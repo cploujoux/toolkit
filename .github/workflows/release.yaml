@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy definition
+        run: |
+          git clone https://.:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/control-plane
+          cp control-plane/api/api/definitions/controlplane.yml ./definition.yml
+          rm -rf control-plane
+      - name: Setup Go
+        uses: actions/setup-go@v5
+      - name: Build
+        run: make build
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: goreleaser
+          # 'latest', 'nightly', or a semver
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: beamlit
+          path: dist/*
