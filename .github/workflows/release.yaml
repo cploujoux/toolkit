@@ -17,7 +17,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://.:${{ secrets.CONTROL_PLANE_TOKEN }}@github.com/".insteadOf "https://github.com/"
           git clone https://github.com/${{ github.repository_owner }}/control-plane
           cp control-plane/api/api/definitions/controlplane.yml ./definition.yml
           rm -rf control-plane
@@ -26,8 +26,9 @@ jobs:
         with:
           go-version: "1.23.x"
           check-latest: true
-      - name: Build
-        run: make build
+      - name: SDK generator
+        run: |
+          make sdk
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:

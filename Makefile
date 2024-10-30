@@ -17,7 +17,8 @@ run:
 	go run main.go
 
 build:
-	go build -o ./dist/beamlit cli/main.go
+	goreleaser release --snapshot --clean
+	cp ./dist/beamlit_darwin_arm64/beamlit ./beamlit
 
 install:
 	go build -o $(shell go env GOPATH)/bin/beamlit cli/main.go
