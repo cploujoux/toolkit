@@ -1,32 +1,11 @@
-package beamlit
+package operations
 
 import (
 	"bytes"
 	"fmt"
-	"regexp"
-	"strings"
 
 	"github.com/fatih/color"
 )
-
-func BlString(s string) *string {
-	return &s
-}
-
-// Entries : ListOperations, ListEnvironments, GetOperation, GetEnvironment
-// Results [list, operations, list environments, get operation, get environment]
-func formatOperationId(operationId string) []string {
-	// Regular expression to match capital letters
-	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
-
-	// Find all matches and convert them to lowercase
-	words := re.FindAllString(operationId, -1)
-	for i, word := range words {
-		words[i] = strings.ToLower(word)
-	}
-
-	return words
-}
 
 func printColoredYAML(yamlData []byte) {
 	lines := bytes.Split(yamlData, []byte("\n"))
@@ -63,4 +42,10 @@ func printColoredYAML(yamlData []byte) {
 		// Print the colored key and value
 		fmt.Printf("%s: %s\n", keyColor(string(key)), coloredValue)
 	}
+}
+
+var BASE_URL string
+
+func SetBaseURL(url string) {
+	BASE_URL = url
 }

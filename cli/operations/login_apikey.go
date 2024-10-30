@@ -1,10 +1,12 @@
-package beamlit
+package operations
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/tmp-moon/toolkit/sdk"
 )
 
 func apiKeyLogin(workspace string) {
@@ -39,7 +41,7 @@ func apiKeyLogin(workspace string) {
 	}
 
 	// Create credentials struct and marshal to JSON
-	credentials := Credentials{
+	credentials := sdk.Credentials{
 		APIKey:    apiKey,
 		Workspace: workspace,
 	}

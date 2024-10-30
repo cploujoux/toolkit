@@ -1,4 +1,4 @@
-package beamlit
+package sdk
 
 import (
 	"context"

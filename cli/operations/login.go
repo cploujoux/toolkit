@@ -1,4 +1,4 @@
-package beamlit
+package operations
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var loginCmd = &cobra.Command{
+var LoginCmd = &cobra.Command{
 	Use:   "login [workspace]",
 	Short: "Login to Beamlit",
 	Args:  cobra.MaximumNArgs(1),

@@ -1,4 +1,4 @@
-package beamlit
+package operations
 
 import (
 	"bytes"
@@ -14,12 +14,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var getCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get operations",
+var DeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete operations",
 }
 
-func getRegister(ctx context.Context, operation []string, fn interface{}) {
+func DeleteRegister(ctx context.Context, operation []string, fn interface{}) {
 	cmd := &cobra.Command{
 		Use:   operation[1],
 		Short: fmt.Sprintf("Execute %s operation", operation[1]),
@@ -78,5 +78,5 @@ func getRegister(ctx context.Context, operation []string, fn interface{}) {
 			printColoredYAML(yamlData)
 		},
 	}
-	getCmd.AddCommand(cmd)
+	DeleteCmd.AddCommand(cmd)
 }

@@ -1,4 +1,4 @@
-package beamlit
+package sdk
 
 type Credentials struct {
 	APIKey       string `json:"api_key"`

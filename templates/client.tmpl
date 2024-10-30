@@ -90,7 +90,7 @@ type ClientInterface interface {
 
 
 // RegisterCliCommands registers CLI commands for the client
-func (c *ClientWithResponses) RegisterCliCommands(ctx context.Context) {
+func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx context.Context) {
     
     {{range . -}}
     {{$hasParams := .RequiresParamObject -}}
@@ -98,7 +98,7 @@ func (c *ClientWithResponses) RegisterCliCommands(ctx context.Context) {
     {{$opid := .OperationId -}}
     
     // Register CLI commands for {{$opid}}
-    RegisterCliCommand(ctx, "{{$opid}}", c.{{$opid}})
+    reg.CliCommand(ctx, "{{$opid}}", c.{{$opid}})
     
     {{end -}}
 }

@@ -1,4 +1,4 @@
-package beamlit
+package operations
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var logoutCmd = &cobra.Command{
+var LogoutCmd = &cobra.Command{
 	Use:   "logout",
 	Short: "Logout from Beamlit",
 	Run: func(cmd *cobra.Command, args []string) {

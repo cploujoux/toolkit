@@ -1,4 +1,4 @@
-package beamlit
+package operations
 
 import (
 	"bytes"
@@ -9,12 +9,14 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/tmp-moon/toolkit/sdk"
 )
 
 func deviceModeLogin(workspace string) {
 	url := BASE_URL + "/login/device"
 
-	payload := DeviceLogin{
+	payload := sdk.DeviceLogin{
 		ClientID: "moon",
 		Scope:    "offline_access",
 	}
@@ -37,7 +39,7 @@ func deviceModeLogin(workspace string) {
 
 	body, _ := io.ReadAll(res.Body)
 
-	var deviceLoginResponse DeviceLoginResponse
+	var deviceLoginResponse sdk.DeviceLoginResponse
 	if err := json.Unmarshal(body, &deviceLoginResponse); err != nil {
 		fmt.Printf("Error unmarshalling response: %v\n", err)
 		os.Exit(1)
@@ -52,7 +54,7 @@ func deviceModeLoginFinalize(userCode string, workspace string) {
 	time.Sleep(3 * time.Second)
 	url := BASE_URL + "/oauth/token"
 
-	payload := DeviceLoginFinalizeRequest{
+	payload := sdk.DeviceLoginFinalizeRequest{
 		GrantType:  "urn:ietf:params:oauth:grant-type:device_code",
 		ClientID:   "beamlit",
 		DeviceCode: userCode,
@@ -75,7 +77,7 @@ func deviceModeLoginFinalize(userCode string, workspace string) {
 
 	body, _ := io.ReadAll(res.Body)
 
-	var finalizeResponse DeviceLoginFinalizeResponse
+	var finalizeResponse sdk.DeviceLoginFinalizeResponse
 	if err := json.Unmarshal(body, &finalizeResponse); err != nil {
 		panic(err)
 	}
@@ -84,7 +86,7 @@ func deviceModeLoginFinalize(userCode string, workspace string) {
 		deviceModeLoginFinalize(userCode, workspace)
 	}
 
-	creds := Credentials{
+	creds := sdk.Credentials{
 		AccessToken:  finalizeResponse.AccessToken,
 		RefreshToken: finalizeResponse.RefreshToken,
 		ExpiresIn:    finalizeResponse.ExpiresIn,

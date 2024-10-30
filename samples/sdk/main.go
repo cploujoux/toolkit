@@ -6,10 +6,10 @@ import (
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/tmp-moon/toolkit/cmd/beamlit"
+	"github.com/tmp-moon/toolkit/sdk"
 )
 
-var BASE_URL = "https://api.beamlit.dev/v0"
+var BASE_URL = "https://api.sdk.dev/v0"
 
 func init() {
 	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
@@ -17,24 +17,22 @@ func init() {
 	}
 }
 func main() {
-	beamlit.SetBaseURL(BASE_URL)
-
 	ctx := context.Background()
 
-	provider := beamlit.NewApiKeyProvider("BL_96UX6OFWA6JG9IA1NDE7CCMED22U8Z2F", "chris")
+	provider := sdk.NewApiKeyProvider("BL_96UX6OFWA6JG9IA1NDE7CCMED22U8Z2F", "chris")
 
-	client, err := beamlit.NewClientWithResponses(
+	client, err := sdk.NewClientWithResponses(
 		BASE_URL,
-		beamlit.WithRequestEditorFn(provider.Intercept),
+		sdk.WithRequestEditorFn(provider.Intercept),
 	)
 	if err != nil {
 		slog.Error("Error creating client", "error", err)
 		os.Exit(1)
 	}
 
-	env, err := client.CreateOrUpdateEnvironmentWithResponse(ctx, "test", beamlit.CreateOrUpdateEnvironmentJSONRequestBody{
-		Name:        beamlit.BlString("test"),
-		DisplayName: beamlit.BlString("Test"),
+	env, err := client.CreateOrUpdateEnvironmentWithResponse(ctx, "test", sdk.CreateOrUpdateEnvironmentJSONRequestBody{
+		Name:        sdk.BlString("test"),
+		DisplayName: sdk.BlString("Test"),
 	})
 	if err != nil {
 		slog.Error("Error getting environment", "error", err)
