@@ -1,3 +1,5 @@
 definition.yml
 dist
 dist/
+/beamlit
+.DS_Store
