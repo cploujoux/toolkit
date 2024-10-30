@@ -17,8 +17,7 @@ run:
 	go run main.go
 
 build:
-	go build -o ./beamlit cli/main.go
-	tar -czvf beamlit-cli.tar.gz ./beamlit
+	go build -o ./dist/beamlit cli/main.go
 
 install:
 	go build -o $(shell go env GOPATH)/bin/beamlit cli/main.go
