@@ -9,7 +9,7 @@ import (
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
-func apiKeyLogin(workspace string) {
+func (r *Operations) ApiKeyLogin(workspace string) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("Error getting home directory: %v\n", err)

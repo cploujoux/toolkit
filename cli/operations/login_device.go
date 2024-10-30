@@ -13,8 +13,8 @@ import (
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
-func deviceModeLogin(workspace string) {
-	url := BASE_URL + "/login/device"
+func (r *Operations) DeviceModeLogin(workspace string) {
+	url := r.BaseURL + "/login/device"
 
 	payload := sdk.DeviceLogin{
 		ClientID: "moon",
@@ -47,12 +47,12 @@ func deviceModeLogin(workspace string) {
 
 	fmt.Printf("Please visit the following URL to finish login: %s\n", deviceLoginResponse.VerificationURIComplete)
 
-	deviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace)
+	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace)
 }
 
-func deviceModeLoginFinalize(userCode string, workspace string) {
+func (r *Operations) DeviceModeLoginFinalize(userCode string, workspace string) {
 	time.Sleep(3 * time.Second)
-	url := BASE_URL + "/oauth/token"
+	url := r.BaseURL + "/oauth/token"
 
 	payload := sdk.DeviceLoginFinalizeRequest{
 		GrantType:  "urn:ietf:params:oauth:grant-type:device_code",
@@ -83,7 +83,7 @@ func deviceModeLoginFinalize(userCode string, workspace string) {
 	}
 
 	if res.StatusCode != http.StatusOK {
-		deviceModeLoginFinalize(userCode, workspace)
+		r.DeviceModeLoginFinalize(userCode, workspace)
 	}
 
 	creds := sdk.Credentials{

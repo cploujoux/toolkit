@@ -2,71 +2,46 @@ package cli
 
 import (
 	"context"
-	"encoding/json"
 	"os"
-	"path/filepath"
 
+	"github.com/spf13/cobra"
+	"github.com/tmp-moon/toolkit/cli/operations"
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
 var BASE_URL = "https://api.beamlit.dev/v0"
 
+var rootCmd = &cobra.Command{
+	Use:   "beamlit",
+	Short: "Beamlit CLI",
+}
+
 func Execute() error {
+	ctx := context.Background()
 	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
 		BASE_URL = url
 	}
-
-	credentials := sdk.Credentials{}
-	reg := &RegisterImpl{}
-
-	homeDir, err := os.UserHomeDir()
-	if err == nil {
-		credentialsPath := filepath.Join(homeDir, ".beamlit", "credentials.json")
-		if data, err := os.ReadFile(credentialsPath); err == nil {
-			if err := json.Unmarshal(data, &credentials); err != nil {
-				// Invalid JSON, use empty credentials
-				credentials = sdk.Credentials{}
-			}
-		}
+	reg := &operations.Operations{
+		BaseURL: BASE_URL,
 	}
 
-	ctx := context.Background()
-
-	var provider sdk.AuthProvider
-	if credentials.AccessToken != "" {
-		provider = sdk.NewBearerTokenProvider(credentials.AccessToken, credentials.Workspace)
-	}
-	if credentials.APIKey != "" {
-		provider = sdk.NewApiKeyProvider(credentials.APIKey, credentials.Workspace)
+	for _, cmd := range reg.MainCommand() {
+		rootCmd.AddCommand(cmd)
 	}
 
-	if provider != nil {
-		client, err := sdk.NewClientWithResponses(
-			BASE_URL,
-			sdk.WithRequestEditorFn(provider.Intercept),
-		)
-		if err != nil {
-			return err
-		}
-
-		client.RegisterCliCommands(reg, ctx)
-
-		if err := execute(); err != nil {
-			return err
-		}
-	}
+	provider := getAuthProvider()
 
 	client, err := sdk.NewClientWithResponses(
 		BASE_URL,
+		sdk.WithRequestEditorFn(provider.Intercept),
 	)
-
 	if err != nil {
 		return err
 	}
 
 	client.RegisterCliCommands(reg, ctx)
 
-	if err := execute(); err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		return err
 	}
 

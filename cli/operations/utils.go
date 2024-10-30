@@ -3,6 +3,8 @@ package operations
 import (
 	"bytes"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/fatih/color"
 )
@@ -44,8 +46,17 @@ func printColoredYAML(yamlData []byte) {
 	}
 }
 
-var BASE_URL string
+// Entries : ListOperations, ListEnvironments, GetOperation, GetEnvironment
+// Results [list, operations, list environments, get operation, get environment]
+func formatOperationId(operationId string) []string {
+	// Regular expression to match capital letters
+	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
 
-func SetBaseURL(url string) {
-	BASE_URL = url
+	// Find all matches and convert them to lowercase
+	words := re.FindAllString(operationId, -1)
+	for i, word := range words {
+		words[i] = strings.ToLower(word)
+	}
+
+	return words
 }
