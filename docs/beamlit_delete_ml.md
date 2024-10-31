@@ -15,7 +15,7 @@ beamlit delete ml [flags]
 ### Options inherited from parent commands
 
 ```
-  -o, --output string      Output format. One of: yaml
+  -o, --output string      Output format. One of: pretty,yaml,json,table
   -w, --workspace string   Specify the workspace name
 ```
 
