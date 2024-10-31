@@ -26,3 +26,5 @@ install:
 
 dev:
 	alias bl="go run main.go"
+
+.PHONY: sdk

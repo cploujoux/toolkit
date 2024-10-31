@@ -47,6 +47,14 @@ changelog:
       - "^docs:"
       - "^test:"
 
+release:
+  header: |
+    ## Beamlit CLI: {{ .Tag }} ({{ .Date }})
+
+    See our amazing latest updates below.
+  footer: |
+    Have a good one.
+
 brews:
   - name: beamlit
     caveats: Beamlit is a tool to ship AI agents that never slack.
