@@ -9,22 +9,31 @@ import (
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
-var BASE_URL = "https://api.sdk.dev/v0"
+var BASE_URL = "https://api.beamlit.dev/v0"
+var RUN_URL = "https://run.beamlit.dev"
 
 func init() {
 	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
 		BASE_URL = url
 	}
+	if runUrl := os.Getenv("BEAMLIT_RUN_URL"); runUrl != "" {
+		RUN_URL = runUrl
+	}
 }
 func main() {
 	ctx := context.Background()
 
-	provider := sdk.NewApiKeyProvider(sdk.Credentials{APIKey: "BL_96UX6OFWA6JG9IA1NDE7CCMED22U8Z2F"}, "chris")
+	client, err := sdk.NewClientWithCredentials(sdk.RunClientWithCredentials{
+		ApiURL:      BASE_URL,
+		RunURL:      RUN_URL,
+		Credentials: sdk.Credentials{APIKey: "BL_96UX6OFWA6JG9IA1NDE7CCMED22U8Z2F"},
+		Workspace:   "chris",
+	})
+	if err != nil {
+		slog.Error("Error creating client", "error", err)
+		os.Exit(1)
+	}
 
-	client, err := sdk.NewClientWithResponses(
-		BASE_URL,
-		sdk.WithRequestEditorFn(provider.Intercept),
-	)
 	if err != nil {
 		slog.Error("Error creating client", "error", err)
 		os.Exit(1)

@@ -52,6 +52,7 @@ var resources = []*Resource{
 
 type Operations struct {
 	BaseURL string
+	RunURL  string
 }
 
 func (r *Operations) CliCommand(ctx context.Context, operationId string, fn interface{}) {

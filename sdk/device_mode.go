@@ -41,10 +41,11 @@ type DeviceLoginFinalizeResponse struct {
 type BearerToken struct {
 	credentials   Credentials
 	workspaceName string
+	baseUrl       string
 }
 
-func NewBearerTokenProvider(credentials Credentials, workspaceName string) *BearerToken {
-	return &BearerToken{credentials: credentials, workspaceName: workspaceName}
+func NewBearerTokenProvider(credentials Credentials, workspaceName string, baseUrl string) *BearerToken {
+	return &BearerToken{credentials: credentials, workspaceName: workspaceName, baseUrl: baseUrl}
 }
 
 func (s *BearerToken) RefreshIfNeeded() error {
@@ -84,9 +85,10 @@ func (s *BearerToken) Intercept(ctx context.Context, req *http.Request) error {
 }
 
 func (s *BearerToken) DoRefresh() error {
-
-	url := "https://api.beamlit.dev/v0/oauth/token"
-
+	if s.credentials.RefreshToken == "" {
+		return fmt.Errorf("no refresh token to refresh")
+	}
+	url := s.baseUrl + "/oauth/token"
 	refreshData := map[string]string{
 		"grant_type":    "refresh_token",
 		"refresh_token": s.credentials.RefreshToken,
@@ -116,7 +118,9 @@ func (s *BearerToken) DoRefresh() error {
 	if err := json.Unmarshal(body, &finalizeResponse); err != nil {
 		panic(err)
 	}
-
+	if finalizeResponse.RefreshToken == "" {
+		finalizeResponse.RefreshToken = s.credentials.RefreshToken
+	}
 	creds := Credentials{
 		AccessToken:  finalizeResponse.AccessToken,
 		RefreshToken: finalizeResponse.RefreshToken,

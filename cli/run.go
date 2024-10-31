@@ -6,16 +6,14 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/tmp-moon/toolkit/sdk"
 )
 
-func (r *Operations) InferenceCmd() *cobra.Command {
+func (r *Operations) RunCmd() *cobra.Command {
 	var data string
 	cmd := &cobra.Command{
-		Use:     "inference [model] [environment]",
-		Args:    cobra.MaximumNArgs(2),
-		Short:   "Inference",
-		Aliases: []string{"infer"},
+		Use:   "run [model] [environment]",
+		Args:  cobra.MaximumNArgs(2),
+		Short: "Run inference",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				fmt.Println("Error: Model is required")
@@ -28,9 +26,9 @@ func (r *Operations) InferenceCmd() *cobra.Command {
 			}
 
 			if len(args) == 2 {
-				sdk.Inference(context.Background(), workspace, args[1], args[0], data)
+				client.Run(context.Background(), workspace, args[1], args[0], data)
 			} else {
-				sdk.Inference(context.Background(), workspace, "production", args[0], data)
+				client.Run(context.Background(), workspace, "production", args[0], data)
 			}
 		},
 	}

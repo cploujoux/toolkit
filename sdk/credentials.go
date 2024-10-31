@@ -72,6 +72,10 @@ func LoadCredentials(workspaceName string) Credentials {
 }
 
 func SaveCredentials(workspaceName string, credentials Credentials) {
+	if credentials.AccessToken == "" && credentials.APIKey == "" {
+		fmt.Println("No credentials to save, error")
+		return
+	}
 	config := loadConfig()
 	found := false
 	for i, workspace := range config.Workspaces {

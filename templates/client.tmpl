@@ -18,6 +18,8 @@ type {{ $clientTypeName }} struct {
 	// paths in the swagger spec will be appended to the server.
 	Server string
 
+    RunServer string
+
 	// Doer for performing requests, typically a *http.Client with any
 	// customized settings, such as certificate chains.
 	Client HttpRequestDoer
@@ -31,10 +33,11 @@ type {{ $clientTypeName }} struct {
 type ClientOption func(*{{ $clientTypeName }}) error
 
 // Creates a new {{ $clientTypeName }}, with reasonable defaults
-func NewClient(server string, opts ...ClientOption) (*{{ $clientTypeName }}, error) {
+func NewClient(server string, runServer string, opts ...ClientOption) (*{{ $clientTypeName }}, error) {
     // create a client with sane default values
     client := {{ $clientTypeName }}{
         Server: server,
+        RunServer: runServer,
     }
     // mutate client and add all optional params
     for _, o := range opts {
@@ -73,6 +76,8 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
+
+    Run(ctx context.Context, workspaceName string, environment string, modelName string, body string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 {{range . -}}
 {{$hasParams := .RequiresParamObject -}}

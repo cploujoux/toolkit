@@ -9,6 +9,7 @@ import (
 )
 
 var BASE_URL = "https://api.beamlit.dev/v0"
+var RUN_URL = "https://run.beamlit.dev"
 var workspace string
 var outputFormat string
 var client *sdk.ClientWithResponses
@@ -21,16 +22,23 @@ var rootCmd = &cobra.Command{
 		if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
 			BASE_URL = url
 		}
+		if runUrl := os.Getenv("BEAMLIT_RUN_URL"); runUrl != "" {
+			RUN_URL = runUrl
+		}
 
 		reg = &Operations{
 			BaseURL: BASE_URL,
+			RunURL:  RUN_URL,
 		}
-
-		provider := getAuthProvider(workspace)
+		credentials := sdk.LoadCredentials(workspace)
 		var err error
-		c, err := sdk.NewClientWithResponses(
-			BASE_URL,
-			sdk.WithRequestEditorFn(provider.Intercept),
+		c, err := sdk.NewClientWithCredentials(
+			sdk.RunClientWithCredentials{
+				ApiURL:      BASE_URL,
+				RunURL:      RUN_URL,
+				Credentials: credentials,
+				Workspace:   workspace,
+			},
 		)
 		if err != nil {
 			return err
@@ -56,9 +64,12 @@ func Execute() error {
 	rootCmd.AddCommand(reg.GetCmd())
 	rootCmd.AddCommand(reg.ApplyCmd())
 	rootCmd.AddCommand(reg.DeleteCmd())
-	rootCmd.AddCommand(reg.InferenceCmd())
+	rootCmd.AddCommand(reg.RunCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: yaml")
+	if workspace == "" {
+		workspace = sdk.CurrentWorkspace()
+	}
 	return rootCmd.Execute()
 }
