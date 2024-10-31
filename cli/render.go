@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -10,7 +11,19 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func printTable(slices []interface{}) {
+func output(resource Resource, slices []interface{}, outputFormat string) {
+	if outputFormat == "yaml" {
+		printYaml(resource, slices)
+		return
+	}
+	if outputFormat == "json" {
+		printJson(resource, slices)
+		return
+	}
+	printTable(resource, slices)
+}
+
+func printTable(resource Resource, slices []interface{}) {
 	// Print header with fixed width columns
 	fmt.Printf("%-15s %-20s %-20s %-20s\n", "WORKSPACE", "NAME", "CREATED_AT", "UPDATED_AT")
 
@@ -57,6 +70,63 @@ func printTable(slices []interface{}) {
 	}
 }
 
+func printJson(resource Resource, slices []interface{}) {
+	formatted := []Result{}
+	for _, slice := range slices {
+		if sliceMap, ok := slice.(map[string]interface{}); ok {
+			formatted = append(formatted, Result{
+				ApiVersion: "beamlit.com/alpha1",
+				Kind:       resource.Kind,
+				Metadata: ResultMetadata{
+					Workspace: sliceMap["workspace"].(string),
+					Name:      sliceMap["name"].(string),
+				},
+				Spec: slice,
+			})
+		}
+	}
+
+	jsonData, err := json.MarshalIndent(formatted, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(string(jsonData))
+}
+
+func printYaml(resource Resource, slices []interface{}) {
+	formatted := []Result{}
+	for _, slice := range slices {
+		if sliceMap, ok := slice.(map[string]interface{}); ok {
+			formatted = append(formatted, Result{
+				ApiVersion: "beamlit.com/alpha1",
+				Kind:       resource.Kind,
+				Metadata: ResultMetadata{
+					Workspace: sliceMap["workspace"].(string),
+					Name:      sliceMap["name"].(string),
+				},
+				Spec: slice,
+			})
+		}
+	}
+
+	// Convert each object to YAML and add separators
+	var yamlData []byte
+	for _, result := range formatted {
+		data, err := yaml.Marshal(result)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		yamlData = append(yamlData, []byte("---\n")...)
+		yamlData = append(yamlData, data...)
+		yamlData = append(yamlData, []byte("\n")...)
+	}
+
+	// Print the YAML with colored keys and values
+	printColoredYAML(yamlData)
+}
+
 func printColoredYAML(yamlData []byte) {
 	lines := bytes.Split(yamlData, []byte("\n"))
 	keyColor := color.New(color.FgBlue).SprintFunc()
@@ -92,42 +162,4 @@ func printColoredYAML(yamlData []byte) {
 		// Print the colored key and value
 		fmt.Printf("%s: %s\n", keyColor(string(key)), coloredValue)
 	}
-}
-
-func output(resource Resource, slices []interface{}, outputFormat string) {
-	if outputFormat != "yaml" {
-		printTable(slices)
-		return
-	}
-
-	formatted := []Result{}
-	for _, slice := range slices {
-		if sliceMap, ok := slice.(map[string]interface{}); ok {
-			formatted = append(formatted, Result{
-				ApiVersion: "beamlit.com/alpha1",
-				Kind:       resource.Kind,
-				Metadata: ResultMetadata{
-					Workspace: sliceMap["workspace"].(string),
-					Name:      sliceMap["name"].(string),
-				},
-				Spec: slice,
-			})
-		}
-	}
-
-	// Convert each object to YAML and add separators
-	var yamlData []byte
-	for _, result := range formatted {
-		data, err := yaml.Marshal(result)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		yamlData = append(yamlData, []byte("---\n")...)
-		yamlData = append(yamlData, data...)
-		yamlData = append(yamlData, []byte("\n")...)
-	}
-
-	// Print the YAML with colored keys and values
-	printColoredYAML(yamlData)
 }
