@@ -14,12 +14,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var ListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List operations",
+var RemoveCmd = &cobra.Command{
+	Use:   "remove",
+	Short: "Remove operations",
 }
 
-func ListRegister(ctx context.Context, operation []string, fn interface{}) {
+func RemoveRegister(ctx context.Context, operation []string, fn interface{}) {
 	cmd := &cobra.Command{
 		Use:   operation[1],
 		Short: fmt.Sprintf("Execute %s operation", operation[1]),
@@ -31,7 +31,7 @@ func ListRegister(ctx context.Context, operation []string, fn interface{}) {
 				os.Exit(1)
 			}
 			// Create a slice for the arguments
-			fnargs := []reflect.Value{reflect.ValueOf(ctx)} // Add the context
+			fnargs := []reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(args[0])} // Add the context and the resource name
 
 			// Call the function with the arguments
 			results := funcValue.Call(fnargs)
@@ -61,14 +61,14 @@ func ListRegister(ctx context.Context, operation []string, fn interface{}) {
 			}
 
 			// Check if the content is an array or an object
-			var slices []interface{}
-			if err := json.Unmarshal(buf.Bytes(), &slices); err != nil {
+			var resource interface{}
+			if err := json.Unmarshal(buf.Bytes(), &resource); err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
 
 			// Convert the dynamic object to YAML
-			yamlData, err := yaml.Marshal(slices)
+			yamlData, err := yaml.Marshal(resource)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
@@ -78,5 +78,5 @@ func ListRegister(ctx context.Context, operation []string, fn interface{}) {
 			printColoredYAML(yamlData)
 		},
 	}
-	ListCmd.AddCommand(cmd)
+	RemoveCmd.AddCommand(cmd)
 }

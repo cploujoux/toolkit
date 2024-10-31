@@ -1,50 +1,9 @@
 package operations
 
 import (
-	"bytes"
-	"fmt"
 	"regexp"
 	"strings"
-
-	"github.com/fatih/color"
 )
-
-func printColoredYAML(yamlData []byte) {
-	lines := bytes.Split(yamlData, []byte("\n"))
-	keyColor := color.New(color.FgBlue).SprintFunc()
-	stringValueColor := color.New(color.FgGreen).SprintFunc()
-	numberValueColor := color.New(color.FgYellow).SprintFunc()
-
-	for _, line := range lines {
-		if len(line) == 0 {
-			continue
-		}
-		// Split the line into key and value
-		parts := bytes.SplitN(line, []byte(":"), 2)
-		if len(parts) < 2 {
-			fmt.Println(string(line))
-			continue
-		}
-		key := parts[0]
-		value := parts[1]
-
-		// Determine the type of value and color it accordingly
-		var coloredValue string
-		if bytes.HasPrefix(value, []byte(" ")) {
-			value = bytes.TrimSpace(value)
-			if len(value) > 0 && (value[0] == '"' || value[0] == '\'') {
-				coloredValue = stringValueColor(string(value))
-			} else if _, err := fmt.Sscanf(string(value), "%f", new(float64)); err == nil {
-				coloredValue = numberValueColor(string(value))
-			} else {
-				coloredValue = string(value)
-			}
-		}
-
-		// Print the colored key and value
-		fmt.Printf("%s: %s\n", keyColor(string(key)), coloredValue)
-	}
-}
 
 // Entries : ListOperations, ListEnvironments, GetOperation, GetEnvironment
 // Results [list, operations, list environments, get operation, get environment]
@@ -59,4 +18,45 @@ func formatOperationId(operationId string) []string {
 	}
 
 	return words
+}
+
+func putToSingular(use string) string {
+	// Common irregular plurals
+	irregulars := map[string]string{
+		"children": "child",
+		"people":   "person",
+		"mice":     "mouse",
+		"teeth":    "tooth",
+	}
+
+	// Check for irregular plurals first
+	if singular, ok := irregulars[use]; ok {
+		return singular
+	}
+
+	// Handle regular plural rules
+	if len(use) < 2 {
+		return use
+	}
+
+	// Handle words ending in 'ies' (e.g., policies -> policy)
+	if strings.HasSuffix(use, "ies") {
+		return use[:len(use)-3] + "y"
+	}
+
+	// Handle words ending in 'es' (e.g., boxes -> box)
+	if strings.HasSuffix(use, "es") {
+		// Special cases like 'analyses' -> 'analysis'
+		if strings.HasSuffix(use, "ses") && len(use) > 4 {
+			return use[:len(use)-2]
+		}
+		return use[:len(use)-2]
+	}
+
+	// Handle regular plural 's'
+	if use[len(use)-1] == 's' {
+		return use[:len(use)-1]
+	}
+
+	return use
 }

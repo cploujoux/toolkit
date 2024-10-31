@@ -13,15 +13,11 @@ type Operations struct {
 func (r *Operations) CliCommand(ctx context.Context, operationId string, fn interface{}) {
 	operation := formatOperationId(operationId)
 	if operation[0] == "list" {
-		ListRegister(ctx, operation, fn)
-		return
-	}
-	if operation[0] == "get" {
 		GetRegister(ctx, operation, fn)
 		return
 	}
 	if operation[0] == "delete" {
-		DeleteRegister(ctx, operation, fn)
+		RemoveRegister(ctx, operation, fn)
 		return
 	}
 	// fmt.Println("operation", operation)
@@ -34,9 +30,8 @@ func (r *Operations) CliCommand(ctx context.Context, operationId string, fn inte
 
 func (r *Operations) MainCommand() []*cobra.Command {
 	return []*cobra.Command{
-		ListCmd,
 		GetCmd,
-		DeleteCmd,
+		RemoveCmd,
 		ApplyCmd,
 		r.LoginCmd(),
 		r.LogoutCmd(),
