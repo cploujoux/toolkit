@@ -68,7 +68,7 @@ func Execute() error {
 	rootCmd.AddCommand(reg.DocCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
-	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: yaml,json,table")
+	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")
 	if workspace == "" {
 		workspace = sdk.CurrentWorkspace()
 	}

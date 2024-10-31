@@ -12,8 +12,12 @@ import (
 )
 
 func output(resource Resource, slices []interface{}, outputFormat string) {
+	if outputFormat == "pretty" {
+		printYaml(resource, slices, true)
+		return
+	}
 	if outputFormat == "yaml" {
-		printYaml(resource, slices)
+		printYaml(resource, slices, false)
 		return
 	}
 	if outputFormat == "json" {
@@ -94,7 +98,7 @@ func printJson(resource Resource, slices []interface{}) {
 	fmt.Println(string(jsonData))
 }
 
-func printYaml(resource Resource, slices []interface{}) {
+func printYaml(resource Resource, slices []interface{}, pretty bool) {
 	formatted := []Result{}
 	for _, slice := range slices {
 		if sliceMap, ok := slice.(map[string]interface{}); ok {
@@ -124,7 +128,11 @@ func printYaml(resource Resource, slices []interface{}) {
 	}
 
 	// Print the YAML with colored keys and values
-	printColoredYAML(yamlData)
+	if pretty {
+		printColoredYAML(yamlData)
+	} else {
+		fmt.Println(string(yamlData))
+	}
 }
 
 func printColoredYAML(yamlData []byte) {
