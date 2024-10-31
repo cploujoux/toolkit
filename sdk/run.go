@@ -4,54 +4,78 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 )
 
-func (c *Client) Run(ctx context.Context, workspaceName string, environment string, modelName string, body string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	fmt.Println("run", workspaceName, environment, modelName, body)
+func (c *Client) Run(
+	ctx context.Context,
+	workspaceName string,
+	environment string,
+	modelName string,
+	method string,
+	path string,
+	headers map[string]string,
+	body string,
+	reqEditors ...RequestEditorFn,
+) (*http.Response, error) {
+
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	fmt.Println("bodyReader", bodyReader)
-	runUrl, err := url.Parse(c.RunServer)
-	fmt.Println("server", runUrl)
 
-	// url := "https://edge-gw.beamlit.net/" + workspaceName + "/models/" + modelName + "?environment=" + environment
+	req, err := NewRunRequest(c.RunServer, method, path, headers, workspaceName, environment, modelName, bodyReader)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
 
-	// payload := strings.NewReader(data)
+	return c.Client.Do(req)
+}
 
-	// req, _ := http.NewRequest("POST", url, payload)
-	// provider.Intercept(ctx, req)
+func NewRunRequest(
+	RunServer string,
+	method string,
+	path string,
+	headers map[string]string,
+	workspaceName string,
+	environment string,
+	modelName string,
+	body io.Reader,
+) (*http.Request, error) {
+	var err error
 
-	// req.Header.Add("content-type", "application/json")
+	runURL, err := url.Parse(RunServer)
+	if path != "" {
+		path = workspaceName + "/models/" + modelName + "/" + path
+	} else {
+		path = workspaceName + "/models/" + modelName
+	}
 
-	// fmt.Printf("URL: %s\n", req.URL)
-	// fmt.Printf("Method: %s\n", req.Method)
-	// fmt.Println("Headers:")
-	// for key, values := range req.Header {
-	// 	for _, value := range values {
-	// 		fmt.Printf("  %s: %s\n", key, value)
-	// 	}
-	// }
-	// fmt.Println("Payload:", data)
+	queryURL, err := runURL.Parse(path + "?environment=" + environment)
+	if err != nil {
+		return nil, err
+	}
 
-	// res, err := http.DefaultClient.Do(req)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	req, err := http.NewRequest(method, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
 
-	// defer res.Body.Close()
-	// body, _ := io.ReadAll(res.Body)
+	if headers["Content-Type"] == "" {
+		headers["Content-Type"] = "application/json"
+	}
 
-	// fmt.Println(res)
-	// fmt.Println(string(body))
+	for key, value := range headers {
+		req.Header.Add(key, value)
+	}
 
-	// return res, nil
-	return nil, nil
+	return req, nil
 }

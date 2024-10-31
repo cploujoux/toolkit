@@ -840,7 +840,17 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	Run(ctx context.Context, workspaceName string, environment string, modelName string, body string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	Run(
+		ctx context.Context,
+		workspaceName string,
+		environment string,
+		modelName string,
+		method string,
+		path string,
+		headers map[string]string,
+		body string,
+		reqEditors ...RequestEditorFn,
+	) (*http.Response, error)
 
 	// ListEnvironments request
 	ListEnvironments(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
