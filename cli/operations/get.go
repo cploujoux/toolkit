@@ -13,11 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var GetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get operations",
-}
-
 func (r *Operations) GetCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get",

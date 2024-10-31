@@ -130,14 +130,3 @@ func output(resource Resource, slices []interface{}, outputFormat string) {
 	// Print the YAML with colored keys and values
 	printColoredYAML(yamlData)
 }
-
-type ResultMetadata struct {
-	Workspace string
-	Name      string
-}
-
-type Result struct {
-	Kind     string
-	Metadata ResultMetadata
-	Spec     interface{}
-}
