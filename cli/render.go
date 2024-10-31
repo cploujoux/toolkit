@@ -104,7 +104,8 @@ func output(resource Resource, slices []interface{}, outputFormat string) {
 	for _, slice := range slices {
 		if sliceMap, ok := slice.(map[string]interface{}); ok {
 			formatted = append(formatted, Result{
-				Kind: resource.Kind,
+				ApiVersion: "beamlit.com/alpha1",
+				Kind:       resource.Kind,
 				Metadata: ResultMetadata{
 					Workspace: sliceMap["workspace"].(string),
 					Name:      sliceMap["name"].(string),

@@ -6,7 +6,8 @@ type ResultMetadata struct {
 }
 
 type Result struct {
-	Kind     string
-	Metadata ResultMetadata
-	Spec     interface{}
+	ApiVersion string `yaml:"apiVersion"`
+	Kind       string `yaml:"kind"`
+	Metadata   ResultMetadata
+	Spec       interface{}
 }
