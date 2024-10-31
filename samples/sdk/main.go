@@ -19,7 +19,7 @@ func init() {
 func main() {
 	ctx := context.Background()
 
-	provider := sdk.NewApiKeyProvider("BL_96UX6OFWA6JG9IA1NDE7CCMED22U8Z2F", "chris")
+	provider := sdk.NewApiKeyProvider(sdk.Credentials{APIKey: "BL_96UX6OFWA6JG9IA1NDE7CCMED22U8Z2F"}, "chris")
 
 	client, err := sdk.NewClientWithResponses(
 		BASE_URL,

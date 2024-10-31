@@ -57,14 +57,14 @@ func (r *Operations) DeviceModeLogin(workspace string) {
 	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace)
 }
 
-func (r *Operations) DeviceModeLoginFinalize(userCode string, workspace string) {
+func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string) {
 	time.Sleep(3 * time.Second)
 	url := r.BaseURL + "/oauth/token"
 
 	payload := sdk.DeviceLoginFinalizeRequest{
 		GrantType:  "urn:ietf:params:oauth:grant-type:device_code",
 		ClientID:   "beamlit",
-		DeviceCode: userCode,
+		DeviceCode: deviceCode,
 	}
 
 	payloadBytes, err := json.Marshal(payload)
@@ -90,13 +90,14 @@ func (r *Operations) DeviceModeLoginFinalize(userCode string, workspace string) 
 	}
 
 	if res.StatusCode != http.StatusOK {
-		r.DeviceModeLoginFinalize(userCode, workspace)
+		r.DeviceModeLoginFinalize(deviceCode, workspace)
 	}
 
 	creds := sdk.Credentials{
 		AccessToken:  finalizeResponse.AccessToken,
 		RefreshToken: finalizeResponse.RefreshToken,
 		ExpiresIn:    finalizeResponse.ExpiresIn,
+		DeviceCode:   deviceCode,
 	}
 
 	sdk.SaveCredentials(workspace, creds)

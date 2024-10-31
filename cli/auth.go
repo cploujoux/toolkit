@@ -11,9 +11,9 @@ func getAuthProvider(workspaceName string) sdk.AuthProvider {
 	credentials := sdk.LoadCredentials(workspaceName)
 	var provider sdk.AuthProvider
 	if credentials.AccessToken != "" {
-		provider = sdk.NewBearerTokenProvider(credentials.AccessToken, workspaceName)
+		provider = sdk.NewBearerTokenProvider(credentials, workspaceName)
 	} else if credentials.APIKey != "" {
-		provider = sdk.NewApiKeyProvider(credentials.APIKey, workspaceName)
+		provider = sdk.NewApiKeyProvider(credentials, workspaceName)
 	} else {
 		provider = sdk.NewPublicProvider()
 	}
