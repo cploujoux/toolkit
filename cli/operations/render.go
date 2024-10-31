@@ -3,9 +3,11 @@ package operations
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/fatih/color"
+	"gopkg.in/yaml.v2"
 )
 
 func printTable(slices []interface{}) {
@@ -90,4 +92,52 @@ func printColoredYAML(yamlData []byte) {
 		// Print the colored key and value
 		fmt.Printf("%s: %s\n", keyColor(string(key)), coloredValue)
 	}
+}
+
+func output(resource Resource, slices []interface{}, outputFormat string) {
+	if outputFormat != "yaml" {
+		printTable(slices)
+		return
+	}
+
+	formatted := []Result{}
+	for _, slice := range slices {
+		if sliceMap, ok := slice.(map[string]interface{}); ok {
+			formatted = append(formatted, Result{
+				Kind: resource.Kind,
+				Metadata: ResultMetadata{
+					Workspace: sliceMap["workspace"].(string),
+					Name:      sliceMap["name"].(string),
+				},
+				Spec: slice,
+			})
+		}
+	}
+
+	// Convert each object to YAML and add separators
+	var yamlData []byte
+	for _, result := range formatted {
+		data, err := yaml.Marshal(result)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		yamlData = append(yamlData, []byte("---\n")...)
+		yamlData = append(yamlData, data...)
+		yamlData = append(yamlData, []byte("\n")...)
+	}
+
+	// Print the YAML with colored keys and values
+	printColoredYAML(yamlData)
+}
+
+type ResultMetadata struct {
+	Workspace string
+	Name      string
+}
+
+type Result struct {
+	Kind     string
+	Metadata ResultMetadata
+	Spec     interface{}
 }

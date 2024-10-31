@@ -6,22 +6,59 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type Resource struct {
+	Kind     string
+	Short    string
+	Plural   string
+	Singular string
+	List     interface{}
+	Get      interface{}
+	Delete   interface{}
+}
+
+var resources = []*Resource{
+	{
+		Kind:     "Environment",
+		Short:    "env",
+		Plural:   "environments",
+		Singular: "environment",
+	},
+}
+
 type Operations struct {
 	BaseURL string
 }
 
 func (r *Operations) CliCommand(ctx context.Context, operationId string, fn interface{}) {
 	operation := formatOperationId(operationId)
+	if len(operation) > 2 {
+		return
+	}
 	if operation[0] == "list" {
-		GetRegister(ctx, operation, fn)
+		for _, resource := range resources {
+			if resource.Plural == operation[1] {
+				resource.List = fn
+				break
+			}
+		}
 		return
 	}
 	if operation[0] == "get" {
-		GetRegister(ctx, operation, fn)
+		for _, resource := range resources {
+			if resource.Singular == operation[1] {
+				resource.Get = fn
+				break
+			}
+		}
 		return
 	}
 	if operation[0] == "delete" {
-		RemoveRegister(ctx, operation, fn)
+		for _, resource := range resources {
+			if resource.Plural == operation[1] {
+				resource.Delete = fn
+				break
+			}
+		}
 		return
 	}
 	// fmt.Println("operation", operation)
@@ -34,9 +71,10 @@ func (r *Operations) CliCommand(ctx context.Context, operationId string, fn inte
 
 func (r *Operations) MainCommand() []*cobra.Command {
 	return []*cobra.Command{
-		GetCmd,
+		// GetCmd,
 		RemoveCmd,
 		ApplyCmd,
+		r.GetCmd(),
 		r.LoginCmd(),
 		r.LogoutCmd(),
 		r.SetContextCmd(),
