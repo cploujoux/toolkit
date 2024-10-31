@@ -9,16 +9,21 @@ import (
 )
 
 var BASE_URL = "https://api.beamlit.dev/v0"
-var workspaceFlag string
+var workspace string
+
+var provider *sdk.AuthProvider
 
 var rootCmd = &cobra.Command{
 	Use:   "beamlit",
 	Short: "Beamlit CLI",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		p := *provider
+		p.SetWorkspace(workspace)
+	},
 }
 
 func Execute() error {
-	rootCmd.PersistentFlags().StringVarP(&workspaceFlag, "workspace", "w", "", "Specify the workspace name")
-
+	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	ctx := context.Background()
 	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
 		BASE_URL = url
@@ -27,15 +32,20 @@ func Execute() error {
 		BaseURL: BASE_URL,
 	}
 
-	for _, cmd := range reg.MainCommand() {
-		rootCmd.AddCommand(cmd)
-	}
+	rootCmd.AddCommand(reg.SetWorkspaceCmd())
+	rootCmd.AddCommand(reg.GetWorkspaceCmd())
+	rootCmd.AddCommand(reg.LoginCmd())
+	rootCmd.AddCommand(reg.LogoutCmd())
+	rootCmd.AddCommand(reg.GetCmd())
+	rootCmd.AddCommand(reg.ApplyCmd())
+	rootCmd.AddCommand(reg.DeleteCmd())
 
-	provider := getAuthProvider(workspaceFlag)
+	p := getAuthProvider()
+	provider = &p
 
 	client, err := sdk.NewClientWithResponses(
 		BASE_URL,
-		sdk.WithRequestEditorFn(provider.Intercept),
+		sdk.WithRequestEditorFn(p.Intercept),
 	)
 	if err != nil {
 		return err

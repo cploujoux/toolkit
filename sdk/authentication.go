@@ -18,6 +18,13 @@ func (s *ApiKeyAuth) Intercept(ctx context.Context, req *http.Request) error {
 	return nil
 }
 
+func (s *ApiKeyAuth) SetWorkspace(workspace string) {
+	if workspace == "" {
+		return
+	}
+	s.workspaceName = workspace
+}
+
 func NewBearerTokenProvider(token string, workspaceName string) *BearerToken {
 	return &BearerToken{token: token, workspaceName: workspaceName}
 }
@@ -28,6 +35,13 @@ func (s *BearerToken) Intercept(ctx context.Context, req *http.Request) error {
 	return nil
 }
 
+func (s *BearerToken) SetWorkspace(workspace string) {
+	if workspace == "" {
+		return
+	}
+	s.workspaceName = workspace
+}
+
 func NewPublicProvider() *PublicProvider {
 	return &PublicProvider{}
 }
@@ -36,6 +50,10 @@ func (s *PublicProvider) Intercept(ctx context.Context, req *http.Request) error
 	return nil
 }
 
+func (s *PublicProvider) SetWorkspace(workspace string) {
+}
+
 type AuthProvider interface {
 	Intercept(ctx context.Context, req *http.Request) error
+	SetWorkspace(workspace string)
 }

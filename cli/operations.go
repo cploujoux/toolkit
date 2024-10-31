@@ -4,7 +4,6 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/spf13/cobra"
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
@@ -97,18 +96,6 @@ func (r *Operations) CliCommand(ctx context.Context, operationId string, fn inte
 		return
 	}
 
-}
-
-func (r *Operations) MainCommand() []*cobra.Command {
-	return []*cobra.Command{
-		r.SetWorkspaceCmd(),
-		r.GetWorkspaceCmd(),
-		r.LoginCmd(),
-		r.LogoutCmd(),
-		r.GetCmd(),
-		r.ApplyCmd(),
-		r.DeleteCmd(),
-	}
 }
 
 func (r *Operations) SetBaseURL(url string) {

@@ -50,7 +50,7 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 			for _, result := range results {
 				for _, resource := range resources {
 					if resource.Kind == result.Kind {
-						resource.DeleteFn(result.Metadata.Name, "")
+						resource.DeleteFn(result.Metadata.Name)
 					}
 				}
 			}
@@ -60,32 +60,28 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&filePath, "file", "f", "", "Path to YAML file to apply")
 	cmd.MarkFlagRequired("file")
 
-	var outputFormat string
-	cmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: yaml")
 	for _, resource := range resources {
 		subcmd := &cobra.Command{
 			Use:     resource.Short,
 			Aliases: []string{resource.Singular, resource.Plural},
 			Short:   fmt.Sprintf("Delete a %s resource", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
-				outputFormat := cmd.Flag("output").Value.String()
 				if len(args) == 0 {
 					fmt.Println("no resource name provided")
 					os.Exit(1)
 				}
 				if len(args) == 1 {
-					resource.DeleteFn(args[0], outputFormat)
+					resource.DeleteFn(args[0])
 				}
 			},
 		}
-		subcmd.Flags().StringP("output", "o", "", "Output format. One of: yaml")
 		cmd.AddCommand(subcmd)
 	}
 
 	return cmd
 }
 
-func (resource Resource) DeleteFn(name string, outputFormat string) {
+func (resource Resource) DeleteFn(name string) {
 	ctx := context.Background()
 	// Use reflect to call the function
 	funcValue := reflect.ValueOf(resource.Delete)
