@@ -62,8 +62,8 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 
 	for _, resource := range resources {
 		subcmd := &cobra.Command{
-			Use:     resource.Short,
-			Aliases: []string{resource.Singular, resource.Plural},
+			Use:     resource.Singular,
+			Aliases: []string{resource.Plural, resource.Short},
 			Short:   fmt.Sprintf("Delete a %s resource", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {

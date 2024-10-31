@@ -27,7 +27,7 @@ func output(resource Resource, slices []interface{}, outputFormat string) {
 	printTable(resource, slices)
 }
 
-func printTable(resource Resource, slices []interface{}) {
+func printTable(_ Resource, slices []interface{}) {
 	// Print header with fixed width columns
 	fmt.Printf("%-15s %-20s %-20s %-20s\n", "WORKSPACE", "NAME", "CREATED_AT", "UPDATED_AT")
 

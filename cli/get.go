@@ -20,8 +20,8 @@ func (r *Operations) GetCmd() *cobra.Command {
 	}
 	for _, resource := range resources {
 		subcmd := &cobra.Command{
-			Use:     resource.Short,
-			Aliases: []string{resource.Singular, resource.Plural},
+			Use:     resource.Plural,
+			Aliases: []string{resource.Singular, resource.Short},
 			Short:   fmt.Sprintf("Get a %s resource", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {
