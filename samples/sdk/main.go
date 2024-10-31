@@ -30,7 +30,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	env, err := client.CreateOrUpdateEnvironmentWithResponse(ctx, "test", sdk.CreateOrUpdateEnvironmentJSONRequestBody{
+	env, err := client.PutEnvironmentWithResponse(ctx, "test", sdk.PutEnvironmentJSONRequestBody{
 		Name:        sdk.BlString("test"),
 		DisplayName: sdk.BlString("Test"),
 	})

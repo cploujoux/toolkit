@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"time"
 
 	"github.com/tmp-moon/toolkit/sdk"
@@ -45,7 +45,14 @@ func (r *Operations) DeviceModeLogin(workspace string) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Please visit the following URL to finish login: %s\n", deviceLoginResponse.VerificationURIComplete)
+	// Open the URL in the default browser
+	err = exec.Command("open", deviceLoginResponse.VerificationURIComplete).Start()
+	if err != nil {
+		fmt.Printf("Please visit the following URL to finish login: %s\n", deviceLoginResponse.VerificationURIComplete)
+	} else {
+		fmt.Println("Opened URL in browser, if it's not working, please open it manually: ", deviceLoginResponse.VerificationURIComplete)
+	}
+	fmt.Println("Waiting for user to finish login...")
 
 	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace)
 }
@@ -90,25 +97,9 @@ func (r *Operations) DeviceModeLoginFinalize(userCode string, workspace string) 
 		AccessToken:  finalizeResponse.AccessToken,
 		RefreshToken: finalizeResponse.RefreshToken,
 		ExpiresIn:    finalizeResponse.ExpiresIn,
-		Workspace:    workspace,
 	}
 
-	jsonData, err := json.MarshalIndent(creds, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Printf("Error getting home directory: %v\n", err)
-		os.Exit(1)
-	}
-	credentialsDir := filepath.Join(homeDir, ".beamlit")
-	credentialsFile := filepath.Join(credentialsDir, "credentials.json")
-	if err := os.WriteFile(credentialsFile, jsonData, 0600); err != nil {
-		fmt.Printf("Error writing credentials file: %v\n", err)
-		os.Exit(1)
-	}
+	sdk.SaveCredentials(workspace, creds)
 
 	fmt.Println("Successfully logged in")
 }

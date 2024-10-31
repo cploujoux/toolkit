@@ -1,11 +1,19 @@
 package sdk
 
+type Config struct {
+	CurrentContext string            `yaml:"current_context"`
+	Workspaces     []WorkspaceConfig `yaml:"workspaces"`
+}
+type WorkspaceConfig struct {
+	Name        string      `yaml:"name"`
+	Credentials Credentials `yaml:"credentials"`
+}
+
 type Credentials struct {
-	APIKey       string `json:"api_key"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
-	Workspace    string `json:"workspace"`
-	ExpiresIn    int    `json:"expires_in"`
+	APIKey       string `yaml:"api_key"`
+	AccessToken  string `yaml:"access_token"`
+	RefreshToken string `yaml:"refresh_token"`
+	ExpiresIn    int    `yaml:"expires_in"`
 }
 
 type DeviceLogin struct {
@@ -35,3 +43,15 @@ type DeviceLoginFinalizeResponse struct {
 	RefreshToken string `json:"refresh_token"`
 	TokenType    string `json:"token_type"`
 }
+
+type BearerToken struct {
+	token         string
+	workspaceName string
+}
+
+type ApiKeyAuth struct {
+	apikey        string
+	workspaceName string
+}
+
+type PublicProvider struct{}

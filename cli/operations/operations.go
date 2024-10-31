@@ -40,6 +40,8 @@ func (r *Operations) MainCommand() []*cobra.Command {
 		ApplyCmd,
 		r.LoginCmd(),
 		r.LogoutCmd(),
+		r.SetContextCmd(),
+		r.GetContextCmd(),
 	}
 }
 

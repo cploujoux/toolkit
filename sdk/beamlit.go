@@ -116,6 +116,18 @@ type EnvironmentMetrics struct {
 	InferencePerSecondGlobal *ArrayMetric `json:"inference_per_second_global,omitempty"`
 }
 
+// Flavor Flavor for a policy or a cluster
+type Flavor struct {
+	// Name Flavor name
+	Name *string `json:"name,omitempty"`
+
+	// Type Flavor type
+	Type *string `json:"type,omitempty"`
+}
+
+// Flavors Flavors
+type Flavors = []Flavor
+
 // Labels Labels
 type Labels struct {
 	String *string `json:"string,omitempty"`
@@ -381,8 +393,8 @@ type Policy struct {
 	// DisplayName Policy display name
 	DisplayName *string `json:"display_name,omitempty"`
 
-	// Gpu Policy GPU
-	Gpu *PolicyGpu `json:"gpu,omitempty"`
+	// Flavors Flavors
+	Flavors *Flavors `json:"flavors,omitempty"`
 
 	// Labels Labels
 	Labels *Labels `json:"labels,omitempty"`
@@ -393,7 +405,7 @@ type Policy struct {
 	// Name Policy name
 	Name *string `json:"name,omitempty"`
 
-	// Type Policy type, can be location or gpu
+	// Type Policy type, can be location or flavor
 	Type *string `json:"type,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
@@ -402,9 +414,6 @@ type Policy struct {
 	// Workspace Workspace name
 	Workspace *string `json:"workspace,omitempty"`
 }
-
-// PolicyGpu Policy GPU
-type PolicyGpu = []string
 
 // PolicyLocation Policy location
 type PolicyLocation struct {
@@ -458,6 +467,9 @@ type ProviderModel struct {
 
 	// Private Provider model private
 	Private *bool `json:"private,omitempty"`
+
+	// Tags Provider model tags
+	Tags *[]string `json:"tags,omitempty"`
 
 	// TrendingScore Provider model trending score
 	TrendingScore *int `json:"trending_score,omitempty"`
@@ -572,6 +584,9 @@ type Tool struct {
 
 	// Parameters Tool parameters, for your function to be callable with Agent
 	Parameters *[]StoreAgentToolParameter `json:"parameters,omitempty"`
+
+	// StoreId Create from a store registered tool
+	StoreId *string `json:"store_id,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
@@ -696,20 +711,20 @@ type UpdateUserRoleInWorkspaceJSONBody struct {
 	Role string `json:"role"`
 }
 
-// CreateOrUpdateEnvironmentJSONRequestBody defines body for CreateOrUpdateEnvironment for application/json ContentType.
-type CreateOrUpdateEnvironmentJSONRequestBody = Environment
+// PutEnvironmentJSONRequestBody defines body for PutEnvironment for application/json ContentType.
+type PutEnvironmentJSONRequestBody = Environment
 
-// CreateOrUpdateModelDeploymentJSONRequestBody defines body for CreateOrUpdateModelDeployment for application/json ContentType.
-type CreateOrUpdateModelDeploymentJSONRequestBody = ModelDeployment
+// PutModelDeploymentJSONRequestBody defines body for PutModelDeployment for application/json ContentType.
+type PutModelDeploymentJSONRequestBody = ModelDeployment
 
-// CreateOrUpdatePolicyJSONRequestBody defines body for CreateOrUpdatePolicy for application/json ContentType.
-type CreateOrUpdatePolicyJSONRequestBody = Policy
+// PutPolicyJSONRequestBody defines body for PutPolicy for application/json ContentType.
+type PutPolicyJSONRequestBody = Policy
 
-// CreateOrUpdateToolJSONRequestBody defines body for CreateOrUpdateTool for application/json ContentType.
-type CreateOrUpdateToolJSONRequestBody = Tool
+// PutToolJSONRequestBody defines body for PutTool for application/json ContentType.
+type PutToolJSONRequestBody = Tool
 
-// CreateOrUpdateToolDeploymentJSONRequestBody defines body for CreateOrUpdateToolDeployment for application/json ContentType.
-type CreateOrUpdateToolDeploymentJSONRequestBody = ToolDeployment
+// PutToolDeploymentJSONRequestBody defines body for PutToolDeployment for application/json ContentType.
+type PutToolDeploymentJSONRequestBody = ToolDeployment
 
 // CreateWorspaceJSONRequestBody defines body for CreateWorspace for application/json ContentType.
 type CreateWorspaceJSONRequestBody = Workspace
@@ -814,10 +829,10 @@ type ClientInterface interface {
 	// GetEnvironment request
 	GetEnvironment(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdateEnvironmentWithBody request with any body
-	CreateOrUpdateEnvironmentWithBody(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutEnvironmentWithBody request with any body
+	PutEnvironmentWithBody(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CreateOrUpdateEnvironment(ctx context.Context, environmentName string, body CreateOrUpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PutEnvironment(ctx context.Context, environmentName string, body PutEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetEnvironmentMetrics request
 	GetEnvironmentMetrics(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -837,8 +852,8 @@ type ClientInterface interface {
 	// GetModelProvider request
 	GetModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdateModelProvider request
-	CreateOrUpdateModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutModelProvider request
+	PutModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModels request
 	ListModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -849,8 +864,8 @@ type ClientInterface interface {
 	// GetModel request
 	GetModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdateModel request
-	CreateOrUpdateModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutModel request
+	PutModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModelDeployments request
 	ListModelDeployments(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -861,10 +876,10 @@ type ClientInterface interface {
 	// GetModelDeployment request
 	GetModelDeployment(ctx context.Context, modelName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdateModelDeploymentWithBody request with any body
-	CreateOrUpdateModelDeploymentWithBody(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutModelDeploymentWithBody request with any body
+	PutModelDeploymentWithBody(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CreateOrUpdateModelDeployment(ctx context.Context, modelName string, environmentName string, body CreateOrUpdateModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PutModelDeployment(ctx context.Context, modelName string, environmentName string, body PutModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetModelDeploymentLogs request
 	GetModelDeploymentLogs(ctx context.Context, modelName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -887,10 +902,10 @@ type ClientInterface interface {
 	// GetPolicy request
 	GetPolicy(ctx context.Context, policyName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdatePolicyWithBody request with any body
-	CreateOrUpdatePolicyWithBody(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutPolicyWithBody request with any body
+	PutPolicyWithBody(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CreateOrUpdatePolicy(ctx context.Context, policyName string, body CreateOrUpdatePolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PutPolicy(ctx context.Context, policyName string, body PutPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListAllPendingInvitations request
 	ListAllPendingInvitations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -919,10 +934,10 @@ type ClientInterface interface {
 	// GetTool request
 	GetTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdateToolWithBody request with any body
-	CreateOrUpdateToolWithBody(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutToolWithBody request with any body
+	PutToolWithBody(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CreateOrUpdateTool(ctx context.Context, toolName string, body CreateOrUpdateToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PutTool(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListToolDeployments request
 	ListToolDeployments(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -933,10 +948,10 @@ type ClientInterface interface {
 	// GetToolDeployment request
 	GetToolDeployment(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateOrUpdateToolDeploymentWithBody request with any body
-	CreateOrUpdateToolDeploymentWithBody(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutToolDeploymentWithBody request with any body
+	PutToolDeploymentWithBody(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	CreateOrUpdateToolDeployment(ctx context.Context, toolName string, environmentName string, body CreateOrUpdateToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PutToolDeployment(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListWorkspaces request
 	ListWorkspaces(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1022,8 +1037,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetEnvironment
 	reg.CliCommand(ctx, "GetEnvironment", c.GetEnvironment)
 
-	// Register CLI commands for CreateOrUpdateEnvironment
-	reg.CliCommand(ctx, "CreateOrUpdateEnvironment", c.CreateOrUpdateEnvironment)
+	// Register CLI commands for PutEnvironment
+	reg.CliCommand(ctx, "PutEnvironment", c.PutEnvironment)
 
 	// Register CLI commands for GetEnvironmentMetrics
 	reg.CliCommand(ctx, "GetEnvironmentMetrics", c.GetEnvironmentMetrics)
@@ -1043,8 +1058,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetModelProvider
 	reg.CliCommand(ctx, "GetModelProvider", c.GetModelProvider)
 
-	// Register CLI commands for CreateOrUpdateModelProvider
-	reg.CliCommand(ctx, "CreateOrUpdateModelProvider", c.CreateOrUpdateModelProvider)
+	// Register CLI commands for PutModelProvider
+	reg.CliCommand(ctx, "PutModelProvider", c.PutModelProvider)
 
 	// Register CLI commands for ListModels
 	reg.CliCommand(ctx, "ListModels", c.ListModels)
@@ -1055,8 +1070,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetModel
 	reg.CliCommand(ctx, "GetModel", c.GetModel)
 
-	// Register CLI commands for CreateOrUpdateModel
-	reg.CliCommand(ctx, "CreateOrUpdateModel", c.CreateOrUpdateModel)
+	// Register CLI commands for PutModel
+	reg.CliCommand(ctx, "PutModel", c.PutModel)
 
 	// Register CLI commands for ListModelDeployments
 	reg.CliCommand(ctx, "ListModelDeployments", c.ListModelDeployments)
@@ -1067,8 +1082,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetModelDeployment
 	reg.CliCommand(ctx, "GetModelDeployment", c.GetModelDeployment)
 
-	// Register CLI commands for CreateOrUpdateModelDeployment
-	reg.CliCommand(ctx, "CreateOrUpdateModelDeployment", c.CreateOrUpdateModelDeployment)
+	// Register CLI commands for PutModelDeployment
+	reg.CliCommand(ctx, "PutModelDeployment", c.PutModelDeployment)
 
 	// Register CLI commands for GetModelDeploymentLogs
 	reg.CliCommand(ctx, "GetModelDeploymentLogs", c.GetModelDeploymentLogs)
@@ -1091,8 +1106,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetPolicy
 	reg.CliCommand(ctx, "GetPolicy", c.GetPolicy)
 
-	// Register CLI commands for CreateOrUpdatePolicy
-	reg.CliCommand(ctx, "CreateOrUpdatePolicy", c.CreateOrUpdatePolicy)
+	// Register CLI commands for PutPolicy
+	reg.CliCommand(ctx, "PutPolicy", c.PutPolicy)
 
 	// Register CLI commands for ListAllPendingInvitations
 	reg.CliCommand(ctx, "ListAllPendingInvitations", c.ListAllPendingInvitations)
@@ -1121,8 +1136,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetTool
 	reg.CliCommand(ctx, "GetTool", c.GetTool)
 
-	// Register CLI commands for CreateOrUpdateTool
-	reg.CliCommand(ctx, "CreateOrUpdateTool", c.CreateOrUpdateTool)
+	// Register CLI commands for PutTool
+	reg.CliCommand(ctx, "PutTool", c.PutTool)
 
 	// Register CLI commands for ListToolDeployments
 	reg.CliCommand(ctx, "ListToolDeployments", c.ListToolDeployments)
@@ -1133,8 +1148,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetToolDeployment
 	reg.CliCommand(ctx, "GetToolDeployment", c.GetToolDeployment)
 
-	// Register CLI commands for CreateOrUpdateToolDeployment
-	reg.CliCommand(ctx, "CreateOrUpdateToolDeployment", c.CreateOrUpdateToolDeployment)
+	// Register CLI commands for PutToolDeployment
+	reg.CliCommand(ctx, "PutToolDeployment", c.PutToolDeployment)
 
 	// Register CLI commands for ListWorkspaces
 	reg.CliCommand(ctx, "ListWorkspaces", c.ListWorkspaces)
@@ -1231,8 +1246,8 @@ func (c *Client) GetEnvironment(ctx context.Context, environmentName string, req
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateEnvironmentWithBody(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateEnvironmentRequestWithBody(c.Server, environmentName, contentType, body)
+func (c *Client) PutEnvironmentWithBody(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutEnvironmentRequestWithBody(c.Server, environmentName, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1243,8 +1258,8 @@ func (c *Client) CreateOrUpdateEnvironmentWithBody(ctx context.Context, environm
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateEnvironment(ctx context.Context, environmentName string, body CreateOrUpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateEnvironmentRequest(c.Server, environmentName, body)
+func (c *Client) PutEnvironment(ctx context.Context, environmentName string, body PutEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutEnvironmentRequest(c.Server, environmentName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1327,8 +1342,8 @@ func (c *Client) GetModelProvider(ctx context.Context, providerId string, reqEdi
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateModelProviderRequest(c.Server, providerId)
+func (c *Client) PutModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelProviderRequest(c.Server, providerId)
 	if err != nil {
 		return nil, err
 	}
@@ -1375,8 +1390,8 @@ func (c *Client) GetModel(ctx context.Context, modelName string, reqEditors ...R
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateModelRequest(c.Server, modelName)
+func (c *Client) PutModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -1423,8 +1438,8 @@ func (c *Client) GetModelDeployment(ctx context.Context, modelName string, envir
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateModelDeploymentWithBody(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateModelDeploymentRequestWithBody(c.Server, modelName, environmentName, contentType, body)
+func (c *Client) PutModelDeploymentWithBody(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelDeploymentRequestWithBody(c.Server, modelName, environmentName, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1435,8 +1450,8 @@ func (c *Client) CreateOrUpdateModelDeploymentWithBody(ctx context.Context, mode
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateModelDeployment(ctx context.Context, modelName string, environmentName string, body CreateOrUpdateModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateModelDeploymentRequest(c.Server, modelName, environmentName, body)
+func (c *Client) PutModelDeployment(ctx context.Context, modelName string, environmentName string, body PutModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelDeploymentRequest(c.Server, modelName, environmentName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1531,8 +1546,8 @@ func (c *Client) GetPolicy(ctx context.Context, policyName string, reqEditors ..
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdatePolicyWithBody(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdatePolicyRequestWithBody(c.Server, policyName, contentType, body)
+func (c *Client) PutPolicyWithBody(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutPolicyRequestWithBody(c.Server, policyName, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1543,8 +1558,8 @@ func (c *Client) CreateOrUpdatePolicyWithBody(ctx context.Context, policyName st
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdatePolicy(ctx context.Context, policyName string, body CreateOrUpdatePolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdatePolicyRequest(c.Server, policyName, body)
+func (c *Client) PutPolicy(ctx context.Context, policyName string, body PutPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutPolicyRequest(c.Server, policyName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1663,8 +1678,8 @@ func (c *Client) GetTool(ctx context.Context, toolName string, reqEditors ...Req
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateToolWithBody(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateToolRequestWithBody(c.Server, toolName, contentType, body)
+func (c *Client) PutToolWithBody(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutToolRequestWithBody(c.Server, toolName, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1675,8 +1690,8 @@ func (c *Client) CreateOrUpdateToolWithBody(ctx context.Context, toolName string
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateTool(ctx context.Context, toolName string, body CreateOrUpdateToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateToolRequest(c.Server, toolName, body)
+func (c *Client) PutTool(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutToolRequest(c.Server, toolName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1723,8 +1738,8 @@ func (c *Client) GetToolDeployment(ctx context.Context, toolName string, environ
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateToolDeploymentWithBody(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateToolDeploymentRequestWithBody(c.Server, toolName, environmentName, contentType, body)
+func (c *Client) PutToolDeploymentWithBody(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutToolDeploymentRequestWithBody(c.Server, toolName, environmentName, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1735,8 +1750,8 @@ func (c *Client) CreateOrUpdateToolDeploymentWithBody(ctx context.Context, toolN
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateOrUpdateToolDeployment(ctx context.Context, toolName string, environmentName string, body CreateOrUpdateToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateOrUpdateToolDeploymentRequest(c.Server, toolName, environmentName, body)
+func (c *Client) PutToolDeployment(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutToolDeploymentRequest(c.Server, toolName, environmentName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2154,19 +2169,19 @@ func NewGetEnvironmentRequest(server string, environmentName string) (*http.Requ
 	return req, nil
 }
 
-// NewCreateOrUpdateEnvironmentRequest calls the generic CreateOrUpdateEnvironment builder with application/json body
-func NewCreateOrUpdateEnvironmentRequest(server string, environmentName string, body CreateOrUpdateEnvironmentJSONRequestBody) (*http.Request, error) {
+// NewPutEnvironmentRequest calls the generic PutEnvironment builder with application/json body
+func NewPutEnvironmentRequest(server string, environmentName string, body PutEnvironmentJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCreateOrUpdateEnvironmentRequestWithBody(server, environmentName, "application/json", bodyReader)
+	return NewPutEnvironmentRequestWithBody(server, environmentName, "application/json", bodyReader)
 }
 
-// NewCreateOrUpdateEnvironmentRequestWithBody generates requests for CreateOrUpdateEnvironment with any type of body
-func NewCreateOrUpdateEnvironmentRequestWithBody(server string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
+// NewPutEnvironmentRequestWithBody generates requests for PutEnvironment with any type of body
+func NewPutEnvironmentRequestWithBody(server string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2384,8 +2399,8 @@ func NewGetModelProviderRequest(server string, providerId string) (*http.Request
 	return req, nil
 }
 
-// NewCreateOrUpdateModelProviderRequest generates requests for CreateOrUpdateModelProvider
-func NewCreateOrUpdateModelProviderRequest(server string, providerId string) (*http.Request, error) {
+// NewPutModelProviderRequest generates requests for PutModelProvider
+func NewPutModelProviderRequest(server string, providerId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2513,8 +2528,8 @@ func NewGetModelRequest(server string, modelName string) (*http.Request, error) 
 	return req, nil
 }
 
-// NewCreateOrUpdateModelRequest generates requests for CreateOrUpdateModel
-func NewCreateOrUpdateModelRequest(server string, modelName string) (*http.Request, error) {
+// NewPutModelRequest generates requests for PutModel
+func NewPutModelRequest(server string, modelName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2663,19 +2678,19 @@ func NewGetModelDeploymentRequest(server string, modelName string, environmentNa
 	return req, nil
 }
 
-// NewCreateOrUpdateModelDeploymentRequest calls the generic CreateOrUpdateModelDeployment builder with application/json body
-func NewCreateOrUpdateModelDeploymentRequest(server string, modelName string, environmentName string, body CreateOrUpdateModelDeploymentJSONRequestBody) (*http.Request, error) {
+// NewPutModelDeploymentRequest calls the generic PutModelDeployment builder with application/json body
+func NewPutModelDeploymentRequest(server string, modelName string, environmentName string, body PutModelDeploymentJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCreateOrUpdateModelDeploymentRequestWithBody(server, modelName, environmentName, "application/json", bodyReader)
+	return NewPutModelDeploymentRequestWithBody(server, modelName, environmentName, "application/json", bodyReader)
 }
 
-// NewCreateOrUpdateModelDeploymentRequestWithBody generates requests for CreateOrUpdateModelDeployment with any type of body
-func NewCreateOrUpdateModelDeploymentRequestWithBody(server string, modelName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
+// NewPutModelDeploymentRequestWithBody generates requests for PutModelDeployment with any type of body
+func NewPutModelDeploymentRequestWithBody(server string, modelName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2962,19 +2977,19 @@ func NewGetPolicyRequest(server string, policyName string) (*http.Request, error
 	return req, nil
 }
 
-// NewCreateOrUpdatePolicyRequest calls the generic CreateOrUpdatePolicy builder with application/json body
-func NewCreateOrUpdatePolicyRequest(server string, policyName string, body CreateOrUpdatePolicyJSONRequestBody) (*http.Request, error) {
+// NewPutPolicyRequest calls the generic PutPolicy builder with application/json body
+func NewPutPolicyRequest(server string, policyName string, body PutPolicyJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCreateOrUpdatePolicyRequestWithBody(server, policyName, "application/json", bodyReader)
+	return NewPutPolicyRequestWithBody(server, policyName, "application/json", bodyReader)
 }
 
-// NewCreateOrUpdatePolicyRequestWithBody generates requests for CreateOrUpdatePolicy with any type of body
-func NewCreateOrUpdatePolicyRequestWithBody(server string, policyName string, contentType string, body io.Reader) (*http.Request, error) {
+// NewPutPolicyRequestWithBody generates requests for PutPolicy with any type of body
+func NewPutPolicyRequestWithBody(server string, policyName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3308,19 +3323,19 @@ func NewGetToolRequest(server string, toolName string) (*http.Request, error) {
 	return req, nil
 }
 
-// NewCreateOrUpdateToolRequest calls the generic CreateOrUpdateTool builder with application/json body
-func NewCreateOrUpdateToolRequest(server string, toolName string, body CreateOrUpdateToolJSONRequestBody) (*http.Request, error) {
+// NewPutToolRequest calls the generic PutTool builder with application/json body
+func NewPutToolRequest(server string, toolName string, body PutToolJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCreateOrUpdateToolRequestWithBody(server, toolName, "application/json", bodyReader)
+	return NewPutToolRequestWithBody(server, toolName, "application/json", bodyReader)
 }
 
-// NewCreateOrUpdateToolRequestWithBody generates requests for CreateOrUpdateTool with any type of body
-func NewCreateOrUpdateToolRequestWithBody(server string, toolName string, contentType string, body io.Reader) (*http.Request, error) {
+// NewPutToolRequestWithBody generates requests for PutTool with any type of body
+func NewPutToolRequestWithBody(server string, toolName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3471,19 +3486,19 @@ func NewGetToolDeploymentRequest(server string, toolName string, environmentName
 	return req, nil
 }
 
-// NewCreateOrUpdateToolDeploymentRequest calls the generic CreateOrUpdateToolDeployment builder with application/json body
-func NewCreateOrUpdateToolDeploymentRequest(server string, toolName string, environmentName string, body CreateOrUpdateToolDeploymentJSONRequestBody) (*http.Request, error) {
+// NewPutToolDeploymentRequest calls the generic PutToolDeployment builder with application/json body
+func NewPutToolDeploymentRequest(server string, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewCreateOrUpdateToolDeploymentRequestWithBody(server, toolName, environmentName, "application/json", bodyReader)
+	return NewPutToolDeploymentRequestWithBody(server, toolName, environmentName, "application/json", bodyReader)
 }
 
-// NewCreateOrUpdateToolDeploymentRequestWithBody generates requests for CreateOrUpdateToolDeployment with any type of body
-func NewCreateOrUpdateToolDeploymentRequestWithBody(server string, toolName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
+// NewPutToolDeploymentRequestWithBody generates requests for PutToolDeployment with any type of body
+func NewPutToolDeploymentRequestWithBody(server string, toolName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4356,10 +4371,10 @@ type ClientWithResponsesInterface interface {
 	// GetEnvironmentWithResponse request
 	GetEnvironmentWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentResponse, error)
 
-	// CreateOrUpdateEnvironmentWithBodyWithResponse request with any body
-	CreateOrUpdateEnvironmentWithBodyWithResponse(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateEnvironmentResponse, error)
+	// PutEnvironmentWithBodyWithResponse request with any body
+	PutEnvironmentWithBodyWithResponse(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutEnvironmentResponse, error)
 
-	CreateOrUpdateEnvironmentWithResponse(ctx context.Context, environmentName string, body CreateOrUpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateEnvironmentResponse, error)
+	PutEnvironmentWithResponse(ctx context.Context, environmentName string, body PutEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutEnvironmentResponse, error)
 
 	// GetEnvironmentMetricsWithResponse request
 	GetEnvironmentMetricsWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentMetricsResponse, error)
@@ -4379,8 +4394,8 @@ type ClientWithResponsesInterface interface {
 	// GetModelProviderWithResponse request
 	GetModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error)
 
-	// CreateOrUpdateModelProviderWithResponse request
-	CreateOrUpdateModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelProviderResponse, error)
+	// PutModelProviderWithResponse request
+	PutModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error)
 
 	// ListModelsWithResponse request
 	ListModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
@@ -4391,8 +4406,8 @@ type ClientWithResponsesInterface interface {
 	// GetModelWithResponse request
 	GetModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelResponse, error)
 
-	// CreateOrUpdateModelWithResponse request
-	CreateOrUpdateModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelResponse, error)
+	// PutModelWithResponse request
+	PutModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*PutModelResponse, error)
 
 	// ListModelDeploymentsWithResponse request
 	ListModelDeploymentsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ListModelDeploymentsResponse, error)
@@ -4403,10 +4418,10 @@ type ClientWithResponsesInterface interface {
 	// GetModelDeploymentWithResponse request
 	GetModelDeploymentWithResponse(ctx context.Context, modelName string, environmentName string, reqEditors ...RequestEditorFn) (*GetModelDeploymentResponse, error)
 
-	// CreateOrUpdateModelDeploymentWithBodyWithResponse request with any body
-	CreateOrUpdateModelDeploymentWithBodyWithResponse(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelDeploymentResponse, error)
+	// PutModelDeploymentWithBodyWithResponse request with any body
+	PutModelDeploymentWithBodyWithResponse(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutModelDeploymentResponse, error)
 
-	CreateOrUpdateModelDeploymentWithResponse(ctx context.Context, modelName string, environmentName string, body CreateOrUpdateModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelDeploymentResponse, error)
+	PutModelDeploymentWithResponse(ctx context.Context, modelName string, environmentName string, body PutModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutModelDeploymentResponse, error)
 
 	// GetModelDeploymentLogsWithResponse request
 	GetModelDeploymentLogsWithResponse(ctx context.Context, modelName string, environmentName string, reqEditors ...RequestEditorFn) (*GetModelDeploymentLogsResponse, error)
@@ -4429,10 +4444,10 @@ type ClientWithResponsesInterface interface {
 	// GetPolicyWithResponse request
 	GetPolicyWithResponse(ctx context.Context, policyName string, reqEditors ...RequestEditorFn) (*GetPolicyResponse, error)
 
-	// CreateOrUpdatePolicyWithBodyWithResponse request with any body
-	CreateOrUpdatePolicyWithBodyWithResponse(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdatePolicyResponse, error)
+	// PutPolicyWithBodyWithResponse request with any body
+	PutPolicyWithBodyWithResponse(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutPolicyResponse, error)
 
-	CreateOrUpdatePolicyWithResponse(ctx context.Context, policyName string, body CreateOrUpdatePolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdatePolicyResponse, error)
+	PutPolicyWithResponse(ctx context.Context, policyName string, body PutPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*PutPolicyResponse, error)
 
 	// ListAllPendingInvitationsWithResponse request
 	ListAllPendingInvitationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAllPendingInvitationsResponse, error)
@@ -4461,10 +4476,10 @@ type ClientWithResponsesInterface interface {
 	// GetToolWithResponse request
 	GetToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*GetToolResponse, error)
 
-	// CreateOrUpdateToolWithBodyWithResponse request with any body
-	CreateOrUpdateToolWithBodyWithResponse(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolResponse, error)
+	// PutToolWithBodyWithResponse request with any body
+	PutToolWithBodyWithResponse(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolResponse, error)
 
-	CreateOrUpdateToolWithResponse(ctx context.Context, toolName string, body CreateOrUpdateToolJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolResponse, error)
+	PutToolWithResponse(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolResponse, error)
 
 	// ListToolDeploymentsWithResponse request
 	ListToolDeploymentsWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*ListToolDeploymentsResponse, error)
@@ -4475,10 +4490,10 @@ type ClientWithResponsesInterface interface {
 	// GetToolDeploymentWithResponse request
 	GetToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*GetToolDeploymentResponse, error)
 
-	// CreateOrUpdateToolDeploymentWithBodyWithResponse request with any body
-	CreateOrUpdateToolDeploymentWithBodyWithResponse(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolDeploymentResponse, error)
+	// PutToolDeploymentWithBodyWithResponse request with any body
+	PutToolDeploymentWithBodyWithResponse(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error)
 
-	CreateOrUpdateToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, body CreateOrUpdateToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolDeploymentResponse, error)
+	PutToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error)
 
 	// ListWorkspacesWithResponse request
 	ListWorkspacesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListWorkspacesResponse, error)
@@ -4618,14 +4633,14 @@ func (r GetEnvironmentResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdateEnvironmentResponse struct {
+type PutEnvironmentResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Environment
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdateEnvironmentResponse) Status() string {
+func (r PutEnvironmentResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4633,7 +4648,7 @@ func (r CreateOrUpdateEnvironmentResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdateEnvironmentResponse) StatusCode() int {
+func (r PutEnvironmentResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -4772,14 +4787,14 @@ func (r GetModelProviderResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdateModelProviderResponse struct {
+type PutModelProviderResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ModelProvider
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdateModelProviderResponse) Status() string {
+func (r PutModelProviderResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4787,7 +4802,7 @@ func (r CreateOrUpdateModelProviderResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdateModelProviderResponse) StatusCode() int {
+func (r PutModelProviderResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -4860,14 +4875,14 @@ func (r GetModelResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdateModelResponse struct {
+type PutModelResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Model
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdateModelResponse) Status() string {
+func (r PutModelResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4875,7 +4890,7 @@ func (r CreateOrUpdateModelResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdateModelResponse) StatusCode() int {
+func (r PutModelResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -4948,14 +4963,14 @@ func (r GetModelDeploymentResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdateModelDeploymentResponse struct {
+type PutModelDeploymentResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ModelDeployment
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdateModelDeploymentResponse) Status() string {
+func (r PutModelDeploymentResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4963,7 +4978,7 @@ func (r CreateOrUpdateModelDeploymentResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdateModelDeploymentResponse) StatusCode() int {
+func (r PutModelDeploymentResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5124,14 +5139,14 @@ func (r GetPolicyResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdatePolicyResponse struct {
+type PutPolicyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Policy
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdatePolicyResponse) Status() string {
+func (r PutPolicyResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5139,7 +5154,7 @@ func (r CreateOrUpdatePolicyResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdatePolicyResponse) StatusCode() int {
+func (r PutPolicyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5344,14 +5359,14 @@ func (r GetToolResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdateToolResponse struct {
+type PutToolResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Tool
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdateToolResponse) Status() string {
+func (r PutToolResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5359,7 +5374,7 @@ func (r CreateOrUpdateToolResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdateToolResponse) StatusCode() int {
+func (r PutToolResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5432,14 +5447,14 @@ func (r GetToolDeploymentResponse) StatusCode() int {
 	return 0
 }
 
-type CreateOrUpdateToolDeploymentResponse struct {
+type PutToolDeploymentResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ToolDeployment
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateOrUpdateToolDeploymentResponse) Status() string {
+func (r PutToolDeploymentResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5447,7 +5462,7 @@ func (r CreateOrUpdateToolDeploymentResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateOrUpdateToolDeploymentResponse) StatusCode() int {
+func (r PutToolDeploymentResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5960,21 +5975,21 @@ func (c *ClientWithResponses) GetEnvironmentWithResponse(ctx context.Context, en
 	return ParseGetEnvironmentResponse(rsp)
 }
 
-// CreateOrUpdateEnvironmentWithBodyWithResponse request with arbitrary body returning *CreateOrUpdateEnvironmentResponse
-func (c *ClientWithResponses) CreateOrUpdateEnvironmentWithBodyWithResponse(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateEnvironmentResponse, error) {
-	rsp, err := c.CreateOrUpdateEnvironmentWithBody(ctx, environmentName, contentType, body, reqEditors...)
+// PutEnvironmentWithBodyWithResponse request with arbitrary body returning *PutEnvironmentResponse
+func (c *ClientWithResponses) PutEnvironmentWithBodyWithResponse(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutEnvironmentResponse, error) {
+	rsp, err := c.PutEnvironmentWithBody(ctx, environmentName, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateEnvironmentResponse(rsp)
+	return ParsePutEnvironmentResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateOrUpdateEnvironmentWithResponse(ctx context.Context, environmentName string, body CreateOrUpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateEnvironmentResponse, error) {
-	rsp, err := c.CreateOrUpdateEnvironment(ctx, environmentName, body, reqEditors...)
+func (c *ClientWithResponses) PutEnvironmentWithResponse(ctx context.Context, environmentName string, body PutEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutEnvironmentResponse, error) {
+	rsp, err := c.PutEnvironment(ctx, environmentName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateEnvironmentResponse(rsp)
+	return ParsePutEnvironmentResponse(rsp)
 }
 
 // GetEnvironmentMetricsWithResponse request returning *GetEnvironmentMetricsResponse
@@ -6031,13 +6046,13 @@ func (c *ClientWithResponses) GetModelProviderWithResponse(ctx context.Context, 
 	return ParseGetModelProviderResponse(rsp)
 }
 
-// CreateOrUpdateModelProviderWithResponse request returning *CreateOrUpdateModelProviderResponse
-func (c *ClientWithResponses) CreateOrUpdateModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelProviderResponse, error) {
-	rsp, err := c.CreateOrUpdateModelProvider(ctx, providerId, reqEditors...)
+// PutModelProviderWithResponse request returning *PutModelProviderResponse
+func (c *ClientWithResponses) PutModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error) {
+	rsp, err := c.PutModelProvider(ctx, providerId, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateModelProviderResponse(rsp)
+	return ParsePutModelProviderResponse(rsp)
 }
 
 // ListModelsWithResponse request returning *ListModelsResponse
@@ -6067,13 +6082,13 @@ func (c *ClientWithResponses) GetModelWithResponse(ctx context.Context, modelNam
 	return ParseGetModelResponse(rsp)
 }
 
-// CreateOrUpdateModelWithResponse request returning *CreateOrUpdateModelResponse
-func (c *ClientWithResponses) CreateOrUpdateModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelResponse, error) {
-	rsp, err := c.CreateOrUpdateModel(ctx, modelName, reqEditors...)
+// PutModelWithResponse request returning *PutModelResponse
+func (c *ClientWithResponses) PutModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*PutModelResponse, error) {
+	rsp, err := c.PutModel(ctx, modelName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateModelResponse(rsp)
+	return ParsePutModelResponse(rsp)
 }
 
 // ListModelDeploymentsWithResponse request returning *ListModelDeploymentsResponse
@@ -6103,21 +6118,21 @@ func (c *ClientWithResponses) GetModelDeploymentWithResponse(ctx context.Context
 	return ParseGetModelDeploymentResponse(rsp)
 }
 
-// CreateOrUpdateModelDeploymentWithBodyWithResponse request with arbitrary body returning *CreateOrUpdateModelDeploymentResponse
-func (c *ClientWithResponses) CreateOrUpdateModelDeploymentWithBodyWithResponse(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelDeploymentResponse, error) {
-	rsp, err := c.CreateOrUpdateModelDeploymentWithBody(ctx, modelName, environmentName, contentType, body, reqEditors...)
+// PutModelDeploymentWithBodyWithResponse request with arbitrary body returning *PutModelDeploymentResponse
+func (c *ClientWithResponses) PutModelDeploymentWithBodyWithResponse(ctx context.Context, modelName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutModelDeploymentResponse, error) {
+	rsp, err := c.PutModelDeploymentWithBody(ctx, modelName, environmentName, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateModelDeploymentResponse(rsp)
+	return ParsePutModelDeploymentResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateOrUpdateModelDeploymentWithResponse(ctx context.Context, modelName string, environmentName string, body CreateOrUpdateModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateModelDeploymentResponse, error) {
-	rsp, err := c.CreateOrUpdateModelDeployment(ctx, modelName, environmentName, body, reqEditors...)
+func (c *ClientWithResponses) PutModelDeploymentWithResponse(ctx context.Context, modelName string, environmentName string, body PutModelDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutModelDeploymentResponse, error) {
+	rsp, err := c.PutModelDeployment(ctx, modelName, environmentName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateModelDeploymentResponse(rsp)
+	return ParsePutModelDeploymentResponse(rsp)
 }
 
 // GetModelDeploymentLogsWithResponse request returning *GetModelDeploymentLogsResponse
@@ -6183,21 +6198,21 @@ func (c *ClientWithResponses) GetPolicyWithResponse(ctx context.Context, policyN
 	return ParseGetPolicyResponse(rsp)
 }
 
-// CreateOrUpdatePolicyWithBodyWithResponse request with arbitrary body returning *CreateOrUpdatePolicyResponse
-func (c *ClientWithResponses) CreateOrUpdatePolicyWithBodyWithResponse(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdatePolicyResponse, error) {
-	rsp, err := c.CreateOrUpdatePolicyWithBody(ctx, policyName, contentType, body, reqEditors...)
+// PutPolicyWithBodyWithResponse request with arbitrary body returning *PutPolicyResponse
+func (c *ClientWithResponses) PutPolicyWithBodyWithResponse(ctx context.Context, policyName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutPolicyResponse, error) {
+	rsp, err := c.PutPolicyWithBody(ctx, policyName, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdatePolicyResponse(rsp)
+	return ParsePutPolicyResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateOrUpdatePolicyWithResponse(ctx context.Context, policyName string, body CreateOrUpdatePolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdatePolicyResponse, error) {
-	rsp, err := c.CreateOrUpdatePolicy(ctx, policyName, body, reqEditors...)
+func (c *ClientWithResponses) PutPolicyWithResponse(ctx context.Context, policyName string, body PutPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*PutPolicyResponse, error) {
+	rsp, err := c.PutPolicy(ctx, policyName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdatePolicyResponse(rsp)
+	return ParsePutPolicyResponse(rsp)
 }
 
 // ListAllPendingInvitationsWithResponse request returning *ListAllPendingInvitationsResponse
@@ -6281,21 +6296,21 @@ func (c *ClientWithResponses) GetToolWithResponse(ctx context.Context, toolName 
 	return ParseGetToolResponse(rsp)
 }
 
-// CreateOrUpdateToolWithBodyWithResponse request with arbitrary body returning *CreateOrUpdateToolResponse
-func (c *ClientWithResponses) CreateOrUpdateToolWithBodyWithResponse(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolResponse, error) {
-	rsp, err := c.CreateOrUpdateToolWithBody(ctx, toolName, contentType, body, reqEditors...)
+// PutToolWithBodyWithResponse request with arbitrary body returning *PutToolResponse
+func (c *ClientWithResponses) PutToolWithBodyWithResponse(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolResponse, error) {
+	rsp, err := c.PutToolWithBody(ctx, toolName, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateToolResponse(rsp)
+	return ParsePutToolResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateOrUpdateToolWithResponse(ctx context.Context, toolName string, body CreateOrUpdateToolJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolResponse, error) {
-	rsp, err := c.CreateOrUpdateTool(ctx, toolName, body, reqEditors...)
+func (c *ClientWithResponses) PutToolWithResponse(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolResponse, error) {
+	rsp, err := c.PutTool(ctx, toolName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateToolResponse(rsp)
+	return ParsePutToolResponse(rsp)
 }
 
 // ListToolDeploymentsWithResponse request returning *ListToolDeploymentsResponse
@@ -6325,21 +6340,21 @@ func (c *ClientWithResponses) GetToolDeploymentWithResponse(ctx context.Context,
 	return ParseGetToolDeploymentResponse(rsp)
 }
 
-// CreateOrUpdateToolDeploymentWithBodyWithResponse request with arbitrary body returning *CreateOrUpdateToolDeploymentResponse
-func (c *ClientWithResponses) CreateOrUpdateToolDeploymentWithBodyWithResponse(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolDeploymentResponse, error) {
-	rsp, err := c.CreateOrUpdateToolDeploymentWithBody(ctx, toolName, environmentName, contentType, body, reqEditors...)
+// PutToolDeploymentWithBodyWithResponse request with arbitrary body returning *PutToolDeploymentResponse
+func (c *ClientWithResponses) PutToolDeploymentWithBodyWithResponse(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error) {
+	rsp, err := c.PutToolDeploymentWithBody(ctx, toolName, environmentName, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateToolDeploymentResponse(rsp)
+	return ParsePutToolDeploymentResponse(rsp)
 }
 
-func (c *ClientWithResponses) CreateOrUpdateToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, body CreateOrUpdateToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateToolDeploymentResponse, error) {
-	rsp, err := c.CreateOrUpdateToolDeployment(ctx, toolName, environmentName, body, reqEditors...)
+func (c *ClientWithResponses) PutToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error) {
+	rsp, err := c.PutToolDeployment(ctx, toolName, environmentName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateOrUpdateToolDeploymentResponse(rsp)
+	return ParsePutToolDeploymentResponse(rsp)
 }
 
 // ListWorkspacesWithResponse request returning *ListWorkspacesResponse
@@ -6647,15 +6662,15 @@ func ParseGetEnvironmentResponse(rsp *http.Response) (*GetEnvironmentResponse, e
 	return response, nil
 }
 
-// ParseCreateOrUpdateEnvironmentResponse parses an HTTP response from a CreateOrUpdateEnvironmentWithResponse call
-func ParseCreateOrUpdateEnvironmentResponse(rsp *http.Response) (*CreateOrUpdateEnvironmentResponse, error) {
+// ParsePutEnvironmentResponse parses an HTTP response from a PutEnvironmentWithResponse call
+func ParsePutEnvironmentResponse(rsp *http.Response) (*PutEnvironmentResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdateEnvironmentResponse{
+	response := &PutEnvironmentResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6829,15 +6844,15 @@ func ParseGetModelProviderResponse(rsp *http.Response) (*GetModelProviderRespons
 	return response, nil
 }
 
-// ParseCreateOrUpdateModelProviderResponse parses an HTTP response from a CreateOrUpdateModelProviderWithResponse call
-func ParseCreateOrUpdateModelProviderResponse(rsp *http.Response) (*CreateOrUpdateModelProviderResponse, error) {
+// ParsePutModelProviderResponse parses an HTTP response from a PutModelProviderWithResponse call
+func ParsePutModelProviderResponse(rsp *http.Response) (*PutModelProviderResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdateModelProviderResponse{
+	response := &PutModelProviderResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6933,15 +6948,15 @@ func ParseGetModelResponse(rsp *http.Response) (*GetModelResponse, error) {
 	return response, nil
 }
 
-// ParseCreateOrUpdateModelResponse parses an HTTP response from a CreateOrUpdateModelWithResponse call
-func ParseCreateOrUpdateModelResponse(rsp *http.Response) (*CreateOrUpdateModelResponse, error) {
+// ParsePutModelResponse parses an HTTP response from a PutModelWithResponse call
+func ParsePutModelResponse(rsp *http.Response) (*PutModelResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdateModelResponse{
+	response := &PutModelResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7037,15 +7052,15 @@ func ParseGetModelDeploymentResponse(rsp *http.Response) (*GetModelDeploymentRes
 	return response, nil
 }
 
-// ParseCreateOrUpdateModelDeploymentResponse parses an HTTP response from a CreateOrUpdateModelDeploymentWithResponse call
-func ParseCreateOrUpdateModelDeploymentResponse(rsp *http.Response) (*CreateOrUpdateModelDeploymentResponse, error) {
+// ParsePutModelDeploymentResponse parses an HTTP response from a PutModelDeploymentWithResponse call
+func ParsePutModelDeploymentResponse(rsp *http.Response) (*PutModelDeploymentResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdateModelDeploymentResponse{
+	response := &PutModelDeploymentResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7245,15 +7260,15 @@ func ParseGetPolicyResponse(rsp *http.Response) (*GetPolicyResponse, error) {
 	return response, nil
 }
 
-// ParseCreateOrUpdatePolicyResponse parses an HTTP response from a CreateOrUpdatePolicyWithResponse call
-func ParseCreateOrUpdatePolicyResponse(rsp *http.Response) (*CreateOrUpdatePolicyResponse, error) {
+// ParsePutPolicyResponse parses an HTTP response from a PutPolicyWithResponse call
+func ParsePutPolicyResponse(rsp *http.Response) (*PutPolicyResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdatePolicyResponse{
+	response := &PutPolicyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7505,15 +7520,15 @@ func ParseGetToolResponse(rsp *http.Response) (*GetToolResponse, error) {
 	return response, nil
 }
 
-// ParseCreateOrUpdateToolResponse parses an HTTP response from a CreateOrUpdateToolWithResponse call
-func ParseCreateOrUpdateToolResponse(rsp *http.Response) (*CreateOrUpdateToolResponse, error) {
+// ParsePutToolResponse parses an HTTP response from a PutToolWithResponse call
+func ParsePutToolResponse(rsp *http.Response) (*PutToolResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdateToolResponse{
+	response := &PutToolResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7609,15 +7624,15 @@ func ParseGetToolDeploymentResponse(rsp *http.Response) (*GetToolDeploymentRespo
 	return response, nil
 }
 
-// ParseCreateOrUpdateToolDeploymentResponse parses an HTTP response from a CreateOrUpdateToolDeploymentWithResponse call
-func ParseCreateOrUpdateToolDeploymentResponse(rsp *http.Response) (*CreateOrUpdateToolDeploymentResponse, error) {
+// ParsePutToolDeploymentResponse parses an HTTP response from a PutToolDeploymentWithResponse call
+func ParsePutToolDeploymentResponse(rsp *http.Response) (*PutToolDeploymentResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateOrUpdateToolDeploymentResponse{
+	response := &PutToolDeploymentResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -8175,89 +8190,90 @@ func ParseUpdateUserRoleInWorkspaceResponse(rsp *http.Response) (*UpdateUserRole
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

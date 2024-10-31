@@ -1,7 +1,6 @@
 package operations
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -42,21 +41,9 @@ func (r *Operations) ApiKeyLogin(workspace string) {
 
 	// Create credentials struct and marshal to JSON
 	credentials := sdk.Credentials{
-		APIKey:    apiKey,
-		Workspace: workspace,
+		APIKey: apiKey,
 	}
 
-	jsonData, err := json.MarshalIndent(credentials, "", "  ")
-	if err != nil {
-		fmt.Printf("Error marshaling credentials: %v\n", err)
-		return
-	}
-
-	// Write JSON to credentials file
-	if err := os.WriteFile(credentialsFile, jsonData, 0600); err != nil {
-		fmt.Printf("Error writing credentials file: %v\n", err)
-		return
-	}
-
+	sdk.SaveCredentials(workspace, credentials)
 	fmt.Println("Successfully stored API key")
 }

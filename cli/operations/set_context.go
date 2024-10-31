@@ -8,17 +8,17 @@ import (
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
-func (r *Operations) LogoutCmd() *cobra.Command {
+func (r *Operations) SetContextCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "logout [workspace]",
+		Use:   "set-context [workspace]",
 		Args:  cobra.MaximumNArgs(1),
-		Short: "Logout from Beamlit",
+		Short: "Set the current workspace",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				fmt.Println("Error: Workspace is required")
 				os.Exit(1)
 			} else {
-				sdk.ClearCredentials(args[0])
+				sdk.SetCurrentContext(args[0])
 			}
 		},
 	}
