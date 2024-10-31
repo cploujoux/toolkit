@@ -41,12 +41,21 @@ func saveConfig(config Config) {
 	}
 }
 
-func CurrentContext() string {
+func ListWorkspaces() []string {
+	config := loadConfig()
+	workspaces := []string{}
+	for _, workspace := range config.Workspaces {
+		workspaces = append(workspaces, workspace.Name)
+	}
+	return workspaces
+}
+
+func CurrentWorkspace() string {
 	config := loadConfig()
 	return config.CurrentContext
 }
 
-func SetCurrentContext(workspaceName string) {
+func SetCurrentWorkspace(workspaceName string) {
 	config := loadConfig()
 	config.CurrentContext = workspaceName
 	saveConfig(config)

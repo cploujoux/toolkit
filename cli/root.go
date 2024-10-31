@@ -28,16 +28,17 @@ var rootCmd = &cobra.Command{
 
 		provider := getAuthProvider(workspace)
 		var err error
-		client, err = sdk.NewClientWithResponses(
+		c, err := sdk.NewClientWithResponses(
 			BASE_URL,
 			sdk.WithRequestEditorFn(provider.Intercept),
 		)
 		if err != nil {
 			return err
 		}
+		client = c
 
 		ctx := context.Background()
-		client.RegisterCliCommands(reg, ctx)
+		c.RegisterCliCommands(reg, ctx)
 		return nil
 	},
 }
@@ -49,11 +50,13 @@ func Execute() error {
 
 	rootCmd.AddCommand(reg.SetWorkspaceCmd())
 	rootCmd.AddCommand(reg.GetWorkspaceCmd())
+	rootCmd.AddCommand(reg.ListWorkspacesCmd())
 	rootCmd.AddCommand(reg.LoginCmd())
 	rootCmd.AddCommand(reg.LogoutCmd())
 	rootCmd.AddCommand(reg.GetCmd())
 	rootCmd.AddCommand(reg.ApplyCmd())
 	rootCmd.AddCommand(reg.DeleteCmd())
+	rootCmd.AddCommand(reg.InferenceCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: yaml")

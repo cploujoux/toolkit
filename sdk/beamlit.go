@@ -837,6 +837,7 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
+
 	// ListEnvironments request
 	ListEnvironments(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 

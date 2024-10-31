@@ -6,7 +6,7 @@ import (
 
 func getAuthProvider(workspaceName string) sdk.AuthProvider {
 	if workspaceName == "" {
-		workspaceName = sdk.CurrentContext()
+		workspaceName = sdk.CurrentWorkspace()
 	}
 	credentials := sdk.LoadCredentials(workspaceName)
 	var provider sdk.AuthProvider
