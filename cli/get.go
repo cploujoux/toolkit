@@ -18,32 +18,28 @@ func (r *Operations) GetCmd() *cobra.Command {
 		Use:   "get",
 		Short: "Get a resource",
 	}
-	var outputFormat string
-	cmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: yaml")
 	for _, resource := range resources {
 		subcmd := &cobra.Command{
 			Use:     resource.Short,
 			Aliases: []string{resource.Singular, resource.Plural},
 			Short:   fmt.Sprintf("Get a %s resource", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
-				outputFormat := cmd.Flag("output").Value.String()
 				if len(args) == 0 {
-					resource.ListFn(outputFormat)
+					resource.ListFn()
 					return
 				}
 				if len(args) == 1 {
-					resource.GetFn(args[0], outputFormat)
+					resource.GetFn(args[0])
 				}
 			},
 		}
-		subcmd.Flags().StringP("output", "o", "", "Output format. One of: yaml")
 		cmd.AddCommand(subcmd)
 	}
 
 	return cmd
 }
 
-func (resource Resource) GetFn(name string, outputFormat string) {
+func (resource Resource) GetFn(name string) {
 	ctx := context.Background()
 	// Use reflect to call the function
 	funcValue := reflect.ValueOf(resource.Get)
@@ -90,7 +86,7 @@ func (resource Resource) GetFn(name string, outputFormat string) {
 	output(resource, []interface{}{res}, outputFormat)
 }
 
-func (resource Resource) ListFn(outputFormat string) {
+func (resource Resource) ListFn() {
 	ctx := context.Background()
 	// Use reflect to call the function
 	funcValue := reflect.ValueOf(resource.List)

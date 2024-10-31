@@ -4,8 +4,10 @@ import (
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
-func getAuthProvider() sdk.AuthProvider {
-	workspaceName := sdk.CurrentContext()
+func getAuthProvider(workspaceName string) sdk.AuthProvider {
+	if workspaceName == "" {
+		workspaceName = sdk.CurrentContext()
+	}
 	credentials := sdk.LoadCredentials(workspaceName)
 	var provider sdk.AuthProvider
 	if credentials.AccessToken != "" {

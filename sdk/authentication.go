@@ -19,10 +19,9 @@ func (s *ApiKeyAuth) Intercept(ctx context.Context, req *http.Request) error {
 }
 
 func (s *ApiKeyAuth) SetWorkspace(workspace string) {
-	if workspace == "" {
-		return
+	if workspace != "" {
+		s.workspaceName = workspace
 	}
-	s.workspaceName = workspace
 }
 
 func NewBearerTokenProvider(token string, workspaceName string) *BearerToken {
@@ -36,10 +35,9 @@ func (s *BearerToken) Intercept(ctx context.Context, req *http.Request) error {
 }
 
 func (s *BearerToken) SetWorkspace(workspace string) {
-	if workspace == "" {
-		return
+	if workspace != "" {
+		s.workspaceName = workspace
 	}
-	s.workspaceName = workspace
 }
 
 func NewPublicProvider() *PublicProvider {
