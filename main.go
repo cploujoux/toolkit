@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/tmp-moon/toolkit/cli/cli"
+	"github.com/tmp-moon/toolkit/cli"
 )
 
 func main() {

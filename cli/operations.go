@@ -1,4 +1,4 @@
-package operations
+package cli
 
 import (
 	"context"
@@ -101,8 +101,8 @@ func (r *Operations) CliCommand(ctx context.Context, operationId string, fn inte
 
 func (r *Operations) MainCommand() []*cobra.Command {
 	return []*cobra.Command{
-		r.SetContextCmd(),
-		r.GetContextCmd(),
+		r.SetWorkspaceCmd(),
+		r.GetWorkspaceCmd(),
 		r.LoginCmd(),
 		r.LogoutCmd(),
 		r.GetCmd(),

@@ -21,8 +21,8 @@ build:
 	cp ./dist/beamlit_darwin_arm64/beamlit ./beamlit
 
 install:
-	go build -o $(shell go env GOPATH)/bin/beamlit cli/main.go
+	go build -o $(shell go env GOPATH)/bin/beamlit main.go
 	ln -s $(shell go exnv GOPATH)/bin/beamlit $(shell go env GOPATH)/bin/bl
 
 dev:
-	alias bl="go run cli/main.go"
+	alias bl="go run main.go"

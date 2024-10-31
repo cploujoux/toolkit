@@ -31,19 +31,19 @@ type ApiKey struct {
 	// ApiKey Api key
 	ApiKey *string `json:"api_key,omitempty"`
 
-	// Comment Comment
+	// Comment Comment for the API key
 	Comment *string `json:"comment,omitempty"`
 
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
 
-	// ExpiresIn Expires in
+	// ExpiresIn Duration until expiration (in seconds)
 	ExpiresIn *string `json:"expires_in,omitempty"`
 
-	// Sub User sub
+	// Sub User subject identifier
 	Sub *string `json:"sub,omitempty"`
 
-	// SubType Sub type
+	// SubType Subject type
 	SubType *string `json:"sub_type,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
@@ -53,7 +53,7 @@ type ApiKey struct {
 // ArrayMetric Array of metrics
 type ArrayMetric = []Metric
 
-// DeploymentPolicies Policies to apply to the model deployment
+// DeploymentPolicies defines model for DeploymentPolicies.
 type DeploymentPolicies = []string
 
 // DeploymentServerlessConfig Configuration for the serverless model deployment
@@ -100,7 +100,7 @@ type Environment struct {
 	// Name The name of the environment
 	Name *string `json:"name,omitempty"`
 
-	// Policies The policies to apply to the environment
+	// Policies The policies attached to the environment
 	Policies *[]interface{} `json:"policies,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
@@ -116,21 +116,42 @@ type EnvironmentMetrics struct {
 	InferencePerSecondGlobal *ArrayMetric `json:"inference_per_second_global,omitempty"`
 }
 
-// Flavor Flavor for a policy or a cluster
+// Flavor A type of hardware available for deployments
 type Flavor struct {
-	// Name Flavor name
+	// Name Flavor name (e.g. t4)
 	Name *string `json:"name,omitempty"`
 
-	// Type Flavor type
+	// Type Flavor type (e.g. cpu, gpu)
 	Type *string `json:"type,omitempty"`
 }
 
-// Flavors Flavors
+// Flavors Types of hardware available for deployments
 type Flavors = []Flavor
 
 // Labels Labels
 type Labels struct {
 	String *string `json:"string,omitempty"`
+}
+
+// Location Location availability for policies
+type Location struct {
+	// Continent Location continent
+	Continent *string `json:"continent,omitempty"`
+
+	// Country Location country
+	Country *string `json:"country,omitempty"`
+
+	// Flavors Location flavors
+	Flavors *[]Flavor `json:"flavors,omitempty"`
+
+	// Location Location name
+	Location *string `json:"location,omitempty"`
+
+	// Name Location name
+	Name *string `json:"name,omitempty"`
+
+	// Status Location status
+	Status *string `json:"status,omitempty"`
 }
 
 // Metric Metric
@@ -142,9 +163,9 @@ type Metric struct {
 	Value *string `json:"value,omitempty"`
 }
 
-// Metrics Metrics for the control plane
+// Metrics Metrics for resources
 type Metrics struct {
-	// Models Metrics for  models
+	// Models Metrics for models
 	Models *interface{} `json:"models,omitempty"`
 }
 
@@ -165,7 +186,7 @@ type Model struct {
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
 
-	// Workspace Workspace name
+	// Workspace The workspace the model belongs to
 	Workspace *string `json:"workspace,omitempty"`
 }
 
@@ -174,10 +195,10 @@ type ModelDeployment struct {
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
 
-	// Enabled Whether the model deployment is enabled
+	// Enabled If false, the model deployment will not be active nor serve requests
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// Environment The name of the environment
+	// Environment The name of the environment in which the model deployment is deployed
 	Environment *string `json:"environment,omitempty"`
 
 	// Labels Labels
@@ -186,7 +207,7 @@ type ModelDeployment struct {
 	// MetricPort The port to serve the metrics on
 	MetricPort *int `json:"metric_port,omitempty"`
 
-	// Model The name of the model
+	// Model The name of the parent model
 	Model *string `json:"model,omitempty"`
 
 	// ModelProviderRef Reference to a model provider
@@ -194,17 +215,15 @@ type ModelDeployment struct {
 
 	// PodTemplate The pod template, should be a valid Kubernetes pod template
 	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
-
-	// Policies Policies to apply to the model deployment
-	Policies *DeploymentPolicies `json:"policies,omitempty"`
+	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
 
 	// RuntimeConfiguration Runtime configuration for the model deployment
 	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
 
-	// RuntimeModel The runtime model
+	// RuntimeModel The slug name of the model origin
 	RuntimeModel *string `json:"runtime_model,omitempty"`
 
-	// RuntimeType The runtime type
+	// RuntimeType The type of the model origin
 	RuntimeType *string `json:"runtime_type,omitempty"`
 
 	// ServerlessConfig Configuration for the serverless model deployment
@@ -234,24 +253,24 @@ type ModelDeploymentMetrics struct {
 	// InferencePerSecondGlobal Array of metrics
 	InferencePerSecondGlobal *ArrayMetric `json:"inference_per_second_global,omitempty"`
 
-	// InferencePerSecondPerRegion Inference metrics for the model deployment per region
+	// InferencePerSecondPerRegion Historical requests per second (RPS) per location, for the model deployment
 	InferencePerSecondPerRegion *struct {
 		// Region Array of metrics
 		Region *ArrayMetric `json:"region,omitempty"`
 	} `json:"inference_per_second_per_region,omitempty"`
 
-	// QueryPerSecondGlobal Query per second globally for the model deployment
+	// QueryPerSecondGlobal RPS value (in last 24 hours) for the model deployment globally
 	QueryPerSecondGlobal *float32 `json:"query_per_second_global,omitempty"`
 
-	// QueryPerSecondPerCodeGlobal Query per second per element, can be code or region
+	// QueryPerSecondPerCodeGlobal Query per second per element, can be per response status code (e.g. 200, 400) or per location
 	QueryPerSecondPerCodeGlobal *QPS `json:"query_per_second_per_code_global,omitempty"`
 
-	// QueryPerSecondPerRegion Query per second per element, can be code or region
+	// QueryPerSecondPerRegion Query per second per element, can be per response status code (e.g. 200, 400) or per location
 	QueryPerSecondPerRegion *QPS `json:"query_per_second_per_region,omitempty"`
 
-	// QueryPerSecondPerRegionPerCode Query per second per region per code for the model deployment
+	// QueryPerSecondPerRegionPerCode RPS value (in last 24 hours) per response status code per location, for the model deployment
 	QueryPerSecondPerRegionPerCode *struct {
-		// Region Query per second per element, can be code or region
+		// Region Query per second per element, can be per response status code (e.g. 200, 400) or per location
 		Region *QPS `json:"region,omitempty"`
 	} `json:"query_per_second_per_region_per_code,omitempty"`
 }
@@ -261,7 +280,7 @@ type ModelMetrics struct {
 	// InferencePerSecondGlobal Array of metrics
 	InferencePerSecondGlobal *ArrayMetric `json:"inference_per_second_global,omitempty"`
 
-	// QueryPerSecondPerRegion Query per second per element, can be code or region
+	// QueryPerSecondPerRegion Query per second per element, can be per response status code (e.g. 200, 400) or per location
 	QueryPerSecondPerRegion *QPS `json:"query_per_second_per_region,omitempty"`
 }
 
@@ -301,12 +320,12 @@ type ModelProviderRef struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// ModelRelease Model release, used to deploy a model from one version to another
+// ModelRelease Model release, used to deploy a model from one environment to another
 type ModelRelease struct {
-	// From Model release from
+	// From Origin environment from which the model is released
 	From *string `json:"from,omitempty"`
 
-	// To Model release to
+	// To Destination environment to which the model is released
 	To *string `json:"to,omitempty"`
 }
 
@@ -393,7 +412,7 @@ type Policy struct {
 	// DisplayName Policy display name
 	DisplayName *string `json:"display_name,omitempty"`
 
-	// Flavors Flavors
+	// Flavors Types of hardware available for deployments
 	Flavors *Flavors `json:"flavors,omitempty"`
 
 	// Labels Labels
@@ -411,7 +430,7 @@ type Policy struct {
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
 
-	// Workspace Workspace name
+	// Workspace The workspace the policy belongs to
 	Workspace *string `json:"workspace,omitempty"`
 }
 
@@ -442,7 +461,7 @@ type ProviderConfig struct {
 	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
 }
 
-// ProviderModel Provider model, like huggingface, openai, etc...
+// ProviderModel Model obtained from an external provider, such as HuggingFace, OpenAI, etc...
 type ProviderModel struct {
 	// CreatedAt Provider model created at
 	CreatedAt *string `json:"created_at,omitempty"`
@@ -475,7 +494,7 @@ type ProviderModel struct {
 	TrendingScore *int `json:"trending_score,omitempty"`
 }
 
-// ProviderOrganization Provider organization
+// ProviderOrganization Organization that hosts models from an external provider (HuggingFace, OpenAI, etc...)
 type ProviderOrganization struct {
 	// AvatarUrl Provider organization avatar URL
 	AvatarUrl *string `json:"avatar_url,omitempty"`
@@ -490,9 +509,9 @@ type ProviderOrganization struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// QPS Query per second per element, can be code or region
+// QPS Query per second per element, can be per response status code (e.g. 200, 400) or per location
 type QPS struct {
-	// RegionCode QPS for region
+	// RegionCode QPS for location
 	RegionCode *float32 `json:"region_code,omitempty"`
 }
 
@@ -611,9 +630,7 @@ type ToolDeployment struct {
 
 	// PodTemplate The pod template, should be a valid Kubernetes pod template
 	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
-
-	// Policies Policies to apply to the model deployment
-	Policies *DeploymentPolicies `json:"policies,omitempty"`
+	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
 
 	// RuntimeConfiguration Runtime configuration for the model deployment
 	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
@@ -651,13 +668,13 @@ type Workspace struct {
 
 // WorkspaceUser Workspace user
 type WorkspaceUser struct {
-	// Accepted Workspace user accepted
+	// Accepted Whether the user has accepted the workspace invitation
 	Accepted *bool `json:"accepted,omitempty"`
 
 	// Email Workspace user email
 	Email *string `json:"email,omitempty"`
 
-	// EmailVerified Workspace user email verified
+	// EmailVerified Whether the user's email has been verified
 	EmailVerified *bool `json:"email_verified,omitempty"`
 
 	// FamilyName Workspace user family name
@@ -669,7 +686,7 @@ type WorkspaceUser struct {
 	// Role Workspace user role
 	Role *string `json:"role,omitempty"`
 
-	// Sub Workspace user sub
+	// Sub Workspace user identifier
 	Sub *string `json:"sub,omitempty"`
 }
 
@@ -4680,7 +4697,7 @@ func (r GetEnvironmentMetricsResponse) StatusCode() int {
 type ListLocationsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]PolicyLocation
+	JSON200      *[]Location
 }
 
 // Status returns HTTPResponse.Status
@@ -6729,7 +6746,7 @@ func ParseListLocationsResponse(rsp *http.Response) (*ListLocationsResponse, err
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []PolicyLocation
+		var dest []Location
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -8190,90 +8207,98 @@ func ParseUpdateUserRoleInWorkspaceResponse(rsp *http.Response) (*UpdateUserRole
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"CFUDPfx/AAAA///JI5AMt7cAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

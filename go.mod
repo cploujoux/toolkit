@@ -8,7 +8,6 @@ require (
 	github.com/getkin/kin-openapi v0.128.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/spf13/cobra v1.8.1
-	golang.org/x/text v0.14.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )

@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/tmp-moon/toolkit/cli/operations"
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
 var BASE_URL = "https://api.beamlit.dev/v0"
+var workspaceFlag string
 
 var rootCmd = &cobra.Command{
 	Use:   "beamlit",
@@ -17,11 +17,13 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() error {
+	rootCmd.PersistentFlags().StringVarP(&workspaceFlag, "workspace", "w", "", "Specify the workspace name")
+
 	ctx := context.Background()
 	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
 		BASE_URL = url
 	}
-	reg := &operations.Operations{
+	reg := &Operations{
 		BaseURL: BASE_URL,
 	}
 
@@ -29,7 +31,7 @@ func Execute() error {
 		rootCmd.AddCommand(cmd)
 	}
 
-	provider := getAuthProvider()
+	provider := getAuthProvider(workspaceFlag)
 
 	client, err := sdk.NewClientWithResponses(
 		BASE_URL,

@@ -1,4 +1,4 @@
-package operations
+package cli
 
 import (
 	"fmt"
@@ -8,9 +8,9 @@ import (
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
-func (r *Operations) GetContextCmd() *cobra.Command {
+func (r *Operations) GetWorkspaceCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "get-context",
+		Use:   "get-workspace",
 		Short: "Get the current workspace",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println(sdk.CurrentContext())
@@ -18,9 +18,9 @@ func (r *Operations) GetContextCmd() *cobra.Command {
 	}
 }
 
-func (r *Operations) SetContextCmd() *cobra.Command {
+func (r *Operations) SetWorkspaceCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "set-context [workspace]",
+		Use:   "set-workspace [workspace]",
 		Args:  cobra.MaximumNArgs(1),
 		Short: "Set the current workspace",
 		Run: func(cmd *cobra.Command, args []string) {

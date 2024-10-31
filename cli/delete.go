@@ -1,4 +1,4 @@
-package operations
+package cli
 
 import (
 	"bytes"
@@ -14,12 +14,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func (r *Operations) ApplyCmd() *cobra.Command {
+func (r *Operations) DeleteCmd() *cobra.Command {
 	var filePath string
 
 	cmd := &cobra.Command{
-		Use:   "apply",
-		Short: "Apply a file",
+		Use:   "delete",
+		Short: "Delete a resource",
 		Run: func(cmd *cobra.Command, args []string) {
 			// Ouvrir le fichier
 			file, err := os.Open(filePath)
@@ -50,7 +50,7 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 			for _, result := range results {
 				for _, resource := range resources {
 					if resource.Kind == result.Kind {
-						resource.PutFn(resource.Kind, result.Metadata.Name, result.Spec)
+						resource.DeleteFn(result.Metadata.Name, "")
 					}
 				}
 			}
@@ -60,37 +60,41 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&filePath, "file", "f", "", "Path to YAML file to apply")
 	cmd.MarkFlagRequired("file")
 
+	var outputFormat string
+	cmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: yaml")
+	for _, resource := range resources {
+		subcmd := &cobra.Command{
+			Use:     resource.Short,
+			Aliases: []string{resource.Singular, resource.Plural},
+			Short:   fmt.Sprintf("Delete a %s resource", resource.Kind),
+			Run: func(cmd *cobra.Command, args []string) {
+				outputFormat := cmd.Flag("output").Value.String()
+				if len(args) == 0 {
+					fmt.Println("no resource name provided")
+					os.Exit(1)
+				}
+				if len(args) == 1 {
+					resource.DeleteFn(args[0], outputFormat)
+				}
+			},
+		}
+		subcmd.Flags().StringP("output", "o", "", "Output format. One of: yaml")
+		cmd.AddCommand(subcmd)
+	}
+
 	return cmd
 }
 
-func (resource Resource) PutFn(resourceName string, name string, spec interface{}) {
+func (resource Resource) DeleteFn(name string, outputFormat string) {
 	ctx := context.Background()
 	// Use reflect to call the function
-	funcValue := reflect.ValueOf(resource.Put)
+	funcValue := reflect.ValueOf(resource.Delete)
 	if funcValue.Kind() != reflect.Func {
 		fmt.Println("fn is not a valid function")
 		os.Exit(1)
 	}
-	// Convert spec to the expected type using JSON marshaling/unmarshaling
-	specJson, err := json.Marshal(spec)
-	if err != nil {
-		fmt.Printf("Error marshaling spec: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Create a new instance of the expected type
-	destType := reflect.New(resource.SpecType).Interface()
-	if err := json.Unmarshal(specJson, destType); err != nil {
-		fmt.Printf("Error unmarshaling to target type: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Use the converted spec in the function call
-	fnargs := []reflect.Value{
-		reflect.ValueOf(ctx),
-		reflect.ValueOf(name),
-		reflect.ValueOf(destType).Elem(),
-	}
+	// Create a slice for the arguments
+	fnargs := []reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(name)} // Add the context and the resource name
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
@@ -125,5 +129,5 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Printf("Resource %s:%s configured\n", resourceName, name)
+	fmt.Printf("Resource %s:%s deleted\n", resource.Kind, name)
 }

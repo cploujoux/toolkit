@@ -1,4 +1,4 @@
-package operations
+package cli
 
 type ResultMetadata struct {
 	Workspace string
