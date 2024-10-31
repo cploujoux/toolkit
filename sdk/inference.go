@@ -22,7 +22,7 @@ func Inference(ctx context.Context, workspaceName string, environment string, mo
 		provider = NewPublicProvider()
 	}
 
-	url := "https://edge-gw.beamlit.net/" + workspaceName + "/models/" + modelName + "?environment=" + environment
+	url := "https://run.beamlit.dev/" + workspaceName + "/models/" + modelName + "?environment=" + environment
 
 	payload := strings.NewReader(data)
 
