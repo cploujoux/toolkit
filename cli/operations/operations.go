@@ -16,6 +16,10 @@ func (r *Operations) CliCommand(ctx context.Context, operationId string, fn inte
 		GetRegister(ctx, operation, fn)
 		return
 	}
+	if operation[0] == "get" {
+		GetRegister(ctx, operation, fn)
+		return
+	}
 	if operation[0] == "delete" {
 		RemoveRegister(ctx, operation, fn)
 		return
