@@ -17,7 +17,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global url."https://.:${{ secrets.CONTROL_PLANE_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://.:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
           git clone https://github.com/${{ github.repository_owner }}/control-plane
           cp control-plane/api/api/definitions/controlplane.yml ./definition.yml
           rm -rf control-plane
@@ -38,7 +38,7 @@ jobs:
           version: "~> v2"
           args: release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       - name: Upload assets
         uses: actions/upload-artifact@v3
         with:
