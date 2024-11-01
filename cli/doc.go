@@ -17,6 +17,8 @@ func (r *Operations) DocCmd() *cobra.Command {
 		Short:  "Generate documentation for the CLI",
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			rootCmd.DisableAutoGenTag = true
+
 			if err := os.MkdirAll(outputDir, 0755); err != nil {
 				return fmt.Errorf("failed to create output directory: %w", err)
 			}

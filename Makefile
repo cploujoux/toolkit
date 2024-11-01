@@ -13,4 +13,7 @@ build:
 dev:
 	alias bl="go run main.go"
 
+doc:
+	go run main.go docs --format=markdown --output=docs
+
 .PHONY: sdk
