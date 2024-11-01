@@ -56,9 +56,7 @@ func Execute() error {
 		BaseURL: BASE_URL,
 	}
 
-	rootCmd.AddCommand(reg.SetWorkspaceCmd())
-	rootCmd.AddCommand(reg.GetWorkspaceCmd())
-	rootCmd.AddCommand(reg.ListWorkspacesCmd())
+	rootCmd.AddCommand(reg.ListOrSetWorkspacesCmd())
 	rootCmd.AddCommand(reg.LoginCmd())
 	rootCmd.AddCommand(reg.LogoutCmd())
 	rootCmd.AddCommand(reg.GetCmd())
@@ -66,6 +64,7 @@ func Execute() error {
 	rootCmd.AddCommand(reg.DeleteCmd())
 	rootCmd.AddCommand(reg.RunCmd())
 	rootCmd.AddCommand(reg.DocCmd())
+	rootCmd.AddCommand(reg.MetricsModelDeploymentCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")
