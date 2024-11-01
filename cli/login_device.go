@@ -48,9 +48,9 @@ func (r *Operations) DeviceModeLogin(workspace string) {
 	// Open the URL in the default browser
 	err = exec.Command("open", deviceLoginResponse.VerificationURIComplete).Start()
 	if err != nil {
-		fmt.Printf("Please visit the following URL to finish login: %s\n", deviceLoginResponse.VerificationURIComplete)
+		fmt.Printf("Please visit the following URL to finish logging in: %s\n", deviceLoginResponse.VerificationURIComplete)
 	} else {
-		fmt.Println("Opened URL in browser, if it's not working, please open it manually: ", deviceLoginResponse.VerificationURIComplete)
+		fmt.Println("Opened URL in browser. If it's not working, please open it manually: ", deviceLoginResponse.VerificationURIComplete)
 	}
 	fmt.Println("Waiting for user to finish login...")
 

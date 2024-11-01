@@ -28,7 +28,7 @@ var resources = []*Resource{
 	},
 	{
 		Kind:     "Policy",
-		Short:    "pl",
+		Short:    "pol",
 		Plural:   "policies",
 		Singular: "policy",
 		SpecType: reflect.TypeOf(sdk.Policy{}),

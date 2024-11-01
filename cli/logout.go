@@ -15,7 +15,7 @@ func (r *Operations) LogoutCmd() *cobra.Command {
 		Short: "Logout from Beamlit",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				fmt.Println("Error: Workspace is required")
+				fmt.Println("Error: Enter a workspace")
 				os.Exit(1)
 			} else {
 				sdk.ClearCredentials(args[0])

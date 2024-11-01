@@ -19,8 +19,8 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "apply",
-		Short: "Apply a file",
-		Long:  "Apply a file",
+		Short: "Apply a configuration to a resource by file",
+		Long:  "Apply a configuration to a resource by file",
 		Example: `
 			beamlit apply -f ./my-deployment.yaml
 		`,
