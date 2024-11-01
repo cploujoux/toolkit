@@ -1,6 +1,6 @@
 ## beamlit
 
-Beamlit CLI
+Beamlit CLI is a command line tool to interact with Beamlit APIs.
 
 ### Options
 
@@ -12,7 +12,7 @@ Beamlit CLI
 
 ### SEE ALSO
 
-* [beamlit apply](beamlit_apply.md)	 - Apply a file
+* [beamlit apply](beamlit_apply.md)	 - Apply a configuration to a resource by file
 * [beamlit completion](beamlit_completion.md)	 - Generate the autocompletion script for the specified shell
 * [beamlit delete](beamlit_delete.md)	 - Delete a resource
 * [beamlit get](beamlit_get.md)	 - Get a resource

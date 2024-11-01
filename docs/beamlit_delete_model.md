@@ -1,6 +1,6 @@
 ## beamlit delete model
 
-Delete a Model resource
+Delete a Model
 
 ```
 beamlit delete model [flags]

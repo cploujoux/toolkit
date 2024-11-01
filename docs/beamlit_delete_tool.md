@@ -1,6 +1,6 @@
 ## beamlit delete tool
 
-Delete a Tool resource
+Delete a Tool
 
 ```
 beamlit delete tool [flags]

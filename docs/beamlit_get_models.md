@@ -1,6 +1,6 @@
 ## beamlit get models
 
-Get a Model resource
+Get a Model
 
 ```
 beamlit get models [flags]

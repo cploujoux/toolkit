@@ -1,6 +1,6 @@
 ## beamlit delete location
 
-Delete a Location resource
+Delete a Location
 
 ```
 beamlit delete location [flags]

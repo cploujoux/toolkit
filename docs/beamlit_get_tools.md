@@ -1,6 +1,6 @@
 ## beamlit get tools
 
-Get a Tool resource
+Get a Tool
 
 ```
 beamlit get tools [flags]

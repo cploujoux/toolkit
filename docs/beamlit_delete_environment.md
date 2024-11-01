@@ -1,6 +1,6 @@
 ## beamlit delete environment
 
-Delete a Environment resource
+Delete a Environment
 
 ```
 beamlit delete environment [flags]

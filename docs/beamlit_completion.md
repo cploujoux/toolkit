@@ -23,7 +23,7 @@ See each sub-command's help for details on how to use the generated script.
 
 ### SEE ALSO
 
-* [beamlit](beamlit.md)	 - Beamlit CLI
+* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 * [beamlit completion bash](beamlit_completion_bash.md)	 - Generate the autocompletion script for bash
 * [beamlit completion fish](beamlit_completion_fish.md)	 - Generate the autocompletion script for fish
 * [beamlit completion powershell](beamlit_completion_powershell.md)	 - Generate the autocompletion script for powershell

@@ -1,6 +1,6 @@
 ## beamlit get modelproviders
 
-Get a ModelProvider resource
+Get a ModelProvider
 
 ```
 beamlit get modelproviders [flags]

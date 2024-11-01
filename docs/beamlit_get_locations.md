@@ -1,6 +1,6 @@
 ## beamlit get locations
 
-Get a Location resource
+Get a Location
 
 ```
 beamlit get locations [flags]

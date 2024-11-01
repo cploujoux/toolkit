@@ -1,6 +1,6 @@
 ## beamlit get policies
 
-Get a Policy resource
+Get a Policy
 
 ```
 beamlit get policies [flags]

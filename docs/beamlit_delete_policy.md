@@ -1,6 +1,6 @@
 ## beamlit delete policy
 
-Delete a Policy resource
+Delete a Policy
 
 ```
 beamlit delete policy [flags]

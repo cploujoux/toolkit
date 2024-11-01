@@ -1,6 +1,6 @@
 ## beamlit delete modelprovider
 
-Delete a ModelProvider resource
+Delete a ModelProvider
 
 ```
 beamlit delete modelprovider [flags]

@@ -1,6 +1,6 @@
 ## beamlit get environments
 
-Get a Environment resource
+Get a Environment
 
 ```
 beamlit get environments [flags]
