@@ -20,6 +20,10 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "apply",
 		Short: "Apply a file",
+		Long:  "Apply a file",
+		Example: `
+			beamlit apply -f ./my-deployment.yaml
+		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Ouvrir le fichier
 			file, err := os.Open(filePath)
