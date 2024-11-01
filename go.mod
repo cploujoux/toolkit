@@ -3,7 +3,6 @@ module github.com/tmp-moon/toolkit
 go 1.23.2
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/fatih/color v1.18.0
 	github.com/getkin/kin-openapi v0.128.0
 	github.com/oapi-codegen/runtime v1.1.1
