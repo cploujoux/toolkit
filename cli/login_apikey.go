@@ -20,7 +20,7 @@ func (r *Operations) ApiKeyLogin(workspace string) {
 
 	// Check if credentials file exists
 	if _, err := os.Stat(credentialsFile); err == nil {
-		fmt.Println("You are already logged in. Enter new API key to overwrite")
+		fmt.Println("You are already logged in. Enter a new API key to overwrite it.")
 	} else {
 		if err := os.MkdirAll(credentialsDir, 0700); err != nil {
 			fmt.Printf("Error creating credentials directory: %v\n", err)

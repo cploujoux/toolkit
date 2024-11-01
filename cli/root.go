@@ -17,7 +17,7 @@ var reg *Operations
 
 var rootCmd = &cobra.Command{
 	Use:   "beamlit",
-	Short: "Beamlit CLI",
+	Short: "Beamlit CLI is a command line tool to interact with Beamlit APIs.",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
 			BASE_URL = url

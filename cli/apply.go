@@ -19,7 +19,7 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "apply",
-		Short: "Apply a file",
+		Short: "Apply a configuration to a resource by file",
 		Run: func(cmd *cobra.Command, args []string) {
 			// Ouvrir le fichier
 			file, err := os.Open(filePath)

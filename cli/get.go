@@ -22,7 +22,7 @@ func (r *Operations) GetCmd() *cobra.Command {
 		subcmd := &cobra.Command{
 			Use:     resource.Plural,
 			Aliases: []string{resource.Singular, resource.Short},
-			Short:   fmt.Sprintf("Get a %s resource", resource.Kind),
+			Short:   fmt.Sprintf("Get a %s", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
 				if len(args) == 0 {
 					resource.ListFn()

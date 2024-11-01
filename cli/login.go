@@ -21,13 +21,13 @@ func (r *Operations) LoginCmd() *cobra.Command {
 				workspace = args[0]
 			}
 			if workspace == "" {
-				fmt.Println("Error: Workspace is required")
+				fmt.Println("Error: Enter a workspace")
 				os.Exit(1)
 			}
 
 			options := []string{
-				"API Key Login",
-				"Oauth Login",
+				"Login with API key",
+				"Login with device",
 			}
 
 			// Initialize variables for keyboard input handling
@@ -52,7 +52,7 @@ func (r *Operations) LoginCmd() *cobra.Command {
 			// Print initial menu
 			printMenu := func() {
 				fmt.Print("\033[H\033[2J") // Clear screen
-				fmt.Println("Choose login method (use arrow keys and press Enter:")
+				fmt.Println("Choose a login method (use arrow keys and press Enter:")
 				for i, opt := range options {
 					if i == selectedIndex {
 						fmt.Printf("> %s\n", opt)
