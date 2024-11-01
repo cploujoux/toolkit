@@ -90,9 +90,6 @@ type DeploymentServerlessConfig struct {
 
 	// Target Target value for the metric
 	Target *string `json:"target,omitempty"`
-
-	// TerminationGracePeriodSeconds The termination grace period seconds
-	TerminationGracePeriodSeconds *int `json:"termination_grace_period_seconds,omitempty"`
 }
 
 // Environment defines model for Environment.
@@ -136,6 +133,73 @@ type Flavor struct {
 
 // Flavors Types of hardware available for deployments
 type Flavors = []Flavor
+
+// Function defines model for Function.
+type Function struct {
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// Description Function description, very important for the agent function to work with an LLM
+	Description *string `json:"description,omitempty"`
+
+	// DisplayName Function display name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// Labels Labels
+	Labels *Labels `json:"labels,omitempty"`
+
+	// Name Function name
+	Name *string `json:"name,omitempty"`
+
+	// Parameters Function parameters, for your function to be callable with Agent
+	Parameters *[]StoreAgentFunctionParameter `json:"parameters,omitempty"`
+
+	// StoreId Create from a store registered function
+	StoreId *string `json:"store_id,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+
+	// Workspace Workspace name
+	Workspace *string `json:"workspace,omitempty"`
+}
+
+// FunctionDeployment defines model for FunctionDeployment.
+type FunctionDeployment struct {
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// Enabled Whether the function deployment is enabled
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// Environment The name of the environment
+	Environment *string `json:"environment,omitempty"`
+
+	// Flavors Types of hardware available for deployments
+	Flavors *Flavors `json:"flavors,omitempty"`
+
+	// Function The name of the function
+	Function *string `json:"function,omitempty"`
+
+	// Labels Labels
+	Labels *Labels `json:"labels,omitempty"`
+
+	// PodTemplate The pod template, should be a valid Kubernetes pod template
+	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
+	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
+
+	// RuntimeConfiguration Runtime configuration for the model deployment
+	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
+
+	// ServerlessConfig Configuration for the serverless model deployment
+	ServerlessConfig *DeploymentServerlessConfig `json:"serverless_config,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+
+	// Workspace The workspace the function deployment belongs to
+	Workspace *string `json:"workspace,omitempty"`
+}
 
 // Labels Labels
 type Labels map[string]string
@@ -207,6 +271,9 @@ type ModelDeployment struct {
 
 	// Environment The name of the environment in which the model deployment is deployed
 	Environment *string `json:"environment,omitempty"`
+
+	// Flavors Types of hardware available for deployments
+	Flavors *Flavors `json:"flavors,omitempty"`
 
 	// Labels Labels
 	Labels *Labels `json:"labels,omitempty"`
@@ -456,7 +523,7 @@ type PolicyLocation struct {
 // PolicyLocations PolicyLocations is a local type that wraps a slice of Location
 type PolicyLocations = []PolicyLocation
 
-// PolicyResourceType PolicyResourceType is a type of resource, e.g. model, tool, etc.
+// PolicyResourceType PolicyResourceType is a type of resource, e.g. model, function, etc.
 type PolicyResourceType = string
 
 // PolicyResourceTypes PolicyResourceTypes is a local type that wraps a slice of PolicyResourceType
@@ -536,6 +603,9 @@ type RuntimeConfiguration struct {
 	// Args The arguments to pass to the model
 	Args *[]interface{} `json:"args,omitempty"`
 
+	// Command The command to run the model
+	Command *[]interface{} `json:"command,omitempty"`
+
 	// Envs The environment variables to set in the model, should be a valid Kubernetes environment config
 	Envs *[]interface{} `json:"envs,omitempty"`
 
@@ -558,110 +628,46 @@ type StandardFieldsDynamoDb struct {
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
-// StoreAgentTool defines model for StoreAgentTool.
-type StoreAgentTool struct {
+// StoreAgentFunction defines model for StoreAgentFunction.
+type StoreAgentFunction struct {
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
 
-	// Description Store agent tool description
+	// Description Store agent function description
 	Description *string `json:"description,omitempty"`
 
-	// DisplayName Store agent tool display name
+	// DisplayName Store agent function display name
 	DisplayName *string `json:"display_name,omitempty"`
 
-	// Image Store agent tool image
+	// Image Store agent function image
 	Image *string `json:"image,omitempty"`
 
-	// Labels Store agent tool labels
+	// Labels Store agent function labels
 	Labels *map[string]interface{} `json:"labels,omitempty"`
 
-	// Name Store agent tool name
+	// Name Store agent function name
 	Name *string `json:"name,omitempty"`
 
-	// Parameters Store agent tool parameters
-	Parameters *[]StoreAgentToolParameter `json:"parameters,omitempty"`
+	// Parameters Store agent function parameters
+	Parameters *[]StoreAgentFunctionParameter `json:"parameters,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
-// StoreAgentToolParameter Store agent tool parameter
-type StoreAgentToolParameter struct {
-	// Description Store agent tool parameter description
+// StoreAgentFunctionParameter Store agent function parameter
+type StoreAgentFunctionParameter struct {
+	// Description Store agent function parameter description
 	Description *string `json:"description,omitempty"`
 
-	// Name Store agent tool parameter name
+	// Name Store agent function parameter name
 	Name *string `json:"name,omitempty"`
 
-	// Required Store agent tool parameter required
+	// Required Store agent function parameter required
 	Required *bool `json:"required,omitempty"`
 
-	// Type Store agent tool parameter type
+	// Type Store agent function parameter type
 	Type *string `json:"type,omitempty"`
-}
-
-// Tool defines model for Tool.
-type Tool struct {
-	// CreatedAt The date and time when the resource was created
-	CreatedAt *string `json:"created_at,omitempty"`
-
-	// Description Tool description, very important for the agent tool to work with an LLM
-	Description *string `json:"description,omitempty"`
-
-	// DisplayName Tool display name
-	DisplayName *string `json:"display_name,omitempty"`
-
-	// Labels Labels
-	Labels *Labels `json:"labels,omitempty"`
-
-	// Name Tool name
-	Name *string `json:"name,omitempty"`
-
-	// Parameters Tool parameters, for your function to be callable with Agent
-	Parameters *[]StoreAgentToolParameter `json:"parameters,omitempty"`
-
-	// StoreId Create from a store registered tool
-	StoreId *string `json:"store_id,omitempty"`
-
-	// UpdatedAt The date and time when the resource was updated
-	UpdatedAt *string `json:"updated_at,omitempty"`
-
-	// Workspace Workspace name
-	Workspace *string `json:"workspace,omitempty"`
-}
-
-// ToolDeployment defines model for ToolDeployment.
-type ToolDeployment struct {
-	// CreatedAt The date and time when the resource was created
-	CreatedAt *string `json:"created_at,omitempty"`
-
-	// Enabled Whether the tool deployment is enabled
-	Enabled *bool `json:"enabled,omitempty"`
-
-	// Environment The name of the environment
-	Environment *string `json:"environment,omitempty"`
-
-	// Labels Labels
-	Labels *Labels `json:"labels,omitempty"`
-
-	// PodTemplate The pod template, should be a valid Kubernetes pod template
-	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
-	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
-
-	// RuntimeConfiguration Runtime configuration for the model deployment
-	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
-
-	// ServerlessConfig Configuration for the serverless model deployment
-	ServerlessConfig *DeploymentServerlessConfig `json:"serverless_config,omitempty"`
-
-	// Tool The name of the tool
-	Tool *string `json:"tool,omitempty"`
-
-	// UpdatedAt The date and time when the resource was updated
-	UpdatedAt *string `json:"updated_at,omitempty"`
-
-	// Workspace The workspace the tool deployment belongs to
-	Workspace *string `json:"workspace,omitempty"`
 }
 
 // Workspace defines model for Workspace.
@@ -747,17 +753,17 @@ type UpdateUserRoleInWorkspaceJSONBody struct {
 // PutEnvironmentJSONRequestBody defines body for PutEnvironment for application/json ContentType.
 type PutEnvironmentJSONRequestBody = Environment
 
+// PutFunctionJSONRequestBody defines body for PutFunction for application/json ContentType.
+type PutFunctionJSONRequestBody = Function
+
+// PutFunctionDeploymentJSONRequestBody defines body for PutFunctionDeployment for application/json ContentType.
+type PutFunctionDeploymentJSONRequestBody = FunctionDeployment
+
 // PutModelDeploymentJSONRequestBody defines body for PutModelDeployment for application/json ContentType.
 type PutModelDeploymentJSONRequestBody = ModelDeployment
 
 // PutPolicyJSONRequestBody defines body for PutPolicy for application/json ContentType.
 type PutPolicyJSONRequestBody = Policy
-
-// PutToolJSONRequestBody defines body for PutTool for application/json ContentType.
-type PutToolJSONRequestBody = Tool
-
-// PutToolDeploymentJSONRequestBody defines body for PutToolDeployment for application/json ContentType.
-type PutToolDeploymentJSONRequestBody = ToolDeployment
 
 // CreateWorspaceJSONRequestBody defines body for CreateWorspace for application/json ContentType.
 type CreateWorspaceJSONRequestBody = Workspace
@@ -888,6 +894,34 @@ type ClientInterface interface {
 	// GetEnvironmentMetrics request
 	GetEnvironmentMetrics(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListFunctions request
+	ListFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteFunction request
+	DeleteFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFunction request
+	GetFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutFunctionWithBody request with any body
+	PutFunctionWithBody(ctx context.Context, functionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutFunction(ctx context.Context, functionName string, body PutFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListFunctionDeployments request
+	ListFunctionDeployments(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteFunctionDeployment request
+	DeleteFunctionDeployment(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFunctionDeployment request
+	GetFunctionDeployment(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutFunctionDeploymentWithBody request with any body
+	PutFunctionDeploymentWithBody(ctx context.Context, functionName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutFunctionDeployment(ctx context.Context, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListLocations request
 	ListLocations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -970,39 +1004,11 @@ type ClientInterface interface {
 	// ListOrganizationsForProvider request
 	ListOrganizationsForProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListStoreAgentTools request
-	ListStoreAgentTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// ListStoreAgentFunctions request
+	ListStoreAgentFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetStoreAgentTool request
-	GetStoreAgentTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListTools request
-	ListTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteTool request
-	DeleteTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetTool request
-	GetTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PutToolWithBody request with any body
-	PutToolWithBody(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PutTool(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListToolDeployments request
-	ListToolDeployments(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteToolDeployment request
-	DeleteToolDeployment(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetToolDeployment request
-	GetToolDeployment(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PutToolDeploymentWithBody request with any body
-	PutToolDeploymentWithBody(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PutToolDeployment(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetStoreAgentFunction request
+	GetStoreAgentFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListWorkspaces request
 	ListWorkspaces(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1097,6 +1103,30 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetEnvironmentMetrics
 	reg.CliCommand(ctx, "GetEnvironmentMetrics", c.GetEnvironmentMetrics)
 
+	// Register CLI commands for ListFunctions
+	reg.CliCommand(ctx, "ListFunctions", c.ListFunctions)
+
+	// Register CLI commands for DeleteFunction
+	reg.CliCommand(ctx, "DeleteFunction", c.DeleteFunction)
+
+	// Register CLI commands for GetFunction
+	reg.CliCommand(ctx, "GetFunction", c.GetFunction)
+
+	// Register CLI commands for PutFunction
+	reg.CliCommand(ctx, "PutFunction", c.PutFunction)
+
+	// Register CLI commands for ListFunctionDeployments
+	reg.CliCommand(ctx, "ListFunctionDeployments", c.ListFunctionDeployments)
+
+	// Register CLI commands for DeleteFunctionDeployment
+	reg.CliCommand(ctx, "DeleteFunctionDeployment", c.DeleteFunctionDeployment)
+
+	// Register CLI commands for GetFunctionDeployment
+	reg.CliCommand(ctx, "GetFunctionDeployment", c.GetFunctionDeployment)
+
+	// Register CLI commands for PutFunctionDeployment
+	reg.CliCommand(ctx, "PutFunctionDeployment", c.PutFunctionDeployment)
+
 	// Register CLI commands for ListLocations
 	reg.CliCommand(ctx, "ListLocations", c.ListLocations)
 
@@ -1175,35 +1205,11 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for ListOrganizationsForProvider
 	reg.CliCommand(ctx, "ListOrganizationsForProvider", c.ListOrganizationsForProvider)
 
-	// Register CLI commands for ListStoreAgentTools
-	reg.CliCommand(ctx, "ListStoreAgentTools", c.ListStoreAgentTools)
+	// Register CLI commands for ListStoreAgentFunctions
+	reg.CliCommand(ctx, "ListStoreAgentFunctions", c.ListStoreAgentFunctions)
 
-	// Register CLI commands for GetStoreAgentTool
-	reg.CliCommand(ctx, "GetStoreAgentTool", c.GetStoreAgentTool)
-
-	// Register CLI commands for ListTools
-	reg.CliCommand(ctx, "ListTools", c.ListTools)
-
-	// Register CLI commands for DeleteTool
-	reg.CliCommand(ctx, "DeleteTool", c.DeleteTool)
-
-	// Register CLI commands for GetTool
-	reg.CliCommand(ctx, "GetTool", c.GetTool)
-
-	// Register CLI commands for PutTool
-	reg.CliCommand(ctx, "PutTool", c.PutTool)
-
-	// Register CLI commands for ListToolDeployments
-	reg.CliCommand(ctx, "ListToolDeployments", c.ListToolDeployments)
-
-	// Register CLI commands for DeleteToolDeployment
-	reg.CliCommand(ctx, "DeleteToolDeployment", c.DeleteToolDeployment)
-
-	// Register CLI commands for GetToolDeployment
-	reg.CliCommand(ctx, "GetToolDeployment", c.GetToolDeployment)
-
-	// Register CLI commands for PutToolDeployment
-	reg.CliCommand(ctx, "PutToolDeployment", c.PutToolDeployment)
+	// Register CLI commands for GetStoreAgentFunction
+	reg.CliCommand(ctx, "GetStoreAgentFunction", c.GetStoreAgentFunction)
 
 	// Register CLI commands for ListWorkspaces
 	reg.CliCommand(ctx, "ListWorkspaces", c.ListWorkspaces)
@@ -1338,6 +1344,126 @@ func (c *Client) PutEnvironment(ctx context.Context, environmentName string, bod
 
 func (c *Client) GetEnvironmentMetrics(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetEnvironmentMetricsRequest(c.Server, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListFunctionsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFunctionRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutFunctionWithBody(ctx context.Context, functionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutFunctionRequestWithBody(c.Server, functionName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutFunction(ctx context.Context, functionName string, body PutFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutFunctionRequest(c.Server, functionName, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListFunctionDeployments(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListFunctionDeploymentsRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteFunctionDeployment(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFunctionDeploymentRequest(c.Server, functionName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFunctionDeployment(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionDeploymentRequest(c.Server, functionName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutFunctionDeploymentWithBody(ctx context.Context, functionName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutFunctionDeploymentRequestWithBody(c.Server, functionName, environmentName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutFunctionDeployment(ctx context.Context, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutFunctionDeploymentRequest(c.Server, functionName, environmentName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1684,8 +1810,8 @@ func (c *Client) ListOrganizationsForProvider(ctx context.Context, providerId st
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListStoreAgentTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListStoreAgentToolsRequest(c.Server)
+func (c *Client) ListStoreAgentFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListStoreAgentFunctionsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -1696,128 +1822,8 @@ func (c *Client) ListStoreAgentTools(ctx context.Context, reqEditors ...RequestE
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetStoreAgentTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetStoreAgentToolRequest(c.Server, toolName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListToolsRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteToolRequest(c.Server, toolName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetTool(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetToolRequest(c.Server, toolName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PutToolWithBody(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutToolRequestWithBody(c.Server, toolName, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PutTool(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutToolRequest(c.Server, toolName, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListToolDeployments(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListToolDeploymentsRequest(c.Server, toolName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteToolDeployment(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteToolDeploymentRequest(c.Server, toolName, environmentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetToolDeployment(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetToolDeploymentRequest(c.Server, toolName, environmentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PutToolDeploymentWithBody(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutToolDeploymentRequestWithBody(c.Server, toolName, environmentName, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PutToolDeployment(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutToolDeploymentRequest(c.Server, toolName, environmentName, body)
+func (c *Client) GetStoreAgentFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetStoreAgentFunctionRequest(c.Server, functionName)
 	if err != nil {
 		return nil, err
 	}
@@ -2339,6 +2345,318 @@ func NewGetEnvironmentMetricsRequest(server string, environmentName string) (*ht
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListFunctionsRequest generates requests for ListFunctions
+func NewListFunctionsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteFunctionRequest generates requests for DeleteFunction
+func NewDeleteFunctionRequest(server string, functionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFunctionRequest generates requests for GetFunction
+func NewGetFunctionRequest(server string, functionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutFunctionRequest calls the generic PutFunction builder with application/json body
+func NewPutFunctionRequest(server string, functionName string, body PutFunctionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutFunctionRequestWithBody(server, functionName, "application/json", bodyReader)
+}
+
+// NewPutFunctionRequestWithBody generates requests for PutFunction with any type of body
+func NewPutFunctionRequestWithBody(server string, functionName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListFunctionDeploymentsRequest generates requests for ListFunctionDeployments
+func NewListFunctionDeploymentsRequest(server string, functionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/deployments", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteFunctionDeploymentRequest generates requests for DeleteFunctionDeployment
+func NewDeleteFunctionDeploymentRequest(server string, functionName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/deployments/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFunctionDeploymentRequest generates requests for GetFunctionDeployment
+func NewGetFunctionDeploymentRequest(server string, functionName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/deployments/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutFunctionDeploymentRequest calls the generic PutFunctionDeployment builder with application/json body
+func NewPutFunctionDeploymentRequest(server string, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutFunctionDeploymentRequestWithBody(server, functionName, environmentName, "application/json", bodyReader)
+}
+
+// NewPutFunctionDeploymentRequestWithBody generates requests for PutFunctionDeployment with any type of body
+func NewPutFunctionDeploymentRequestWithBody(server string, functionName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/deployments/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -3260,8 +3578,8 @@ func NewListOrganizationsForProviderRequest(server string, providerId string) (*
 	return req, nil
 }
 
-// NewListStoreAgentToolsRequest generates requests for ListStoreAgentTools
-func NewListStoreAgentToolsRequest(server string) (*http.Request, error) {
+// NewListStoreAgentFunctionsRequest generates requests for ListStoreAgentFunctions
+func NewListStoreAgentFunctionsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -3269,7 +3587,7 @@ func NewListStoreAgentToolsRequest(server string) (*http.Request, error) {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/store/agent-tools")
+	operationPath := fmt.Sprintf("/store/functions")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -3287,13 +3605,13 @@ func NewListStoreAgentToolsRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
-// NewGetStoreAgentToolRequest generates requests for GetStoreAgentTool
-func NewGetStoreAgentToolRequest(server string, toolName string) (*http.Request, error) {
+// NewGetStoreAgentFunctionRequest generates requests for GetStoreAgentFunction
+func NewGetStoreAgentFunctionRequest(server string, functionName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
 	if err != nil {
 		return nil, err
 	}
@@ -3303,7 +3621,7 @@ func NewGetStoreAgentToolRequest(server string, toolName string) (*http.Request,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/store/agent-tools/%s", pathParam0)
+	operationPath := fmt.Sprintf("/store/functions/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -3317,318 +3635,6 @@ func NewGetStoreAgentToolRequest(server string, toolName string) (*http.Request,
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewListToolsRequest generates requests for ListTools
-func NewListToolsRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewDeleteToolRequest generates requests for DeleteTool
-func NewDeleteToolRequest(server string, toolName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetToolRequest generates requests for GetTool
-func NewGetToolRequest(server string, toolName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewPutToolRequest calls the generic PutTool builder with application/json body
-func NewPutToolRequest(server string, toolName string, body PutToolJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPutToolRequestWithBody(server, toolName, "application/json", bodyReader)
-}
-
-// NewPutToolRequestWithBody generates requests for PutTool with any type of body
-func NewPutToolRequestWithBody(server string, toolName string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewListToolDeploymentsRequest generates requests for ListToolDeployments
-func NewListToolDeploymentsRequest(server string, toolName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s/deployments", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewDeleteToolDeploymentRequest generates requests for DeleteToolDeployment
-func NewDeleteToolDeploymentRequest(server string, toolName string, environmentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s/deployments/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetToolDeploymentRequest generates requests for GetToolDeployment
-func NewGetToolDeploymentRequest(server string, toolName string, environmentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s/deployments/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewPutToolDeploymentRequest calls the generic PutToolDeployment builder with application/json body
-func NewPutToolDeploymentRequest(server string, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPutToolDeploymentRequestWithBody(server, toolName, environmentName, "application/json", bodyReader)
-}
-
-// NewPutToolDeploymentRequestWithBody generates requests for PutToolDeployment with any type of body
-func NewPutToolDeploymentRequestWithBody(server string, toolName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "toolName", runtime.ParamLocationPath, toolName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/tools/%s/deployments/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -4475,6 +4481,34 @@ type ClientWithResponsesInterface interface {
 	// GetEnvironmentMetricsWithResponse request
 	GetEnvironmentMetricsWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentMetricsResponse, error)
 
+	// ListFunctionsWithResponse request
+	ListFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListFunctionsResponse, error)
+
+	// DeleteFunctionWithResponse request
+	DeleteFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*DeleteFunctionResponse, error)
+
+	// GetFunctionWithResponse request
+	GetFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionResponse, error)
+
+	// PutFunctionWithBodyWithResponse request with any body
+	PutFunctionWithBodyWithResponse(ctx context.Context, functionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutFunctionResponse, error)
+
+	PutFunctionWithResponse(ctx context.Context, functionName string, body PutFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*PutFunctionResponse, error)
+
+	// ListFunctionDeploymentsWithResponse request
+	ListFunctionDeploymentsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*ListFunctionDeploymentsResponse, error)
+
+	// DeleteFunctionDeploymentWithResponse request
+	DeleteFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*DeleteFunctionDeploymentResponse, error)
+
+	// GetFunctionDeploymentWithResponse request
+	GetFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*GetFunctionDeploymentResponse, error)
+
+	// PutFunctionDeploymentWithBodyWithResponse request with any body
+	PutFunctionDeploymentWithBodyWithResponse(ctx context.Context, functionName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutFunctionDeploymentResponse, error)
+
+	PutFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutFunctionDeploymentResponse, error)
+
 	// ListLocationsWithResponse request
 	ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error)
 
@@ -4557,39 +4591,11 @@ type ClientWithResponsesInterface interface {
 	// ListOrganizationsForProviderWithResponse request
 	ListOrganizationsForProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*ListOrganizationsForProviderResponse, error)
 
-	// ListStoreAgentToolsWithResponse request
-	ListStoreAgentToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentToolsResponse, error)
+	// ListStoreAgentFunctionsWithResponse request
+	ListStoreAgentFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentFunctionsResponse, error)
 
-	// GetStoreAgentToolWithResponse request
-	GetStoreAgentToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*GetStoreAgentToolResponse, error)
-
-	// ListToolsWithResponse request
-	ListToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListToolsResponse, error)
-
-	// DeleteToolWithResponse request
-	DeleteToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*DeleteToolResponse, error)
-
-	// GetToolWithResponse request
-	GetToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*GetToolResponse, error)
-
-	// PutToolWithBodyWithResponse request with any body
-	PutToolWithBodyWithResponse(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolResponse, error)
-
-	PutToolWithResponse(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolResponse, error)
-
-	// ListToolDeploymentsWithResponse request
-	ListToolDeploymentsWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*ListToolDeploymentsResponse, error)
-
-	// DeleteToolDeploymentWithResponse request
-	DeleteToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*DeleteToolDeploymentResponse, error)
-
-	// GetToolDeploymentWithResponse request
-	GetToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*GetToolDeploymentResponse, error)
-
-	// PutToolDeploymentWithBodyWithResponse request with any body
-	PutToolDeploymentWithBodyWithResponse(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error)
-
-	PutToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error)
+	// GetStoreAgentFunctionWithResponse request
+	GetStoreAgentFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreAgentFunctionResponse, error)
 
 	// ListWorkspacesWithResponse request
 	ListWorkspacesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListWorkspacesResponse, error)
@@ -4789,6 +4795,182 @@ func (r GetEnvironmentMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetEnvironmentMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListFunctionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Function
+}
+
+// Status returns HTTPResponse.Status
+func (r ListFunctionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListFunctionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteFunctionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Function
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFunctionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFunctionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFunctionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Function
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFunctionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFunctionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutFunctionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Function
+}
+
+// Status returns HTTPResponse.Status
+func (r PutFunctionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutFunctionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListFunctionDeploymentsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]FunctionDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r ListFunctionDeploymentsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListFunctionDeploymentsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteFunctionDeploymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FunctionDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteFunctionDeploymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteFunctionDeploymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFunctionDeploymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FunctionDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFunctionDeploymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFunctionDeploymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutFunctionDeploymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FunctionDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r PutFunctionDeploymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutFunctionDeploymentResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5367,14 +5549,14 @@ func (r ListOrganizationsForProviderResponse) StatusCode() int {
 	return 0
 }
 
-type ListStoreAgentToolsResponse struct {
+type ListStoreAgentFunctionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]StoreAgentTool
+	JSON200      *[]StoreAgentFunction
 }
 
 // Status returns HTTPResponse.Status
-func (r ListStoreAgentToolsResponse) Status() string {
+func (r ListStoreAgentFunctionsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5382,21 +5564,21 @@ func (r ListStoreAgentToolsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r ListStoreAgentToolsResponse) StatusCode() int {
+func (r ListStoreAgentFunctionsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type GetStoreAgentToolResponse struct {
+type GetStoreAgentFunctionResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *StoreAgentTool
+	JSON200      *StoreAgentFunction
 }
 
 // Status returns HTTPResponse.Status
-func (r GetStoreAgentToolResponse) Status() string {
+func (r GetStoreAgentFunctionResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5404,183 +5586,7 @@ func (r GetStoreAgentToolResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetStoreAgentToolResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListToolsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]Tool
-}
-
-// Status returns HTTPResponse.Status
-func (r ListToolsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListToolsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteToolResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Tool
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteToolResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteToolResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetToolResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Tool
-}
-
-// Status returns HTTPResponse.Status
-func (r GetToolResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetToolResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PutToolResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Tool
-}
-
-// Status returns HTTPResponse.Status
-func (r PutToolResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PutToolResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListToolDeploymentsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ToolDeployment
-}
-
-// Status returns HTTPResponse.Status
-func (r ListToolDeploymentsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListToolDeploymentsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteToolDeploymentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ToolDeployment
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteToolDeploymentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteToolDeploymentResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetToolDeploymentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ToolDeployment
-}
-
-// Status returns HTTPResponse.Status
-func (r GetToolDeploymentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetToolDeploymentResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PutToolDeploymentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ToolDeployment
-}
-
-// Status returns HTTPResponse.Status
-func (r PutToolDeploymentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PutToolDeploymentResponse) StatusCode() int {
+func (r GetStoreAgentFunctionResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -6128,6 +6134,94 @@ func (c *ClientWithResponses) GetEnvironmentMetricsWithResponse(ctx context.Cont
 	return ParseGetEnvironmentMetricsResponse(rsp)
 }
 
+// ListFunctionsWithResponse request returning *ListFunctionsResponse
+func (c *ClientWithResponses) ListFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListFunctionsResponse, error) {
+	rsp, err := c.ListFunctions(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListFunctionsResponse(rsp)
+}
+
+// DeleteFunctionWithResponse request returning *DeleteFunctionResponse
+func (c *ClientWithResponses) DeleteFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*DeleteFunctionResponse, error) {
+	rsp, err := c.DeleteFunction(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFunctionResponse(rsp)
+}
+
+// GetFunctionWithResponse request returning *GetFunctionResponse
+func (c *ClientWithResponses) GetFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionResponse, error) {
+	rsp, err := c.GetFunction(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFunctionResponse(rsp)
+}
+
+// PutFunctionWithBodyWithResponse request with arbitrary body returning *PutFunctionResponse
+func (c *ClientWithResponses) PutFunctionWithBodyWithResponse(ctx context.Context, functionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutFunctionResponse, error) {
+	rsp, err := c.PutFunctionWithBody(ctx, functionName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutFunctionResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutFunctionWithResponse(ctx context.Context, functionName string, body PutFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*PutFunctionResponse, error) {
+	rsp, err := c.PutFunction(ctx, functionName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutFunctionResponse(rsp)
+}
+
+// ListFunctionDeploymentsWithResponse request returning *ListFunctionDeploymentsResponse
+func (c *ClientWithResponses) ListFunctionDeploymentsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*ListFunctionDeploymentsResponse, error) {
+	rsp, err := c.ListFunctionDeployments(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListFunctionDeploymentsResponse(rsp)
+}
+
+// DeleteFunctionDeploymentWithResponse request returning *DeleteFunctionDeploymentResponse
+func (c *ClientWithResponses) DeleteFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*DeleteFunctionDeploymentResponse, error) {
+	rsp, err := c.DeleteFunctionDeployment(ctx, functionName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteFunctionDeploymentResponse(rsp)
+}
+
+// GetFunctionDeploymentWithResponse request returning *GetFunctionDeploymentResponse
+func (c *ClientWithResponses) GetFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*GetFunctionDeploymentResponse, error) {
+	rsp, err := c.GetFunctionDeployment(ctx, functionName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFunctionDeploymentResponse(rsp)
+}
+
+// PutFunctionDeploymentWithBodyWithResponse request with arbitrary body returning *PutFunctionDeploymentResponse
+func (c *ClientWithResponses) PutFunctionDeploymentWithBodyWithResponse(ctx context.Context, functionName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutFunctionDeploymentResponse, error) {
+	rsp, err := c.PutFunctionDeploymentWithBody(ctx, functionName, environmentName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutFunctionDeploymentResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutFunctionDeploymentResponse, error) {
+	rsp, err := c.PutFunctionDeployment(ctx, functionName, environmentName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutFunctionDeploymentResponse(rsp)
+}
+
 // ListLocationsWithResponse request returning *ListLocationsResponse
 func (c *ClientWithResponses) ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error) {
 	rsp, err := c.ListLocations(ctx, reqEditors...)
@@ -6378,110 +6472,22 @@ func (c *ClientWithResponses) ListOrganizationsForProviderWithResponse(ctx conte
 	return ParseListOrganizationsForProviderResponse(rsp)
 }
 
-// ListStoreAgentToolsWithResponse request returning *ListStoreAgentToolsResponse
-func (c *ClientWithResponses) ListStoreAgentToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentToolsResponse, error) {
-	rsp, err := c.ListStoreAgentTools(ctx, reqEditors...)
+// ListStoreAgentFunctionsWithResponse request returning *ListStoreAgentFunctionsResponse
+func (c *ClientWithResponses) ListStoreAgentFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentFunctionsResponse, error) {
+	rsp, err := c.ListStoreAgentFunctions(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseListStoreAgentToolsResponse(rsp)
+	return ParseListStoreAgentFunctionsResponse(rsp)
 }
 
-// GetStoreAgentToolWithResponse request returning *GetStoreAgentToolResponse
-func (c *ClientWithResponses) GetStoreAgentToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*GetStoreAgentToolResponse, error) {
-	rsp, err := c.GetStoreAgentTool(ctx, toolName, reqEditors...)
+// GetStoreAgentFunctionWithResponse request returning *GetStoreAgentFunctionResponse
+func (c *ClientWithResponses) GetStoreAgentFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreAgentFunctionResponse, error) {
+	rsp, err := c.GetStoreAgentFunction(ctx, functionName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetStoreAgentToolResponse(rsp)
-}
-
-// ListToolsWithResponse request returning *ListToolsResponse
-func (c *ClientWithResponses) ListToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListToolsResponse, error) {
-	rsp, err := c.ListTools(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListToolsResponse(rsp)
-}
-
-// DeleteToolWithResponse request returning *DeleteToolResponse
-func (c *ClientWithResponses) DeleteToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*DeleteToolResponse, error) {
-	rsp, err := c.DeleteTool(ctx, toolName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteToolResponse(rsp)
-}
-
-// GetToolWithResponse request returning *GetToolResponse
-func (c *ClientWithResponses) GetToolWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*GetToolResponse, error) {
-	rsp, err := c.GetTool(ctx, toolName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetToolResponse(rsp)
-}
-
-// PutToolWithBodyWithResponse request with arbitrary body returning *PutToolResponse
-func (c *ClientWithResponses) PutToolWithBodyWithResponse(ctx context.Context, toolName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolResponse, error) {
-	rsp, err := c.PutToolWithBody(ctx, toolName, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutToolResponse(rsp)
-}
-
-func (c *ClientWithResponses) PutToolWithResponse(ctx context.Context, toolName string, body PutToolJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolResponse, error) {
-	rsp, err := c.PutTool(ctx, toolName, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutToolResponse(rsp)
-}
-
-// ListToolDeploymentsWithResponse request returning *ListToolDeploymentsResponse
-func (c *ClientWithResponses) ListToolDeploymentsWithResponse(ctx context.Context, toolName string, reqEditors ...RequestEditorFn) (*ListToolDeploymentsResponse, error) {
-	rsp, err := c.ListToolDeployments(ctx, toolName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListToolDeploymentsResponse(rsp)
-}
-
-// DeleteToolDeploymentWithResponse request returning *DeleteToolDeploymentResponse
-func (c *ClientWithResponses) DeleteToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*DeleteToolDeploymentResponse, error) {
-	rsp, err := c.DeleteToolDeployment(ctx, toolName, environmentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteToolDeploymentResponse(rsp)
-}
-
-// GetToolDeploymentWithResponse request returning *GetToolDeploymentResponse
-func (c *ClientWithResponses) GetToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, reqEditors ...RequestEditorFn) (*GetToolDeploymentResponse, error) {
-	rsp, err := c.GetToolDeployment(ctx, toolName, environmentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetToolDeploymentResponse(rsp)
-}
-
-// PutToolDeploymentWithBodyWithResponse request with arbitrary body returning *PutToolDeploymentResponse
-func (c *ClientWithResponses) PutToolDeploymentWithBodyWithResponse(ctx context.Context, toolName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error) {
-	rsp, err := c.PutToolDeploymentWithBody(ctx, toolName, environmentName, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutToolDeploymentResponse(rsp)
-}
-
-func (c *ClientWithResponses) PutToolDeploymentWithResponse(ctx context.Context, toolName string, environmentName string, body PutToolDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutToolDeploymentResponse, error) {
-	rsp, err := c.PutToolDeployment(ctx, toolName, environmentName, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutToolDeploymentResponse(rsp)
+	return ParseGetStoreAgentFunctionResponse(rsp)
 }
 
 // ListWorkspacesWithResponse request returning *ListWorkspacesResponse
@@ -6857,6 +6863,214 @@ func ParseGetEnvironmentMetricsResponse(rsp *http.Response) (*GetEnvironmentMetr
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest EnvironmentMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListFunctionsResponse parses an HTTP response from a ListFunctionsWithResponse call
+func ParseListFunctionsResponse(rsp *http.Response) (*ListFunctionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListFunctionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Function
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteFunctionResponse parses an HTTP response from a DeleteFunctionWithResponse call
+func ParseDeleteFunctionResponse(rsp *http.Response) (*DeleteFunctionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFunctionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Function
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFunctionResponse parses an HTTP response from a GetFunctionWithResponse call
+func ParseGetFunctionResponse(rsp *http.Response) (*GetFunctionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFunctionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Function
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutFunctionResponse parses an HTTP response from a PutFunctionWithResponse call
+func ParsePutFunctionResponse(rsp *http.Response) (*PutFunctionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutFunctionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Function
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListFunctionDeploymentsResponse parses an HTTP response from a ListFunctionDeploymentsWithResponse call
+func ParseListFunctionDeploymentsResponse(rsp *http.Response) (*ListFunctionDeploymentsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListFunctionDeploymentsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []FunctionDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteFunctionDeploymentResponse parses an HTTP response from a DeleteFunctionDeploymentWithResponse call
+func ParseDeleteFunctionDeploymentResponse(rsp *http.Response) (*DeleteFunctionDeploymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteFunctionDeploymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FunctionDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFunctionDeploymentResponse parses an HTTP response from a GetFunctionDeploymentWithResponse call
+func ParseGetFunctionDeploymentResponse(rsp *http.Response) (*GetFunctionDeploymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFunctionDeploymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FunctionDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutFunctionDeploymentResponse parses an HTTP response from a PutFunctionDeploymentWithResponse call
+func ParsePutFunctionDeploymentResponse(rsp *http.Response) (*PutFunctionDeploymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutFunctionDeploymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FunctionDeployment
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7543,22 +7757,22 @@ func ParseListOrganizationsForProviderResponse(rsp *http.Response) (*ListOrganiz
 	return response, nil
 }
 
-// ParseListStoreAgentToolsResponse parses an HTTP response from a ListStoreAgentToolsWithResponse call
-func ParseListStoreAgentToolsResponse(rsp *http.Response) (*ListStoreAgentToolsResponse, error) {
+// ParseListStoreAgentFunctionsResponse parses an HTTP response from a ListStoreAgentFunctionsWithResponse call
+func ParseListStoreAgentFunctionsResponse(rsp *http.Response) (*ListStoreAgentFunctionsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &ListStoreAgentToolsResponse{
+	response := &ListStoreAgentFunctionsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []StoreAgentTool
+		var dest []StoreAgentFunction
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7569,230 +7783,22 @@ func ParseListStoreAgentToolsResponse(rsp *http.Response) (*ListStoreAgentToolsR
 	return response, nil
 }
 
-// ParseGetStoreAgentToolResponse parses an HTTP response from a GetStoreAgentToolWithResponse call
-func ParseGetStoreAgentToolResponse(rsp *http.Response) (*GetStoreAgentToolResponse, error) {
+// ParseGetStoreAgentFunctionResponse parses an HTTP response from a GetStoreAgentFunctionWithResponse call
+func ParseGetStoreAgentFunctionResponse(rsp *http.Response) (*GetStoreAgentFunctionResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetStoreAgentToolResponse{
+	response := &GetStoreAgentFunctionResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest StoreAgentTool
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListToolsResponse parses an HTTP response from a ListToolsWithResponse call
-func ParseListToolsResponse(rsp *http.Response) (*ListToolsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListToolsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []Tool
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteToolResponse parses an HTTP response from a DeleteToolWithResponse call
-func ParseDeleteToolResponse(rsp *http.Response) (*DeleteToolResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteToolResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Tool
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetToolResponse parses an HTTP response from a GetToolWithResponse call
-func ParseGetToolResponse(rsp *http.Response) (*GetToolResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetToolResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Tool
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePutToolResponse parses an HTTP response from a PutToolWithResponse call
-func ParsePutToolResponse(rsp *http.Response) (*PutToolResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PutToolResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Tool
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListToolDeploymentsResponse parses an HTTP response from a ListToolDeploymentsWithResponse call
-func ParseListToolDeploymentsResponse(rsp *http.Response) (*ListToolDeploymentsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListToolDeploymentsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ToolDeployment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteToolDeploymentResponse parses an HTTP response from a DeleteToolDeploymentWithResponse call
-func ParseDeleteToolDeploymentResponse(rsp *http.Response) (*DeleteToolDeploymentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteToolDeploymentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ToolDeployment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetToolDeploymentResponse parses an HTTP response from a GetToolDeploymentWithResponse call
-func ParseGetToolDeploymentResponse(rsp *http.Response) (*GetToolDeploymentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetToolDeploymentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ToolDeployment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePutToolDeploymentResponse parses an HTTP response from a PutToolDeploymentWithResponse call
-func ParsePutToolDeploymentResponse(rsp *http.Response) (*PutToolDeploymentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PutToolDeploymentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ToolDeployment
+		var dest StoreAgentFunction
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -8343,101 +8349,101 @@ func ParseUpdateUserRoleInWorkspaceResponse(rsp *http.Response) (*UpdateUserRole
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"AAD//2yXobbGuwAA",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

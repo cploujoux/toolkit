@@ -19,9 +19,9 @@ Get a resource
 
 * [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 * [beamlit get environments](beamlit_get_environments.md)	 - Get a Environment
+* [beamlit get functions](beamlit_get_functions.md)	 - Get a Function
 * [beamlit get locations](beamlit_get_locations.md)	 - Get a Location
 * [beamlit get modelproviders](beamlit_get_modelproviders.md)	 - Get a ModelProvider
 * [beamlit get models](beamlit_get_models.md)	 - Get a Model
 * [beamlit get policies](beamlit_get_policies.md)	 - Get a Policy
-* [beamlit get tools](beamlit_get_tools.md)	 - Get a Tool
 

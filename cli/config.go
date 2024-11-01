@@ -55,10 +55,10 @@ var resources = []*Resource{
 		SpecType: reflect.TypeOf(sdk.Location{}),
 	},
 	{
-		Kind:     "Tool",
+		Kind:     "Function",
 		Short:    "tl",
-		Plural:   "tools",
-		Singular: "tool",
-		SpecType: reflect.TypeOf(sdk.Tool{}),
+		Plural:   "functions",
+		Singular: "function",
+		SpecType: reflect.TypeOf(sdk.Function{}),
 	},
 }

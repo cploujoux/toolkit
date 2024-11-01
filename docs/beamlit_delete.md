@@ -24,9 +24,9 @@ beamlit delete [flags]
 
 * [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 * [beamlit delete environment](beamlit_delete_environment.md)	 - Delete a Environment
+* [beamlit delete function](beamlit_delete_function.md)	 - Delete a Function
 * [beamlit delete location](beamlit_delete_location.md)	 - Delete a Location
 * [beamlit delete model](beamlit_delete_model.md)	 - Delete a Model
 * [beamlit delete modelprovider](beamlit_delete_modelprovider.md)	 - Delete a ModelProvider
 * [beamlit delete policy](beamlit_delete_policy.md)	 - Delete a Policy
-* [beamlit delete tool](beamlit_delete_tool.md)	 - Delete a Tool
 
