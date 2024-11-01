@@ -3,7 +3,6 @@ package sdk
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -20,13 +19,8 @@ func (c *Client) Run(
 	body string,
 	reqEditors ...RequestEditorFn,
 ) (*http.Response, error) {
-
 	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
+	bodyReader = bytes.NewReader([]byte(body))
 
 	req, err := NewRunRequest(c.RunServer, method, path, headers, workspaceName, environment, modelName, bodyReader)
 	if err != nil {
