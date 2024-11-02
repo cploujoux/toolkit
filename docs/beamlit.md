@@ -5,6 +5,7 @@ Beamlit CLI is a command line tool to interact with Beamlit APIs.
 ### Options
 
 ```
+  -e, --env string         Environment. One of: development,production
   -h, --help               help for beamlit
   -o, --output string      Output format. One of: pretty,yaml,json,table
   -w, --workspace string   Specify the workspace name

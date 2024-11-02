@@ -3,7 +3,7 @@
 Get metrics for a model deployment
 
 ```
-beamlit metrics [name] [environment] [flags]
+beamlit metrics [name] [flags]
 ```
 
 ### Options
@@ -15,6 +15,7 @@ beamlit metrics [name] [environment] [flags]
 ### Options inherited from parent commands
 
 ```
+  -e, --env string         Environment. One of: development,production
   -o, --output string      Output format. One of: pretty,yaml,json,table
   -w, --workspace string   Specify the workspace name
 ```

@@ -15,5 +15,6 @@ dev:
 
 doc:
 	go run main.go docs --format=markdown --output=docs
+	rm docs/beamlit_completion_zsh.md docs/beamlit_completion_bash.md
 
 .PHONY: sdk
