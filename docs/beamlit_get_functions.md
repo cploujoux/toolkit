@@ -1,15 +1,15 @@
-## beamlit delete tool
+## beamlit get functions
 
-Delete a Tool
+Get a Function
 
 ```
-beamlit delete tool [flags]
+beamlit get functions [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for tool
+  -h, --help   help for functions
 ```
 
 ### Options inherited from parent commands
@@ -21,5 +21,5 @@ beamlit delete tool [flags]
 
 ### SEE ALSO
 
-* [beamlit delete](beamlit_delete.md)	 - Delete a resource
+* [beamlit get](beamlit_get.md)	 - Get a resource
 

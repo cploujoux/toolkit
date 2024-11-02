@@ -16,10 +16,9 @@ Beamlit CLI is a command line tool to interact with Beamlit APIs.
 * [beamlit completion](beamlit_completion.md)	 - Generate the autocompletion script for the specified shell
 * [beamlit delete](beamlit_delete.md)	 - Delete a resource
 * [beamlit get](beamlit_get.md)	 - Get a resource
-* [beamlit get-workspace](beamlit_get-workspace.md)	 - Get the current workspace
-* [beamlit get-workspaces](beamlit_get-workspaces.md)	 - List all workspaces
 * [beamlit login](beamlit_login.md)	 - Login to Beamlit
 * [beamlit logout](beamlit_logout.md)	 - Logout from Beamlit
+* [beamlit metrics](beamlit_metrics.md)	 - Get metrics for a model deployment
 * [beamlit run](beamlit_run.md)	 - Run inference
-* [beamlit set-workspace](beamlit_set-workspace.md)	 - Set the current workspace
+* [beamlit workspaces](beamlit_workspaces.md)	 - List all workspaces with the current workspace highlighted, set optionally a new current workspace
 

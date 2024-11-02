@@ -1,15 +1,15 @@
-## beamlit get tools
+## beamlit metrics
 
-Get a Tool
+Get metrics for a model deployment
 
 ```
-beamlit get tools [flags]
+beamlit metrics [name] [environment] [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for tools
+  -h, --help   help for metrics
 ```
 
 ### Options inherited from parent commands
@@ -21,5 +21,5 @@ beamlit get tools [flags]
 
 ### SEE ALSO
 
-* [beamlit get](beamlit_get.md)	 - Get a resource
+* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 
