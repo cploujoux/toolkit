@@ -21,7 +21,7 @@ import (
 
 func (r *Operations) MetricsModelDeploymentCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "metrics [name] [environment]",
+		Use:   "metrics [name]",
 		Args:  cobra.MaximumNArgs(2),
 		Short: "Get metrics for a model deployment",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -29,11 +29,6 @@ func (r *Operations) MetricsModelDeploymentCmd() *cobra.Command {
 			if len(args) == 0 {
 				fmt.Println("Error: Name of the model is required")
 				os.Exit(1)
-			}
-
-			environment := "production"
-			if len(args) > 1 {
-				environment = args[1]
 			}
 
 			res, err := client.GetModelDeploymentMetrics(ctx, args[0], environment)

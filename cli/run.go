@@ -13,25 +13,20 @@ import (
 )
 
 func (r *Operations) RunCmd() *cobra.Command {
-	var environment string
 	var data string
 	var path string
 	var method string
 	var headerFlags []string
 	var showHeaders bool
+	var uploadFilePath string
 
 	cmd := &cobra.Command{
-		Use:   "run [model] [environment]",
+		Use:   "run [model]",
 		Args:  cobra.MaximumNArgs(2),
 		Short: "Run inference",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				fmt.Println("Error: Model is required")
-				os.Exit(1)
-			}
-
-			if data == "" {
-				fmt.Println("Error: --data parameter is required")
 				os.Exit(1)
 			}
 
@@ -48,6 +43,16 @@ func (r *Operations) RunCmd() *cobra.Command {
 				key := strings.TrimSpace(parts[0])
 				value := strings.TrimSpace(parts[1])
 				headers[key] = value
+			}
+
+			// Handle file upload if specified
+			if uploadFilePath != "" {
+				fileContent, err := os.ReadFile(uploadFilePath)
+				if err != nil {
+					fmt.Printf("Error reading file: %v\n", err)
+					os.Exit(1)
+				}
+				data = string(fileContent)
 			}
 
 			res, err := client.Run(
@@ -98,9 +103,9 @@ func (r *Operations) RunCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&data, "data", "", "JSON body data for the inference request")
-	cmd.Flags().StringVar(&environment, "env", "production", "Environment to run the inference in")
 	cmd.Flags().StringVar(&path, "path", "", "path for the inference request")
 	cmd.Flags().StringVar(&method, "method", "POST", "HTTP method for the inference request")
+	cmd.Flags().StringVar(&uploadFilePath, "upload-file", "", "This transfers the specified local file to the remote URL")
 	cmd.Flags().StringArrayVar(&headerFlags, "header", []string{}, "Request headers in 'Key: Value' format. Can be specified multiple times")
 	cmd.Flags().BoolVar(&showHeaders, "show-headers", false, "Show response headers in output")
 	return cmd

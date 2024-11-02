@@ -12,6 +12,7 @@ var BASE_URL = "https://api.beamlit.dev/v0"
 var RUN_URL = "https://run.beamlit.dev"
 var workspace string
 var outputFormat string
+var environment string
 var client *sdk.ClientWithResponses
 var reg *Operations
 
@@ -68,6 +69,7 @@ func Execute() error {
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")
+	rootCmd.PersistentFlags().StringVarP(&environment, "env", "e", "", "Environment. One of: development,production")
 	if workspace == "" {
 		workspace = sdk.CurrentWorkspace()
 	}
