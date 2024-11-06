@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit completion"
+slug: beamlit_completion
+---
 ## beamlit completion
 
 Generate the autocompletion script for the specified shell

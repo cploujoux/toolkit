@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit delete"
+slug: beamlit_delete
+---
 ## beamlit delete
 
 Delete a resource

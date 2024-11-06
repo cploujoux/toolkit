@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit completion powershell"
+slug: beamlit_completion_powershell
+---
 ## beamlit completion powershell
 
 Generate the autocompletion script for powershell

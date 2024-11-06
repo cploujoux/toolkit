@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit get environments"
+slug: beamlit_get_environments
+---
 ## beamlit get environments
 
 Get a Environment

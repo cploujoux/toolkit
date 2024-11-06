@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit delete function"
+slug: beamlit_delete_function
+---
 ## beamlit delete function
 
 Delete a Function

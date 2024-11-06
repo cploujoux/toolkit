@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit get"
+slug: beamlit_get
+---
 ## beamlit get
 
 Get a resource

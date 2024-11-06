@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit metrics"
+slug: beamlit_metrics
+---
 ## beamlit metrics
 
 Get metrics for a model deployment

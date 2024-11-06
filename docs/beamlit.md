@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit"
+slug: beamlit
+---
 ## beamlit
 
 Beamlit CLI is a command line tool to interact with Beamlit APIs.

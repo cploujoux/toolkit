@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit delete environment"
+slug: beamlit_delete_environment
+---
 ## beamlit delete environment
 
 Delete a Environment

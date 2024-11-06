@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit delete modelprovider"
+slug: beamlit_delete_modelprovider
+---
 ## beamlit delete modelprovider
 
 Delete a ModelProvider

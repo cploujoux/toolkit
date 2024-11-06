@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit get models"
+slug: beamlit_get_models
+---
 ## beamlit get models
 
 Get a Model

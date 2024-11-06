@@ -1,3 +1,8 @@
+---
+date: 2024-11-06T14:35:20+01:00
+title: "beamlit get policies"
+slug: beamlit_get_policies
+---
 ## beamlit get policies
 
 Get a Policy
