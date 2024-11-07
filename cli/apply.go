@@ -92,8 +92,8 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 	}
 
 	// Create a new instance of the expected type
-	destType := reflect.New(resource.SpecType).Interface()
-	if err := json.Unmarshal(specJson, destType); err != nil {
+	destBody := reflect.New(resource.SpecType).Interface()
+	if err := json.Unmarshal(specJson, destBody); err != nil {
 		fmt.Printf("Error unmarshaling to target type: %v\n", err)
 		os.Exit(1)
 	}
@@ -102,7 +102,7 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 	fnargs := []reflect.Value{
 		reflect.ValueOf(ctx),
 		reflect.ValueOf(name),
-		reflect.ValueOf(destType).Elem(),
+		reflect.ValueOf(destBody).Elem(),
 	}
 
 	// Call the function with the arguments
@@ -136,6 +136,10 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
 		fmt.Println(err)
+		os.Exit(1)
+	}
+	if response.StatusCode >= 400 {
+		fmt.Println(res)
 		os.Exit(1)
 	}
 	fmt.Printf("Resource %s:%s configured\n", resourceName, name)
