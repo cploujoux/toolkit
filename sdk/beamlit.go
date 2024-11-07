@@ -26,19 +26,98 @@ const (
 	BearerAuthScopes = "BearerAuth.Scopes"
 )
 
+// Agent defines model for Agent.
+type Agent struct {
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// DisplayName Agent display name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// Labels Labels
+	Labels *Labels `json:"labels,omitempty"`
+
+	// Name Agent name
+	Name *string `json:"name,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+
+	// Workspace Workspace name
+	Workspace *string `json:"workspace,omitempty"`
+}
+
+// AgentDeployment defines model for AgentDeployment.
+type AgentDeployment struct {
+	// Agent The name of the agent
+	Agent *string `json:"agent,omitempty"`
+
+	// Configuration Deployment configurations key value and also a boolean secret to specify if it should be stored in secret manager
+	Configuration *DeploymentConfigurations `json:"configuration,omitempty"`
+
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// Enabled Whether the agent deployment is enabled
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// Environment The name of the environment
+	Environment *string `json:"environment,omitempty"`
+
+	// Flavors Types of hardware available for deployments
+	Flavors *Flavors `json:"flavors,omitempty"`
+
+	// Labels Labels
+	Labels *Labels `json:"labels,omitempty"`
+
+	// Llm LLM to use for agent, it should be compatible with function calling
+	Llm *string `json:"llm,omitempty"`
+
+	// PodTemplate The pod template, should be a valid Kubernetes pod template
+	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
+	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
+
+	// Runtime Set of configurations for a deployment
+	Runtime *Runtime `json:"runtime,omitempty"`
+
+	// ServerlessConfig Configuration for a serverless deployment
+	ServerlessConfig *DeploymentServerlessConfig `json:"serverless_config,omitempty"`
+
+	// StoreId Create from a store registered function
+	StoreId *string `json:"store_id,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+
+	// Workspace The workspace the agent deployment belongs to
+	Workspace *string `json:"workspace,omitempty"`
+}
+
+// AgentRelease Agent release, used to deploy a agent from one environment to another
+type AgentRelease struct {
+	// From Origin environment from which the agent is released
+	From *string `json:"from,omitempty"`
+
+	// To Destination environment to which the agent is released
+	To *string `json:"to,omitempty"`
+}
+
 // ApiKey defines model for ApiKey.
 type ApiKey struct {
 	// ApiKey Api key
 	ApiKey *string `json:"api_key,omitempty"`
-
-	// Comment Comment for the API key
-	Comment *string `json:"comment,omitempty"`
 
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
 
 	// ExpiresIn Duration until expiration (in seconds)
 	ExpiresIn *string `json:"expires_in,omitempty"`
+
+	// Id Api key id, to retrieve it from the API
+	Id *string `json:"id,omitempty"`
+
+	// Name Name for the API key
+	Name *string `json:"name,omitempty"`
 
 	// Sub User subject identifier
 	Sub *string `json:"sub,omitempty"`
@@ -53,6 +132,54 @@ type ApiKey struct {
 // ArrayMetric Array of metrics
 type ArrayMetric = []Metric
 
+// AuthenticationProviderModel Model obtained from an external authentication provider, such as HuggingFace, OpenAI, etc...
+type AuthenticationProviderModel struct {
+	// CreatedAt Provider model created at
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// Downloads Provider model downloads
+	Downloads *int `json:"downloads,omitempty"`
+
+	// Id Provider model ID
+	Id *string `json:"id,omitempty"`
+
+	// LibraryName Provider model library name
+	LibraryName *string `json:"library_name,omitempty"`
+
+	// Likes Provider model likes
+	Likes *int `json:"likes,omitempty"`
+
+	// Name Provider model name
+	Name *string `json:"name,omitempty"`
+
+	// PipelineTag Provider model pipeline tag
+	PipelineTag *string `json:"pipeline_tag,omitempty"`
+
+	// Private Provider model private
+	Private *bool `json:"private,omitempty"`
+
+	// Tags Provider model tags
+	Tags *[]string `json:"tags,omitempty"`
+
+	// TrendingScore Provider model trending score
+	TrendingScore *int `json:"trending_score,omitempty"`
+}
+
+// AuthenticationProviderOrganization Organization that hosts models from an external authentication provider (HuggingFace, OpenAI, etc...)
+type AuthenticationProviderOrganization struct {
+	// AvatarUrl Provider organization avatar URL
+	AvatarUrl *string `json:"avatar_url,omitempty"`
+
+	// DisplayName Provider organization display name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// Id Provider organization ID
+	Id *string `json:"id,omitempty"`
+
+	// Name Provider organization name
+	Name *string `json:"name,omitempty"`
+}
+
 // Configuration Configuration
 type Configuration struct {
 	// Continents Continents
@@ -62,33 +189,36 @@ type Configuration struct {
 	Countries *[]interface{} `json:"countries,omitempty"`
 }
 
+// DeploymentConfigurations Deployment configurations key value and also a boolean secret to specify if it should be stored in secret manager
+type DeploymentConfigurations map[string]string
+
 // DeploymentPolicies defines model for DeploymentPolicies.
 type DeploymentPolicies = []string
 
-// DeploymentServerlessConfig Configuration for the serverless model deployment
+// DeploymentServerlessConfig Configuration for a serverless deployment
 type DeploymentServerlessConfig struct {
-	// LastPodRetentionPeriod The last pod retention period
+	// LastPodRetentionPeriod The minimum amount of time that the last replica will remain active AFTER a scale-to-zero decision is made
 	LastPodRetentionPeriod *string `json:"last_pod_retention_period,omitempty"`
 
-	// MaxNumReplicas The maximum number of replicas
+	// MaxNumReplicas The maximum number of replicas for the deployment.
 	MaxNumReplicas *int `json:"max_num_replicas,omitempty"`
 
-	// Metric Metric to scale on, can be "cpu" or "memory" or "rps" or "concurrency"
+	// Metric Metric watched to make scaling decisions. Can be "cpu" or "memory" or "rps" or "concurrency"
 	Metric *string `json:"metric,omitempty"`
 
-	// MinNumReplicas The minimum number of replicas
+	// MinNumReplicas The minimum number of replicas for the deployment. Can be 0 or 1 (in which case the deployment is always running in at least one location).
 	MinNumReplicas *int `json:"min_num_replicas,omitempty"`
 
-	// ScaleDownDelay The scale down delay
+	// ScaleDownDelay The time window which must pass at reduced concurrency before a scale-down decision is applied. This can be useful, for example, to keep containers around for a configurable duration to avoid a cold start penalty if new requests come in.
 	ScaleDownDelay *string `json:"scale_down_delay,omitempty"`
 
-	// ScaleUpMinimum The scale up minimum
+	// ScaleUpMinimum The minimum number of replicas that will be created when the deployment scales up from zero.
 	ScaleUpMinimum *int `json:"scale_up_minimum,omitempty"`
 
-	// StableWindow The stable window
+	// StableWindow The sliding time window over which metrics are averaged to provide the input for scaling decisions
 	StableWindow *string `json:"stable_window,omitempty"`
 
-	// Target Target value for the metric
+	// Target Target value for the watched metric
 	Target *string `json:"target,omitempty"`
 }
 
@@ -139,9 +269,6 @@ type Function struct {
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
 
-	// Description Function description, very important for the agent function to work with an LLM
-	Description *string `json:"description,omitempty"`
-
 	// DisplayName Function display name
 	DisplayName *string `json:"display_name,omitempty"`
 
@@ -150,12 +277,6 @@ type Function struct {
 
 	// Name Function name
 	Name *string `json:"name,omitempty"`
-
-	// Parameters Function parameters, for your function to be callable with Agent
-	Parameters *[]StoreAgentFunctionParameter `json:"parameters,omitempty"`
-
-	// StoreId Create from a store registered function
-	StoreId *string `json:"store_id,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
@@ -166,8 +287,14 @@ type Function struct {
 
 // FunctionDeployment defines model for FunctionDeployment.
 type FunctionDeployment struct {
+	// Configuration Deployment configurations key value and also a boolean secret to specify if it should be stored in secret manager
+	Configuration *DeploymentConfigurations `json:"configuration,omitempty"`
+
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
+
+	// Description Function description, very important for the agent function to work with an LLM
+	Description *string `json:"description,omitempty"`
 
 	// Enabled Whether the function deployment is enabled
 	Enabled *bool `json:"enabled,omitempty"`
@@ -184,21 +311,36 @@ type FunctionDeployment struct {
 	// Labels Labels
 	Labels *Labels `json:"labels,omitempty"`
 
+	// Parameters Function parameters, for your function to be callable with Agent
+	Parameters *[]StoreFunctionParameter `json:"parameters,omitempty"`
+
 	// PodTemplate The pod template, should be a valid Kubernetes pod template
 	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
 	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
 
-	// RuntimeConfiguration Runtime configuration for the model deployment
-	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
+	// Runtime Set of configurations for a deployment
+	Runtime *Runtime `json:"runtime,omitempty"`
 
-	// ServerlessConfig Configuration for the serverless model deployment
+	// ServerlessConfig Configuration for a serverless deployment
 	ServerlessConfig *DeploymentServerlessConfig `json:"serverless_config,omitempty"`
+
+	// StoreId Create from a store registered function
+	StoreId *string `json:"store_id,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
 
 	// Workspace The workspace the function deployment belongs to
 	Workspace *string `json:"workspace,omitempty"`
+}
+
+// FunctionRelease Function release, used to deploy a function from one environment to another
+type FunctionRelease struct {
+	// From Origin environment from which the function is released
+	From *string `json:"from,omitempty"`
+
+	// To Destination environment to which the function is released
+	To *string `json:"to,omitempty"`
 }
 
 // Labels Labels
@@ -287,20 +429,14 @@ type ModelDeployment struct {
 	// ModelProviderRef Reference to a model provider
 	ModelProviderRef *ModelProviderRef `json:"model_provider_ref,omitempty"`
 
-	// PodTemplate The pod template, should be a valid Kubernetes pod template
+	// PodTemplate The pod template for the deployment. Should be a Kubernetes PodTemplateSpec
 	PodTemplate *map[string]interface{} `json:"pod_template,omitempty"`
 	Policies    *DeploymentPolicies     `json:"policies,omitempty"`
 
-	// RuntimeConfiguration Runtime configuration for the model deployment
-	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
+	// Runtime Set of configurations for a deployment
+	Runtime *Runtime `json:"runtime,omitempty"`
 
-	// RuntimeModel The slug name of the model origin
-	RuntimeModel *string `json:"runtime_model,omitempty"`
-
-	// RuntimeType The type of the model origin
-	RuntimeType *string `json:"runtime_type,omitempty"`
-
-	// ServerlessConfig Configuration for the serverless model deployment
+	// ServerlessConfig Configuration for a serverless deployment
 	ServerlessConfig *DeploymentServerlessConfig `json:"serverless_config,omitempty"`
 
 	// ServingPort The port to serve the model on
@@ -360,7 +496,7 @@ type ModelMetrics struct {
 
 // ModelProvider defines model for ModelProvider.
 type ModelProvider struct {
-	// Comment Model provider comment
+	// Comment Model provider description
 	Comment *string `json:"comment,omitempty"`
 
 	// Config Model provider config
@@ -540,56 +676,8 @@ type ProviderConfig struct {
 	// PresignedUrl The presigned URLs to upload the model to
 	PresignedUrl *[]interface{} `json:"presigned_url,omitempty"`
 
-	// RuntimeConfiguration Runtime configuration for the model deployment
-	RuntimeConfiguration *RuntimeConfiguration `json:"runtime_configuration,omitempty"`
-}
-
-// ProviderModel Model obtained from an external provider, such as HuggingFace, OpenAI, etc...
-type ProviderModel struct {
-	// CreatedAt Provider model created at
-	CreatedAt *string `json:"created_at,omitempty"`
-
-	// Downloads Provider model downloads
-	Downloads *int `json:"downloads,omitempty"`
-
-	// Id Provider model ID
-	Id *string `json:"id,omitempty"`
-
-	// LibraryName Provider model library name
-	LibraryName *string `json:"library_name,omitempty"`
-
-	// Likes Provider model likes
-	Likes *int `json:"likes,omitempty"`
-
-	// Name Provider model name
-	Name *string `json:"name,omitempty"`
-
-	// PipelineTag Provider model pipeline tag
-	PipelineTag *string `json:"pipeline_tag,omitempty"`
-
-	// Private Provider model private
-	Private *bool `json:"private,omitempty"`
-
-	// Tags Provider model tags
-	Tags *[]string `json:"tags,omitempty"`
-
-	// TrendingScore Provider model trending score
-	TrendingScore *int `json:"trending_score,omitempty"`
-}
-
-// ProviderOrganization Organization that hosts models from an external provider (HuggingFace, OpenAI, etc...)
-type ProviderOrganization struct {
-	// AvatarUrl Provider organization avatar URL
-	AvatarUrl *string `json:"avatar_url,omitempty"`
-
-	// DisplayName Provider organization display name
-	DisplayName *string `json:"display_name,omitempty"`
-
-	// Id Provider organization ID
-	Id *string `json:"id,omitempty"`
-
-	// Name Provider organization name
-	Name *string `json:"name,omitempty"`
+	// Runtime Set of configurations for a deployment
+	Runtime *Runtime `json:"runtime,omitempty"`
 }
 
 // QPS Query per second per element, can be per response status code (e.g. 200, 400) or per location
@@ -598,25 +686,76 @@ type QPS struct {
 	RegionCode *float32 `json:"region_code,omitempty"`
 }
 
-// RuntimeConfiguration Runtime configuration for the model deployment
-type RuntimeConfiguration struct {
-	// Args The arguments to pass to the model
+// ResourceDeploymentLog Log for a resource deployment (eg. model deployment, function deployment)
+type ResourceDeploymentLog struct {
+	// Message Content of the log
+	Message *string `json:"message,omitempty"`
+
+	// Timestamp The timestamp of the log
+	Timestamp *string `json:"timestamp,omitempty"`
+}
+
+// ResourceDeploymentMetrics Metrics for a single resource deployment (eg. model deployment, function deployment)
+type ResourceDeploymentMetrics struct {
+	// InferencePerSecondGlobal Array of metrics
+	InferencePerSecondGlobal *ArrayMetric `json:"inference_per_second_global,omitempty"`
+
+	// InferencePerSecondPerRegion Historical requests per second (RPS) per location, for the model deployment
+	InferencePerSecondPerRegion *struct {
+		// Region Array of metrics
+		Region *ArrayMetric `json:"region,omitempty"`
+	} `json:"inference_per_second_per_region,omitempty"`
+
+	// QueryPerSecondGlobal RPS value (in last 24 hours) for the model deployment globally
+	QueryPerSecondGlobal *float32 `json:"query_per_second_global,omitempty"`
+
+	// QueryPerSecondPerCodeGlobal Query per second per element, can be per response status code (e.g. 200, 400) or per location
+	QueryPerSecondPerCodeGlobal *QPS `json:"query_per_second_per_code_global,omitempty"`
+
+	// QueryPerSecondPerRegion Query per second per element, can be per response status code (e.g. 200, 400) or per location
+	QueryPerSecondPerRegion *QPS `json:"query_per_second_per_region,omitempty"`
+
+	// QueryPerSecondPerRegionPerCode RPS value (in last 24 hours) per response status code per location, for the model deployment
+	QueryPerSecondPerRegionPerCode *struct {
+		// Region Query per second per element, can be per response status code (e.g. 200, 400) or per location
+		Region *QPS `json:"region,omitempty"`
+	} `json:"query_per_second_per_region_per_code,omitempty"`
+}
+
+// ResourceMetrics Metrics for a single resource (eg. model, function)
+type ResourceMetrics struct {
+	// InferencePerSecondGlobal Array of metrics
+	InferencePerSecondGlobal *ArrayMetric `json:"inference_per_second_global,omitempty"`
+
+	// QueryPerSecondPerRegion Query per second per element, can be per response status code (e.g. 200, 400) or per location
+	QueryPerSecondPerRegion *QPS `json:"query_per_second_per_region,omitempty"`
+}
+
+// Runtime Set of configurations for a deployment
+type Runtime struct {
+	// Args The arguments to pass to the deployment runtime
 	Args *[]interface{} `json:"args,omitempty"`
 
-	// Command The command to run the model
+	// Command The command to run the deployment
 	Command *[]interface{} `json:"command,omitempty"`
 
-	// Envs The environment variables to set in the model, should be a valid Kubernetes environment config
+	// Envs The environment variables to set in the deployment. Should be a list of Kubernetes EnvVar types
 	Envs *[]interface{} `json:"envs,omitempty"`
 
-	// Image The image to use
+	// Image The Docker image for the deployment
 	Image *string `json:"image,omitempty"`
 
-	// ReadinessProbe The readiness probe
+	// Model The slug name of the origin model. Only used if the deployment is a ModelDeployment
+	Model *string `json:"model,omitempty"`
+
+	// ReadinessProbe The readiness probe. Should be a Kubernetes Probe type
 	ReadinessProbe *map[string]interface{} `json:"readiness_probe,omitempty"`
 
-	// Resources The resources with k8s spec for the model
+	// Resources The resources for the deployment. Should be a Kubernetes ResourceRequirements type
 	Resources *map[string]interface{} `json:"resources,omitempty"`
+
+	// Type The type of origin for the deployment
+	Type *string `json:"type,omitempty"`
 }
 
 // StandardFieldsDynamoDb Standard fields for Persistance
@@ -628,45 +767,112 @@ type StandardFieldsDynamoDb struct {
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
-// StoreAgentFunction defines model for StoreAgentFunction.
-type StoreAgentFunction struct {
+// StoreAgent defines model for StoreAgent.
+type StoreAgent struct {
+	// Configuration Store agent configuration
+	Configuration *[]StoreConfiguration `json:"configuration,omitempty"`
+
 	// CreatedAt The date and time when the resource was created
 	CreatedAt *string `json:"created_at,omitempty"`
 
-	// Description Store agent function description
+	// Description Store agent description
 	Description *string `json:"description,omitempty"`
 
-	// DisplayName Store agent function display name
+	// DisplayName Store agent display name
 	DisplayName *string `json:"display_name,omitempty"`
 
-	// Image Store agent function image
+	// Image Store agent image
 	Image *string `json:"image,omitempty"`
 
-	// Labels Store agent function labels
+	// Labels Store agent labels
 	Labels *map[string]interface{} `json:"labels,omitempty"`
 
-	// Name Store agent function name
+	// Name Store agent name
 	Name *string `json:"name,omitempty"`
-
-	// Parameters Store agent function parameters
-	Parameters *[]StoreAgentFunctionParameter `json:"parameters,omitempty"`
 
 	// UpdatedAt The date and time when the resource was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
-// StoreAgentFunctionParameter Store agent function parameter
-type StoreAgentFunctionParameter struct {
-	// Description Store agent function parameter description
+// StoreConfiguration Store configuration for resources (eg: agent, function, etc)
+type StoreConfiguration struct {
+	// Description Store configuration description
 	Description *string `json:"description,omitempty"`
 
-	// Name Store agent function parameter name
-	Name *string `json:"name,omitempty"`
+	// DisplayName Store configuration display name
+	DisplayName *string `json:"display_name,omitempty"`
 
-	// Required Store agent function parameter required
+	// If Conditional rendering for the configuration, example: provider === 'openai'
+	If *string `json:"if,omitempty"`
+
+	// Name Store configuration name
+	Name    *string                     `json:"name,omitempty"`
+	Options *[]StoreConfigurationOption `json:"options,omitempty"`
+
+	// Required Store configuration required
 	Required *bool `json:"required,omitempty"`
 
-	// Type Store agent function parameter type
+	// Secret Store configuration secret
+	Secret *bool `json:"secret,omitempty"`
+
+	// Type Store configuration type
+	Type *string `json:"type,omitempty"`
+}
+
+// StoreConfigurationOption Store configuration options for a select type configuration
+type StoreConfigurationOption struct {
+	// If Conditional rendering for the configuration option, example: provider === 'openai'
+	If *string `json:"if,omitempty"`
+
+	// Label Store configuration option label
+	Label *string `json:"label,omitempty"`
+
+	// Value Store configuration option value
+	Value *string `json:"value,omitempty"`
+}
+
+// StoreFunction defines model for StoreFunction.
+type StoreFunction struct {
+	// Configuration Store function configuration
+	Configuration *[]StoreConfiguration `json:"configuration,omitempty"`
+
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// Description Store function description
+	Description *string `json:"description,omitempty"`
+
+	// DisplayName Store function display name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// Image Store function image
+	Image *string `json:"image,omitempty"`
+
+	// Labels Store function labels
+	Labels *map[string]interface{} `json:"labels,omitempty"`
+
+	// Name Store function name
+	Name *string `json:"name,omitempty"`
+
+	// Parameters Store function parameters
+	Parameters *[]StoreFunctionParameter `json:"parameters,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+}
+
+// StoreFunctionParameter Store function parameter
+type StoreFunctionParameter struct {
+	// Description Store function parameter description
+	Description *string `json:"description,omitempty"`
+
+	// Name Store function parameter name
+	Name *string `json:"name,omitempty"`
+
+	// Required Store function parameter required
+	Required *bool `json:"required,omitempty"`
+
+	// Type Store function parameter type
 	Type *string `json:"type,omitempty"`
 }
 
@@ -732,23 +938,29 @@ type UpdateWorkspaceServiceAccountJSONBody struct {
 
 // CreateApiKeyForServiceAccountJSONBody defines parameters for CreateApiKeyForServiceAccount.
 type CreateApiKeyForServiceAccountJSONBody struct {
-	// Comment Comment for the API key
-	Comment *string `json:"comment,omitempty"`
-
 	// ExpiresIn Expiration period for the API key
 	ExpiresIn *string `json:"expires_in,omitempty"`
+
+	// Name Name for the API key
+	Name *string `json:"name,omitempty"`
 }
 
-// InviteUserToWorkspaceJSONBody defines parameters for InviteUserToWorkspace.
-type InviteUserToWorkspaceJSONBody struct {
+// InviteWorkspaceUserJSONBody defines parameters for InviteWorkspaceUser.
+type InviteWorkspaceUserJSONBody struct {
 	Email *openapi_types.Email `json:"email,omitempty"`
 }
 
-// UpdateUserRoleInWorkspaceJSONBody defines parameters for UpdateUserRoleInWorkspace.
-type UpdateUserRoleInWorkspaceJSONBody struct {
+// UpdateWorkspaceUserRoleJSONBody defines parameters for UpdateWorkspaceUserRole.
+type UpdateWorkspaceUserRoleJSONBody struct {
 	// Role The new role to assign to the user
 	Role string `json:"role"`
 }
+
+// PutAgentJSONRequestBody defines body for PutAgent for application/json ContentType.
+type PutAgentJSONRequestBody = Agent
+
+// PutAgentDeploymentJSONRequestBody defines body for PutAgentDeployment for application/json ContentType.
+type PutAgentDeploymentJSONRequestBody = AgentDeployment
 
 // PutEnvironmentJSONRequestBody defines body for PutEnvironment for application/json ContentType.
 type PutEnvironmentJSONRequestBody = Environment
@@ -759,17 +971,17 @@ type PutFunctionJSONRequestBody = Function
 // PutFunctionDeploymentJSONRequestBody defines body for PutFunctionDeployment for application/json ContentType.
 type PutFunctionDeploymentJSONRequestBody = FunctionDeployment
 
+// PutModelProviderJSONRequestBody defines body for PutModelProvider for application/json ContentType.
+type PutModelProviderJSONRequestBody = ModelProvider
+
+// PutModelJSONRequestBody defines body for PutModel for application/json ContentType.
+type PutModelJSONRequestBody = Model
+
 // PutModelDeploymentJSONRequestBody defines body for PutModelDeployment for application/json ContentType.
 type PutModelDeploymentJSONRequestBody = ModelDeployment
 
 // PutPolicyJSONRequestBody defines body for PutPolicy for application/json ContentType.
 type PutPolicyJSONRequestBody = Policy
-
-// CreateWorspaceJSONRequestBody defines body for CreateWorspace for application/json ContentType.
-type CreateWorspaceJSONRequestBody = Workspace
-
-// UpdateWorkspaceJSONRequestBody defines body for UpdateWorkspace for application/json ContentType.
-type UpdateWorkspaceJSONRequestBody = Workspace
 
 // CreateWorkspaceServiceAccountJSONRequestBody defines body for CreateWorkspaceServiceAccount for application/json ContentType.
 type CreateWorkspaceServiceAccountJSONRequestBody CreateWorkspaceServiceAccountJSONBody
@@ -780,11 +992,17 @@ type UpdateWorkspaceServiceAccountJSONRequestBody UpdateWorkspaceServiceAccountJ
 // CreateApiKeyForServiceAccountJSONRequestBody defines body for CreateApiKeyForServiceAccount for application/json ContentType.
 type CreateApiKeyForServiceAccountJSONRequestBody CreateApiKeyForServiceAccountJSONBody
 
-// InviteUserToWorkspaceJSONRequestBody defines body for InviteUserToWorkspace for application/json ContentType.
-type InviteUserToWorkspaceJSONRequestBody InviteUserToWorkspaceJSONBody
+// InviteWorkspaceUserJSONRequestBody defines body for InviteWorkspaceUser for application/json ContentType.
+type InviteWorkspaceUserJSONRequestBody InviteWorkspaceUserJSONBody
 
-// UpdateUserRoleInWorkspaceJSONRequestBody defines body for UpdateUserRoleInWorkspace for application/json ContentType.
-type UpdateUserRoleInWorkspaceJSONRequestBody UpdateUserRoleInWorkspaceJSONBody
+// UpdateWorkspaceUserRoleJSONRequestBody defines body for UpdateWorkspaceUserRole for application/json ContentType.
+type UpdateWorkspaceUserRoleJSONRequestBody UpdateWorkspaceUserRoleJSONBody
+
+// CreateWorspaceJSONRequestBody defines body for CreateWorspace for application/json ContentType.
+type CreateWorspaceJSONRequestBody = Workspace
+
+// UpdateWorkspaceJSONRequestBody defines body for UpdateWorkspace for application/json ContentType.
+type UpdateWorkspaceJSONRequestBody = Workspace
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -874,6 +1092,55 @@ type ClientInterface interface {
 		reqEditors ...RequestEditorFn,
 	) (*http.Response, error)
 
+	// ListAgents request
+	ListAgents(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteAgent request
+	DeleteAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAgent request
+	GetAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutAgentWithBody request with any body
+	PutAgentWithBody(ctx context.Context, agentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutAgent(ctx context.Context, agentName string, body PutAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAgentDeployments request
+	ListAgentDeployments(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteAgentDeployment request
+	DeleteAgentDeployment(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAgentDeployment request
+	GetAgentDeployment(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutAgentDeploymentWithBody request with any body
+	PutAgentDeploymentWithBody(ctx context.Context, agentName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutAgentDeployment(ctx context.Context, agentName string, environmentName string, body PutAgentDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAgentDeploymentLogs request
+	GetAgentDeploymentLogs(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAgentDeploymentMetrics request
+	GetAgentDeploymentMetrics(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAgentMetrics request
+	GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateAgentRelease request
+	CreateAgentRelease(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListModelsForAuthenticationProvider request
+	ListModelsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetModelWithRepoForAuthenticationProvider request
+	GetModelWithRepoForAuthenticationProvider(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListOrganizationsForAuthenticationProvider request
+	ListOrganizationsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetConfiguration request
 	GetConfiguration(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -922,6 +1189,18 @@ type ClientInterface interface {
 
 	PutFunctionDeployment(ctx context.Context, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetFunctionDeploymentLogs request
+	GetFunctionDeploymentLogs(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFunctionDeploymentMetrics request
+	GetFunctionDeploymentMetrics(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFunctionMetrics request
+	GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateFunctionRelease request
+	CreateFunctionRelease(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListLocations request
 	ListLocations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -932,13 +1211,15 @@ type ClientInterface interface {
 	ListModelProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteModelProvider request
-	DeleteModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetModelProvider request
-	GetModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PutModelProvider request
-	PutModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutModelProviderWithBody request with any body
+	PutModelProviderWithBody(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutModelProvider(ctx context.Context, modelProviderName string, body PutModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModels request
 	ListModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -949,8 +1230,10 @@ type ClientInterface interface {
 	// GetModel request
 	GetModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PutModel request
-	PutModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PutModelWithBody request with any body
+	PutModelWithBody(ctx context.Context, modelName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutModel(ctx context.Context, modelName string, body PutModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModelDeployments request
 	ListModelDeployments(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -975,8 +1258,8 @@ type ClientInterface interface {
 	// GetModelMetrics request
 	GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// CreateModelRelease request
-	CreateModelRelease(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// ReleaseModel request
+	ReleaseModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListPolicies request
 	ListPolicies(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -995,20 +1278,60 @@ type ClientInterface interface {
 	// ListAllPendingInvitations request
 	ListAllPendingInvitations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListModelsForProvider request
-	ListModelsForProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetWorkspaceServiceAccounts request
+	GetWorkspaceServiceAccounts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetModelWithRepoForProvider request
-	GetModelWithRepoForProvider(ctx context.Context, providerId string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// CreateWorkspaceServiceAccountWithBody request with any body
+	CreateWorkspaceServiceAccountWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListOrganizationsForProvider request
-	ListOrganizationsForProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	CreateWorkspaceServiceAccount(ctx context.Context, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListStoreAgentFunctions request
-	ListStoreAgentFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// DeleteWorkspaceServiceAccount request
+	DeleteWorkspaceServiceAccount(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetStoreAgentFunction request
-	GetStoreAgentFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// UpdateWorkspaceServiceAccountWithBody request with any body
+	UpdateWorkspaceServiceAccountWithBody(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateWorkspaceServiceAccount(ctx context.Context, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListApiKeysForServiceAccount request
+	ListApiKeysForServiceAccount(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateApiKeyForServiceAccountWithBody request with any body
+	CreateApiKeyForServiceAccountWithBody(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateApiKeyForServiceAccount(ctx context.Context, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteApiKeyForServiceAccount request
+	DeleteApiKeyForServiceAccount(ctx context.Context, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListStoreAgents request
+	ListStoreAgents(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetStoreAgent request
+	GetStoreAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListStoreFunctions request
+	ListStoreFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetStoreFunction request
+	GetStoreFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListWorkspaceUsers request
+	ListWorkspaceUsers(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// InviteWorkspaceUserWithBody request with any body
+	InviteWorkspaceUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	InviteWorkspaceUser(ctx context.Context, body InviteWorkspaceUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RemoveWorkspaceUser request
+	RemoveWorkspaceUser(ctx context.Context, subOrEmail string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateWorkspaceUserRoleWithBody request with any body
+	UpdateWorkspaceUserRoleWithBody(ctx context.Context, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateWorkspaceUserRole(ctx context.Context, subOrEmail string, body UpdateWorkspaceUserRoleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListWorkspaces request
 	ListWorkspaces(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1029,61 +1352,63 @@ type ClientInterface interface {
 
 	UpdateWorkspace(ctx context.Context, workspaceName string, body UpdateWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// DeclineInvitationToWorkspace request
-	DeclineInvitationToWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// DeclineWorkspaceInvitation request
+	DeclineWorkspaceInvitation(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// AcceptInvitationToWorkspace request
-	AcceptInvitationToWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AcceptWorkspaceInvitation request
+	AcceptWorkspaceInvitation(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LeaveWorkspace request
 	LeaveWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetWorkspaceServiceAccounts request
-	GetWorkspaceServiceAccounts(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateWorkspaceServiceAccountWithBody request with any body
-	CreateWorkspaceServiceAccountWithBody(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	CreateWorkspaceServiceAccount(ctx context.Context, workspaceName string, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteWorkspaceServiceAccount request
-	DeleteWorkspaceServiceAccount(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// UpdateWorkspaceServiceAccountWithBody request with any body
-	UpdateWorkspaceServiceAccountWithBody(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	UpdateWorkspaceServiceAccount(ctx context.Context, workspaceName string, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListApiKeysForServiceAccount request
-	ListApiKeysForServiceAccount(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateApiKeyForServiceAccountWithBody request with any body
-	CreateApiKeyForServiceAccountWithBody(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	CreateApiKeyForServiceAccount(ctx context.Context, workspaceName string, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteApiKeyForServiceAccount request
-	DeleteApiKeyForServiceAccount(ctx context.Context, workspaceName string, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListUsersInWorkspace request
-	ListUsersInWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// InviteUserToWorkspaceWithBody request with any body
-	InviteUserToWorkspaceWithBody(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	InviteUserToWorkspace(ctx context.Context, workspaceName string, body InviteUserToWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RemoveUserFromWorkspace request
-	RemoveUserFromWorkspace(ctx context.Context, workspaceName string, subOrEmail string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// UpdateUserRoleInWorkspaceWithBody request with any body
-	UpdateUserRoleInWorkspaceWithBody(ctx context.Context, workspaceName string, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	UpdateUserRoleInWorkspace(ctx context.Context, workspaceName string, subOrEmail string, body UpdateUserRoleInWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // RegisterCliCommands registers CLI commands for the client
 func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx context.Context) {
+
+	// Register CLI commands for ListAgents
+	reg.CliCommand(ctx, "ListAgents", c.ListAgents)
+
+	// Register CLI commands for DeleteAgent
+	reg.CliCommand(ctx, "DeleteAgent", c.DeleteAgent)
+
+	// Register CLI commands for GetAgent
+	reg.CliCommand(ctx, "GetAgent", c.GetAgent)
+
+	// Register CLI commands for PutAgent
+	reg.CliCommand(ctx, "PutAgent", c.PutAgent)
+
+	// Register CLI commands for ListAgentDeployments
+	reg.CliCommand(ctx, "ListAgentDeployments", c.ListAgentDeployments)
+
+	// Register CLI commands for DeleteAgentDeployment
+	reg.CliCommand(ctx, "DeleteAgentDeployment", c.DeleteAgentDeployment)
+
+	// Register CLI commands for GetAgentDeployment
+	reg.CliCommand(ctx, "GetAgentDeployment", c.GetAgentDeployment)
+
+	// Register CLI commands for PutAgentDeployment
+	reg.CliCommand(ctx, "PutAgentDeployment", c.PutAgentDeployment)
+
+	// Register CLI commands for GetAgentDeploymentLogs
+	reg.CliCommand(ctx, "GetAgentDeploymentLogs", c.GetAgentDeploymentLogs)
+
+	// Register CLI commands for GetAgentDeploymentMetrics
+	reg.CliCommand(ctx, "GetAgentDeploymentMetrics", c.GetAgentDeploymentMetrics)
+
+	// Register CLI commands for GetAgentMetrics
+	reg.CliCommand(ctx, "GetAgentMetrics", c.GetAgentMetrics)
+
+	// Register CLI commands for CreateAgentRelease
+	reg.CliCommand(ctx, "CreateAgentRelease", c.CreateAgentRelease)
+
+	// Register CLI commands for ListModelsForAuthenticationProvider
+	reg.CliCommand(ctx, "ListModelsForAuthenticationProvider", c.ListModelsForAuthenticationProvider)
+
+	// Register CLI commands for GetModelWithRepoForAuthenticationProvider
+	reg.CliCommand(ctx, "GetModelWithRepoForAuthenticationProvider", c.GetModelWithRepoForAuthenticationProvider)
+
+	// Register CLI commands for ListOrganizationsForAuthenticationProvider
+	reg.CliCommand(ctx, "ListOrganizationsForAuthenticationProvider", c.ListOrganizationsForAuthenticationProvider)
 
 	// Register CLI commands for GetConfiguration
 	reg.CliCommand(ctx, "GetConfiguration", c.GetConfiguration)
@@ -1126,6 +1451,18 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for PutFunctionDeployment
 	reg.CliCommand(ctx, "PutFunctionDeployment", c.PutFunctionDeployment)
+
+	// Register CLI commands for GetFunctionDeploymentLogs
+	reg.CliCommand(ctx, "GetFunctionDeploymentLogs", c.GetFunctionDeploymentLogs)
+
+	// Register CLI commands for GetFunctionDeploymentMetrics
+	reg.CliCommand(ctx, "GetFunctionDeploymentMetrics", c.GetFunctionDeploymentMetrics)
+
+	// Register CLI commands for GetFunctionMetrics
+	reg.CliCommand(ctx, "GetFunctionMetrics", c.GetFunctionMetrics)
+
+	// Register CLI commands for CreateFunctionRelease
+	reg.CliCommand(ctx, "CreateFunctionRelease", c.CreateFunctionRelease)
 
 	// Register CLI commands for ListLocations
 	reg.CliCommand(ctx, "ListLocations", c.ListLocations)
@@ -1178,8 +1515,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetModelMetrics
 	reg.CliCommand(ctx, "GetModelMetrics", c.GetModelMetrics)
 
-	// Register CLI commands for CreateModelRelease
-	reg.CliCommand(ctx, "CreateModelRelease", c.CreateModelRelease)
+	// Register CLI commands for ReleaseModel
+	reg.CliCommand(ctx, "ReleaseModel", c.ReleaseModel)
 
 	// Register CLI commands for ListPolicies
 	reg.CliCommand(ctx, "ListPolicies", c.ListPolicies)
@@ -1195,45 +1532,6 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for ListAllPendingInvitations
 	reg.CliCommand(ctx, "ListAllPendingInvitations", c.ListAllPendingInvitations)
-
-	// Register CLI commands for ListModelsForProvider
-	reg.CliCommand(ctx, "ListModelsForProvider", c.ListModelsForProvider)
-
-	// Register CLI commands for GetModelWithRepoForProvider
-	reg.CliCommand(ctx, "GetModelWithRepoForProvider", c.GetModelWithRepoForProvider)
-
-	// Register CLI commands for ListOrganizationsForProvider
-	reg.CliCommand(ctx, "ListOrganizationsForProvider", c.ListOrganizationsForProvider)
-
-	// Register CLI commands for ListStoreAgentFunctions
-	reg.CliCommand(ctx, "ListStoreAgentFunctions", c.ListStoreAgentFunctions)
-
-	// Register CLI commands for GetStoreAgentFunction
-	reg.CliCommand(ctx, "GetStoreAgentFunction", c.GetStoreAgentFunction)
-
-	// Register CLI commands for ListWorkspaces
-	reg.CliCommand(ctx, "ListWorkspaces", c.ListWorkspaces)
-
-	// Register CLI commands for CreateWorspace
-	reg.CliCommand(ctx, "CreateWorspace", c.CreateWorspace)
-
-	// Register CLI commands for DeleteWorkspace
-	reg.CliCommand(ctx, "DeleteWorkspace", c.DeleteWorkspace)
-
-	// Register CLI commands for GetWorkspace
-	reg.CliCommand(ctx, "GetWorkspace", c.GetWorkspace)
-
-	// Register CLI commands for UpdateWorkspace
-	reg.CliCommand(ctx, "UpdateWorkspace", c.UpdateWorkspace)
-
-	// Register CLI commands for DeclineInvitationToWorkspace
-	reg.CliCommand(ctx, "DeclineInvitationToWorkspace", c.DeclineInvitationToWorkspace)
-
-	// Register CLI commands for AcceptInvitationToWorkspace
-	reg.CliCommand(ctx, "AcceptInvitationToWorkspace", c.AcceptInvitationToWorkspace)
-
-	// Register CLI commands for LeaveWorkspace
-	reg.CliCommand(ctx, "LeaveWorkspace", c.LeaveWorkspace)
 
 	// Register CLI commands for GetWorkspaceServiceAccounts
 	reg.CliCommand(ctx, "GetWorkspaceServiceAccounts", c.GetWorkspaceServiceAccounts)
@@ -1256,18 +1554,258 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for DeleteApiKeyForServiceAccount
 	reg.CliCommand(ctx, "DeleteApiKeyForServiceAccount", c.DeleteApiKeyForServiceAccount)
 
-	// Register CLI commands for ListUsersInWorkspace
-	reg.CliCommand(ctx, "ListUsersInWorkspace", c.ListUsersInWorkspace)
+	// Register CLI commands for ListStoreAgents
+	reg.CliCommand(ctx, "ListStoreAgents", c.ListStoreAgents)
 
-	// Register CLI commands for InviteUserToWorkspace
-	reg.CliCommand(ctx, "InviteUserToWorkspace", c.InviteUserToWorkspace)
+	// Register CLI commands for GetStoreAgent
+	reg.CliCommand(ctx, "GetStoreAgent", c.GetStoreAgent)
 
-	// Register CLI commands for RemoveUserFromWorkspace
-	reg.CliCommand(ctx, "RemoveUserFromWorkspace", c.RemoveUserFromWorkspace)
+	// Register CLI commands for ListStoreFunctions
+	reg.CliCommand(ctx, "ListStoreFunctions", c.ListStoreFunctions)
 
-	// Register CLI commands for UpdateUserRoleInWorkspace
-	reg.CliCommand(ctx, "UpdateUserRoleInWorkspace", c.UpdateUserRoleInWorkspace)
+	// Register CLI commands for GetStoreFunction
+	reg.CliCommand(ctx, "GetStoreFunction", c.GetStoreFunction)
 
+	// Register CLI commands for ListWorkspaceUsers
+	reg.CliCommand(ctx, "ListWorkspaceUsers", c.ListWorkspaceUsers)
+
+	// Register CLI commands for InviteWorkspaceUser
+	reg.CliCommand(ctx, "InviteWorkspaceUser", c.InviteWorkspaceUser)
+
+	// Register CLI commands for RemoveWorkspaceUser
+	reg.CliCommand(ctx, "RemoveWorkspaceUser", c.RemoveWorkspaceUser)
+
+	// Register CLI commands for UpdateWorkspaceUserRole
+	reg.CliCommand(ctx, "UpdateWorkspaceUserRole", c.UpdateWorkspaceUserRole)
+
+	// Register CLI commands for ListWorkspaces
+	reg.CliCommand(ctx, "ListWorkspaces", c.ListWorkspaces)
+
+	// Register CLI commands for CreateWorspace
+	reg.CliCommand(ctx, "CreateWorspace", c.CreateWorspace)
+
+	// Register CLI commands for DeleteWorkspace
+	reg.CliCommand(ctx, "DeleteWorkspace", c.DeleteWorkspace)
+
+	// Register CLI commands for GetWorkspace
+	reg.CliCommand(ctx, "GetWorkspace", c.GetWorkspace)
+
+	// Register CLI commands for UpdateWorkspace
+	reg.CliCommand(ctx, "UpdateWorkspace", c.UpdateWorkspace)
+
+	// Register CLI commands for DeclineWorkspaceInvitation
+	reg.CliCommand(ctx, "DeclineWorkspaceInvitation", c.DeclineWorkspaceInvitation)
+
+	// Register CLI commands for AcceptWorkspaceInvitation
+	reg.CliCommand(ctx, "AcceptWorkspaceInvitation", c.AcceptWorkspaceInvitation)
+
+	// Register CLI commands for LeaveWorkspace
+	reg.CliCommand(ctx, "LeaveWorkspace", c.LeaveWorkspace)
+
+}
+
+func (c *Client) ListAgents(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAgentsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAgentRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutAgentWithBody(ctx context.Context, agentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutAgentRequestWithBody(c.Server, agentName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutAgent(ctx context.Context, agentName string, body PutAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutAgentRequest(c.Server, agentName, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAgentDeployments(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAgentDeploymentsRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteAgentDeployment(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAgentDeploymentRequest(c.Server, agentName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAgentDeployment(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentDeploymentRequest(c.Server, agentName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutAgentDeploymentWithBody(ctx context.Context, agentName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutAgentDeploymentRequestWithBody(c.Server, agentName, environmentName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutAgentDeployment(ctx context.Context, agentName string, environmentName string, body PutAgentDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutAgentDeploymentRequest(c.Server, agentName, environmentName, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAgentDeploymentLogs(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentDeploymentLogsRequest(c.Server, agentName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAgentDeploymentMetrics(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentDeploymentMetricsRequest(c.Server, agentName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentMetricsRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateAgentRelease(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateAgentReleaseRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListModelsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListModelsForAuthenticationProviderRequest(c.Server, authenticationProviderName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetModelWithRepoForAuthenticationProvider(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelWithRepoForAuthenticationProviderRequest(c.Server, authenticationProviderName, modelRepoId, modelId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListOrganizationsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListOrganizationsForAuthenticationProviderRequest(c.Server, authenticationProviderName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
 }
 
 func (c *Client) GetConfiguration(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -1474,6 +2012,54 @@ func (c *Client) PutFunctionDeployment(ctx context.Context, functionName string,
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetFunctionDeploymentLogs(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionDeploymentLogsRequest(c.Server, functionName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFunctionDeploymentMetrics(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionDeploymentMetricsRequest(c.Server, functionName, environmentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionMetricsRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateFunctionRelease(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateFunctionReleaseRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListLocations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListLocationsRequest(c.Server)
 	if err != nil {
@@ -1510,8 +2096,8 @@ func (c *Client) ListModelProviders(ctx context.Context, reqEditors ...RequestEd
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteModelProviderRequest(c.Server, providerId)
+func (c *Client) DeleteModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteModelProviderRequest(c.Server, modelProviderName)
 	if err != nil {
 		return nil, err
 	}
@@ -1522,8 +2108,8 @@ func (c *Client) DeleteModelProvider(ctx context.Context, providerId string, req
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelProviderRequest(c.Server, providerId)
+func (c *Client) GetModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelProviderRequest(c.Server, modelProviderName)
 	if err != nil {
 		return nil, err
 	}
@@ -1534,8 +2120,20 @@ func (c *Client) GetModelProvider(ctx context.Context, providerId string, reqEdi
 	return c.Client.Do(req)
 }
 
-func (c *Client) PutModelProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutModelProviderRequest(c.Server, providerId)
+func (c *Client) PutModelProviderWithBody(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelProviderRequestWithBody(c.Server, modelProviderName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutModelProvider(ctx context.Context, modelProviderName string, body PutModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelProviderRequest(c.Server, modelProviderName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1582,8 +2180,20 @@ func (c *Client) GetModel(ctx context.Context, modelName string, reqEditors ...R
 	return c.Client.Do(req)
 }
 
-func (c *Client) PutModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutModelRequest(c.Server, modelName)
+func (c *Client) PutModelWithBody(ctx context.Context, modelName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelRequestWithBody(c.Server, modelName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutModel(ctx context.Context, modelName string, body PutModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutModelRequest(c.Server, modelName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1690,8 +2300,8 @@ func (c *Client) GetModelMetrics(ctx context.Context, modelName string, reqEdito
 	return c.Client.Do(req)
 }
 
-func (c *Client) CreateModelRelease(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateModelReleaseRequest(c.Server, modelName)
+func (c *Client) ReleaseModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReleaseModelRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -1774,8 +2384,8 @@ func (c *Client) ListAllPendingInvitations(ctx context.Context, reqEditors ...Re
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListModelsForProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListModelsForProviderRequest(c.Server, providerId)
+func (c *Client) GetWorkspaceServiceAccounts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetWorkspaceServiceAccountsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -1786,8 +2396,8 @@ func (c *Client) ListModelsForProvider(ctx context.Context, providerId string, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetModelWithRepoForProvider(ctx context.Context, providerId string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelWithRepoForProviderRequest(c.Server, providerId, modelRepoId, modelId)
+func (c *Client) CreateWorkspaceServiceAccountWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateWorkspaceServiceAccountRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1798,8 +2408,8 @@ func (c *Client) GetModelWithRepoForProvider(ctx context.Context, providerId str
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListOrganizationsForProvider(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListOrganizationsForProviderRequest(c.Server, providerId)
+func (c *Client) CreateWorkspaceServiceAccount(ctx context.Context, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateWorkspaceServiceAccountRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1810,8 +2420,8 @@ func (c *Client) ListOrganizationsForProvider(ctx context.Context, providerId st
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListStoreAgentFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListStoreAgentFunctionsRequest(c.Server)
+func (c *Client) DeleteWorkspaceServiceAccount(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteWorkspaceServiceAccountRequest(c.Server, clientId)
 	if err != nil {
 		return nil, err
 	}
@@ -1822,8 +2432,188 @@ func (c *Client) ListStoreAgentFunctions(ctx context.Context, reqEditors ...Requ
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetStoreAgentFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetStoreAgentFunctionRequest(c.Server, functionName)
+func (c *Client) UpdateWorkspaceServiceAccountWithBody(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateWorkspaceServiceAccountRequestWithBody(c.Server, clientId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateWorkspaceServiceAccount(ctx context.Context, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateWorkspaceServiceAccountRequest(c.Server, clientId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListApiKeysForServiceAccount(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListApiKeysForServiceAccountRequest(c.Server, clientId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateApiKeyForServiceAccountWithBody(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateApiKeyForServiceAccountRequestWithBody(c.Server, clientId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateApiKeyForServiceAccount(ctx context.Context, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateApiKeyForServiceAccountRequest(c.Server, clientId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteApiKeyForServiceAccount(ctx context.Context, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiKeyForServiceAccountRequest(c.Server, clientId, apiKeyId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListStoreAgents(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListStoreAgentsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetStoreAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetStoreAgentRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListStoreFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListStoreFunctionsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetStoreFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetStoreFunctionRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListWorkspaceUsers(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListWorkspaceUsersRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) InviteWorkspaceUserWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewInviteWorkspaceUserRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) InviteWorkspaceUser(ctx context.Context, body InviteWorkspaceUserJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewInviteWorkspaceUserRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RemoveWorkspaceUser(ctx context.Context, subOrEmail string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRemoveWorkspaceUserRequest(c.Server, subOrEmail)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateWorkspaceUserRoleWithBody(ctx context.Context, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateWorkspaceUserRoleRequestWithBody(c.Server, subOrEmail, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateWorkspaceUserRole(ctx context.Context, subOrEmail string, body UpdateWorkspaceUserRoleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateWorkspaceUserRoleRequest(c.Server, subOrEmail, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1918,8 +2708,8 @@ func (c *Client) UpdateWorkspace(ctx context.Context, workspaceName string, body
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeclineInvitationToWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeclineInvitationToWorkspaceRequest(c.Server, workspaceName)
+func (c *Client) DeclineWorkspaceInvitation(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeclineWorkspaceInvitationRequest(c.Server, workspaceName)
 	if err != nil {
 		return nil, err
 	}
@@ -1930,8 +2720,8 @@ func (c *Client) DeclineInvitationToWorkspace(ctx context.Context, workspaceName
 	return c.Client.Do(req)
 }
 
-func (c *Client) AcceptInvitationToWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAcceptInvitationToWorkspaceRequest(c.Server, workspaceName)
+func (c *Client) AcceptWorkspaceInvitation(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAcceptWorkspaceInvitationRequest(c.Server, workspaceName)
 	if err != nil {
 		return nil, err
 	}
@@ -1954,196 +2744,582 @@ func (c *Client) LeaveWorkspace(ctx context.Context, workspaceName string, reqEd
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetWorkspaceServiceAccounts(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetWorkspaceServiceAccountsRequest(c.Server, workspaceName)
+// NewListAgentsRequest generates requests for ListAgents
+func NewListAgentsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	operationPath := fmt.Sprintf("/agents")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) CreateWorkspaceServiceAccountWithBody(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateWorkspaceServiceAccountRequestWithBody(c.Server, workspaceName, contentType, body)
+// NewDeleteAgentRequest generates requests for DeleteAgent
+func NewDeleteAgentRequest(server string, agentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/agents/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) CreateWorkspaceServiceAccount(ctx context.Context, workspaceName string, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateWorkspaceServiceAccountRequest(c.Server, workspaceName, body)
+// NewGetAgentRequest generates requests for GetAgent
+func NewGetAgentRequest(server string, agentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/agents/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) DeleteWorkspaceServiceAccount(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteWorkspaceServiceAccountRequest(c.Server, workspaceName, clientId)
+// NewPutAgentRequest calls the generic PutAgent builder with application/json body
+func NewPutAgentRequest(server string, agentName string, body PutAgentJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
+	bodyReader = bytes.NewReader(buf)
+	return NewPutAgentRequestWithBody(server, agentName, "application/json", bodyReader)
 }
 
-func (c *Client) UpdateWorkspaceServiceAccountWithBody(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateWorkspaceServiceAccountRequestWithBody(c.Server, workspaceName, clientId, contentType, body)
+// NewPutAgentRequestWithBody generates requests for PutAgent with any type of body
+func NewPutAgentRequestWithBody(server string, agentName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/agents/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
 }
 
-func (c *Client) UpdateWorkspaceServiceAccount(ctx context.Context, workspaceName string, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateWorkspaceServiceAccountRequest(c.Server, workspaceName, clientId, body)
+// NewListAgentDeploymentsRequest generates requests for ListAgentDeployments
+func NewListAgentDeploymentsRequest(server string, agentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/agents/%s/deployments", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) ListApiKeysForServiceAccount(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListApiKeysForServiceAccountRequest(c.Server, workspaceName, clientId)
+// NewDeleteAgentDeploymentRequest generates requests for DeleteAgentDeployment
+func NewDeleteAgentDeploymentRequest(server string, agentName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/agents/%s/deployments/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) CreateApiKeyForServiceAccountWithBody(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateApiKeyForServiceAccountRequestWithBody(c.Server, workspaceName, clientId, contentType, body)
+// NewGetAgentDeploymentRequest generates requests for GetAgentDeployment
+func NewGetAgentDeploymentRequest(server string, agentName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/agents/%s/deployments/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) CreateApiKeyForServiceAccount(ctx context.Context, workspaceName string, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateApiKeyForServiceAccountRequest(c.Server, workspaceName, clientId, body)
+// NewPutAgentDeploymentRequest calls the generic PutAgentDeployment builder with application/json body
+func NewPutAgentDeploymentRequest(server string, agentName string, environmentName string, body PutAgentDeploymentJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
+	bodyReader = bytes.NewReader(buf)
+	return NewPutAgentDeploymentRequestWithBody(server, agentName, environmentName, "application/json", bodyReader)
 }
 
-func (c *Client) DeleteApiKeyForServiceAccount(ctx context.Context, workspaceName string, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteApiKeyForServiceAccountRequest(c.Server, workspaceName, clientId, apiKeyId)
+// NewPutAgentDeploymentRequestWithBody generates requests for PutAgentDeployment with any type of body
+func NewPutAgentDeploymentRequestWithBody(server string, agentName string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/agents/%s/deployments/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
 }
 
-func (c *Client) ListUsersInWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListUsersInWorkspaceRequest(c.Server, workspaceName)
+// NewGetAgentDeploymentLogsRequest generates requests for GetAgentDeploymentLogs
+func NewGetAgentDeploymentLogsRequest(server string, agentName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/agents/%s/deployments/%s/logs", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) InviteUserToWorkspaceWithBody(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewInviteUserToWorkspaceRequestWithBody(c.Server, workspaceName, contentType, body)
+// NewGetAgentDeploymentMetricsRequest generates requests for GetAgentDeploymentMetrics
+func NewGetAgentDeploymentMetricsRequest(server string, agentName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/agents/%s/deployments/%s/metrics", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) InviteUserToWorkspace(ctx context.Context, workspaceName string, body InviteUserToWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewInviteUserToWorkspaceRequest(c.Server, workspaceName, body)
+// NewGetAgentMetricsRequest generates requests for GetAgentMetrics
+func NewGetAgentMetricsRequest(server string, agentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/agents/%s/metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) RemoveUserFromWorkspace(ctx context.Context, workspaceName string, subOrEmail string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRemoveUserFromWorkspaceRequest(c.Server, workspaceName, subOrEmail)
+// NewCreateAgentReleaseRequest generates requests for CreateAgentRelease
+func NewCreateAgentReleaseRequest(server string, agentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/agents/%s/release", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) UpdateUserRoleInWorkspaceWithBody(ctx context.Context, workspaceName string, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateUserRoleInWorkspaceRequestWithBody(c.Server, workspaceName, subOrEmail, contentType, body)
+// NewListModelsForAuthenticationProviderRequest generates requests for ListModelsForAuthenticationProvider
+func NewListModelsForAuthenticationProviderRequest(server string, authenticationProviderName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authenticationProviderName", runtime.ParamLocationPath, authenticationProviderName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	operationPath := fmt.Sprintf("/authentication_providers/%s/models", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
-func (c *Client) UpdateUserRoleInWorkspace(ctx context.Context, workspaceName string, subOrEmail string, body UpdateUserRoleInWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateUserRoleInWorkspaceRequest(c.Server, workspaceName, subOrEmail, body)
+// NewGetModelWithRepoForAuthenticationProviderRequest generates requests for GetModelWithRepoForAuthenticationProvider
+func NewGetModelWithRepoForAuthenticationProviderRequest(server string, authenticationProviderName string, modelRepoId string, modelId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authenticationProviderName", runtime.ParamLocationPath, authenticationProviderName)
 	if err != nil {
 		return nil, err
 	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "modelRepoId", runtime.ParamLocationPath, modelRepoId)
+	if err != nil {
 		return nil, err
 	}
-	return c.Client.Do(req)
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "modelId", runtime.ParamLocationPath, modelId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/authentication_providers/%s/models/%s/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListOrganizationsForAuthenticationProviderRequest generates requests for ListOrganizationsForAuthenticationProvider
+func NewListOrganizationsForAuthenticationProviderRequest(server string, authenticationProviderName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authenticationProviderName", runtime.ParamLocationPath, authenticationProviderName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/authentication_providers/%s/organizations", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
 // NewGetConfigurationRequest generates requests for GetConfiguration
@@ -2661,6 +3837,156 @@ func NewPutFunctionDeploymentRequestWithBody(server string, functionName string,
 	return req, nil
 }
 
+// NewGetFunctionDeploymentLogsRequest generates requests for GetFunctionDeploymentLogs
+func NewGetFunctionDeploymentLogsRequest(server string, functionName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/deployments/%s/logs", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFunctionDeploymentMetricsRequest generates requests for GetFunctionDeploymentMetrics
+func NewGetFunctionDeploymentMetricsRequest(server string, functionName string, environmentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/deployments/%s/metrics", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetFunctionMetricsRequest generates requests for GetFunctionMetrics
+func NewGetFunctionMetricsRequest(server string, functionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateFunctionReleaseRequest generates requests for CreateFunctionRelease
+func NewCreateFunctionReleaseRequest(server string, functionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/release", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListLocationsRequest generates requests for ListLocations
 func NewListLocationsRequest(server string) (*http.Request, error) {
 	var err error
@@ -2743,12 +4069,12 @@ func NewListModelProvidersRequest(server string) (*http.Request, error) {
 }
 
 // NewDeleteModelProviderRequest generates requests for DeleteModelProvider
-func NewDeleteModelProviderRequest(server string, providerId string) (*http.Request, error) {
+func NewDeleteModelProviderRequest(server string, modelProviderName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "providerId", runtime.ParamLocationPath, providerId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelProviderName", runtime.ParamLocationPath, modelProviderName)
 	if err != nil {
 		return nil, err
 	}
@@ -2777,12 +4103,12 @@ func NewDeleteModelProviderRequest(server string, providerId string) (*http.Requ
 }
 
 // NewGetModelProviderRequest generates requests for GetModelProvider
-func NewGetModelProviderRequest(server string, providerId string) (*http.Request, error) {
+func NewGetModelProviderRequest(server string, modelProviderName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "providerId", runtime.ParamLocationPath, providerId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelProviderName", runtime.ParamLocationPath, modelProviderName)
 	if err != nil {
 		return nil, err
 	}
@@ -2810,13 +4136,24 @@ func NewGetModelProviderRequest(server string, providerId string) (*http.Request
 	return req, nil
 }
 
-// NewPutModelProviderRequest generates requests for PutModelProvider
-func NewPutModelProviderRequest(server string, providerId string) (*http.Request, error) {
+// NewPutModelProviderRequest calls the generic PutModelProvider builder with application/json body
+func NewPutModelProviderRequest(server string, modelProviderName string, body PutModelProviderJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutModelProviderRequestWithBody(server, modelProviderName, "application/json", bodyReader)
+}
+
+// NewPutModelProviderRequestWithBody generates requests for PutModelProvider with any type of body
+func NewPutModelProviderRequestWithBody(server string, modelProviderName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "providerId", runtime.ParamLocationPath, providerId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelProviderName", runtime.ParamLocationPath, modelProviderName)
 	if err != nil {
 		return nil, err
 	}
@@ -2836,10 +4173,12 @@ func NewPutModelProviderRequest(server string, providerId string) (*http.Request
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryURL.String(), nil)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -2939,8 +4278,19 @@ func NewGetModelRequest(server string, modelName string) (*http.Request, error) 
 	return req, nil
 }
 
-// NewPutModelRequest generates requests for PutModel
-func NewPutModelRequest(server string, modelName string) (*http.Request, error) {
+// NewPutModelRequest calls the generic PutModel builder with application/json body
+func NewPutModelRequest(server string, modelName string, body PutModelJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutModelRequestWithBody(server, modelName, "application/json", bodyReader)
+}
+
+// NewPutModelRequestWithBody generates requests for PutModel with any type of body
+func NewPutModelRequestWithBody(server string, modelName string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2965,10 +4315,12 @@ func NewPutModelRequest(server string, modelName string) (*http.Request, error) 
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", queryURL.String(), nil)
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -3259,8 +4611,8 @@ func NewGetModelMetricsRequest(server string, modelName string) (*http.Request, 
 	return req, nil
 }
 
-// NewCreateModelReleaseRequest generates requests for CreateModelRelease
-func NewCreateModelReleaseRequest(server string, modelName string) (*http.Request, error) {
+// NewReleaseModelRequest generates requests for ReleaseModel
+func NewReleaseModelRequest(server string, modelName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3462,23 +4814,16 @@ func NewListAllPendingInvitationsRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
-// NewListModelsForProviderRequest generates requests for ListModelsForProvider
-func NewListModelsForProviderRequest(server string, providerId string) (*http.Request, error) {
+// NewGetWorkspaceServiceAccountsRequest generates requests for GetWorkspaceServiceAccounts
+func NewGetWorkspaceServiceAccountsRequest(server string) (*http.Request, error) {
 	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "providerId", runtime.ParamLocationPath, providerId)
-	if err != nil {
-		return nil, err
-	}
 
 	serverURL, err := url.Parse(server)
 	if err != nil {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/providers/%s/models", pathParam0)
+	operationPath := fmt.Sprintf("/service_accounts")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -3496,27 +4841,222 @@ func NewListModelsForProviderRequest(server string, providerId string) (*http.Re
 	return req, nil
 }
 
-// NewGetModelWithRepoForProviderRequest generates requests for GetModelWithRepoForProvider
-func NewGetModelWithRepoForProviderRequest(server string, providerId string, modelRepoId string, modelId string) (*http.Request, error) {
+// NewCreateWorkspaceServiceAccountRequest calls the generic CreateWorkspaceServiceAccount builder with application/json body
+func NewCreateWorkspaceServiceAccountRequest(server string, body CreateWorkspaceServiceAccountJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateWorkspaceServiceAccountRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateWorkspaceServiceAccountRequestWithBody generates requests for CreateWorkspaceServiceAccount with any type of body
+func NewCreateWorkspaceServiceAccountRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/service_accounts")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteWorkspaceServiceAccountRequest generates requests for DeleteWorkspaceServiceAccount
+func NewDeleteWorkspaceServiceAccountRequest(server string, clientId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "providerId", runtime.ParamLocationPath, providerId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/service_accounts/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateWorkspaceServiceAccountRequest calls the generic UpdateWorkspaceServiceAccount builder with application/json body
+func NewUpdateWorkspaceServiceAccountRequest(server string, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateWorkspaceServiceAccountRequestWithBody(server, clientId, "application/json", bodyReader)
+}
+
+// NewUpdateWorkspaceServiceAccountRequestWithBody generates requests for UpdateWorkspaceServiceAccount with any type of body
+func NewUpdateWorkspaceServiceAccountRequestWithBody(server string, clientId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/service_accounts/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListApiKeysForServiceAccountRequest generates requests for ListApiKeysForServiceAccount
+func NewListApiKeysForServiceAccountRequest(server string, clientId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/service_accounts/%s/api_keys", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateApiKeyForServiceAccountRequest calls the generic CreateApiKeyForServiceAccount builder with application/json body
+func NewCreateApiKeyForServiceAccountRequest(server string, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateApiKeyForServiceAccountRequestWithBody(server, clientId, "application/json", bodyReader)
+}
+
+// NewCreateApiKeyForServiceAccountRequestWithBody generates requests for CreateApiKeyForServiceAccount with any type of body
+func NewCreateApiKeyForServiceAccountRequestWithBody(server string, clientId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/service_accounts/%s/api_keys", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteApiKeyForServiceAccountRequest generates requests for DeleteApiKeyForServiceAccount
+func NewDeleteApiKeyForServiceAccountRequest(server string, clientId string, apiKeyId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
 	if err != nil {
 		return nil, err
 	}
 
 	var pathParam1 string
 
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "modelRepoId", runtime.ParamLocationPath, modelRepoId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "modelId", runtime.ParamLocationPath, modelId)
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "apiKeyId", runtime.ParamLocationPath, apiKeyId)
 	if err != nil {
 		return nil, err
 	}
@@ -3526,7 +5066,34 @@ func NewGetModelWithRepoForProviderRequest(server string, providerId string, mod
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/providers/%s/models/%s/%s", pathParam0, pathParam1, pathParam2)
+	operationPath := fmt.Sprintf("/service_accounts/%s/api_keys/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListStoreAgentsRequest generates requests for ListStoreAgents
+func NewListStoreAgentsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/store/agents")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -3544,13 +5111,13 @@ func NewGetModelWithRepoForProviderRequest(server string, providerId string, mod
 	return req, nil
 }
 
-// NewListOrganizationsForProviderRequest generates requests for ListOrganizationsForProvider
-func NewListOrganizationsForProviderRequest(server string, providerId string) (*http.Request, error) {
+// NewGetStoreAgentRequest generates requests for GetStoreAgent
+func NewGetStoreAgentRequest(server string, agentName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "providerId", runtime.ParamLocationPath, providerId)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
 	if err != nil {
 		return nil, err
 	}
@@ -3560,7 +5127,7 @@ func NewListOrganizationsForProviderRequest(server string, providerId string) (*
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/providers/%s/organizations", pathParam0)
+	operationPath := fmt.Sprintf("/store/agents/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -3578,8 +5145,8 @@ func NewListOrganizationsForProviderRequest(server string, providerId string) (*
 	return req, nil
 }
 
-// NewListStoreAgentFunctionsRequest generates requests for ListStoreAgentFunctions
-func NewListStoreAgentFunctionsRequest(server string) (*http.Request, error) {
+// NewListStoreFunctionsRequest generates requests for ListStoreFunctions
+func NewListStoreFunctionsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -3605,8 +5172,8 @@ func NewListStoreAgentFunctionsRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
-// NewGetStoreAgentFunctionRequest generates requests for GetStoreAgentFunction
-func NewGetStoreAgentFunctionRequest(server string, functionName string) (*http.Request, error) {
+// NewGetStoreFunctionRequest generates requests for GetStoreFunction
+func NewGetStoreFunctionRequest(server string, functionName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3635,6 +5202,154 @@ func NewGetStoreAgentFunctionRequest(server string, functionName string) (*http.
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListWorkspaceUsersRequest generates requests for ListWorkspaceUsers
+func NewListWorkspaceUsersRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewInviteWorkspaceUserRequest calls the generic InviteWorkspaceUser builder with application/json body
+func NewInviteWorkspaceUserRequest(server string, body InviteWorkspaceUserJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewInviteWorkspaceUserRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewInviteWorkspaceUserRequestWithBody generates requests for InviteWorkspaceUser with any type of body
+func NewInviteWorkspaceUserRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewRemoveWorkspaceUserRequest generates requests for RemoveWorkspaceUser
+func NewRemoveWorkspaceUserRequest(server string, subOrEmail string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "subOrEmail", runtime.ParamLocationPath, subOrEmail)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateWorkspaceUserRoleRequest calls the generic UpdateWorkspaceUserRole builder with application/json body
+func NewUpdateWorkspaceUserRoleRequest(server string, subOrEmail string, body UpdateWorkspaceUserRoleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateWorkspaceUserRoleRequestWithBody(server, subOrEmail, "application/json", bodyReader)
+}
+
+// NewUpdateWorkspaceUserRoleRequestWithBody generates requests for UpdateWorkspaceUserRole with any type of body
+func NewUpdateWorkspaceUserRoleRequestWithBody(server string, subOrEmail string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "subOrEmail", runtime.ParamLocationPath, subOrEmail)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -3821,8 +5536,8 @@ func NewUpdateWorkspaceRequestWithBody(server string, workspaceName string, cont
 	return req, nil
 }
 
-// NewDeclineInvitationToWorkspaceRequest generates requests for DeclineInvitationToWorkspace
-func NewDeclineInvitationToWorkspaceRequest(server string, workspaceName string) (*http.Request, error) {
+// NewDeclineWorkspaceInvitationRequest generates requests for DeclineWorkspaceInvitation
+func NewDeclineWorkspaceInvitationRequest(server string, workspaceName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3855,8 +5570,8 @@ func NewDeclineInvitationToWorkspaceRequest(server string, workspaceName string)
 	return req, nil
 }
 
-// NewAcceptInvitationToWorkspaceRequest generates requests for AcceptInvitationToWorkspace
-func NewAcceptInvitationToWorkspaceRequest(server string, workspaceName string) (*http.Request, error) {
+// NewAcceptWorkspaceInvitationRequest generates requests for AcceptWorkspaceInvitation
+func NewAcceptWorkspaceInvitationRequest(server string, workspaceName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3923,501 +5638,6 @@ func NewLeaveWorkspaceRequest(server string, workspaceName string) (*http.Reques
 	return req, nil
 }
 
-// NewGetWorkspaceServiceAccountsRequest generates requests for GetWorkspaceServiceAccounts
-func NewGetWorkspaceServiceAccountsRequest(server string, workspaceName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateWorkspaceServiceAccountRequest calls the generic CreateWorkspaceServiceAccount builder with application/json body
-func NewCreateWorkspaceServiceAccountRequest(server string, workspaceName string, body CreateWorkspaceServiceAccountJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateWorkspaceServiceAccountRequestWithBody(server, workspaceName, "application/json", bodyReader)
-}
-
-// NewCreateWorkspaceServiceAccountRequestWithBody generates requests for CreateWorkspaceServiceAccount with any type of body
-func NewCreateWorkspaceServiceAccountRequestWithBody(server string, workspaceName string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDeleteWorkspaceServiceAccountRequest generates requests for DeleteWorkspaceServiceAccount
-func NewDeleteWorkspaceServiceAccountRequest(server string, workspaceName string, clientId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateWorkspaceServiceAccountRequest calls the generic UpdateWorkspaceServiceAccount builder with application/json body
-func NewUpdateWorkspaceServiceAccountRequest(server string, workspaceName string, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateWorkspaceServiceAccountRequestWithBody(server, workspaceName, clientId, "application/json", bodyReader)
-}
-
-// NewUpdateWorkspaceServiceAccountRequestWithBody generates requests for UpdateWorkspaceServiceAccount with any type of body
-func NewUpdateWorkspaceServiceAccountRequestWithBody(server string, workspaceName string, clientId string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewListApiKeysForServiceAccountRequest generates requests for ListApiKeysForServiceAccount
-func NewListApiKeysForServiceAccountRequest(server string, workspaceName string, clientId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts/%s/api_keys", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateApiKeyForServiceAccountRequest calls the generic CreateApiKeyForServiceAccount builder with application/json body
-func NewCreateApiKeyForServiceAccountRequest(server string, workspaceName string, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateApiKeyForServiceAccountRequestWithBody(server, workspaceName, clientId, "application/json", bodyReader)
-}
-
-// NewCreateApiKeyForServiceAccountRequestWithBody generates requests for CreateApiKeyForServiceAccount with any type of body
-func NewCreateApiKeyForServiceAccountRequestWithBody(server string, workspaceName string, clientId string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts/%s/api_keys", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDeleteApiKeyForServiceAccountRequest generates requests for DeleteApiKeyForServiceAccount
-func NewDeleteApiKeyForServiceAccountRequest(server string, workspaceName string, clientId string, apiKeyId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "clientId", runtime.ParamLocationPath, clientId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "apiKeyId", runtime.ParamLocationPath, apiKeyId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/service_accounts/%s/api_keys/%s", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewListUsersInWorkspaceRequest generates requests for ListUsersInWorkspace
-func NewListUsersInWorkspaceRequest(server string, workspaceName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/users", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewInviteUserToWorkspaceRequest calls the generic InviteUserToWorkspace builder with application/json body
-func NewInviteUserToWorkspaceRequest(server string, workspaceName string, body InviteUserToWorkspaceJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewInviteUserToWorkspaceRequestWithBody(server, workspaceName, "application/json", bodyReader)
-}
-
-// NewInviteUserToWorkspaceRequestWithBody generates requests for InviteUserToWorkspace with any type of body
-func NewInviteUserToWorkspaceRequestWithBody(server string, workspaceName string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/users", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewRemoveUserFromWorkspaceRequest generates requests for RemoveUserFromWorkspace
-func NewRemoveUserFromWorkspaceRequest(server string, workspaceName string, subOrEmail string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "subOrEmail", runtime.ParamLocationPath, subOrEmail)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/users/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateUserRoleInWorkspaceRequest calls the generic UpdateUserRoleInWorkspace builder with application/json body
-func NewUpdateUserRoleInWorkspaceRequest(server string, workspaceName string, subOrEmail string, body UpdateUserRoleInWorkspaceJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateUserRoleInWorkspaceRequestWithBody(server, workspaceName, subOrEmail, "application/json", bodyReader)
-}
-
-// NewUpdateUserRoleInWorkspaceRequestWithBody generates requests for UpdateUserRoleInWorkspace with any type of body
-func NewUpdateUserRoleInWorkspaceRequestWithBody(server string, workspaceName string, subOrEmail string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "subOrEmail", runtime.ParamLocationPath, subOrEmail)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/workspaces/%s/users/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -4461,6 +5681,55 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
+	// ListAgentsWithResponse request
+	ListAgentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error)
+
+	// DeleteAgentWithResponse request
+	DeleteAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*DeleteAgentResponse, error)
+
+	// GetAgentWithResponse request
+	GetAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentResponse, error)
+
+	// PutAgentWithBodyWithResponse request with any body
+	PutAgentWithBodyWithResponse(ctx context.Context, agentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutAgentResponse, error)
+
+	PutAgentWithResponse(ctx context.Context, agentName string, body PutAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentResponse, error)
+
+	// ListAgentDeploymentsWithResponse request
+	ListAgentDeploymentsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentDeploymentsResponse, error)
+
+	// DeleteAgentDeploymentWithResponse request
+	DeleteAgentDeploymentWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*DeleteAgentDeploymentResponse, error)
+
+	// GetAgentDeploymentWithResponse request
+	GetAgentDeploymentWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*GetAgentDeploymentResponse, error)
+
+	// PutAgentDeploymentWithBodyWithResponse request with any body
+	PutAgentDeploymentWithBodyWithResponse(ctx context.Context, agentName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutAgentDeploymentResponse, error)
+
+	PutAgentDeploymentWithResponse(ctx context.Context, agentName string, environmentName string, body PutAgentDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentDeploymentResponse, error)
+
+	// GetAgentDeploymentLogsWithResponse request
+	GetAgentDeploymentLogsWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*GetAgentDeploymentLogsResponse, error)
+
+	// GetAgentDeploymentMetricsWithResponse request
+	GetAgentDeploymentMetricsWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*GetAgentDeploymentMetricsResponse, error)
+
+	// GetAgentMetricsWithResponse request
+	GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error)
+
+	// CreateAgentReleaseWithResponse request
+	CreateAgentReleaseWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*CreateAgentReleaseResponse, error)
+
+	// ListModelsForAuthenticationProviderWithResponse request
+	ListModelsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListModelsForAuthenticationProviderResponse, error)
+
+	// GetModelWithRepoForAuthenticationProviderWithResponse request
+	GetModelWithRepoForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*GetModelWithRepoForAuthenticationProviderResponse, error)
+
+	// ListOrganizationsForAuthenticationProviderWithResponse request
+	ListOrganizationsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListOrganizationsForAuthenticationProviderResponse, error)
+
 	// GetConfigurationWithResponse request
 	GetConfigurationWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetConfigurationResponse, error)
 
@@ -4509,6 +5778,18 @@ type ClientWithResponsesInterface interface {
 
 	PutFunctionDeploymentWithResponse(ctx context.Context, functionName string, environmentName string, body PutFunctionDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutFunctionDeploymentResponse, error)
 
+	// GetFunctionDeploymentLogsWithResponse request
+	GetFunctionDeploymentLogsWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*GetFunctionDeploymentLogsResponse, error)
+
+	// GetFunctionDeploymentMetricsWithResponse request
+	GetFunctionDeploymentMetricsWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*GetFunctionDeploymentMetricsResponse, error)
+
+	// GetFunctionMetricsWithResponse request
+	GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error)
+
+	// CreateFunctionReleaseWithResponse request
+	CreateFunctionReleaseWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*CreateFunctionReleaseResponse, error)
+
 	// ListLocationsWithResponse request
 	ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error)
 
@@ -4519,13 +5800,15 @@ type ClientWithResponsesInterface interface {
 	ListModelProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelProvidersResponse, error)
 
 	// DeleteModelProviderWithResponse request
-	DeleteModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*DeleteModelProviderResponse, error)
+	DeleteModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*DeleteModelProviderResponse, error)
 
 	// GetModelProviderWithResponse request
-	GetModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error)
+	GetModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error)
 
-	// PutModelProviderWithResponse request
-	PutModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error)
+	// PutModelProviderWithBodyWithResponse request with any body
+	PutModelProviderWithBodyWithResponse(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error)
+
+	PutModelProviderWithResponse(ctx context.Context, modelProviderName string, body PutModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error)
 
 	// ListModelsWithResponse request
 	ListModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
@@ -4536,8 +5819,10 @@ type ClientWithResponsesInterface interface {
 	// GetModelWithResponse request
 	GetModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelResponse, error)
 
-	// PutModelWithResponse request
-	PutModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*PutModelResponse, error)
+	// PutModelWithBodyWithResponse request with any body
+	PutModelWithBodyWithResponse(ctx context.Context, modelName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutModelResponse, error)
+
+	PutModelWithResponse(ctx context.Context, modelName string, body PutModelJSONRequestBody, reqEditors ...RequestEditorFn) (*PutModelResponse, error)
 
 	// ListModelDeploymentsWithResponse request
 	ListModelDeploymentsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ListModelDeploymentsResponse, error)
@@ -4562,8 +5847,8 @@ type ClientWithResponsesInterface interface {
 	// GetModelMetricsWithResponse request
 	GetModelMetricsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error)
 
-	// CreateModelReleaseWithResponse request
-	CreateModelReleaseWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*CreateModelReleaseResponse, error)
+	// ReleaseModelWithResponse request
+	ReleaseModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ReleaseModelResponse, error)
 
 	// ListPoliciesWithResponse request
 	ListPoliciesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListPoliciesResponse, error)
@@ -4582,20 +5867,60 @@ type ClientWithResponsesInterface interface {
 	// ListAllPendingInvitationsWithResponse request
 	ListAllPendingInvitationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAllPendingInvitationsResponse, error)
 
-	// ListModelsForProviderWithResponse request
-	ListModelsForProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*ListModelsForProviderResponse, error)
+	// GetWorkspaceServiceAccountsWithResponse request
+	GetWorkspaceServiceAccountsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetWorkspaceServiceAccountsResponse, error)
 
-	// GetModelWithRepoForProviderWithResponse request
-	GetModelWithRepoForProviderWithResponse(ctx context.Context, providerId string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*GetModelWithRepoForProviderResponse, error)
+	// CreateWorkspaceServiceAccountWithBodyWithResponse request with any body
+	CreateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error)
 
-	// ListOrganizationsForProviderWithResponse request
-	ListOrganizationsForProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*ListOrganizationsForProviderResponse, error)
+	CreateWorkspaceServiceAccountWithResponse(ctx context.Context, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error)
 
-	// ListStoreAgentFunctionsWithResponse request
-	ListStoreAgentFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentFunctionsResponse, error)
+	// DeleteWorkspaceServiceAccountWithResponse request
+	DeleteWorkspaceServiceAccountWithResponse(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*DeleteWorkspaceServiceAccountResponse, error)
 
-	// GetStoreAgentFunctionWithResponse request
-	GetStoreAgentFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreAgentFunctionResponse, error)
+	// UpdateWorkspaceServiceAccountWithBodyWithResponse request with any body
+	UpdateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error)
+
+	UpdateWorkspaceServiceAccountWithResponse(ctx context.Context, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error)
+
+	// ListApiKeysForServiceAccountWithResponse request
+	ListApiKeysForServiceAccountWithResponse(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*ListApiKeysForServiceAccountResponse, error)
+
+	// CreateApiKeyForServiceAccountWithBodyWithResponse request with any body
+	CreateApiKeyForServiceAccountWithBodyWithResponse(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error)
+
+	CreateApiKeyForServiceAccountWithResponse(ctx context.Context, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error)
+
+	// DeleteApiKeyForServiceAccountWithResponse request
+	DeleteApiKeyForServiceAccountWithResponse(ctx context.Context, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*DeleteApiKeyForServiceAccountResponse, error)
+
+	// ListStoreAgentsWithResponse request
+	ListStoreAgentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentsResponse, error)
+
+	// GetStoreAgentWithResponse request
+	GetStoreAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetStoreAgentResponse, error)
+
+	// ListStoreFunctionsWithResponse request
+	ListStoreFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreFunctionsResponse, error)
+
+	// GetStoreFunctionWithResponse request
+	GetStoreFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreFunctionResponse, error)
+
+	// ListWorkspaceUsersWithResponse request
+	ListWorkspaceUsersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListWorkspaceUsersResponse, error)
+
+	// InviteWorkspaceUserWithBodyWithResponse request with any body
+	InviteWorkspaceUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*InviteWorkspaceUserResponse, error)
+
+	InviteWorkspaceUserWithResponse(ctx context.Context, body InviteWorkspaceUserJSONRequestBody, reqEditors ...RequestEditorFn) (*InviteWorkspaceUserResponse, error)
+
+	// RemoveWorkspaceUserWithResponse request
+	RemoveWorkspaceUserWithResponse(ctx context.Context, subOrEmail string, reqEditors ...RequestEditorFn) (*RemoveWorkspaceUserResponse, error)
+
+	// UpdateWorkspaceUserRoleWithBodyWithResponse request with any body
+	UpdateWorkspaceUserRoleWithBodyWithResponse(ctx context.Context, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWorkspaceUserRoleResponse, error)
+
+	UpdateWorkspaceUserRoleWithResponse(ctx context.Context, subOrEmail string, body UpdateWorkspaceUserRoleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceUserRoleResponse, error)
 
 	// ListWorkspacesWithResponse request
 	ListWorkspacesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListWorkspacesResponse, error)
@@ -4616,57 +5941,344 @@ type ClientWithResponsesInterface interface {
 
 	UpdateWorkspaceWithResponse(ctx context.Context, workspaceName string, body UpdateWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceResponse, error)
 
-	// DeclineInvitationToWorkspaceWithResponse request
-	DeclineInvitationToWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*DeclineInvitationToWorkspaceResponse, error)
+	// DeclineWorkspaceInvitationWithResponse request
+	DeclineWorkspaceInvitationWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*DeclineWorkspaceInvitationResponse, error)
 
-	// AcceptInvitationToWorkspaceWithResponse request
-	AcceptInvitationToWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*AcceptInvitationToWorkspaceResponse, error)
+	// AcceptWorkspaceInvitationWithResponse request
+	AcceptWorkspaceInvitationWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*AcceptWorkspaceInvitationResponse, error)
 
 	// LeaveWorkspaceWithResponse request
 	LeaveWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*LeaveWorkspaceResponse, error)
+}
 
-	// GetWorkspaceServiceAccountsWithResponse request
-	GetWorkspaceServiceAccountsWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*GetWorkspaceServiceAccountsResponse, error)
+type ListAgentsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Agent
+}
 
-	// CreateWorkspaceServiceAccountWithBodyWithResponse request with any body
-	CreateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error)
+// Status returns HTTPResponse.Status
+func (r ListAgentsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
 
-	CreateWorkspaceServiceAccountWithResponse(ctx context.Context, workspaceName string, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error)
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAgentsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
 
-	// DeleteWorkspaceServiceAccountWithResponse request
-	DeleteWorkspaceServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*DeleteWorkspaceServiceAccountResponse, error)
+type DeleteAgentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Agent
+}
 
-	// UpdateWorkspaceServiceAccountWithBodyWithResponse request with any body
-	UpdateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error)
+// Status returns HTTPResponse.Status
+func (r DeleteAgentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
 
-	UpdateWorkspaceServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error)
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAgentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
 
-	// ListApiKeysForServiceAccountWithResponse request
-	ListApiKeysForServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*ListApiKeysForServiceAccountResponse, error)
+type GetAgentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Agent
+}
 
-	// CreateApiKeyForServiceAccountWithBodyWithResponse request with any body
-	CreateApiKeyForServiceAccountWithBodyWithResponse(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error)
+// Status returns HTTPResponse.Status
+func (r GetAgentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
 
-	CreateApiKeyForServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error)
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAgentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
 
-	// DeleteApiKeyForServiceAccountWithResponse request
-	DeleteApiKeyForServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*DeleteApiKeyForServiceAccountResponse, error)
+type PutAgentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Agent
+}
 
-	// ListUsersInWorkspaceWithResponse request
-	ListUsersInWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*ListUsersInWorkspaceResponse, error)
+// Status returns HTTPResponse.Status
+func (r PutAgentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
 
-	// InviteUserToWorkspaceWithBodyWithResponse request with any body
-	InviteUserToWorkspaceWithBodyWithResponse(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*InviteUserToWorkspaceResponse, error)
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutAgentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
 
-	InviteUserToWorkspaceWithResponse(ctx context.Context, workspaceName string, body InviteUserToWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*InviteUserToWorkspaceResponse, error)
+type ListAgentDeploymentsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]AgentDeployment
+}
 
-	// RemoveUserFromWorkspaceWithResponse request
-	RemoveUserFromWorkspaceWithResponse(ctx context.Context, workspaceName string, subOrEmail string, reqEditors ...RequestEditorFn) (*RemoveUserFromWorkspaceResponse, error)
+// Status returns HTTPResponse.Status
+func (r ListAgentDeploymentsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
 
-	// UpdateUserRoleInWorkspaceWithBodyWithResponse request with any body
-	UpdateUserRoleInWorkspaceWithBodyWithResponse(ctx context.Context, workspaceName string, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateUserRoleInWorkspaceResponse, error)
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAgentDeploymentsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
 
-	UpdateUserRoleInWorkspaceWithResponse(ctx context.Context, workspaceName string, subOrEmail string, body UpdateUserRoleInWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateUserRoleInWorkspaceResponse, error)
+type DeleteAgentDeploymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteAgentDeploymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteAgentDeploymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetAgentDeploymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAgentDeploymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAgentDeploymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutAgentDeploymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentDeployment
+}
+
+// Status returns HTTPResponse.Status
+func (r PutAgentDeploymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutAgentDeploymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetAgentDeploymentLogsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ResourceDeploymentLog
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAgentDeploymentLogsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAgentDeploymentLogsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetAgentDeploymentMetricsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ResourceDeploymentMetrics
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAgentDeploymentMetricsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAgentDeploymentMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetAgentMetricsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ResourceMetrics
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAgentMetricsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAgentMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateAgentReleaseResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentRelease
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateAgentReleaseResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateAgentReleaseResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListModelsForAuthenticationProviderResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]AuthenticationProviderModel
+}
+
+// Status returns HTTPResponse.Status
+func (r ListModelsForAuthenticationProviderResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListModelsForAuthenticationProviderResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetModelWithRepoForAuthenticationProviderResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AuthenticationProviderModel
+}
+
+// Status returns HTTPResponse.Status
+func (r GetModelWithRepoForAuthenticationProviderResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetModelWithRepoForAuthenticationProviderResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListOrganizationsForAuthenticationProviderResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]AuthenticationProviderOrganization
+}
+
+// Status returns HTTPResponse.Status
+func (r ListOrganizationsForAuthenticationProviderResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListOrganizationsForAuthenticationProviderResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
 }
 
 type GetConfigurationResponse struct {
@@ -4971,6 +6583,94 @@ func (r PutFunctionDeploymentResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PutFunctionDeploymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFunctionDeploymentLogsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]ResourceDeploymentLog
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFunctionDeploymentLogsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFunctionDeploymentLogsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFunctionDeploymentMetricsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ResourceDeploymentMetrics
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFunctionDeploymentMetricsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFunctionDeploymentMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFunctionMetricsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ResourceMetrics
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFunctionMetricsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFunctionMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateFunctionReleaseResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FunctionRelease
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateFunctionReleaseResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateFunctionReleaseResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5351,14 +7051,14 @@ func (r GetModelMetricsResponse) StatusCode() int {
 	return 0
 }
 
-type CreateModelReleaseResponse struct {
+type ReleaseModelResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *ModelRelease
 }
 
 // Status returns HTTPResponse.Status
-func (r CreateModelReleaseResponse) Status() string {
+func (r ReleaseModelResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5366,7 +7066,7 @@ func (r CreateModelReleaseResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r CreateModelReleaseResponse) StatusCode() int {
+func (r ReleaseModelResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5477,292 +7177,6 @@ func (r ListAllPendingInvitationsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListAllPendingInvitationsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListModelsForProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ProviderModel
-}
-
-// Status returns HTTPResponse.Status
-func (r ListModelsForProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListModelsForProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetModelWithRepoForProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ProviderModel
-}
-
-// Status returns HTTPResponse.Status
-func (r GetModelWithRepoForProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetModelWithRepoForProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListOrganizationsForProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ProviderOrganization
-}
-
-// Status returns HTTPResponse.Status
-func (r ListOrganizationsForProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListOrganizationsForProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListStoreAgentFunctionsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]StoreAgentFunction
-}
-
-// Status returns HTTPResponse.Status
-func (r ListStoreAgentFunctionsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListStoreAgentFunctionsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetStoreAgentFunctionResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *StoreAgentFunction
-}
-
-// Status returns HTTPResponse.Status
-func (r GetStoreAgentFunctionResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetStoreAgentFunctionResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListWorkspacesResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]Workspace
-}
-
-// Status returns HTTPResponse.Status
-func (r ListWorkspacesResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListWorkspacesResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateWorspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Workspace
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateWorspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateWorspaceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteWorkspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Workspace
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteWorkspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteWorkspaceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetWorkspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Workspace
-}
-
-// Status returns HTTPResponse.Status
-func (r GetWorkspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetWorkspaceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type UpdateWorkspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Workspace
-}
-
-// Status returns HTTPResponse.Status
-func (r UpdateWorkspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r UpdateWorkspaceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeclineInvitationToWorkspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *PendingInvitation
-}
-
-// Status returns HTTPResponse.Status
-func (r DeclineInvitationToWorkspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeclineInvitationToWorkspaceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type AcceptInvitationToWorkspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *PendingInvitationAccept
-}
-
-// Status returns HTTPResponse.Status
-func (r AcceptInvitationToWorkspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r AcceptInvitationToWorkspaceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type LeaveWorkspaceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Workspace
-}
-
-// Status returns HTTPResponse.Status
-func (r LeaveWorkspaceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r LeaveWorkspaceResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5985,14 +7399,102 @@ func (r DeleteApiKeyForServiceAccountResponse) StatusCode() int {
 	return 0
 }
 
-type ListUsersInWorkspaceResponse struct {
+type ListStoreAgentsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]StoreAgent
+}
+
+// Status returns HTTPResponse.Status
+func (r ListStoreAgentsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListStoreAgentsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetStoreAgentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *StoreAgent
+}
+
+// Status returns HTTPResponse.Status
+func (r GetStoreAgentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetStoreAgentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListStoreFunctionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]StoreFunction
+}
+
+// Status returns HTTPResponse.Status
+func (r ListStoreFunctionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListStoreFunctionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetStoreFunctionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *StoreFunction
+}
+
+// Status returns HTTPResponse.Status
+func (r GetStoreFunctionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetStoreFunctionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListWorkspaceUsersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]WorkspaceUser
 }
 
 // Status returns HTTPResponse.Status
-func (r ListUsersInWorkspaceResponse) Status() string {
+func (r ListWorkspaceUsersResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -6000,21 +7502,21 @@ func (r ListUsersInWorkspaceResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r ListUsersInWorkspaceResponse) StatusCode() int {
+func (r ListWorkspaceUsersResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type InviteUserToWorkspaceResponse struct {
+type InviteWorkspaceUserResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PendingInvitation
 }
 
 // Status returns HTTPResponse.Status
-func (r InviteUserToWorkspaceResponse) Status() string {
+func (r InviteWorkspaceUserResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -6022,20 +7524,20 @@ func (r InviteUserToWorkspaceResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r InviteUserToWorkspaceResponse) StatusCode() int {
+func (r InviteWorkspaceUserResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type RemoveUserFromWorkspaceResponse struct {
+type RemoveWorkspaceUserResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r RemoveUserFromWorkspaceResponse) Status() string {
+func (r RemoveWorkspaceUserResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -6043,21 +7545,21 @@ func (r RemoveUserFromWorkspaceResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r RemoveUserFromWorkspaceResponse) StatusCode() int {
+func (r RemoveWorkspaceUserResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type UpdateUserRoleInWorkspaceResponse struct {
+type UpdateWorkspaceUserRoleResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *WorkspaceUser
 }
 
 // Status returns HTTPResponse.Status
-func (r UpdateUserRoleInWorkspaceResponse) Status() string {
+func (r UpdateWorkspaceUserRoleResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -6065,11 +7567,338 @@ func (r UpdateUserRoleInWorkspaceResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r UpdateUserRoleInWorkspaceResponse) StatusCode() int {
+func (r UpdateWorkspaceUserRoleResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
+}
+
+type ListWorkspacesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Workspace
+}
+
+// Status returns HTTPResponse.Status
+func (r ListWorkspacesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListWorkspacesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateWorspaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Workspace
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateWorspaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateWorspaceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteWorkspaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Workspace
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteWorkspaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteWorkspaceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetWorkspaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Workspace
+}
+
+// Status returns HTTPResponse.Status
+func (r GetWorkspaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetWorkspaceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateWorkspaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Workspace
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateWorkspaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateWorkspaceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeclineWorkspaceInvitationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PendingInvitation
+}
+
+// Status returns HTTPResponse.Status
+func (r DeclineWorkspaceInvitationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeclineWorkspaceInvitationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AcceptWorkspaceInvitationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PendingInvitationAccept
+}
+
+// Status returns HTTPResponse.Status
+func (r AcceptWorkspaceInvitationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AcceptWorkspaceInvitationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type LeaveWorkspaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Workspace
+}
+
+// Status returns HTTPResponse.Status
+func (r LeaveWorkspaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r LeaveWorkspaceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ListAgentsWithResponse request returning *ListAgentsResponse
+func (c *ClientWithResponses) ListAgentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error) {
+	rsp, err := c.ListAgents(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAgentsResponse(rsp)
+}
+
+// DeleteAgentWithResponse request returning *DeleteAgentResponse
+func (c *ClientWithResponses) DeleteAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*DeleteAgentResponse, error) {
+	rsp, err := c.DeleteAgent(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAgentResponse(rsp)
+}
+
+// GetAgentWithResponse request returning *GetAgentResponse
+func (c *ClientWithResponses) GetAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentResponse, error) {
+	rsp, err := c.GetAgent(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAgentResponse(rsp)
+}
+
+// PutAgentWithBodyWithResponse request with arbitrary body returning *PutAgentResponse
+func (c *ClientWithResponses) PutAgentWithBodyWithResponse(ctx context.Context, agentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutAgentResponse, error) {
+	rsp, err := c.PutAgentWithBody(ctx, agentName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutAgentResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutAgentWithResponse(ctx context.Context, agentName string, body PutAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentResponse, error) {
+	rsp, err := c.PutAgent(ctx, agentName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutAgentResponse(rsp)
+}
+
+// ListAgentDeploymentsWithResponse request returning *ListAgentDeploymentsResponse
+func (c *ClientWithResponses) ListAgentDeploymentsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentDeploymentsResponse, error) {
+	rsp, err := c.ListAgentDeployments(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAgentDeploymentsResponse(rsp)
+}
+
+// DeleteAgentDeploymentWithResponse request returning *DeleteAgentDeploymentResponse
+func (c *ClientWithResponses) DeleteAgentDeploymentWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*DeleteAgentDeploymentResponse, error) {
+	rsp, err := c.DeleteAgentDeployment(ctx, agentName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteAgentDeploymentResponse(rsp)
+}
+
+// GetAgentDeploymentWithResponse request returning *GetAgentDeploymentResponse
+func (c *ClientWithResponses) GetAgentDeploymentWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*GetAgentDeploymentResponse, error) {
+	rsp, err := c.GetAgentDeployment(ctx, agentName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAgentDeploymentResponse(rsp)
+}
+
+// PutAgentDeploymentWithBodyWithResponse request with arbitrary body returning *PutAgentDeploymentResponse
+func (c *ClientWithResponses) PutAgentDeploymentWithBodyWithResponse(ctx context.Context, agentName string, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutAgentDeploymentResponse, error) {
+	rsp, err := c.PutAgentDeploymentWithBody(ctx, agentName, environmentName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutAgentDeploymentResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutAgentDeploymentWithResponse(ctx context.Context, agentName string, environmentName string, body PutAgentDeploymentJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentDeploymentResponse, error) {
+	rsp, err := c.PutAgentDeployment(ctx, agentName, environmentName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutAgentDeploymentResponse(rsp)
+}
+
+// GetAgentDeploymentLogsWithResponse request returning *GetAgentDeploymentLogsResponse
+func (c *ClientWithResponses) GetAgentDeploymentLogsWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*GetAgentDeploymentLogsResponse, error) {
+	rsp, err := c.GetAgentDeploymentLogs(ctx, agentName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAgentDeploymentLogsResponse(rsp)
+}
+
+// GetAgentDeploymentMetricsWithResponse request returning *GetAgentDeploymentMetricsResponse
+func (c *ClientWithResponses) GetAgentDeploymentMetricsWithResponse(ctx context.Context, agentName string, environmentName string, reqEditors ...RequestEditorFn) (*GetAgentDeploymentMetricsResponse, error) {
+	rsp, err := c.GetAgentDeploymentMetrics(ctx, agentName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAgentDeploymentMetricsResponse(rsp)
+}
+
+// GetAgentMetricsWithResponse request returning *GetAgentMetricsResponse
+func (c *ClientWithResponses) GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error) {
+	rsp, err := c.GetAgentMetrics(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAgentMetricsResponse(rsp)
+}
+
+// CreateAgentReleaseWithResponse request returning *CreateAgentReleaseResponse
+func (c *ClientWithResponses) CreateAgentReleaseWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*CreateAgentReleaseResponse, error) {
+	rsp, err := c.CreateAgentRelease(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateAgentReleaseResponse(rsp)
+}
+
+// ListModelsForAuthenticationProviderWithResponse request returning *ListModelsForAuthenticationProviderResponse
+func (c *ClientWithResponses) ListModelsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListModelsForAuthenticationProviderResponse, error) {
+	rsp, err := c.ListModelsForAuthenticationProvider(ctx, authenticationProviderName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListModelsForAuthenticationProviderResponse(rsp)
+}
+
+// GetModelWithRepoForAuthenticationProviderWithResponse request returning *GetModelWithRepoForAuthenticationProviderResponse
+func (c *ClientWithResponses) GetModelWithRepoForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*GetModelWithRepoForAuthenticationProviderResponse, error) {
+	rsp, err := c.GetModelWithRepoForAuthenticationProvider(ctx, authenticationProviderName, modelRepoId, modelId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetModelWithRepoForAuthenticationProviderResponse(rsp)
+}
+
+// ListOrganizationsForAuthenticationProviderWithResponse request returning *ListOrganizationsForAuthenticationProviderResponse
+func (c *ClientWithResponses) ListOrganizationsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListOrganizationsForAuthenticationProviderResponse, error) {
+	rsp, err := c.ListOrganizationsForAuthenticationProvider(ctx, authenticationProviderName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListOrganizationsForAuthenticationProviderResponse(rsp)
 }
 
 // GetConfigurationWithResponse request returning *GetConfigurationResponse
@@ -6222,6 +8051,42 @@ func (c *ClientWithResponses) PutFunctionDeploymentWithResponse(ctx context.Cont
 	return ParsePutFunctionDeploymentResponse(rsp)
 }
 
+// GetFunctionDeploymentLogsWithResponse request returning *GetFunctionDeploymentLogsResponse
+func (c *ClientWithResponses) GetFunctionDeploymentLogsWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*GetFunctionDeploymentLogsResponse, error) {
+	rsp, err := c.GetFunctionDeploymentLogs(ctx, functionName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFunctionDeploymentLogsResponse(rsp)
+}
+
+// GetFunctionDeploymentMetricsWithResponse request returning *GetFunctionDeploymentMetricsResponse
+func (c *ClientWithResponses) GetFunctionDeploymentMetricsWithResponse(ctx context.Context, functionName string, environmentName string, reqEditors ...RequestEditorFn) (*GetFunctionDeploymentMetricsResponse, error) {
+	rsp, err := c.GetFunctionDeploymentMetrics(ctx, functionName, environmentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFunctionDeploymentMetricsResponse(rsp)
+}
+
+// GetFunctionMetricsWithResponse request returning *GetFunctionMetricsResponse
+func (c *ClientWithResponses) GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error) {
+	rsp, err := c.GetFunctionMetrics(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFunctionMetricsResponse(rsp)
+}
+
+// CreateFunctionReleaseWithResponse request returning *CreateFunctionReleaseResponse
+func (c *ClientWithResponses) CreateFunctionReleaseWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*CreateFunctionReleaseResponse, error) {
+	rsp, err := c.CreateFunctionRelease(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateFunctionReleaseResponse(rsp)
+}
+
 // ListLocationsWithResponse request returning *ListLocationsResponse
 func (c *ClientWithResponses) ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error) {
 	rsp, err := c.ListLocations(ctx, reqEditors...)
@@ -6250,8 +8115,8 @@ func (c *ClientWithResponses) ListModelProvidersWithResponse(ctx context.Context
 }
 
 // DeleteModelProviderWithResponse request returning *DeleteModelProviderResponse
-func (c *ClientWithResponses) DeleteModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*DeleteModelProviderResponse, error) {
-	rsp, err := c.DeleteModelProvider(ctx, providerId, reqEditors...)
+func (c *ClientWithResponses) DeleteModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*DeleteModelProviderResponse, error) {
+	rsp, err := c.DeleteModelProvider(ctx, modelProviderName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6259,17 +8124,25 @@ func (c *ClientWithResponses) DeleteModelProviderWithResponse(ctx context.Contex
 }
 
 // GetModelProviderWithResponse request returning *GetModelProviderResponse
-func (c *ClientWithResponses) GetModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error) {
-	rsp, err := c.GetModelProvider(ctx, providerId, reqEditors...)
+func (c *ClientWithResponses) GetModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error) {
+	rsp, err := c.GetModelProvider(ctx, modelProviderName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGetModelProviderResponse(rsp)
 }
 
-// PutModelProviderWithResponse request returning *PutModelProviderResponse
-func (c *ClientWithResponses) PutModelProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error) {
-	rsp, err := c.PutModelProvider(ctx, providerId, reqEditors...)
+// PutModelProviderWithBodyWithResponse request with arbitrary body returning *PutModelProviderResponse
+func (c *ClientWithResponses) PutModelProviderWithBodyWithResponse(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error) {
+	rsp, err := c.PutModelProviderWithBody(ctx, modelProviderName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutModelProviderResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutModelProviderWithResponse(ctx context.Context, modelProviderName string, body PutModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*PutModelProviderResponse, error) {
+	rsp, err := c.PutModelProvider(ctx, modelProviderName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6303,9 +8176,17 @@ func (c *ClientWithResponses) GetModelWithResponse(ctx context.Context, modelNam
 	return ParseGetModelResponse(rsp)
 }
 
-// PutModelWithResponse request returning *PutModelResponse
-func (c *ClientWithResponses) PutModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*PutModelResponse, error) {
-	rsp, err := c.PutModel(ctx, modelName, reqEditors...)
+// PutModelWithBodyWithResponse request with arbitrary body returning *PutModelResponse
+func (c *ClientWithResponses) PutModelWithBodyWithResponse(ctx context.Context, modelName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutModelResponse, error) {
+	rsp, err := c.PutModelWithBody(ctx, modelName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutModelResponse(rsp)
+}
+
+func (c *ClientWithResponses) PutModelWithResponse(ctx context.Context, modelName string, body PutModelJSONRequestBody, reqEditors ...RequestEditorFn) (*PutModelResponse, error) {
+	rsp, err := c.PutModel(ctx, modelName, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6383,13 +8264,13 @@ func (c *ClientWithResponses) GetModelMetricsWithResponse(ctx context.Context, m
 	return ParseGetModelMetricsResponse(rsp)
 }
 
-// CreateModelReleaseWithResponse request returning *CreateModelReleaseResponse
-func (c *ClientWithResponses) CreateModelReleaseWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*CreateModelReleaseResponse, error) {
-	rsp, err := c.CreateModelRelease(ctx, modelName, reqEditors...)
+// ReleaseModelWithResponse request returning *ReleaseModelResponse
+func (c *ClientWithResponses) ReleaseModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ReleaseModelResponse, error) {
+	rsp, err := c.ReleaseModel(ctx, modelName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateModelReleaseResponse(rsp)
+	return ParseReleaseModelResponse(rsp)
 }
 
 // ListPoliciesWithResponse request returning *ListPoliciesResponse
@@ -6445,49 +8326,179 @@ func (c *ClientWithResponses) ListAllPendingInvitationsWithResponse(ctx context.
 	return ParseListAllPendingInvitationsResponse(rsp)
 }
 
-// ListModelsForProviderWithResponse request returning *ListModelsForProviderResponse
-func (c *ClientWithResponses) ListModelsForProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*ListModelsForProviderResponse, error) {
-	rsp, err := c.ListModelsForProvider(ctx, providerId, reqEditors...)
+// GetWorkspaceServiceAccountsWithResponse request returning *GetWorkspaceServiceAccountsResponse
+func (c *ClientWithResponses) GetWorkspaceServiceAccountsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetWorkspaceServiceAccountsResponse, error) {
+	rsp, err := c.GetWorkspaceServiceAccounts(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseListModelsForProviderResponse(rsp)
+	return ParseGetWorkspaceServiceAccountsResponse(rsp)
 }
 
-// GetModelWithRepoForProviderWithResponse request returning *GetModelWithRepoForProviderResponse
-func (c *ClientWithResponses) GetModelWithRepoForProviderWithResponse(ctx context.Context, providerId string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*GetModelWithRepoForProviderResponse, error) {
-	rsp, err := c.GetModelWithRepoForProvider(ctx, providerId, modelRepoId, modelId, reqEditors...)
+// CreateWorkspaceServiceAccountWithBodyWithResponse request with arbitrary body returning *CreateWorkspaceServiceAccountResponse
+func (c *ClientWithResponses) CreateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error) {
+	rsp, err := c.CreateWorkspaceServiceAccountWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetModelWithRepoForProviderResponse(rsp)
+	return ParseCreateWorkspaceServiceAccountResponse(rsp)
 }
 
-// ListOrganizationsForProviderWithResponse request returning *ListOrganizationsForProviderResponse
-func (c *ClientWithResponses) ListOrganizationsForProviderWithResponse(ctx context.Context, providerId string, reqEditors ...RequestEditorFn) (*ListOrganizationsForProviderResponse, error) {
-	rsp, err := c.ListOrganizationsForProvider(ctx, providerId, reqEditors...)
+func (c *ClientWithResponses) CreateWorkspaceServiceAccountWithResponse(ctx context.Context, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error) {
+	rsp, err := c.CreateWorkspaceServiceAccount(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseListOrganizationsForProviderResponse(rsp)
+	return ParseCreateWorkspaceServiceAccountResponse(rsp)
 }
 
-// ListStoreAgentFunctionsWithResponse request returning *ListStoreAgentFunctionsResponse
-func (c *ClientWithResponses) ListStoreAgentFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentFunctionsResponse, error) {
-	rsp, err := c.ListStoreAgentFunctions(ctx, reqEditors...)
+// DeleteWorkspaceServiceAccountWithResponse request returning *DeleteWorkspaceServiceAccountResponse
+func (c *ClientWithResponses) DeleteWorkspaceServiceAccountWithResponse(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*DeleteWorkspaceServiceAccountResponse, error) {
+	rsp, err := c.DeleteWorkspaceServiceAccount(ctx, clientId, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseListStoreAgentFunctionsResponse(rsp)
+	return ParseDeleteWorkspaceServiceAccountResponse(rsp)
 }
 
-// GetStoreAgentFunctionWithResponse request returning *GetStoreAgentFunctionResponse
-func (c *ClientWithResponses) GetStoreAgentFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreAgentFunctionResponse, error) {
-	rsp, err := c.GetStoreAgentFunction(ctx, functionName, reqEditors...)
+// UpdateWorkspaceServiceAccountWithBodyWithResponse request with arbitrary body returning *UpdateWorkspaceServiceAccountResponse
+func (c *ClientWithResponses) UpdateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error) {
+	rsp, err := c.UpdateWorkspaceServiceAccountWithBody(ctx, clientId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetStoreAgentFunctionResponse(rsp)
+	return ParseUpdateWorkspaceServiceAccountResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateWorkspaceServiceAccountWithResponse(ctx context.Context, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error) {
+	rsp, err := c.UpdateWorkspaceServiceAccount(ctx, clientId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateWorkspaceServiceAccountResponse(rsp)
+}
+
+// ListApiKeysForServiceAccountWithResponse request returning *ListApiKeysForServiceAccountResponse
+func (c *ClientWithResponses) ListApiKeysForServiceAccountWithResponse(ctx context.Context, clientId string, reqEditors ...RequestEditorFn) (*ListApiKeysForServiceAccountResponse, error) {
+	rsp, err := c.ListApiKeysForServiceAccount(ctx, clientId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListApiKeysForServiceAccountResponse(rsp)
+}
+
+// CreateApiKeyForServiceAccountWithBodyWithResponse request with arbitrary body returning *CreateApiKeyForServiceAccountResponse
+func (c *ClientWithResponses) CreateApiKeyForServiceAccountWithBodyWithResponse(ctx context.Context, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error) {
+	rsp, err := c.CreateApiKeyForServiceAccountWithBody(ctx, clientId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateApiKeyForServiceAccountResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateApiKeyForServiceAccountWithResponse(ctx context.Context, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error) {
+	rsp, err := c.CreateApiKeyForServiceAccount(ctx, clientId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateApiKeyForServiceAccountResponse(rsp)
+}
+
+// DeleteApiKeyForServiceAccountWithResponse request returning *DeleteApiKeyForServiceAccountResponse
+func (c *ClientWithResponses) DeleteApiKeyForServiceAccountWithResponse(ctx context.Context, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*DeleteApiKeyForServiceAccountResponse, error) {
+	rsp, err := c.DeleteApiKeyForServiceAccount(ctx, clientId, apiKeyId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteApiKeyForServiceAccountResponse(rsp)
+}
+
+// ListStoreAgentsWithResponse request returning *ListStoreAgentsResponse
+func (c *ClientWithResponses) ListStoreAgentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreAgentsResponse, error) {
+	rsp, err := c.ListStoreAgents(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListStoreAgentsResponse(rsp)
+}
+
+// GetStoreAgentWithResponse request returning *GetStoreAgentResponse
+func (c *ClientWithResponses) GetStoreAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetStoreAgentResponse, error) {
+	rsp, err := c.GetStoreAgent(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetStoreAgentResponse(rsp)
+}
+
+// ListStoreFunctionsWithResponse request returning *ListStoreFunctionsResponse
+func (c *ClientWithResponses) ListStoreFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStoreFunctionsResponse, error) {
+	rsp, err := c.ListStoreFunctions(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListStoreFunctionsResponse(rsp)
+}
+
+// GetStoreFunctionWithResponse request returning *GetStoreFunctionResponse
+func (c *ClientWithResponses) GetStoreFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreFunctionResponse, error) {
+	rsp, err := c.GetStoreFunction(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetStoreFunctionResponse(rsp)
+}
+
+// ListWorkspaceUsersWithResponse request returning *ListWorkspaceUsersResponse
+func (c *ClientWithResponses) ListWorkspaceUsersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListWorkspaceUsersResponse, error) {
+	rsp, err := c.ListWorkspaceUsers(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListWorkspaceUsersResponse(rsp)
+}
+
+// InviteWorkspaceUserWithBodyWithResponse request with arbitrary body returning *InviteWorkspaceUserResponse
+func (c *ClientWithResponses) InviteWorkspaceUserWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*InviteWorkspaceUserResponse, error) {
+	rsp, err := c.InviteWorkspaceUserWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseInviteWorkspaceUserResponse(rsp)
+}
+
+func (c *ClientWithResponses) InviteWorkspaceUserWithResponse(ctx context.Context, body InviteWorkspaceUserJSONRequestBody, reqEditors ...RequestEditorFn) (*InviteWorkspaceUserResponse, error) {
+	rsp, err := c.InviteWorkspaceUser(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseInviteWorkspaceUserResponse(rsp)
+}
+
+// RemoveWorkspaceUserWithResponse request returning *RemoveWorkspaceUserResponse
+func (c *ClientWithResponses) RemoveWorkspaceUserWithResponse(ctx context.Context, subOrEmail string, reqEditors ...RequestEditorFn) (*RemoveWorkspaceUserResponse, error) {
+	rsp, err := c.RemoveWorkspaceUser(ctx, subOrEmail, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRemoveWorkspaceUserResponse(rsp)
+}
+
+// UpdateWorkspaceUserRoleWithBodyWithResponse request with arbitrary body returning *UpdateWorkspaceUserRoleResponse
+func (c *ClientWithResponses) UpdateWorkspaceUserRoleWithBodyWithResponse(ctx context.Context, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWorkspaceUserRoleResponse, error) {
+	rsp, err := c.UpdateWorkspaceUserRoleWithBody(ctx, subOrEmail, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateWorkspaceUserRoleResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateWorkspaceUserRoleWithResponse(ctx context.Context, subOrEmail string, body UpdateWorkspaceUserRoleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceUserRoleResponse, error) {
+	rsp, err := c.UpdateWorkspaceUserRole(ctx, subOrEmail, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateWorkspaceUserRoleResponse(rsp)
 }
 
 // ListWorkspacesWithResponse request returning *ListWorkspacesResponse
@@ -6551,22 +8562,22 @@ func (c *ClientWithResponses) UpdateWorkspaceWithResponse(ctx context.Context, w
 	return ParseUpdateWorkspaceResponse(rsp)
 }
 
-// DeclineInvitationToWorkspaceWithResponse request returning *DeclineInvitationToWorkspaceResponse
-func (c *ClientWithResponses) DeclineInvitationToWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*DeclineInvitationToWorkspaceResponse, error) {
-	rsp, err := c.DeclineInvitationToWorkspace(ctx, workspaceName, reqEditors...)
+// DeclineWorkspaceInvitationWithResponse request returning *DeclineWorkspaceInvitationResponse
+func (c *ClientWithResponses) DeclineWorkspaceInvitationWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*DeclineWorkspaceInvitationResponse, error) {
+	rsp, err := c.DeclineWorkspaceInvitation(ctx, workspaceName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseDeclineInvitationToWorkspaceResponse(rsp)
+	return ParseDeclineWorkspaceInvitationResponse(rsp)
 }
 
-// AcceptInvitationToWorkspaceWithResponse request returning *AcceptInvitationToWorkspaceResponse
-func (c *ClientWithResponses) AcceptInvitationToWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*AcceptInvitationToWorkspaceResponse, error) {
-	rsp, err := c.AcceptInvitationToWorkspace(ctx, workspaceName, reqEditors...)
+// AcceptWorkspaceInvitationWithResponse request returning *AcceptWorkspaceInvitationResponse
+func (c *ClientWithResponses) AcceptWorkspaceInvitationWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*AcceptWorkspaceInvitationResponse, error) {
+	rsp, err := c.AcceptWorkspaceInvitation(ctx, workspaceName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAcceptInvitationToWorkspaceResponse(rsp)
+	return ParseAcceptWorkspaceInvitationResponse(rsp)
 }
 
 // LeaveWorkspaceWithResponse request returning *LeaveWorkspaceResponse
@@ -6578,143 +8589,394 @@ func (c *ClientWithResponses) LeaveWorkspaceWithResponse(ctx context.Context, wo
 	return ParseLeaveWorkspaceResponse(rsp)
 }
 
-// GetWorkspaceServiceAccountsWithResponse request returning *GetWorkspaceServiceAccountsResponse
-func (c *ClientWithResponses) GetWorkspaceServiceAccountsWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*GetWorkspaceServiceAccountsResponse, error) {
-	rsp, err := c.GetWorkspaceServiceAccounts(ctx, workspaceName, reqEditors...)
+// ParseListAgentsResponse parses an HTTP response from a ListAgentsWithResponse call
+func ParseListAgentsResponse(rsp *http.Response) (*ListAgentsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetWorkspaceServiceAccountsResponse(rsp)
+
+	response := &ListAgentsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Agent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// CreateWorkspaceServiceAccountWithBodyWithResponse request with arbitrary body returning *CreateWorkspaceServiceAccountResponse
-func (c *ClientWithResponses) CreateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error) {
-	rsp, err := c.CreateWorkspaceServiceAccountWithBody(ctx, workspaceName, contentType, body, reqEditors...)
+// ParseDeleteAgentResponse parses an HTTP response from a DeleteAgentWithResponse call
+func ParseDeleteAgentResponse(rsp *http.Response) (*DeleteAgentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateWorkspaceServiceAccountResponse(rsp)
+
+	response := &DeleteAgentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Agent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-func (c *ClientWithResponses) CreateWorkspaceServiceAccountWithResponse(ctx context.Context, workspaceName string, body CreateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateWorkspaceServiceAccountResponse, error) {
-	rsp, err := c.CreateWorkspaceServiceAccount(ctx, workspaceName, body, reqEditors...)
+// ParseGetAgentResponse parses an HTTP response from a GetAgentWithResponse call
+func ParseGetAgentResponse(rsp *http.Response) (*GetAgentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateWorkspaceServiceAccountResponse(rsp)
+
+	response := &GetAgentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Agent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// DeleteWorkspaceServiceAccountWithResponse request returning *DeleteWorkspaceServiceAccountResponse
-func (c *ClientWithResponses) DeleteWorkspaceServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*DeleteWorkspaceServiceAccountResponse, error) {
-	rsp, err := c.DeleteWorkspaceServiceAccount(ctx, workspaceName, clientId, reqEditors...)
+// ParsePutAgentResponse parses an HTTP response from a PutAgentWithResponse call
+func ParsePutAgentResponse(rsp *http.Response) (*PutAgentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseDeleteWorkspaceServiceAccountResponse(rsp)
+
+	response := &PutAgentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Agent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// UpdateWorkspaceServiceAccountWithBodyWithResponse request with arbitrary body returning *UpdateWorkspaceServiceAccountResponse
-func (c *ClientWithResponses) UpdateWorkspaceServiceAccountWithBodyWithResponse(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error) {
-	rsp, err := c.UpdateWorkspaceServiceAccountWithBody(ctx, workspaceName, clientId, contentType, body, reqEditors...)
+// ParseListAgentDeploymentsResponse parses an HTTP response from a ListAgentDeploymentsWithResponse call
+func ParseListAgentDeploymentsResponse(rsp *http.Response) (*ListAgentDeploymentsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseUpdateWorkspaceServiceAccountResponse(rsp)
+
+	response := &ListAgentDeploymentsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []AgentDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-func (c *ClientWithResponses) UpdateWorkspaceServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, body UpdateWorkspaceServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateWorkspaceServiceAccountResponse, error) {
-	rsp, err := c.UpdateWorkspaceServiceAccount(ctx, workspaceName, clientId, body, reqEditors...)
+// ParseDeleteAgentDeploymentResponse parses an HTTP response from a DeleteAgentDeploymentWithResponse call
+func ParseDeleteAgentDeploymentResponse(rsp *http.Response) (*DeleteAgentDeploymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseUpdateWorkspaceServiceAccountResponse(rsp)
+
+	response := &DeleteAgentDeploymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// ListApiKeysForServiceAccountWithResponse request returning *ListApiKeysForServiceAccountResponse
-func (c *ClientWithResponses) ListApiKeysForServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, reqEditors ...RequestEditorFn) (*ListApiKeysForServiceAccountResponse, error) {
-	rsp, err := c.ListApiKeysForServiceAccount(ctx, workspaceName, clientId, reqEditors...)
+// ParseGetAgentDeploymentResponse parses an HTTP response from a GetAgentDeploymentWithResponse call
+func ParseGetAgentDeploymentResponse(rsp *http.Response) (*GetAgentDeploymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseListApiKeysForServiceAccountResponse(rsp)
+
+	response := &GetAgentDeploymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// CreateApiKeyForServiceAccountWithBodyWithResponse request with arbitrary body returning *CreateApiKeyForServiceAccountResponse
-func (c *ClientWithResponses) CreateApiKeyForServiceAccountWithBodyWithResponse(ctx context.Context, workspaceName string, clientId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error) {
-	rsp, err := c.CreateApiKeyForServiceAccountWithBody(ctx, workspaceName, clientId, contentType, body, reqEditors...)
+// ParsePutAgentDeploymentResponse parses an HTTP response from a PutAgentDeploymentWithResponse call
+func ParsePutAgentDeploymentResponse(rsp *http.Response) (*PutAgentDeploymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateApiKeyForServiceAccountResponse(rsp)
+
+	response := &PutAgentDeploymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-func (c *ClientWithResponses) CreateApiKeyForServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, body CreateApiKeyForServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateApiKeyForServiceAccountResponse, error) {
-	rsp, err := c.CreateApiKeyForServiceAccount(ctx, workspaceName, clientId, body, reqEditors...)
+// ParseGetAgentDeploymentLogsResponse parses an HTTP response from a GetAgentDeploymentLogsWithResponse call
+func ParseGetAgentDeploymentLogsResponse(rsp *http.Response) (*GetAgentDeploymentLogsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseCreateApiKeyForServiceAccountResponse(rsp)
+
+	response := &GetAgentDeploymentLogsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ResourceDeploymentLog
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// DeleteApiKeyForServiceAccountWithResponse request returning *DeleteApiKeyForServiceAccountResponse
-func (c *ClientWithResponses) DeleteApiKeyForServiceAccountWithResponse(ctx context.Context, workspaceName string, clientId string, apiKeyId string, reqEditors ...RequestEditorFn) (*DeleteApiKeyForServiceAccountResponse, error) {
-	rsp, err := c.DeleteApiKeyForServiceAccount(ctx, workspaceName, clientId, apiKeyId, reqEditors...)
+// ParseGetAgentDeploymentMetricsResponse parses an HTTP response from a GetAgentDeploymentMetricsWithResponse call
+func ParseGetAgentDeploymentMetricsResponse(rsp *http.Response) (*GetAgentDeploymentMetricsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseDeleteApiKeyForServiceAccountResponse(rsp)
+
+	response := &GetAgentDeploymentMetricsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceDeploymentMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// ListUsersInWorkspaceWithResponse request returning *ListUsersInWorkspaceResponse
-func (c *ClientWithResponses) ListUsersInWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*ListUsersInWorkspaceResponse, error) {
-	rsp, err := c.ListUsersInWorkspace(ctx, workspaceName, reqEditors...)
+// ParseGetAgentMetricsResponse parses an HTTP response from a GetAgentMetricsWithResponse call
+func ParseGetAgentMetricsResponse(rsp *http.Response) (*GetAgentMetricsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseListUsersInWorkspaceResponse(rsp)
+
+	response := &GetAgentMetricsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// InviteUserToWorkspaceWithBodyWithResponse request with arbitrary body returning *InviteUserToWorkspaceResponse
-func (c *ClientWithResponses) InviteUserToWorkspaceWithBodyWithResponse(ctx context.Context, workspaceName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*InviteUserToWorkspaceResponse, error) {
-	rsp, err := c.InviteUserToWorkspaceWithBody(ctx, workspaceName, contentType, body, reqEditors...)
+// ParseCreateAgentReleaseResponse parses an HTTP response from a CreateAgentReleaseWithResponse call
+func ParseCreateAgentReleaseResponse(rsp *http.Response) (*CreateAgentReleaseResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseInviteUserToWorkspaceResponse(rsp)
+
+	response := &CreateAgentReleaseResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentRelease
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-func (c *ClientWithResponses) InviteUserToWorkspaceWithResponse(ctx context.Context, workspaceName string, body InviteUserToWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*InviteUserToWorkspaceResponse, error) {
-	rsp, err := c.InviteUserToWorkspace(ctx, workspaceName, body, reqEditors...)
+// ParseListModelsForAuthenticationProviderResponse parses an HTTP response from a ListModelsForAuthenticationProviderWithResponse call
+func ParseListModelsForAuthenticationProviderResponse(rsp *http.Response) (*ListModelsForAuthenticationProviderResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseInviteUserToWorkspaceResponse(rsp)
+
+	response := &ListModelsForAuthenticationProviderResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []AuthenticationProviderModel
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// RemoveUserFromWorkspaceWithResponse request returning *RemoveUserFromWorkspaceResponse
-func (c *ClientWithResponses) RemoveUserFromWorkspaceWithResponse(ctx context.Context, workspaceName string, subOrEmail string, reqEditors ...RequestEditorFn) (*RemoveUserFromWorkspaceResponse, error) {
-	rsp, err := c.RemoveUserFromWorkspace(ctx, workspaceName, subOrEmail, reqEditors...)
+// ParseGetModelWithRepoForAuthenticationProviderResponse parses an HTTP response from a GetModelWithRepoForAuthenticationProviderWithResponse call
+func ParseGetModelWithRepoForAuthenticationProviderResponse(rsp *http.Response) (*GetModelWithRepoForAuthenticationProviderResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseRemoveUserFromWorkspaceResponse(rsp)
+
+	response := &GetModelWithRepoForAuthenticationProviderResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AuthenticationProviderModel
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
-// UpdateUserRoleInWorkspaceWithBodyWithResponse request with arbitrary body returning *UpdateUserRoleInWorkspaceResponse
-func (c *ClientWithResponses) UpdateUserRoleInWorkspaceWithBodyWithResponse(ctx context.Context, workspaceName string, subOrEmail string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateUserRoleInWorkspaceResponse, error) {
-	rsp, err := c.UpdateUserRoleInWorkspaceWithBody(ctx, workspaceName, subOrEmail, contentType, body, reqEditors...)
+// ParseListOrganizationsForAuthenticationProviderResponse parses an HTTP response from a ListOrganizationsForAuthenticationProviderWithResponse call
+func ParseListOrganizationsForAuthenticationProviderResponse(rsp *http.Response) (*ListOrganizationsForAuthenticationProviderResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
-	return ParseUpdateUserRoleInWorkspaceResponse(rsp)
-}
 
-func (c *ClientWithResponses) UpdateUserRoleInWorkspaceWithResponse(ctx context.Context, workspaceName string, subOrEmail string, body UpdateUserRoleInWorkspaceJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateUserRoleInWorkspaceResponse, error) {
-	rsp, err := c.UpdateUserRoleInWorkspace(ctx, workspaceName, subOrEmail, body, reqEditors...)
-	if err != nil {
-		return nil, err
+	response := &ListOrganizationsForAuthenticationProviderResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
-	return ParseUpdateUserRoleInWorkspaceResponse(rsp)
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []AuthenticationProviderOrganization
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
 // ParseGetConfigurationResponse parses an HTTP response from a GetConfigurationWithResponse call
@@ -7071,6 +9333,110 @@ func ParsePutFunctionDeploymentResponse(rsp *http.Response) (*PutFunctionDeploym
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest FunctionDeployment
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFunctionDeploymentLogsResponse parses an HTTP response from a GetFunctionDeploymentLogsWithResponse call
+func ParseGetFunctionDeploymentLogsResponse(rsp *http.Response) (*GetFunctionDeploymentLogsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFunctionDeploymentLogsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ResourceDeploymentLog
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFunctionDeploymentMetricsResponse parses an HTTP response from a GetFunctionDeploymentMetricsWithResponse call
+func ParseGetFunctionDeploymentMetricsResponse(rsp *http.Response) (*GetFunctionDeploymentMetricsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFunctionDeploymentMetricsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceDeploymentMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFunctionMetricsResponse parses an HTTP response from a GetFunctionMetricsWithResponse call
+func ParseGetFunctionMetricsResponse(rsp *http.Response) (*GetFunctionMetricsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFunctionMetricsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ResourceMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateFunctionReleaseResponse parses an HTTP response from a CreateFunctionReleaseWithResponse call
+func ParseCreateFunctionReleaseResponse(rsp *http.Response) (*CreateFunctionReleaseResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateFunctionReleaseResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FunctionRelease
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7523,15 +9889,15 @@ func ParseGetModelMetricsResponse(rsp *http.Response) (*GetModelMetricsResponse,
 	return response, nil
 }
 
-// ParseCreateModelReleaseResponse parses an HTTP response from a CreateModelReleaseWithResponse call
-func ParseCreateModelReleaseResponse(rsp *http.Response) (*CreateModelReleaseResponse, error) {
+// ParseReleaseModelResponse parses an HTTP response from a ReleaseModelWithResponse call
+func ParseReleaseModelResponse(rsp *http.Response) (*ReleaseModelResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &CreateModelReleaseResponse{
+	response := &ReleaseModelResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7669,344 +10035,6 @@ func ParseListAllPendingInvitationsResponse(rsp *http.Response) (*ListAllPending
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []PendingInvitationRender
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListModelsForProviderResponse parses an HTTP response from a ListModelsForProviderWithResponse call
-func ParseListModelsForProviderResponse(rsp *http.Response) (*ListModelsForProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListModelsForProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ProviderModel
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetModelWithRepoForProviderResponse parses an HTTP response from a GetModelWithRepoForProviderWithResponse call
-func ParseGetModelWithRepoForProviderResponse(rsp *http.Response) (*GetModelWithRepoForProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetModelWithRepoForProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ProviderModel
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListOrganizationsForProviderResponse parses an HTTP response from a ListOrganizationsForProviderWithResponse call
-func ParseListOrganizationsForProviderResponse(rsp *http.Response) (*ListOrganizationsForProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListOrganizationsForProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ProviderOrganization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListStoreAgentFunctionsResponse parses an HTTP response from a ListStoreAgentFunctionsWithResponse call
-func ParseListStoreAgentFunctionsResponse(rsp *http.Response) (*ListStoreAgentFunctionsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListStoreAgentFunctionsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []StoreAgentFunction
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetStoreAgentFunctionResponse parses an HTTP response from a GetStoreAgentFunctionWithResponse call
-func ParseGetStoreAgentFunctionResponse(rsp *http.Response) (*GetStoreAgentFunctionResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetStoreAgentFunctionResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest StoreAgentFunction
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListWorkspacesResponse parses an HTTP response from a ListWorkspacesWithResponse call
-func ParseListWorkspacesResponse(rsp *http.Response) (*ListWorkspacesResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListWorkspacesResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []Workspace
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateWorspaceResponse parses an HTTP response from a CreateWorspaceWithResponse call
-func ParseCreateWorspaceResponse(rsp *http.Response) (*CreateWorspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateWorspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Workspace
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteWorkspaceResponse parses an HTTP response from a DeleteWorkspaceWithResponse call
-func ParseDeleteWorkspaceResponse(rsp *http.Response) (*DeleteWorkspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteWorkspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Workspace
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetWorkspaceResponse parses an HTTP response from a GetWorkspaceWithResponse call
-func ParseGetWorkspaceResponse(rsp *http.Response) (*GetWorkspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetWorkspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Workspace
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseUpdateWorkspaceResponse parses an HTTP response from a UpdateWorkspaceWithResponse call
-func ParseUpdateWorkspaceResponse(rsp *http.Response) (*UpdateWorkspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &UpdateWorkspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Workspace
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeclineInvitationToWorkspaceResponse parses an HTTP response from a DeclineInvitationToWorkspaceWithResponse call
-func ParseDeclineInvitationToWorkspaceResponse(rsp *http.Response) (*DeclineInvitationToWorkspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeclineInvitationToWorkspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest PendingInvitation
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseAcceptInvitationToWorkspaceResponse parses an HTTP response from a AcceptInvitationToWorkspaceWithResponse call
-func ParseAcceptInvitationToWorkspaceResponse(rsp *http.Response) (*AcceptInvitationToWorkspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &AcceptInvitationToWorkspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest PendingInvitationAccept
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseLeaveWorkspaceResponse parses an HTTP response from a LeaveWorkspaceWithResponse call
-func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &LeaveWorkspaceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Workspace
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -8252,15 +10280,119 @@ func ParseDeleteApiKeyForServiceAccountResponse(rsp *http.Response) (*DeleteApiK
 	return response, nil
 }
 
-// ParseListUsersInWorkspaceResponse parses an HTTP response from a ListUsersInWorkspaceWithResponse call
-func ParseListUsersInWorkspaceResponse(rsp *http.Response) (*ListUsersInWorkspaceResponse, error) {
+// ParseListStoreAgentsResponse parses an HTTP response from a ListStoreAgentsWithResponse call
+func ParseListStoreAgentsResponse(rsp *http.Response) (*ListStoreAgentsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &ListUsersInWorkspaceResponse{
+	response := &ListStoreAgentsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []StoreAgent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetStoreAgentResponse parses an HTTP response from a GetStoreAgentWithResponse call
+func ParseGetStoreAgentResponse(rsp *http.Response) (*GetStoreAgentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetStoreAgentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest StoreAgent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListStoreFunctionsResponse parses an HTTP response from a ListStoreFunctionsWithResponse call
+func ParseListStoreFunctionsResponse(rsp *http.Response) (*ListStoreFunctionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListStoreFunctionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []StoreFunction
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetStoreFunctionResponse parses an HTTP response from a GetStoreFunctionWithResponse call
+func ParseGetStoreFunctionResponse(rsp *http.Response) (*GetStoreFunctionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetStoreFunctionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest StoreFunction
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListWorkspaceUsersResponse parses an HTTP response from a ListWorkspaceUsersWithResponse call
+func ParseListWorkspaceUsersResponse(rsp *http.Response) (*ListWorkspaceUsersResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListWorkspaceUsersResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -8278,15 +10410,15 @@ func ParseListUsersInWorkspaceResponse(rsp *http.Response) (*ListUsersInWorkspac
 	return response, nil
 }
 
-// ParseInviteUserToWorkspaceResponse parses an HTTP response from a InviteUserToWorkspaceWithResponse call
-func ParseInviteUserToWorkspaceResponse(rsp *http.Response) (*InviteUserToWorkspaceResponse, error) {
+// ParseInviteWorkspaceUserResponse parses an HTTP response from a InviteWorkspaceUserWithResponse call
+func ParseInviteWorkspaceUserResponse(rsp *http.Response) (*InviteWorkspaceUserResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &InviteUserToWorkspaceResponse{
+	response := &InviteWorkspaceUserResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -8304,15 +10436,15 @@ func ParseInviteUserToWorkspaceResponse(rsp *http.Response) (*InviteUserToWorksp
 	return response, nil
 }
 
-// ParseRemoveUserFromWorkspaceResponse parses an HTTP response from a RemoveUserFromWorkspaceWithResponse call
-func ParseRemoveUserFromWorkspaceResponse(rsp *http.Response) (*RemoveUserFromWorkspaceResponse, error) {
+// ParseRemoveWorkspaceUserResponse parses an HTTP response from a RemoveWorkspaceUserWithResponse call
+func ParseRemoveWorkspaceUserResponse(rsp *http.Response) (*RemoveWorkspaceUserResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &RemoveUserFromWorkspaceResponse{
+	response := &RemoveWorkspaceUserResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -8320,15 +10452,15 @@ func ParseRemoveUserFromWorkspaceResponse(rsp *http.Response) (*RemoveUserFromWo
 	return response, nil
 }
 
-// ParseUpdateUserRoleInWorkspaceResponse parses an HTTP response from a UpdateUserRoleInWorkspaceWithResponse call
-func ParseUpdateUserRoleInWorkspaceResponse(rsp *http.Response) (*UpdateUserRoleInWorkspaceResponse, error) {
+// ParseUpdateWorkspaceUserRoleResponse parses an HTTP response from a UpdateWorkspaceUserRoleWithResponse call
+func ParseUpdateWorkspaceUserRoleResponse(rsp *http.Response) (*UpdateWorkspaceUserRoleResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &UpdateUserRoleInWorkspaceResponse{
+	response := &UpdateWorkspaceUserRoleResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -8346,104 +10478,341 @@ func ParseUpdateUserRoleInWorkspaceResponse(rsp *http.Response) (*UpdateUserRole
 	return response, nil
 }
 
+// ParseListWorkspacesResponse parses an HTTP response from a ListWorkspacesWithResponse call
+func ParseListWorkspacesResponse(rsp *http.Response) (*ListWorkspacesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListWorkspacesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Workspace
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateWorspaceResponse parses an HTTP response from a CreateWorspaceWithResponse call
+func ParseCreateWorspaceResponse(rsp *http.Response) (*CreateWorspaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateWorspaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Workspace
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteWorkspaceResponse parses an HTTP response from a DeleteWorkspaceWithResponse call
+func ParseDeleteWorkspaceResponse(rsp *http.Response) (*DeleteWorkspaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteWorkspaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Workspace
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetWorkspaceResponse parses an HTTP response from a GetWorkspaceWithResponse call
+func ParseGetWorkspaceResponse(rsp *http.Response) (*GetWorkspaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetWorkspaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Workspace
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateWorkspaceResponse parses an HTTP response from a UpdateWorkspaceWithResponse call
+func ParseUpdateWorkspaceResponse(rsp *http.Response) (*UpdateWorkspaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateWorkspaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Workspace
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeclineWorkspaceInvitationResponse parses an HTTP response from a DeclineWorkspaceInvitationWithResponse call
+func ParseDeclineWorkspaceInvitationResponse(rsp *http.Response) (*DeclineWorkspaceInvitationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeclineWorkspaceInvitationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PendingInvitation
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAcceptWorkspaceInvitationResponse parses an HTTP response from a AcceptWorkspaceInvitationWithResponse call
+func ParseAcceptWorkspaceInvitationResponse(rsp *http.Response) (*AcceptWorkspaceInvitationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AcceptWorkspaceInvitationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PendingInvitationAccept
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseLeaveWorkspaceResponse parses an HTTP response from a LeaveWorkspaceWithResponse call
+func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &LeaveWorkspaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Workspace
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+w9W3Pbtpp/BcPdmU1mtFa2pw87fnOT+hxvnda1m8lDm9FA5CcJDQmwAChX6/F/P4ML",
-	"SZAESEoWFefyFEcEPgDf/YLLQxSzLGcUqBTR+UMk4g1kWP95kZOfYKf+wmn6yyo6//0h+k8Oq+g8+o95",
-	"3Wtuu8zvJKYJ5sklgTQRb3YUZ+zNMnqcPUQ5ZzlwSUADxjlZfDSQExAxJ7kkjEbnakSkPswiucshOo+E",
-	"5ISuo8eZmmUGVHb7vDYf0IpxJDeALm6uQjDg75xwEAtCu2DeFByrP1FBJUmRbmp+eEEoEhAzmoiXPqii",
-	"WHbBvRPAkSiWf0IsEUmASrIiwAP9F+bHNpA7219/7fR8fPwwa3W4ZnT93ynZQlKiQaMFxzEIQega/QA4",
-	"S4msgTE9gprGBed49xYkJ7GHMOojYiuU6QYimkVEQqap2ccSFt5jNR5WgNT/XzO6ImuLdB9V3c+zFgPF",
-	"jEpSsWynZ/mtnqRnAjErqOQWYBtE+akHwqMHh28gT9lOseMNS0lsgVeYao6im+wQxRn42KI93xr2HfAt",
-	"8BSEMFgawF4lGaLqhzKWQIqSCmQHwykWcpGzZMFBKuZldJEDJyzpDvbbBpBqjnKWoKo5ss09K8vw3wta",
-	"ZAsOeUpiLPwgM/w3yYoM0SJbAle8V7WvYBIqYQ1cAw1wruFAJBkSMU4BMTpDMaZoCeiPKM6LPyLEOPoj",
-	"yiBjfFf+j+ei/DNmNC44Bxrv/oi8yyF0zHII3Wc5erKLhN3TRQIp3vmBmiWpVsi08qkXDanIF3YGfZCK",
-	"vJynf1ISL1NY3BOasPsAHN0E2SY+tsZ8DR41/pv+HW1xWkDFsZaoXdXnkb0f6ZZwRksjcWSTlRCRp3i3",
-	"0NLqXbltoeVZkVfNH5w5eXCR4iWkgzr02rR6nEXhwfcYNHc0UxdQ+RVhKXG8gURJThdqj169Z/yjyHEc",
-	"mGn1uQ0VLSFldC2QZKNsnUNvxCi635B442g0ge5Jmioxz3AC6AWcrc9QAltIWa6+z1DOWVLECtrLGQK6",
-	"YjxWJjIrUknytIEKxGgMZ1E/1721pjGggkTF1U1UNvmM0BUoXQNK3S6M27FYp2yJ0yE+cQ24V0IuU7xl",
-	"3GPctYOh2GeDeXKPOSC8xSTVkqwm7WC1M2E/T5qhDFsa1MvvX4atXKC7npbpHufFDK3z4uU4ZWAA+Hh8",
-	"l4MYvdRRPo5Fq0cULgsal+7NsfWRu6oO+uy4yPl5hrbAd4hkOeMSO/4yXmvvuewimRZRdE/kBmGKrq/f",
-	"+ujWrw/rCThKcToNWA0XGibHHGcgwccRVee60UwjZ8cK3sDLElCM09QaOLlBF+umNhwgLeOge5Qj3pQD",
-	"+nhHqOYL4vG3XnPAEtCKswxhpNshDmsiJHBIqhn78NCjm99XetmPRI8GdjGntfAKlT+9cT3LrnR2Wx1f",
-	"QoAqQnnw934DcgOG+Ve1pJRTQUSgsm819yVjKWCqg8imn/EkW7yq1dSwhtECsHJUSv/QfXywr9ipQEBC",
-	"lqdYQshvSFDZYobEhhVpogQGK4+OJOinYgmcggTRaOrjDtdB6ZueJ9h6nEVcxe8ZLOJ2fNkH6tZ0agad",
-	"SgiriMnCGz+nTpC2r2vkY809XaRLD4i4FVh30H9d8QZOEqJa4fSmIVldY9BMQhgAPtAsDoT75ZfSGpOU",
-	"SJO7qLghmAPogVa38WaUVJS/6+1uWvRLbqBz2eLJXkQ6jLWQ3fOby8FuQmJZ9K3NNhjlir3tDcw7ZFVy",
-	"KCTO8nAoX7XwTF3Hj8Gu5use0x7w5jkIVvDYw506wTLQ27bxD6++nTyOfWvSQidx2sxYoTH2UpUmm7Wn",
-	"crxmaxLjFBmcIw45BwFKX6wRNiBnSG6wLNNFhArlOBMsIUGE1oGiY+QFwt3kmlcX6uV/GgfoaoVWOBUw",
-	"c5DnWAgdN1MmtfmOJdkCooyb7CHi8FcBwl3SEVwjhU0Tv3snRIT9HyTHcaL2ZWCThlqoyCnk/XCpU4wa",
-	"R3XmSiDXxrrZylK8+3FkHWvT2pd6VB8WOWdbkgBf6MUMJORVjxvb4RZWX7N3VwLrIYZIi3WDIoY5GSdr",
-	"4vWsS5j+vIYCWeZaxkA7sv+pwBG63o+RzRT9bHyAlj7cm72gVgXHGn+Vji51g9IiGIkcYrIisT/0Curf",
-	"a7b2+TtrUz8brpdkIAReg78cZYNjhYSUrb1psLDXo3mm/NwL5nF4maO8GowEoesUhld9rGzlzA8p1zpt",
-	"7fV9/0WEZFxb8NImoRy4rdSiF7c3dy/1D6X7PKurCkPLqsd8Ur71rwL4zo+Z5lpub+5s4eMFoaaW9t33",
-	"aMMKLl4GZ40MtNQJT0xtyTu0+jNmCYykzq83d0Ew47AzDKGa054IUUTlIHJGBdhIBCkw01Jbr6dL5aDM",
-	"HSBpE4rXUwkZXGbpSkzgvwZ3fJjIofR6UNnOG+KPMZrlGmpDecwIp5pnf6F/oLN/C8ixM7rNQaMhot8a",
-	"f7Mlu2CZVvkRpeV0QDaJ/JHQwJYC9aXpJ5VAqgL+TWeiQ6mPtoOdBRY8aFJvIQUsgnTj5vMMFcKUUI3+",
-	"qfChk/eMNqMghS/K5MaDJtW+O9Yv2nFswNCA27EUEeWEvAGUZJ7tUCAkoSbb05rjXtB9CLwBmhC6vqJb",
-	"IvFE9THIMEkD27LMNw8iiJoRJIvlLryhy+v0s9TDCRevr5H+MrnYWoQiUmFUR9TVGGNocBHHkHuUrQc2",
-	"Nk1nx0B5AxF9lK/QMpKnboFas7Qvro7ISNiD0HqKKGnEyCE+7DVd/mVfGQA/7A7jzkIAX1hnstPx52oD",
-	"k2omFPakG+v53NHRVA6s5zDi11jwEwEStNwdh+ArnJE0lFXVXU2LoBOwJlugff11g3DGvm8P6oFauY36",
-	"sKbq4LA/y1xruKFM81D/gIb0rU5vtjx5Qt3u8Rxa5/QpzDIuGuxiZnxdNQ9SYWD7alka0ZmwkaPe2j56",
-	"k07YNbYjq4+VK1iuDzFuK29PrirkZpg9s1S3RQq2bMCo5CwVaMPuEW4ltPWmNEwTk2lL7C6nahUc1BC6",
-	"eOtuOm/zc7iganFU1Q7Hbdtq9dozZGn3DmxbH1xNcK901UBhEOuBUpNP1Qi/5zhXv4uUmBThdb36UTXY",
-	"FlI9tdgun4bm6rYx0y0Tv6VkzJCmuc1iluX+GQIZn/mQ7pOREYOPRZZnaXuhrdHTh7pmlD0c1etmbb41",
-	"RxkWkn2EwB4Y0wLpFipcKUS9nzjvCRhXJIVw0Ki+msixBTJYm8k5CLKmkCwKHqguVE3Qu9troSHnKcOJ",
-	"E1xprdOz2/aIBRGvYFqEvfWXSAzN2FJiolZhtqRRBH9L4BS7Ebso4g3CAv2rWK8JXV9ixf+/5EAvrgzH",
-	"n511d3jojW5+L7qcmEWTbYqwNw2UsHuq8CoG4dQtfeUO3268FoCrN96KOVlyzINOQhOEbRwuv5OPIEZA",
-	"+Qj+VYyaRHAnJckhJRQWEq8HgZSNkWrsFRGy9dYc23BsO1/NWeL1MDJ0I0ebDR62kdx4wwsRMz48wbI5",
-	"Ms27WO+TrV/4GlPy/wFD7n41mnvDhLSbDERY5NCLHlF72dWrWywx96uqarHMnYvpoTTX/vuD/RCHvORe",
-	"8WtA8kvhPnMZH1n8enPXBfprAXzn1qPUn5CCOXlgfdZgIcM4g9+9ejVD37969VL5tG5tI1DBCNRSfr25",
-	"08bK6d2Kz32r8pqIbq7XtGpuKhxfecF8HTiGgvm6MPtpJEM51va8YW57D/ZlGQ5lle1HBY4XdCxIoNvA",
-	"RN3c6BZzgpcpCFNBl2VqxHp4vdsmXDiV69MzI5J5q81qSvqTdVP8kRlOCFVeVM7ZMgCkaoRMIw+L1Jvf",
-	"AhDsZ7NX/uP/Cl2bDzlOfQW1QDDePS9r26GVbqiHugEuiNk1sJeDoY90YWmCNM3k9xsw9CxXhu6xKD0P",
-	"bxotT54M3sIYp4q6RwxOffJEz6B9pMRtsrep8EMcshR+6fDCMm17tzmOgJIGNz3vsaxDjq94ATkdpjid",
-	"4kl7+KYRjWLRepw919bNOu7NmRWsIR7dg4g1zHBq7K+CcN/OzAGAVUevI+y/QqAf4vgUTSMPfNIc6vh0",
-	"cUhiawj7iukBxbj3fWW36uM74WP4erhCeBjcFN6GzjSprmiDBSqbN+szTuXLv4nXX/9oTi1cCdEfFlvg",
-	"ZEXGzPS/hIGlZ7wEoKjq65tdb6GlNccnlFxakPqLL/4CWwtEqNbmrdy0+vbdH+LdkiQgLjiRuzsliYZ3",
-	"fgDMgV8UcqP+t9T/u2Q8U85J9H/vf4tm5uoXjW/9tR5rI2WueF1v02PmlIZUa47sfSLotcl1o5sUU7XM",
-	"rfK69FJenb06+x+1UJYDxTmJzqN/nL06+4dibiw3em7zTvbKXhGgmF//dpVE59E/QbavBSnDJw3mu1ev",
-	"yoNB5Y76XF+xoBrP/xQGtNFOQ/awnRvrnHJqXrFht5PYlD/KNRpcSmhl6dLg96ixaHGeEiGjD0qfiCLL",
-	"MN9F59E1ERLhNG0GWFp/6bRHG0j0QY05dw8kBLGpYP/oNnwiNke5Ge4lDR63oo1kUehk7qpIUTX5IbS6",
-	"i+9HKjRXX6K08XMXofMH538/4wwejfymYDJZTSy/0b//2Dzx77hzv3fK68HTo0R9VjITldYqas0kcn0L",
-	"yQuYOfRp640PE0pPg8wTkNViu0VYg+vmnRK1+vdTdxZUNU2afbaoUstr4emfIPdF0rNh2bzwUOum6FBL",
-	"7wj/gSW76QjVnPfjZ8wjJsnQZhN7zwDj6J3+vh/PDKvNeVZvkR4hhG+rm8e+Kv1ZLnsCui8sAcboiPI8",
-	"2yi6l4Fmv/NxWbU6hedRZcQmcjuqNff7HCtn0SUG699a6Js/lH+O9DMu68zLZLxZI/LYiOu16lXyosuB",
-	"Lv7C9vzzxk1AREdjZbTOdJJ3HoXp8uOxTHeDMMe3202anM5oT8cLfnNtjfRIjujTM3P36PoYDf6mcdT9",
-	"dLrcOT4/sVZfOCgZp+Db5/+fp1SOZYNDgl7vXVCTi5vLExPywDhb5R523jX8qSeZsC8So0MW7kBcfmoR",
-	"mz3HaDnASNMZ3zYPnd4Mn4iLzXaAaOb/OhRoFy0bfhDPK53e2O4ftN/1hutTWO3wvurj0KNac7+Brpo5",
-	"N3/qHSr1pVYWqTUSDVJH5CvqJMVkDH3khMBADiBrnFZvHPKyWCqxYnHUuJGmn/0aZ4lPw4PNM+sTMWIL",
-	"B/3s2DyB7LJfG5VeBM8fyj+vkhE+WXP9A9bx6k11D1Hdw2Ok6hk8mwRai87T0LXXB2zSValvkvQSN+z2",
-	"fSPaEYkW0nP7kyvkXH0j1xHJVflT7Q8jaxZ707XSsSNs1wlt1qS2aoyJ6limJrLmD/rfkamBt3bv77S8",
-	"eWQcjVD33ZxbhaoB9f65IaNXjfaiYXRAXu3L72rDiteOFRB/ljTozQMPUsIvu6Nzv62L5U6oCqfP+hqr",
-	"MDrl673v9Vkx/jCtD0nwtqkxtfgcP4XTJfQIJT86KTNW939hKOw1DYcg79MJzrNM3vp45viZWy+7nC5t",
-	"ezJubQUYB2RrD2XsQ5TyPGXr/gRk51rbvXZMfVkSdHKH5JqtT+aTLBQrnHPAieHQ4/DXmBy3/0rhb1w2",
-	"sQ48duK/w1BlKWB/nhrLNc+BVyan2CR06tLG513Vr/OOpRyv7zH9tIE5Ex6+Mba2ceHq1NQrxzkq9SyW",
-	"K2/D71LYVo0r56v7PZq32TfSlyV0S2X3hYVg+H5TP6s0vZW0l+9NZBnL9fYH6c47UiX2qp+aeJs/mJvf",
-	"RkbBdnET8mWJviOjqzfULS+/6+SPHKSFw9rPFieB2HUcNkYr0LxEj6/QU/HeseJFhxjHDxNdOpwuOpyI",
-	"+r0J1TE8oNUIZyuSwrw+Zt2viS/StHP16onUcuDO5IP19Cz6/tX33dPMlKG8c+uyGKKK03RAs3tg19Rx",
-	"f60I5Nk7Mb7od8n4F1LdHccljSsAp7Lhe2yWKTcjuZc5lqLYKuT2ktr6wbeQM/Wj+Z/dRdMbxbwncqN6",
-	"PR9GmPmeuR7rrhsEPG28en1Doz2jDQwtzj4FJytnIgGJSYrwkhWy9vOfyNLu5XX9Ssy9UPBr1WWNKxc/",
-	"rUprEG48G+hnv0cetOzeuXQa/8JzHdmTcN1FnvDcbuQaf/3djzHP2cqQ0vesY0Kt5MPaQVhSusaHII8L",
-	"W+LpmZxIqrYZ9/P1+7rZKdjZeYRiGo1RL7tfZdy76y5J6Pyo6diTT3vPeLmJe4qQ0H2s46RRYWvgoxKk",
-	"N3F3XyPUS44mT88fqr9HppgaD22MFVB3r75HQhtzeDYu2ZQk7M131dejLXfo56Z2bIlWyEx8o9IxqBTI",
-	"wL33nDxpqzxf/sskb0aThp6MNN/07ih26E3JjRbafgU8TyBOCTVFMK/dfGMa1Jmy39jXI+3d5/o8ZHZe",
-	"Naspnu6QRW2yl5421Ogoav2z+3CbZN4TafuQ/k9GaJju5lG8b2R3Xwjcg/jVfaWhzHB9zyXjLmEpk2jF",
-	"CroP29hXCVtcYyZ9ZKZJAW+hz227Vg2++QMtGjd4I4WVHMEXh3CCIU87elI/Ppny+gX9GBY4jlnRt0Xe",
-	"9QfvTKeLss+XwA5VxNy6UT8lQOXC91KHxQKyqEOmaeCpjr6b+XXQpSW5ejTfd6t872Xgrbkcdvt3C0jo",
-	"euC+ZwCusZDlPtKe5fgu5J44AzHkhyPRXP7huQifkHzufvo+F9OfjhcbUcHvBtSH7v3RRw8eJtIRBo6A",
-	"mIMcDcs0Ry8YTXeIgyw4hQQxah7yIIy+/KaPDtBHJwr8bMItqIWOZNbnD4ZbRt2pcKAKO4mZ7xRqXzsS",
-	"5RmpXPZJfYlvLsSXLLKdBGtLZNFyVxKycTT/gOzeVy2AX5ij8rk6Jd+0zrPQOp0M8SFa53CvYY5zsvgI",
-	"u4Gtnzn5CXbikvGO5pq+nG0GnyqStOvvKWTnBCkE6S0vI724r0mh9wXNhnR+tjmGGYhZltlu7Udv9Ifq",
-	"DceLmytFRO87UH/nhINYEI8W+1F9M6owB05YMgzwFBZhjLQcVzruOQnGOFZA9pGPI+ir+QPWKx0V+fTx",
-	"YZcOE6PN+pkHoO2rUSudQS4ssrQJ9IxS8sJTtnB12LAQQxdDvlMtruiXVUDZb4+Zfh/wE+8z04RChA5X",
-	"TULmShcG9VqeZeX0GLayei5xVT6mF3gacYwr/KN+CdGuXT/9J5mpXXZX9/ipS/7hM0AedU+oefLavPVo",
-	"cRUq/90/qfxn8dXiasOKBqnLnZ3HEWrBWkjmD6JY/sI1+Xrt5i1kbKsF4pKz7HmJRMc63BVLxOxTny5T",
-	"+geuMXAMtdqciUJYs3zMNSKT1r4BDlv2cex+A80KhzCYGbvNYIa09uVRzjIn9mTczqz19uremS6Fh1uW",
-	"wnOzjZ+QdY6hw/0PuP62AUThXr/cqjQFFoKs9f4RZzX9FTYN+MMnDl1aPkVXkb8r36ctX5tviFpQpV9Z",
-	"la572vMpU4teb7Knemd3lM8yFGskGaF2IOBbv3CVz98msK3efi2fwC14ap/OFedzFV+dLU3rswS28+2r",
-	"qCs1LjhCV8CBxl1QvKAuqOjxw+O/AwAA//+wsgo8xb0AAA==",
+	"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",
+	"AAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

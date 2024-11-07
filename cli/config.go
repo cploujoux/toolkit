@@ -38,7 +38,7 @@ var resources = []*Resource{
 		Short:    "ml",
 		Plural:   "models",
 		Singular: "model",
-		SpecType: reflect.TypeOf(sdk.Policy{}),
+		SpecType: reflect.TypeOf(sdk.Model{}),
 	},
 	{
 		Kind:     "ModelProvider",
