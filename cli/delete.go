@@ -20,17 +20,29 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a resource",
+		Example: `
+			beamlit delete -f ./my-resource.yaml
+			# Or using stdin
+			cat file.yaml | beamlit delete -f -
+		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// Ouvrir le fichier
-			file, err := os.Open(filePath)
-			if err != nil {
-				fmt.Printf("Error opening file: %v\n", err)
-				return
+			var reader io.Reader
+
+			// Choisir la source (stdin ou fichier)
+			if filePath == "-" {
+				reader = os.Stdin
+			} else {
+				file, err := os.Open(filePath)
+				if err != nil {
+					fmt.Printf("Error opening file: %v\n", err)
+					return
+				}
+				defer file.Close()
+				reader = file
 			}
-			defer file.Close()
 
 			// Lire et parser les documents YAML
-			decoder := yaml.NewDecoder(file)
+			decoder := yaml.NewDecoder(reader)
 			var results []Result
 
 			for {

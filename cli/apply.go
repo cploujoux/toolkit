@@ -23,18 +23,27 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 		Long:  "Apply a configuration to a resource by file",
 		Example: `
 			beamlit apply -f ./my-deployment.yaml
+			# Or using stdin
+			cat file.yaml | beamlit apply -f -
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// Ouvrir le fichier
-			file, err := os.Open(filePath)
-			if err != nil {
-				fmt.Printf("Error opening file: %v\n", err)
-				return
+			var reader io.Reader
+
+			// Choisir la source (stdin ou fichier)
+			if filePath == "-" {
+				reader = os.Stdin
+			} else {
+				file, err := os.Open(filePath)
+				if err != nil {
+					fmt.Printf("Error opening file: %v\n", err)
+					return
+				}
+				defer file.Close()
+				reader = file
 			}
-			defer file.Close()
 
 			// Lire et parser les documents YAML
-			decoder := yaml.NewDecoder(file)
+			decoder := yaml.NewDecoder(reader)
 			var results []Result
 
 			for {
