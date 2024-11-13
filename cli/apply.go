@@ -132,14 +132,15 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 		os.Exit(1)
 	}
 
+	if response.StatusCode >= 400 {
+		ErrorHandler(buf.String())
+		os.Exit(1)
+	}
+
 	// Check if the content is an array or an object
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
-	}
-	if response.StatusCode >= 400 {
-		fmt.Println(res)
 		os.Exit(1)
 	}
 	fmt.Printf("Resource %s:%s configured\n", resourceName, name)

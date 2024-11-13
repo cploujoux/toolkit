@@ -71,7 +71,30 @@ func LoadCredentials(workspaceName string) Credentials {
 	return Credentials{}
 }
 
+func createHomeDirIfMissing() {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("Error getting home directory: %v\n", err)
+		return
+	}
+
+	credentialsDir := filepath.Join(homeDir, ".beamlit")
+	credentialsFile := filepath.Join(credentialsDir, "credentials.json")
+
+	// Check if credentials file exists
+	if _, err := os.Stat(credentialsFile); err == nil {
+		fmt.Println("You are already logged in. Enter a new API key to overwrite it.")
+	} else {
+		if err := os.MkdirAll(credentialsDir, 0700); err != nil {
+			fmt.Printf("Error creating credentials directory: %v\n", err)
+			return
+		}
+		fmt.Println("Enter your API key")
+	}
+}
+
 func SaveCredentials(workspaceName string, credentials Credentials) {
+	createHomeDirIfMissing()
 	if credentials.AccessToken == "" && credentials.APIKey == "" {
 		fmt.Println("No credentials to save, error")
 		return

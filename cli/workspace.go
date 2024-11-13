@@ -19,12 +19,17 @@ func (r *Operations) ListOrSetWorkspacesCmd() *cobra.Command {
 
 			workspaces := sdk.ListWorkspaces()
 			currentWorkspace := sdk.CurrentWorkspace()
+
+			// Afficher les en-têtes du tableau
+			fmt.Printf("%-20s %s\n", "NAME", "CURRENT")
+
+			// Afficher chaque workspace
 			for _, workspace := range workspaces {
+				current := " "
 				if workspace == currentWorkspace {
-					fmt.Printf("* %s\n", workspace)
-				} else {
-					fmt.Printf("  %s\n", workspace)
+					current = "*"
 				}
+				fmt.Printf("%-20s %s\n", workspace, current)
 			}
 		},
 	}

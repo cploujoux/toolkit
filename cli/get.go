@@ -77,6 +77,11 @@ func (resource Resource) GetFn(name string) {
 		os.Exit(1)
 	}
 
+	if response.StatusCode >= 400 {
+		ErrorHandler(buf.String())
+		os.Exit(1)
+	}
+
 	// Check if the content is an array or an object
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
@@ -119,8 +124,12 @@ func (resource Resource) ListFn() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	// Check if the content is an array or an object
+	if response.StatusCode >= 400 {
+		ErrorHandler(buf.String())
+		os.Exit(1)
+	}
 
+	// Check if the content is an array or an object
 	var slices []interface{}
 	if err := json.Unmarshal(buf.Bytes(), &slices); err != nil {
 		fmt.Println(err)
