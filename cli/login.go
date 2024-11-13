@@ -26,8 +26,8 @@ func (r *Operations) LoginCmd() *cobra.Command {
 			}
 
 			options := []string{
+				"Login with your browser",
 				"Login with API key",
-				"Login with device",
 			}
 
 			// Initialize variables for keyboard input handling
@@ -90,9 +90,9 @@ func (r *Operations) LoginCmd() *cobra.Command {
 				} else if b[0] == 10 { // Enter
 					switch selectedIndex {
 					case 0:
-						r.ApiKeyLogin(workspace)
-					case 1:
 						r.DeviceModeLogin(workspace)
+					case 1:
+						r.ApiKeyLogin(workspace)
 					}
 					return
 				}
