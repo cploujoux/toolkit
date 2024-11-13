@@ -23,7 +23,7 @@ func ErrorHandler(body string) {
 	fmt.Printf("Error: %s (Code: %d)\n", error.Error, error.Code)
 
 	// Afficher le stack trace seulement s'il existe
-	if len(error.Stack) > 0 {
+	if verbose && len(error.Stack) > 0 {
 		fmt.Println("Stack trace:")
 		for _, line := range error.Stack {
 			fmt.Printf("  %s\n", line)

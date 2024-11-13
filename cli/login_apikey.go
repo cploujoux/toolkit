@@ -2,11 +2,13 @@ package cli
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/tmp-moon/toolkit/sdk"
 )
 
 func (r *Operations) ApiKeyLogin(workspace string) {
+	fmt.Println("Enter your API key :")
 	var apiKey string
 	for {
 		fmt.Scanln(&apiKey)
@@ -18,10 +20,15 @@ func (r *Operations) ApiKeyLogin(workspace string) {
 	}
 
 	// Create credentials struct and marshal to JSON
-	credentials := sdk.Credentials{
+	creds := sdk.Credentials{
 		APIKey: apiKey,
 	}
 
-	sdk.SaveCredentials(workspace, credentials)
+	if err := CheckWorkspaceAccess(workspace, creds); err != nil {
+		fmt.Printf("Error accessing workspace %s : %s\n", workspace, err)
+		os.Exit(1)
+	}
+
+	sdk.SaveCredentials(workspace, creds)
 	fmt.Println("Successfully stored API key")
 }

@@ -89,7 +89,6 @@ func createHomeDirIfMissing() {
 			fmt.Printf("Error creating credentials directory: %v\n", err)
 			return
 		}
-		fmt.Println("Enter your API key")
 	}
 }
 

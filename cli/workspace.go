@@ -1,7 +1,11 @@
 package cli
 
 import (
+	"bytes"
+	"context"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/tmp-moon/toolkit/sdk"
@@ -33,4 +37,32 @@ func (r *Operations) ListOrSetWorkspacesCmd() *cobra.Command {
 			}
 		},
 	}
+}
+
+func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) error {
+	c, err := sdk.NewClientWithCredentials(
+		sdk.RunClientWithCredentials{
+			ApiURL:      BASE_URL,
+			RunURL:      RUN_URL,
+			Credentials: credentials,
+			Workspace:   workspace,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	response, err := c.GetWorkspace(context.Background(), workspaceName)
+	if err != nil {
+		return err
+	}
+	var buf bytes.Buffer
+	if _, err := io.Copy(&buf, response.Body); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if response.StatusCode >= 400 {
+		ErrorHandler(buf.String())
+		os.Exit(1)
+	}
+	return nil
 }

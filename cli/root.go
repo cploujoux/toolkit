@@ -15,6 +15,7 @@ var outputFormat string
 var environment string
 var client *sdk.ClientWithResponses
 var reg *Operations
+var verbose bool
 
 var rootCmd = &cobra.Command{
 	Use:   "beamlit",
@@ -70,6 +71,7 @@ func Execute() error {
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")
 	rootCmd.PersistentFlags().StringVarP(&environment, "env", "e", "", "Environment. One of: development,production")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 	if workspace == "" {
 		workspace = sdk.CurrentWorkspace()
 	}
