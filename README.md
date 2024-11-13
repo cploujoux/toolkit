@@ -2,7 +2,7 @@
 
 ## Install cli on MacOS
 ```sh
-brew tap tmp-moon/beamlit
+brew tap beamlit/beamlit
 brew install beamlit
 ```
 
