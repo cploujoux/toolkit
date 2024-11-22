@@ -3,7 +3,7 @@ package cli
 import (
 	"reflect"
 
-	"github.com/tmp-moon/toolkit/sdk"
+	"github.com/beamlit/toolkit/sdk"
 )
 
 type Resource struct {
@@ -16,6 +16,7 @@ type Resource struct {
 	Get      interface{}
 	Delete   interface{}
 	Put      interface{}
+	Post     interface{}
 }
 
 var resources = []*Resource{

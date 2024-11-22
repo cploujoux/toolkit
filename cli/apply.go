@@ -71,61 +71,112 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&filePath, "file", "f", "", "Path to YAML file to apply")
-	cmd.MarkFlagRequired("file")
-
-	return cmd
-}
-
-func (resource Resource) PutFn(resourceName string, name string, spec interface{}) {
-	ctx := context.Background()
-	// Use reflect to call the function
-	funcValue := reflect.ValueOf(resource.Put)
-	if funcValue.Kind() != reflect.Func {
-		fmt.Println("fn is not a valid function")
-		os.Exit(1)
-	}
-	// Convert spec to the expected type using JSON marshaling/unmarshaling
-	specJson, err := json.Marshal(spec)
+	err := cmd.MarkFlagRequired("file")
 	if err != nil {
-		fmt.Printf("Error marshaling spec: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Create a new instance of the expected type
-	destBody := reflect.New(resource.SpecType).Interface()
-	if err := json.Unmarshal(specJson, destBody); err != nil {
-		fmt.Printf("Error unmarshaling to target type: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Use the converted spec in the function call
-	fnargs := []reflect.Value{
-		reflect.ValueOf(ctx),
-		reflect.ValueOf(name),
-		reflect.ValueOf(destBody).Elem(),
-	}
-
-	// Call the function with the arguments
-	results := funcValue.Call(fnargs)
-
-	// Handle the results based on your needs
-	if len(results) <= 1 {
-		return
-	}
-
-	if err, ok := results[1].Interface().(error); ok && err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	// Check if the first result is a pointer to http.Response
+	return cmd
+}
+
+// Helper function to handle common resource operations
+func (resource Resource) handleResourceOperation(name string, spec interface{}, operation string) (*http.Response, error) {
+	ctx := context.Background()
+
+	// Get the appropriate function based on operation
+	var fn reflect.Value
+	if operation == "put" {
+		fn = reflect.ValueOf(resource.Put)
+	} else {
+		fn = reflect.ValueOf(resource.Post)
+	}
+
+	if fn.Kind() != reflect.Func {
+		return nil, fmt.Errorf("fn is not a valid function")
+	}
+
+	// Handle spec conversion
+	specJson, err := json.Marshal(spec)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling spec: %v", err)
+	}
+
+	destBody := reflect.New(resource.SpecType).Interface()
+	if err := json.Unmarshal(specJson, destBody); err != nil {
+		return nil, fmt.Errorf("error unmarshaling to target type: %v", err)
+	}
+
+	// Call the function
+	results := fn.Call([]reflect.Value{
+		reflect.ValueOf(ctx),
+		reflect.ValueOf(name),
+		reflect.ValueOf(destBody).Elem(),
+	})
+
+	if len(results) <= 1 {
+		return nil, nil
+	}
+
+	if err, ok := results[1].Interface().(error); ok && err != nil {
+		return nil, err
+	}
+
 	response, ok := results[0].Interface().(*http.Response)
 	if !ok {
-		fmt.Println("the result is not a pointer to http.Response")
+		return nil, fmt.Errorf("the result is not a pointer to http.Response")
+	}
+
+	return response, nil
+}
+
+func (resource Resource) PutFn(resourceName string, name string, spec interface{}) {
+	response, err := resource.handleResourceOperation(name, spec, "put")
+	if err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
-	// Read the content of http.Response.Body
-	defer response.Body.Close() // Ensure to close the ReadCloser
+	if response == nil {
+		return
+	}
+
+	defer response.Body.Close()
+	var buf bytes.Buffer
+	if _, err := io.Copy(&buf, response.Body); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if response.StatusCode >= 404 {
+		// Need to create the resource
+		resource.PostFn(resourceName, name, spec)
+		return
+	}
+
+	if response.StatusCode >= 400 {
+		ErrorHandler(buf.String())
+		os.Exit(1)
+	}
+
+	var res interface{}
+	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Printf("Resource %s:%s configured\n", resourceName, name)
+}
+
+func (resource Resource) PostFn(resourceName string, name string, spec interface{}) {
+	response, err := resource.handleResourceOperation(name, spec, "post")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if response == nil {
+		return
+	}
+
+	defer response.Body.Close()
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
 		fmt.Println(err)
@@ -137,11 +188,10 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 		os.Exit(1)
 	}
 
-	// Check if the content is an array or an object
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Printf("Resource %s:%s configured\n", resourceName, name)
+	fmt.Printf("Resource %s:%s created\n", resourceName, name)
 }
