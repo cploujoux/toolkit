@@ -59,6 +59,9 @@ brews:
   - name: beamlit
     caveats: Beamlit is a tool to ship AI agents that never slack.
     homepage: "https://www.beamlit.com"
+    install: |
+      bin.install "beamlit"
+      bin.install_symlink "beamlit" => "bl"
     repository:
       owner: "{{ .Env.GITHUB_REPOSITORY_OWNER }}"
       name: homebrew-beamlit
