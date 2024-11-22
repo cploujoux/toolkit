@@ -60,7 +60,7 @@ brews:
     caveats: Beamlit is a tool to ship AI agents that never slack.
     homepage: "https://www.beamlit.com"
     repository:
-      owner: "{{ .Env.GITHUB_REPOSITORY_OWNER }}"
+      owner: "drappier-charles"
       name: homebrew-beamlit
       pull_request:
         enabled: true
