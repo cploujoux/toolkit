@@ -63,7 +63,7 @@ brews:
       bin.install "beamlit"
       bin.install_symlink "beamlit" => "bl"
     repository:
-      owner: "drappier-charles"
+      owner: "{{ .Env.GITHUB_REPOSITORY_OWNER }}"
       name: homebrew-beamlit
       pull_request:
         enabled: true
