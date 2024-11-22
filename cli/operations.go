@@ -53,7 +53,7 @@ func (r *Operations) CliCommand(ctx context.Context, operationId string, fn inte
 	if operation[0] == "create" {
 		for _, resource := range resources {
 			if resource.Singular == operation[1] {
-				resource.Put = fn
+				resource.Post = fn
 				break
 			}
 		}

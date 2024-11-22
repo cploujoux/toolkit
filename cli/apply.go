@@ -108,11 +108,22 @@ func (resource Resource) handleResourceOperation(name string, spec interface{}, 
 	}
 
 	// Call the function
-	results := fn.Call([]reflect.Value{
-		reflect.ValueOf(ctx),
-		reflect.ValueOf(name),
-		reflect.ValueOf(destBody).Elem(),
-	})
+	var results []reflect.Value
+	switch operation {
+	case "put":
+		results = fn.Call([]reflect.Value{
+			reflect.ValueOf(ctx),
+			reflect.ValueOf(name),
+			reflect.ValueOf(destBody).Elem(),
+		})
+	case "post":
+		results = fn.Call([]reflect.Value{
+			reflect.ValueOf(ctx),
+			reflect.ValueOf(destBody).Elem(),
+		})
+	default:
+		return nil, fmt.Errorf("invalid operation: %s", operation)
+	}
 
 	if len(results) <= 1 {
 		return nil, nil
@@ -147,7 +158,7 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 		os.Exit(1)
 	}
 
-	if response.StatusCode >= 404 {
+	if response.StatusCode == 404 {
 		// Need to create the resource
 		resource.PostFn(resourceName, name, spec)
 		return
