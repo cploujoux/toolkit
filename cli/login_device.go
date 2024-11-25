@@ -13,7 +13,7 @@ import (
 	"github.com/beamlit/toolkit/sdk"
 )
 
-func (r *Operations) DeviceModeLogin(workspace string) {
+func (r *Operations) DeviceModeLogin(workspace string, environment string) {
 	url := r.BaseURL + "/login/device"
 
 	payload := sdk.DeviceLogin{
@@ -54,10 +54,10 @@ func (r *Operations) DeviceModeLogin(workspace string) {
 	}
 	fmt.Println("Waiting for user to finish login...")
 
-	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace)
+	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace, environment)
 }
 
-func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string) {
+func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string, environment string) {
 	time.Sleep(3 * time.Second)
 	url := r.BaseURL + "/oauth/token"
 
@@ -90,7 +90,7 @@ func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string
 	}
 
 	if res.StatusCode != http.StatusOK {
-		r.DeviceModeLoginFinalize(deviceCode, workspace)
+		r.DeviceModeLoginFinalize(deviceCode, workspace, environment)
 	}
 
 	creds := sdk.Credentials{
@@ -106,6 +106,6 @@ func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string
 	}
 
 	sdk.SaveCredentials(workspace, creds)
-
+	sdk.SetCurrentWorkspace(workspace, environment)
 	fmt.Println("Successfully logged in")
 }

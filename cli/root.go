@@ -73,7 +73,10 @@ func Execute() error {
 	rootCmd.PersistentFlags().StringVarP(&environment, "env", "e", "", "Environment. One of: development,production")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 	if workspace == "" {
-		workspace = sdk.CurrentWorkspace()
+		workspace = sdk.CurrentContext().Workspace
+	}
+	if environment == "" {
+		environment = sdk.CurrentContext().Environment
 	}
 	return rootCmd.Execute()
 }

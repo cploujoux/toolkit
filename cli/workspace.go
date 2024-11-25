@@ -13,27 +13,35 @@ import (
 
 func (r *Operations) ListOrSetWorkspacesCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:     "workspaces [workspace]",
+		Use:     "workspaces [workspace] [environment]",
 		Aliases: []string{"ws", "workspace"},
-		Short:   "List all workspaces with the current workspace highlighted, set optionally a new current workspace",
+		Short:   "List all workspaces with the current workspace highlighted, set optionally a new current workspace and environment",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) > 0 {
-				sdk.SetCurrentWorkspace(args[0])
+				if len(args) > 1 {
+					sdk.SetCurrentWorkspace(args[0], args[1])
+				} else {
+					sdk.SetCurrentWorkspace(args[0], "")
+				}
 			}
 
 			workspaces := sdk.ListWorkspaces()
-			currentWorkspace := sdk.CurrentWorkspace()
+			currentWorkspace := sdk.CurrentContext().Workspace
 
-			// Afficher les en-têtes du tableau
-			fmt.Printf("%-20s %s\n", "NAME", "CURRENT")
+			// En-têtes avec largeurs fixes
+			fmt.Printf("%-30s %-20s %-20s\n", "NAME", "ENVIRONMENT", "CURRENT")
 
-			// Afficher chaque workspace
+			// Afficher chaque workspace avec les mêmes largeurs fixes
 			for _, workspace := range workspaces {
 				current := " "
 				if workspace == currentWorkspace {
 					current = "*"
 				}
-				fmt.Printf("%-20s %s\n", workspace, current)
+				env := ""
+				if workspace == currentWorkspace {
+					env = sdk.CurrentContext().Environment
+				}
+				fmt.Printf("%-30s %-20s %-10s\n", workspace, env, current)
 			}
 		},
 	}

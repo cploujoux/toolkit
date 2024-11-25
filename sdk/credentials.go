@@ -50,14 +50,15 @@ func ListWorkspaces() []string {
 	return workspaces
 }
 
-func CurrentWorkspace() string {
+func CurrentContext() ContextConfig {
 	config := loadConfig()
-	return config.CurrentContext
+	return config.Context
 }
 
-func SetCurrentWorkspace(workspaceName string) {
+func SetCurrentWorkspace(workspaceName string, environment string) {
 	config := loadConfig()
-	config.CurrentContext = workspaceName
+	config.Context.Workspace = workspaceName
+	config.Context.Environment = environment
 	saveConfig(config)
 }
 
@@ -110,7 +111,6 @@ func SaveCredentials(workspaceName string, credentials Credentials) {
 	if !found {
 		config.Workspaces = append(config.Workspaces, WorkspaceConfig{Name: workspaceName, Credentials: credentials})
 	}
-	config.CurrentContext = workspaceName
 	saveConfig(config)
 }
 
@@ -122,8 +122,8 @@ func ClearCredentials(workspaceName string) {
 			break
 		}
 	}
-	if config.CurrentContext == workspaceName {
-		config.CurrentContext = ""
+	if config.Context.Workspace == workspaceName {
+		config.Context.Workspace = ""
 	}
 	saveConfig(config)
 }

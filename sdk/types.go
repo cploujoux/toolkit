@@ -1,12 +1,17 @@
 package sdk
 
 type Config struct {
-	CurrentContext string            `yaml:"current_context"`
-	Workspaces     []WorkspaceConfig `yaml:"workspaces"`
+	Context    ContextConfig     `yaml:"context"`
+	Workspaces []WorkspaceConfig `yaml:"workspaces"`
 }
 type WorkspaceConfig struct {
 	Name        string      `yaml:"name"`
 	Credentials Credentials `yaml:"credentials"`
+}
+
+type ContextConfig struct {
+	Workspace   string `yaml:"workspace"`
+	Environment string `yaml:"environment"`
 }
 
 type Credentials struct {

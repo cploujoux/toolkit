@@ -12,17 +12,22 @@ import (
 
 func (r *Operations) LoginCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "login [workspace]",
+		Use:   "login [workspace] [environment]",
 		Short: "Login to Beamlit",
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			workspace := "" // Default workspace
+			workspace := ""   // Default workspace
+			environment := "" // Default environment
 			if len(args) > 0 {
 				workspace = args[0]
 			}
 			if workspace == "" {
 				fmt.Println("Error: Enter a workspace")
 				os.Exit(1)
+			}
+
+			if len(args) > 1 {
+				environment = args[1]
 			}
 
 			options := []string{
@@ -94,9 +99,9 @@ func (r *Operations) LoginCmd() *cobra.Command {
 				} else if b[0] == 10 { // Enter
 					switch selectedIndex {
 					case 0:
-						r.DeviceModeLogin(workspace)
+						r.DeviceModeLogin(workspace, environment)
 					case 1:
-						r.ApiKeyLogin(workspace)
+						r.ApiKeyLogin(workspace, environment)
 					}
 					return
 				}

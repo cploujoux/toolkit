@@ -7,7 +7,7 @@ import (
 	"github.com/beamlit/toolkit/sdk"
 )
 
-func (r *Operations) ApiKeyLogin(workspace string) {
+func (r *Operations) ApiKeyLogin(workspace string, environment string) {
 	fmt.Println("Enter your API key :")
 	var apiKey string
 	for {
@@ -34,5 +34,6 @@ func (r *Operations) ApiKeyLogin(workspace string) {
 	}
 
 	sdk.SaveCredentials(workspace, creds)
+	sdk.SetCurrentWorkspace(workspace, environment)
 	fmt.Println("Successfully stored API key")
 }
