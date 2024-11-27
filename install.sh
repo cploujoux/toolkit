@@ -91,7 +91,6 @@ uname_arch_check() {
 untar() {
   tarball=$1
   destination=$2
-  echo "UNTARING ${tarball} -> ${destination}"
   case "${tarball}" in
   *.tar.gz|*.tgz)
     if [ -z "$destination" ]; then
