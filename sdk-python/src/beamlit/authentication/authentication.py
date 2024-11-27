@@ -3,8 +3,8 @@ from typing import Generator
 
 from httpx import Auth, Request, Response
 
+from ..client import AuthenticatedClient
 from .apikey import ApiKeyProvider
-from .client import AuthenticatedClient
 from .credentials import Credentials
 from .device_mode import BearerToken
 
