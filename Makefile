@@ -9,10 +9,12 @@ sdk:
 sdk-python:
 	openapi-python-client generate \
 		--path=definition.yml \
-		--output-path=./sdk-python \
+		--output-path=./tmp-sdk-python \
 		--overwrite \
 		--custom-template-path=./templates/python \
 		--config=./config/openapi-python-client.yml
+	cp -r ./tmp-sdk-python/beamlit/* ./sdk-python/src/beamlit/
+	rm -rf ./tmp-sdk-python
 
 sdk-ts:
 	npx @hey-api/openapi-ts -i ./definition.yml -o sdk-ts -c @hey-api/client-fetch

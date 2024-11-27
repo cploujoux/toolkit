@@ -1,6 +1,5 @@
-{% from "helpers.jinja" import safe_docstring %}
+"""A client library for accessing Beamlit Control Plane"""
 
-{{ safe_docstring(package_description) }}
 from .client import AuthenticatedClient, Client
 
 __all__ = (

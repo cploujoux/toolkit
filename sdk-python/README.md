@@ -17,7 +17,7 @@ from beamlit import AuthenticatedClient
 from beamlit import load_credentials
 
 credentials = load_credentials()
-client = AuthenticatedClient(credentials=credentials)
+client = AuthenticatedClient(provider=credentials)
 ```
 
 Now call your endpoint and use your models:
