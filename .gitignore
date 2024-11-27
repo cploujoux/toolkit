@@ -3,3 +3,4 @@ dist
 dist/
 /beamlit
 .DS_Store
+venv
