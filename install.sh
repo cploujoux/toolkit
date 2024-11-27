@@ -34,6 +34,33 @@ uname_os() {
   os=$(uname -s | tr '[:upper:]' '[:lower:]')
   echo "$os"
 }
+uname_arch() {
+  arch=$(uname -m)
+  case $arch in
+    aarch64)    arch="x86_64" ;;
+    x86_64)     arch="x86_64" ;;
+    x86-64)     arch="x86_64" ;;
+    x64)        arch="x86_64" ;;
+    amd64)      arch="x86_64" ;;
+    arm64)      arch="arm64" ;;
+    armv8*)     arch="arm64" ;;
+    i386)       arch="i386" ;;
+    i686)       arch="i386" ;;
+    x86)        arch="i386" ;;
+    386)        arch="i386" ;;
+  esac
+  echo ${arch}
+}
+uname_arch_check() {
+  arch=$(uname_arch)
+  case "$arch" in
+    x86_64)    return 0 ;;
+    arm64)     return 0 ;;
+    i386)      return 0 ;;
+  esac
+  echo "$0: ARCH $arch is not supported, supported ARCH: x86_64, arm64, i386"
+  return 1
+}
 uname_os_check() {
   os=$(uname_os)
   case "$os" in
@@ -171,7 +198,7 @@ REPO=toolkit
 BINARY=beamlit
 BINDIR=${BINDIR:-./bin}
 PREFIX="$OWNER/$REPO"
-ARCH=$(uname -m)
+ARCH=$(uname_arch)
 OS=$(uname_os)
 OS_TITLE=$(echo "$OS" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
@@ -213,5 +240,5 @@ execute() {
 }
 
 uname_os_check
-
+uname_arch_check
 execute
