@@ -1,3 +1,5 @@
+ARGS:= $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
 sdk:
 	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
 	oapi-codegen -package=sdk \
