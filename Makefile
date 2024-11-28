@@ -1,10 +1,23 @@
 sdk:
-	cp ../control-plane/api/api/definitions/controlplane.yml ./definition.yml
+	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
 	oapi-codegen -package=sdk \
 		-generate=types,client,spec \
 		-o=sdk/beamlit.go \
-		-templates=./templates \
+		-templates=./templates/go \
 		definition.yml
+
+sdk-python:
+	openapi-python-client generate \
+		--path=definition.yml \
+		--output-path=./tmp-sdk-python \
+		--overwrite \
+		--custom-template-path=./templates/python \
+		--config=./config/openapi-python-client.yml
+	cp -r ./tmp-sdk-python/beamlit/* ./sdk-python/src/beamlit/
+	rm -rf ./tmp-sdk-python
+
+sdk-ts:
+	npx @hey-api/openapi-ts -i ./definition.yml -o sdk-ts -c @hey-api/client-fetch
 
 build:
 	goreleaser release --snapshot --clean
@@ -21,4 +34,7 @@ doc:
 lint:
 	golangci-lint run
 
-.PHONY: sdk
+install:
+	uv pip install openapi-python-client
+
+.PHONY: sdk sdk-python sdk-ts
