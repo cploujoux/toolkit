@@ -17,7 +17,7 @@ doc:
 	rm -rf docs
 	go run main.go docs --format=markdown --output=docs
 	rm docs/bl_completion_zsh.md docs/bl_completion_bash.md
-	
+
 lint:
 	golangci-lint run
 
