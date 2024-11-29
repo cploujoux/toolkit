@@ -1,14 +1,14 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit run"
-slug: beamlit_run
+date: 2024-11-29T16:27:20+01:00
+title: "bl run"
+slug: bl_run
 ---
-## beamlit run
+## bl run
 
 Run inference
 
 ```
-beamlit run [model] [flags]
+bl run [model] [flags]
 ```
 
 ### Options
@@ -34,5 +34,5 @@ beamlit run [model] [flags]
 
 ### SEE ALSO
 
-* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
+* [bl](bl.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 

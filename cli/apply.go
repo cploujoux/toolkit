@@ -22,9 +22,9 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 		Short: "Apply a configuration to a resource by file",
 		Long:  "Apply a configuration to a resource by file",
 		Example: `
-			beamlit apply -f ./my-deployment.yaml
+			bl apply -f ./my-deployment.yaml
 			# Or using stdin
-			cat file.yaml | beamlit apply -f -
+			cat file.yaml | bl apply -f -
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			var reader io.Reader

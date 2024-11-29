@@ -21,7 +21,7 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 		Use:   "delete",
 		Short: "Delete a resource",
 		Example: `
-			beamlit delete -f ./my-resource.yaml
+			bl delete -f ./my-resource.yaml
 			# Or using stdin
 			cat file.yaml | beamlit delete -f -
 		`,

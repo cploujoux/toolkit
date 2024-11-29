@@ -1,14 +1,14 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit workspaces"
-slug: beamlit_workspaces
+date: 2024-11-29T16:27:20+01:00
+title: "bl workspaces"
+slug: bl_workspaces
 ---
-## beamlit workspaces
+## bl workspaces
 
 List all workspaces with the current workspace highlighted, set optionally a new current workspace and environment
 
 ```
-beamlit workspaces [workspace] [environment] [flags]
+bl workspaces [workspace] [environment] [flags]
 ```
 
 ### Options
@@ -28,5 +28,5 @@ beamlit workspaces [workspace] [environment] [flags]
 
 ### SEE ALSO
 
-* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
+* [bl](bl.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 

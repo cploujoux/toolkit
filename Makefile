@@ -16,7 +16,7 @@ dev:
 doc:
 	rm -rf docs
 	go run main.go docs --format=markdown --output=docs
-	rm docs/beamlit_completion_zsh.md docs/beamlit_completion_bash.md
+	rm docs/bl_completion_zsh.md docs/bl_completion_bash.md
 	
 lint:
 	golangci-lint run
