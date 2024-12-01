@@ -11,12 +11,11 @@ import (
 	"reflect"
 
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 )
 
 func (r *Operations) DeleteCmd() *cobra.Command {
 	var filePath string
-
+	var recursive bool
 	cmd := &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a resource",
@@ -26,36 +25,10 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 			cat file.yaml | beamlit delete -f -
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			var reader io.Reader
-
-			// Choisir la source (stdin ou fichier)
-			if filePath == "-" {
-				reader = os.Stdin
-			} else {
-				file, err := os.Open(filePath)
-				if err != nil {
-					fmt.Printf("Error opening file: %v\n", err)
-					return
-				}
-				defer file.Close()
-				reader = file
-			}
-
-			// Lire et parser les documents YAML
-			decoder := yaml.NewDecoder(reader)
-			var results []Result
-
-			for {
-				var result Result
-				err := decoder.Decode(&result)
-				if err == io.EOF {
-					break
-				}
-				if err != nil {
-					fmt.Printf("Error decoding YAML: %v\n", err)
-					return
-				}
-				results = append(results, result)
+			results, err := getResults(filePath, recursive)
+			if err != nil {
+				fmt.Printf("error getting results: %v", err)
+				os.Exit(1)
 			}
 
 			// À ce stade, results contient tous vos documents YAML
@@ -69,8 +42,9 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&filePath, "file", "f", "", "Path to YAML file to apply")
-	err := cmd.MarkFlagRequired("file")
+	cmd.Flags().StringVarP(&filePath, "filename", "f", "", "Path to YAML file to apply")
+	cmd.Flags().BoolVarP(&recursive, "recursive", "R", false, "Process the directory used in -f, --filename recursively")
+	err := cmd.MarkFlagRequired("filename")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

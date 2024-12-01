@@ -4,3 +4,4 @@ dist/
 /beamlit
 .DS_Store
 venv
+tmp
