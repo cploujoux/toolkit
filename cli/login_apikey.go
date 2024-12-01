@@ -8,19 +8,24 @@ import (
 )
 
 func (r *Operations) ApiKeyLogin(workspace string, environment string) {
-	fmt.Println("Enter your API key :")
 	var apiKey string
-	for {
-		_, err := fmt.Scanln(&apiKey)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+	// Check if API key is provided via environment variable
+	if apiKey = os.Getenv("BL_API_KEY"); apiKey != "" {
+		fmt.Println("Using API key from environment variable BL_API_KEY")
+	} else {
+		fmt.Println("Enter your API key :")
+		for {
+			_, err := fmt.Scanln(&apiKey)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 
-		if apiKey != "" {
-			break
+			if apiKey != "" {
+				break
+			}
+			fmt.Println("API key cannot be empty. Please enter your API key")
 		}
-		fmt.Println("API key cannot be empty. Please enter your API key")
 	}
 
 	// Create credentials struct and marshal to JSON

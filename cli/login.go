@@ -30,6 +30,11 @@ func (r *Operations) LoginCmd() *cobra.Command {
 				environment = args[1]
 			}
 
+			if os.Getenv("BL_API_KEY") != "" {
+				r.ApiKeyLogin(workspace, environment)
+				return
+			}
+
 			options := []string{
 				"Login with your browser",
 				"Login with API key",
