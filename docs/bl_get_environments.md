@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit delete policy"
-slug: beamlit_delete_policy
+date: 2024-11-29T16:27:20+01:00
+title: "bl get environments"
+slug: bl_get_environments
 ---
-## beamlit delete policy
+## bl get environments
 
-Delete a Policy
+Get a Environment
 
 ```
-beamlit delete policy [flags]
+bl get environments [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for policy
+  -h, --help   help for environments
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit delete policy [flags]
 
 ### SEE ALSO
 
-* [beamlit delete](beamlit_delete.md)	 - Delete a resource
+* [bl get](bl_get.md)	 - Get a resource
 

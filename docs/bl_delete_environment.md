@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit metrics"
-slug: beamlit_metrics
+date: 2024-11-29T16:27:20+01:00
+title: "bl delete environment"
+slug: bl_delete_environment
 ---
-## beamlit metrics
+## bl delete environment
 
-Get metrics for a model deployment
+Delete a Environment
 
 ```
-beamlit metrics [name] [flags]
+bl delete environment [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for metrics
+  -h, --help   help for environment
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit metrics [name] [flags]
 
 ### SEE ALSO
 
-* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
+* [bl delete](bl_delete.md)	 - Delete a resource
 

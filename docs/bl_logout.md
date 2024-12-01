@@ -1,14 +1,14 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit logout"
-slug: beamlit_logout
+date: 2024-11-29T16:27:20+01:00
+title: "bl logout"
+slug: bl_logout
 ---
-## beamlit logout
+## bl logout
 
 Logout from Beamlit
 
 ```
-beamlit logout [workspace] [flags]
+bl logout [workspace] [flags]
 ```
 
 ### Options
@@ -28,5 +28,5 @@ beamlit logout [workspace] [flags]
 
 ### SEE ALSO
 
-* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
+* [bl](bl.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 

@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit delete function"
-slug: beamlit_delete_function
+date: 2024-11-29T16:27:20+01:00
+title: "bl metrics"
+slug: bl_metrics
 ---
-## beamlit delete function
+## bl metrics
 
-Delete a Function
+Get metrics for a model deployment
 
 ```
-beamlit delete function [flags]
+bl metrics [name] [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for function
+  -h, --help   help for metrics
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit delete function [flags]
 
 ### SEE ALSO
 
-* [beamlit delete](beamlit_delete.md)	 - Delete a resource
+* [bl](bl.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 

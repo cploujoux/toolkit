@@ -1,9 +1,9 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit completion fish"
-slug: beamlit_completion_fish
+date: 2024-11-29T16:27:20+01:00
+title: "bl completion fish"
+slug: bl_completion_fish
 ---
-## beamlit completion fish
+## bl completion fish
 
 Generate the autocompletion script for fish
 
@@ -13,17 +13,17 @@ Generate the autocompletion script for the fish shell.
 
 To load completions in your current shell session:
 
-	beamlit completion fish | source
+	bl completion fish | source
 
 To load completions for every new session, execute once:
 
-	beamlit completion fish > ~/.config/fish/completions/beamlit.fish
+	bl completion fish > ~/.config/fish/completions/bl.fish
 
 You will need to start a new shell for this setup to take effect.
 
 
 ```
-beamlit completion fish [flags]
+bl completion fish [flags]
 ```
 
 ### Options
@@ -44,5 +44,5 @@ beamlit completion fish [flags]
 
 ### SEE ALSO
 
-* [beamlit completion](beamlit_completion.md)	 - Generate the autocompletion script for the specified shell
+* [bl completion](bl_completion.md)	 - Generate the autocompletion script for the specified shell
 

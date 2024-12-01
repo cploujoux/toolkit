@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit delete modelprovider"
-slug: beamlit_delete_modelprovider
+date: 2024-11-29T16:27:20+01:00
+title: "bl get modelproviders"
+slug: bl_get_modelproviders
 ---
-## beamlit delete modelprovider
+## bl get modelproviders
 
-Delete a ModelProvider
+Get a ModelProvider
 
 ```
-beamlit delete modelprovider [flags]
+bl get modelproviders [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for modelprovider
+  -h, --help   help for modelproviders
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit delete modelprovider [flags]
 
 ### SEE ALSO
 
-* [beamlit delete](beamlit_delete.md)	 - Delete a resource
+* [bl get](bl_get.md)	 - Get a resource
 

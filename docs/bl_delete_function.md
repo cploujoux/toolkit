@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit login"
-slug: beamlit_login
+date: 2024-11-29T16:27:20+01:00
+title: "bl delete function"
+slug: bl_delete_function
 ---
-## beamlit login
+## bl delete function
 
-Login to Beamlit
+Delete a Function
 
 ```
-beamlit login [workspace] [environment] [flags]
+bl delete function [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for login
+  -h, --help   help for function
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit login [workspace] [environment] [flags]
 
 ### SEE ALSO
 
-* [beamlit](beamlit.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
+* [bl delete](bl_delete.md)	 - Delete a resource
 

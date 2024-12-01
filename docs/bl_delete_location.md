@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit delete environment"
-slug: beamlit_delete_environment
+date: 2024-11-29T16:27:20+01:00
+title: "bl delete location"
+slug: bl_delete_location
 ---
-## beamlit delete environment
+## bl delete location
 
-Delete a Environment
+Delete a Location
 
 ```
-beamlit delete environment [flags]
+bl delete location [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for environment
+  -h, --help   help for location
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit delete environment [flags]
 
 ### SEE ALSO
 
-* [beamlit delete](beamlit_delete.md)	 - Delete a resource
+* [bl delete](bl_delete.md)	 - Delete a resource
 

@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit get environments"
-slug: beamlit_get_environments
+date: 2024-11-29T16:27:20+01:00
+title: "bl get policies"
+slug: bl_get_policies
 ---
-## beamlit get environments
+## bl get policies
 
-Get a Environment
+Get a Policy
 
 ```
-beamlit get environments [flags]
+bl get policies [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for environments
+  -h, --help   help for policies
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit get environments [flags]
 
 ### SEE ALSO
 
-* [beamlit get](beamlit_get.md)	 - Get a resource
+* [bl get](bl_get.md)	 - Get a resource
 

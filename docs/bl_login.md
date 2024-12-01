@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit get policies"
-slug: beamlit_get_policies
+date: 2024-11-29T16:27:20+01:00
+title: "bl login"
+slug: bl_login
 ---
-## beamlit get policies
+## bl login
 
-Get a Policy
+Login to Beamlit
 
 ```
-beamlit get policies [flags]
+bl login [workspace] [environment] [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for policies
+  -h, --help   help for login
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit get policies [flags]
 
 ### SEE ALSO
 
-* [beamlit get](beamlit_get.md)	 - Get a resource
+* [bl](bl.md)	 - Beamlit CLI is a command line tool to interact with Beamlit APIs.
 

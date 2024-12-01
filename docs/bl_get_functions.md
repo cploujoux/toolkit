@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit get models"
-slug: beamlit_get_models
+date: 2024-11-29T16:27:20+01:00
+title: "bl get functions"
+slug: bl_get_functions
 ---
-## beamlit get models
+## bl get functions
 
-Get a Model
+Get a Function
 
 ```
-beamlit get models [flags]
+bl get functions [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for models
+  -h, --help   help for functions
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit get models [flags]
 
 ### SEE ALSO
 
-* [beamlit get](beamlit_get.md)	 - Get a resource
+* [bl get](bl_get.md)	 - Get a resource
 

@@ -1,20 +1,20 @@
 ---
-date: 2024-11-25T14:23:03+01:00
-title: "beamlit delete model"
-slug: beamlit_delete_model
+date: 2024-11-29T16:27:20+01:00
+title: "bl delete policy"
+slug: bl_delete_policy
 ---
-## beamlit delete model
+## bl delete policy
 
-Delete a Model
+Delete a Policy
 
 ```
-beamlit delete model [flags]
+bl delete policy [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for model
+  -h, --help   help for policy
 ```
 
 ### Options inherited from parent commands
@@ -28,5 +28,5 @@ beamlit delete model [flags]
 
 ### SEE ALSO
 
-* [beamlit delete](beamlit_delete.md)	 - Delete a resource
+* [bl delete](bl_delete.md)	 - Delete a resource
 
