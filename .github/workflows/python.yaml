@@ -28,7 +28,7 @@ jobs:
           VERSION="${{ github.ref_name }}"
           VERSION="${VERSION#v}"
           echo "Setting version to $VERSION"
-          sed -i -E 's/^version = .*/version = "${VERSION}"/' sdk-python/pyproject.toml
+          sed -i -E "s/^version = .*/version = \"${VERSION}\"/" sdk-python/pyproject.toml
       - name: Set version
         if: startsWith(github.ref, 'refs/tags') != true
         run: |
@@ -36,6 +36,10 @@ jobs:
           echo "Setting version to ${{ github.ref_name }}"
           VERSION=$(git describe --tags --abbrev=0)
           VERSION="${VERSION#v}"
+          # Split version into parts and increment minor version
+          IFS='.' read -r major minor patch <<< "$VERSION"
+          minor=$((minor + 1))
+          VERSION="${major}.${minor}.${patch}"
           echo "Current version: $VERSION"
           sed -i -E "s/^version = .*/version = \"${VERSION}.pre-${{ github.run_number }}\"/" sdk-python/pyproject.toml
       - name: Publish to PyPi
