@@ -22,7 +22,7 @@ func formatOperationId(operationId string) []string {
 		words[i] = strings.ToLower(word)
 	}
 
-	return words
+	return []string{words[0], strings.Join(words[1:], "")}
 }
 
 func getResults(filePath string, recursive bool) ([]Result, error) {

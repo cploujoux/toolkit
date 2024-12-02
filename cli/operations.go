@@ -11,9 +11,6 @@ type Operations struct {
 
 func (r *Operations) CliCommand(ctx context.Context, operationId string, fn interface{}) {
 	operation := formatOperationId(operationId)
-	if len(operation) > 2 {
-		return
-	}
 	if operation[0] == "list" {
 		for _, resource := range resources {
 			if resource.Plural == operation[1] {

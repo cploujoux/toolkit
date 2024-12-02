@@ -69,4 +69,11 @@ var resources = []*Resource{
 		Singular: "agent",
 		SpecType: reflect.TypeOf(sdk.Agent{}),
 	},
+	{
+		Kind:     "IntegrationConnection",
+		Short:    "ic",
+		Plural:   "integrationconnections",
+		Singular: "integrationconnection",
+		SpecType: reflect.TypeOf(sdk.IntegrationConnection{}),
+	},
 }
