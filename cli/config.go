@@ -62,4 +62,11 @@ var resources = []*Resource{
 		Singular: "function",
 		SpecType: reflect.TypeOf(sdk.Function{}),
 	},
+	{
+		Kind:     "Agent",
+		Short:    "ag",
+		Plural:   "agents",
+		Singular: "agent",
+		SpecType: reflect.TypeOf(sdk.Agent{}),
+	},
 }

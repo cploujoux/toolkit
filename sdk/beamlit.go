@@ -95,7 +95,8 @@ type AgentDeployment struct {
 	Flavors *Flavors `json:"flavors,omitempty"`
 
 	// Functions Functions used by the agent, those functions needs to be created before setting it here
-	Functions *[]string `json:"functions,omitempty"`
+	Functions              *[]string                         `json:"functions,omitempty"`
+	IntegrationConnections *DeploymentIntegrationConnections `json:"integration_connections,omitempty"`
 
 	// Labels Labels
 	Labels *Labels `json:"labels,omitempty"`
@@ -173,6 +174,9 @@ type AgentDeploymentHistoryEvent struct {
 	// End End time
 	End *string `json:"end,omitempty"`
 
+	// Error Error message
+	Error *string `json:"error,omitempty"`
+
 	// Name Name of the function or agent
 	Name *string `json:"name,omitempty"`
 
@@ -240,54 +244,6 @@ type ApiKey struct {
 // ArrayMetric Array of metrics
 type ArrayMetric = []Metric
 
-// AuthenticationProviderModel Model obtained from an external authentication provider, such as HuggingFace, OpenAI, etc...
-type AuthenticationProviderModel struct {
-	// CreatedAt Provider model created at
-	CreatedAt *string `json:"created_at,omitempty"`
-
-	// Downloads Provider model downloads
-	Downloads *int `json:"downloads,omitempty"`
-
-	// Id Provider model ID
-	Id *string `json:"id,omitempty"`
-
-	// LibraryName Provider model library name
-	LibraryName *string `json:"library_name,omitempty"`
-
-	// Likes Provider model likes
-	Likes *int `json:"likes,omitempty"`
-
-	// Name Provider model name
-	Name *string `json:"name,omitempty"`
-
-	// PipelineTag Provider model pipeline tag
-	PipelineTag *string `json:"pipeline_tag,omitempty"`
-
-	// Private Provider model private
-	Private *bool `json:"private,omitempty"`
-
-	// Tags Provider model tags
-	Tags *[]string `json:"tags,omitempty"`
-
-	// TrendingScore Provider model trending score
-	TrendingScore *int `json:"trending_score,omitempty"`
-}
-
-// AuthenticationProviderOrganization Organization that hosts models from an external authentication provider (HuggingFace, OpenAI, etc...)
-type AuthenticationProviderOrganization struct {
-	// AvatarUrl Provider organization avatar URL
-	AvatarUrl *string `json:"avatar_url,omitempty"`
-
-	// DisplayName Provider organization display name
-	DisplayName *string `json:"display_name,omitempty"`
-
-	// Id Provider organization ID
-	Id *string `json:"id,omitempty"`
-
-	// Name Provider organization name
-	Name *string `json:"name,omitempty"`
-}
-
 // Configuration Configuration
 type Configuration struct {
 	// Continents Continents
@@ -299,6 +255,9 @@ type Configuration struct {
 
 // DeploymentConfigurations Deployment configurations key value and also a boolean secret to specify if it should be stored in secret manager
 type DeploymentConfigurations map[string]string
+
+// DeploymentIntegrationConnections defines model for DeploymentIntegrationConnections.
+type DeploymentIntegrationConnections = []string
 
 // DeploymentPolicies defines model for DeploymentPolicies.
 type DeploymentPolicies = []string
@@ -429,7 +388,8 @@ type FunctionDeployment struct {
 	Flavors *Flavors `json:"flavors,omitempty"`
 
 	// Function The name of the function
-	Function *string `json:"function,omitempty"`
+	Function               *string                           `json:"function,omitempty"`
+	IntegrationConnections *DeploymentIntegrationConnections `json:"integration_connections,omitempty"`
 
 	// Kit The kit of the function deployment
 	Kit *[]FunctionKit `json:"kit,omitempty"`
@@ -482,6 +442,96 @@ type FunctionRelease struct {
 
 	// To Destination environment to which the function is released
 	To *string `json:"to,omitempty"`
+}
+
+// Integration defines model for Integration.
+type Integration struct {
+	// Config Integration config
+	Config *IntegrationConfig `json:"config,omitempty"`
+
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// CreatedBy The user or service account who created the resource
+	CreatedBy *string `json:"created_by,omitempty"`
+
+	// DisplayName Integration display name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// Labels Labels
+	Labels *Labels `json:"labels,omitempty"`
+
+	// Name Integration name
+	Name *string `json:"name,omitempty"`
+
+	// Secret Integration secret
+	Secret *IntegrationSecret `json:"secret,omitempty"`
+
+	// Type Integration type
+	Type *string `json:"type,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+
+	// UpdatedBy The user or service account who updated the resource
+	UpdatedBy *string `json:"updated_by,omitempty"`
+
+	// Workspace Workspace name
+	Workspace *string `json:"workspace,omitempty"`
+}
+
+// IntegrationConfig Integration config
+type IntegrationConfig = map[string]interface{}
+
+// IntegrationConnection defines model for IntegrationConnection.
+type IntegrationConnection struct {
+	// Config Integration config
+	Config *IntegrationConnectionConfig `json:"config,omitempty"`
+
+	// CreatedAt The date and time when the resource was created
+	CreatedAt *string `json:"created_at,omitempty"`
+
+	// CreatedBy The user or service account who created the resource
+	CreatedBy *string `json:"created_by,omitempty"`
+
+	// DisplayName Integration connection display name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// Integration Integration type
+	Integration *string `json:"integration,omitempty"`
+
+	// Labels Labels
+	Labels *Labels `json:"labels,omitempty"`
+
+	// Name Integration connection name
+	Name *string `json:"name,omitempty"`
+
+	// Secret Integration secret
+	Secret *IntegrationConnectionSecret `json:"secret,omitempty"`
+
+	// UpdatedAt The date and time when the resource was updated
+	UpdatedAt *string `json:"updated_at,omitempty"`
+
+	// UpdatedBy The user or service account who updated the resource
+	UpdatedBy *string `json:"updated_by,omitempty"`
+
+	// Workspace Workspace name
+	Workspace *string `json:"workspace,omitempty"`
+}
+
+// IntegrationConnectionConfig Integration config
+type IntegrationConnectionConfig = map[string]interface{}
+
+// IntegrationConnectionSecret Integration secret
+type IntegrationConnectionSecret struct {
+	// ApiKey The API key to use for the integration
+	ApiKey *string `json:"api_key,omitempty"`
+}
+
+// IntegrationSecret Integration secret
+type IntegrationSecret struct {
+	// ApiKey The API key to use for the integration
+	ApiKey *string `json:"api_key,omitempty"`
 }
 
 // Labels Labels
@@ -577,7 +627,8 @@ type ModelDeployment struct {
 	Environment *string `json:"environment,omitempty"`
 
 	// Flavors Types of hardware available for deployments
-	Flavors *Flavors `json:"flavors,omitempty"`
+	Flavors                *Flavors                          `json:"flavors,omitempty"`
+	IntegrationConnections *DeploymentIntegrationConnections `json:"integration_connections,omitempty"`
 
 	// Labels Labels
 	Labels *Labels `json:"labels,omitempty"`
@@ -794,11 +845,11 @@ type PendingInvitationRender struct {
 	// Role ACL role
 	Role *string `json:"role,omitempty"`
 
-	// UserNumber Number of users in the workspace
-	UserNumber *float32 `json:"user_number,omitempty"`
-
 	// Workspace Workspace
 	Workspace *PendingInvitationRenderWorkspace `json:"workspace,omitempty"`
+
+	// WorkspaceDetails Workspace details
+	WorkspaceDetails *PendingInvitationWorkspaceDetails `json:"workspace_details,omitempty"`
 }
 
 // PendingInvitationRenderInvitedBy Invited by
@@ -823,6 +874,15 @@ type PendingInvitationRenderWorkspace struct {
 
 	// Name Workspace name
 	Name *string `json:"name,omitempty"`
+}
+
+// PendingInvitationWorkspaceDetails Workspace details
+type PendingInvitationWorkspaceDetails struct {
+	// Emails List of user emails in the workspace
+	Emails *[]interface{} `json:"emails,omitempty"`
+
+	// UserNumber Number of users in the workspace
+	UserNumber *float32 `json:"user_number,omitempty"`
 }
 
 // Policy defines model for Policy.
@@ -884,9 +944,6 @@ type PolicyResourceTypes = []PolicyResourceType
 
 // ProviderConfig Model provider config
 type ProviderConfig struct {
-	// AccessToken The access token to use for the provider
-	AccessToken *string `json:"access_token,omitempty"`
-
 	// Filename The file name to use for the model
 	Filename *string `json:"filename,omitempty"`
 
@@ -1242,6 +1299,12 @@ type UpdateFunctionJSONRequestBody = Function
 // PutFunctionDeploymentJSONRequestBody defines body for PutFunctionDeployment for application/json ContentType.
 type PutFunctionDeploymentJSONRequestBody = FunctionDeployment
 
+// CreateIntegrationConnectionJSONRequestBody defines body for CreateIntegrationConnection for application/json ContentType.
+type CreateIntegrationConnectionJSONRequestBody = IntegrationConnection
+
+// UpdateIntegrationConnectionJSONRequestBody defines body for UpdateIntegrationConnection for application/json ContentType.
+type UpdateIntegrationConnectionJSONRequestBody = IntegrationConnection
+
 // CreateModelProviderJSONRequestBody defines body for CreateModelProvider for application/json ContentType.
 type CreateModelProviderJSONRequestBody = ModelProvider
 
@@ -1431,15 +1494,6 @@ type ClientInterface interface {
 	// CreateAgentRelease request
 	CreateAgentRelease(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListModelsForAuthenticationProvider request
-	ListModelsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetModelWithRepoForAuthenticationProvider request
-	GetModelWithRepoForAuthenticationProvider(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListOrganizationsForAuthenticationProvider request
-	ListOrganizationsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetConfiguration request
 	GetConfiguration(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1515,6 +1569,43 @@ type ClientInterface interface {
 
 	// GetAgentsHistory request
 	GetAgentsHistory(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListIntegrationConnections request
+	ListIntegrationConnections(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetIntegration request
+	GetIntegration(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListIntegrationConnectionsByIntegration request
+	ListIntegrationConnectionsByIntegration(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateIntegrationConnectionWithBody request with any body
+	CreateIntegrationConnectionWithBody(ctx context.Context, integrationName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateIntegrationConnection(ctx context.Context, integrationName string, body CreateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteIntegrationConnection request
+	DeleteIntegrationConnection(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetIntegrationConnection request
+	GetIntegrationConnection(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateIntegrationConnectionWithBody request with any body
+	UpdateIntegrationConnectionWithBody(ctx context.Context, integrationName string, connectionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateIntegrationConnection(ctx context.Context, integrationName string, connectionName string, body UpdateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListIntegrationConnectionModels request
+	ListIntegrationConnectionModels(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetIntegrationConnectionModel request
+	GetIntegrationConnectionModel(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListIntegrationModels request
+	ListIntegrationModels(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetIntegrationModel request
+	GetIntegrationModel(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListLocations request
 	ListLocations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1746,15 +1837,6 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for CreateAgentRelease
 	reg.CliCommand(ctx, "CreateAgentRelease", c.CreateAgentRelease)
 
-	// Register CLI commands for ListModelsForAuthenticationProvider
-	reg.CliCommand(ctx, "ListModelsForAuthenticationProvider", c.ListModelsForAuthenticationProvider)
-
-	// Register CLI commands for GetModelWithRepoForAuthenticationProvider
-	reg.CliCommand(ctx, "GetModelWithRepoForAuthenticationProvider", c.GetModelWithRepoForAuthenticationProvider)
-
-	// Register CLI commands for ListOrganizationsForAuthenticationProvider
-	reg.CliCommand(ctx, "ListOrganizationsForAuthenticationProvider", c.ListOrganizationsForAuthenticationProvider)
-
 	// Register CLI commands for GetConfiguration
 	reg.CliCommand(ctx, "GetConfiguration", c.GetConfiguration)
 
@@ -1820,6 +1902,39 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for GetAgentsHistory
 	reg.CliCommand(ctx, "GetAgentsHistory", c.GetAgentsHistory)
+
+	// Register CLI commands for ListIntegrationConnections
+	reg.CliCommand(ctx, "ListIntegrationConnections", c.ListIntegrationConnections)
+
+	// Register CLI commands for GetIntegration
+	reg.CliCommand(ctx, "GetIntegration", c.GetIntegration)
+
+	// Register CLI commands for ListIntegrationConnectionsByIntegration
+	reg.CliCommand(ctx, "ListIntegrationConnectionsByIntegration", c.ListIntegrationConnectionsByIntegration)
+
+	// Register CLI commands for CreateIntegrationConnection
+	reg.CliCommand(ctx, "CreateIntegrationConnection", c.CreateIntegrationConnection)
+
+	// Register CLI commands for DeleteIntegrationConnection
+	reg.CliCommand(ctx, "DeleteIntegrationConnection", c.DeleteIntegrationConnection)
+
+	// Register CLI commands for GetIntegrationConnection
+	reg.CliCommand(ctx, "GetIntegrationConnection", c.GetIntegrationConnection)
+
+	// Register CLI commands for UpdateIntegrationConnection
+	reg.CliCommand(ctx, "UpdateIntegrationConnection", c.UpdateIntegrationConnection)
+
+	// Register CLI commands for ListIntegrationConnectionModels
+	reg.CliCommand(ctx, "ListIntegrationConnectionModels", c.ListIntegrationConnectionModels)
+
+	// Register CLI commands for GetIntegrationConnectionModel
+	reg.CliCommand(ctx, "GetIntegrationConnectionModel", c.GetIntegrationConnectionModel)
+
+	// Register CLI commands for ListIntegrationModels
+	reg.CliCommand(ctx, "ListIntegrationModels", c.ListIntegrationModels)
+
+	// Register CLI commands for GetIntegrationModel
+	reg.CliCommand(ctx, "GetIntegrationModel", c.GetIntegrationModel)
 
 	// Register CLI commands for ListLocations
 	reg.CliCommand(ctx, "ListLocations", c.ListLocations)
@@ -2222,42 +2337,6 @@ func (c *Client) CreateAgentRelease(ctx context.Context, agentName string, reqEd
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListModelsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListModelsForAuthenticationProviderRequest(c.Server, authenticationProviderName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetModelWithRepoForAuthenticationProvider(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelWithRepoForAuthenticationProviderRequest(c.Server, authenticationProviderName, modelRepoId, modelId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListOrganizationsForAuthenticationProvider(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListOrganizationsForAuthenticationProviderRequest(c.Server, authenticationProviderName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) GetConfiguration(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetConfigurationRequest(c.Server)
 	if err != nil {
@@ -2572,6 +2651,162 @@ func (c *Client) ListAgentsHistory(ctx context.Context, reqEditors ...RequestEdi
 
 func (c *Client) GetAgentsHistory(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAgentsHistoryRequest(c.Server, requestId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListIntegrationConnections(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListIntegrationConnectionsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetIntegration(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetIntegrationRequest(c.Server, integrationName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListIntegrationConnectionsByIntegration(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListIntegrationConnectionsByIntegrationRequest(c.Server, integrationName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateIntegrationConnectionWithBody(ctx context.Context, integrationName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateIntegrationConnectionRequestWithBody(c.Server, integrationName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateIntegrationConnection(ctx context.Context, integrationName string, body CreateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateIntegrationConnectionRequest(c.Server, integrationName, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteIntegrationConnection(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteIntegrationConnectionRequest(c.Server, integrationName, connectionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetIntegrationConnection(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetIntegrationConnectionRequest(c.Server, integrationName, connectionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateIntegrationConnectionWithBody(ctx context.Context, integrationName string, connectionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateIntegrationConnectionRequestWithBody(c.Server, integrationName, connectionName, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateIntegrationConnection(ctx context.Context, integrationName string, connectionName string, body UpdateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateIntegrationConnectionRequest(c.Server, integrationName, connectionName, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListIntegrationConnectionModels(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListIntegrationConnectionModelsRequest(c.Server, integrationName, connectionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetIntegrationConnectionModel(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetIntegrationConnectionModelRequest(c.Server, integrationName, connectionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListIntegrationModels(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListIntegrationModelsRequest(c.Server, integrationName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetIntegrationModel(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetIntegrationModelRequest(c.Server, integrationName)
 	if err != nil {
 		return nil, err
 	}
@@ -4038,122 +4273,6 @@ func NewCreateAgentReleaseRequest(server string, agentName string) (*http.Reques
 	return req, nil
 }
 
-// NewListModelsForAuthenticationProviderRequest generates requests for ListModelsForAuthenticationProvider
-func NewListModelsForAuthenticationProviderRequest(server string, authenticationProviderName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authenticationProviderName", runtime.ParamLocationPath, authenticationProviderName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/authentication_providers/%s/models", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetModelWithRepoForAuthenticationProviderRequest generates requests for GetModelWithRepoForAuthenticationProvider
-func NewGetModelWithRepoForAuthenticationProviderRequest(server string, authenticationProviderName string, modelRepoId string, modelId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authenticationProviderName", runtime.ParamLocationPath, authenticationProviderName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "modelRepoId", runtime.ParamLocationPath, modelRepoId)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam2 string
-
-	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "modelId", runtime.ParamLocationPath, modelId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/authentication_providers/%s/models/%s/%s", pathParam0, pathParam1, pathParam2)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewListOrganizationsForAuthenticationProviderRequest generates requests for ListOrganizationsForAuthenticationProvider
-func NewListOrganizationsForAuthenticationProviderRequest(server string, authenticationProviderName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "authenticationProviderName", runtime.ParamLocationPath, authenticationProviderName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/authentication_providers/%s/organizations", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewGetConfigurationRequest generates requests for GetConfiguration
 func NewGetConfigurationRequest(server string) (*http.Request, error) {
 	var err error
@@ -4943,6 +5062,434 @@ func NewGetAgentsHistoryRequest(server string, requestId string) (*http.Request,
 	}
 
 	operationPath := fmt.Sprintf("/history/agents/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListIntegrationConnectionsRequest generates requests for ListIntegrationConnections
+func NewListIntegrationConnectionsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/connections")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetIntegrationRequest generates requests for GetIntegration
+func NewGetIntegrationRequest(server string, integrationName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListIntegrationConnectionsByIntegrationRequest generates requests for ListIntegrationConnectionsByIntegration
+func NewListIntegrationConnectionsByIntegrationRequest(server string, integrationName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateIntegrationConnectionRequest calls the generic CreateIntegrationConnection builder with application/json body
+func NewCreateIntegrationConnectionRequest(server string, integrationName string, body CreateIntegrationConnectionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateIntegrationConnectionRequestWithBody(server, integrationName, "application/json", bodyReader)
+}
+
+// NewCreateIntegrationConnectionRequestWithBody generates requests for CreateIntegrationConnection with any type of body
+func NewCreateIntegrationConnectionRequestWithBody(server string, integrationName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteIntegrationConnectionRequest generates requests for DeleteIntegrationConnection
+func NewDeleteIntegrationConnectionRequest(server string, integrationName string, connectionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "connectionName", runtime.ParamLocationPath, connectionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetIntegrationConnectionRequest generates requests for GetIntegrationConnection
+func NewGetIntegrationConnectionRequest(server string, integrationName string, connectionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "connectionName", runtime.ParamLocationPath, connectionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateIntegrationConnectionRequest calls the generic UpdateIntegrationConnection builder with application/json body
+func NewUpdateIntegrationConnectionRequest(server string, integrationName string, connectionName string, body UpdateIntegrationConnectionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateIntegrationConnectionRequestWithBody(server, integrationName, connectionName, "application/json", bodyReader)
+}
+
+// NewUpdateIntegrationConnectionRequestWithBody generates requests for UpdateIntegrationConnection with any type of body
+func NewUpdateIntegrationConnectionRequestWithBody(server string, integrationName string, connectionName string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "connectionName", runtime.ParamLocationPath, connectionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListIntegrationConnectionModelsRequest generates requests for ListIntegrationConnectionModels
+func NewListIntegrationConnectionModelsRequest(server string, integrationName string, connectionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "connectionName", runtime.ParamLocationPath, connectionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections/%s/models", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetIntegrationConnectionModelRequest generates requests for GetIntegrationConnectionModel
+func NewGetIntegrationConnectionModelRequest(server string, integrationName string, connectionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "connectionName", runtime.ParamLocationPath, connectionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/connections/%s/models/*modelId", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListIntegrationModelsRequest generates requests for ListIntegrationModels
+func NewListIntegrationModelsRequest(server string, integrationName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/models", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetIntegrationModelRequest generates requests for GetIntegrationModel
+func NewGetIntegrationModelRequest(server string, integrationName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "integrationName", runtime.ParamLocationPath, integrationName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/integrations/%s/models/*modelId", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -6833,15 +7380,6 @@ type ClientWithResponsesInterface interface {
 	// CreateAgentReleaseWithResponse request
 	CreateAgentReleaseWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*CreateAgentReleaseResponse, error)
 
-	// ListModelsForAuthenticationProviderWithResponse request
-	ListModelsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListModelsForAuthenticationProviderResponse, error)
-
-	// GetModelWithRepoForAuthenticationProviderWithResponse request
-	GetModelWithRepoForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*GetModelWithRepoForAuthenticationProviderResponse, error)
-
-	// ListOrganizationsForAuthenticationProviderWithResponse request
-	ListOrganizationsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListOrganizationsForAuthenticationProviderResponse, error)
-
 	// GetConfigurationWithResponse request
 	GetConfigurationWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetConfigurationResponse, error)
 
@@ -6917,6 +7455,43 @@ type ClientWithResponsesInterface interface {
 
 	// GetAgentsHistoryWithResponse request
 	GetAgentsHistoryWithResponse(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*GetAgentsHistoryResponse, error)
+
+	// ListIntegrationConnectionsWithResponse request
+	ListIntegrationConnectionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsResponse, error)
+
+	// GetIntegrationWithResponse request
+	GetIntegrationWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*GetIntegrationResponse, error)
+
+	// ListIntegrationConnectionsByIntegrationWithResponse request
+	ListIntegrationConnectionsByIntegrationWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsByIntegrationResponse, error)
+
+	// CreateIntegrationConnectionWithBodyWithResponse request with any body
+	CreateIntegrationConnectionWithBodyWithResponse(ctx context.Context, integrationName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateIntegrationConnectionResponse, error)
+
+	CreateIntegrationConnectionWithResponse(ctx context.Context, integrationName string, body CreateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateIntegrationConnectionResponse, error)
+
+	// DeleteIntegrationConnectionWithResponse request
+	DeleteIntegrationConnectionWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*DeleteIntegrationConnectionResponse, error)
+
+	// GetIntegrationConnectionWithResponse request
+	GetIntegrationConnectionWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*GetIntegrationConnectionResponse, error)
+
+	// UpdateIntegrationConnectionWithBodyWithResponse request with any body
+	UpdateIntegrationConnectionWithBodyWithResponse(ctx context.Context, integrationName string, connectionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateIntegrationConnectionResponse, error)
+
+	UpdateIntegrationConnectionWithResponse(ctx context.Context, integrationName string, connectionName string, body UpdateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateIntegrationConnectionResponse, error)
+
+	// ListIntegrationConnectionModelsWithResponse request
+	ListIntegrationConnectionModelsWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionModelsResponse, error)
+
+	// GetIntegrationConnectionModelWithResponse request
+	GetIntegrationConnectionModelWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*GetIntegrationConnectionModelResponse, error)
+
+	// ListIntegrationModelsWithResponse request
+	ListIntegrationModelsWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*ListIntegrationModelsResponse, error)
+
+	// GetIntegrationModelWithResponse request
+	GetIntegrationModelWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*GetIntegrationModelResponse, error)
 
 	// ListLocationsWithResponse request
 	ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error)
@@ -7468,72 +8043,6 @@ func (r CreateAgentReleaseResponse) StatusCode() int {
 	return 0
 }
 
-type ListModelsForAuthenticationProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]AuthenticationProviderModel
-}
-
-// Status returns HTTPResponse.Status
-func (r ListModelsForAuthenticationProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListModelsForAuthenticationProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetModelWithRepoForAuthenticationProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AuthenticationProviderModel
-}
-
-// Status returns HTTPResponse.Status
-func (r GetModelWithRepoForAuthenticationProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetModelWithRepoForAuthenticationProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListOrganizationsForAuthenticationProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]AuthenticationProviderOrganization
-}
-
-// Status returns HTTPResponse.Status
-func (r ListOrganizationsForAuthenticationProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListOrganizationsForAuthenticationProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type GetConfigurationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -8012,6 +8521,243 @@ func (r GetAgentsHistoryResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetAgentsHistoryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListIntegrationConnectionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]IntegrationConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r ListIntegrationConnectionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListIntegrationConnectionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetIntegrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetIntegrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetIntegrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListIntegrationConnectionsByIntegrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]IntegrationConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r ListIntegrationConnectionsByIntegrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListIntegrationConnectionsByIntegrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateIntegrationConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IntegrationConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateIntegrationConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateIntegrationConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteIntegrationConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IntegrationConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteIntegrationConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteIntegrationConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetIntegrationConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Integration
+}
+
+// Status returns HTTPResponse.Status
+func (r GetIntegrationConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetIntegrationConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateIntegrationConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *IntegrationConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateIntegrationConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateIntegrationConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListIntegrationConnectionModelsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ListIntegrationConnectionModelsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListIntegrationConnectionModelsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetIntegrationConnectionModelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetIntegrationConnectionModelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetIntegrationConnectionModelResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListIntegrationModelsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ListIntegrationModelsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListIntegrationModelsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetIntegrationModelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetIntegrationModelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetIntegrationModelResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -9342,33 +10088,6 @@ func (c *ClientWithResponses) CreateAgentReleaseWithResponse(ctx context.Context
 	return ParseCreateAgentReleaseResponse(rsp)
 }
 
-// ListModelsForAuthenticationProviderWithResponse request returning *ListModelsForAuthenticationProviderResponse
-func (c *ClientWithResponses) ListModelsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListModelsForAuthenticationProviderResponse, error) {
-	rsp, err := c.ListModelsForAuthenticationProvider(ctx, authenticationProviderName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListModelsForAuthenticationProviderResponse(rsp)
-}
-
-// GetModelWithRepoForAuthenticationProviderWithResponse request returning *GetModelWithRepoForAuthenticationProviderResponse
-func (c *ClientWithResponses) GetModelWithRepoForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, modelRepoId string, modelId string, reqEditors ...RequestEditorFn) (*GetModelWithRepoForAuthenticationProviderResponse, error) {
-	rsp, err := c.GetModelWithRepoForAuthenticationProvider(ctx, authenticationProviderName, modelRepoId, modelId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetModelWithRepoForAuthenticationProviderResponse(rsp)
-}
-
-// ListOrganizationsForAuthenticationProviderWithResponse request returning *ListOrganizationsForAuthenticationProviderResponse
-func (c *ClientWithResponses) ListOrganizationsForAuthenticationProviderWithResponse(ctx context.Context, authenticationProviderName string, reqEditors ...RequestEditorFn) (*ListOrganizationsForAuthenticationProviderResponse, error) {
-	rsp, err := c.ListOrganizationsForAuthenticationProvider(ctx, authenticationProviderName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListOrganizationsForAuthenticationProviderResponse(rsp)
-}
-
 // GetConfigurationWithResponse request returning *GetConfigurationResponse
 func (c *ClientWithResponses) GetConfigurationWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetConfigurationResponse, error) {
 	rsp, err := c.GetConfiguration(ctx, reqEditors...)
@@ -9605,6 +10324,121 @@ func (c *ClientWithResponses) GetAgentsHistoryWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseGetAgentsHistoryResponse(rsp)
+}
+
+// ListIntegrationConnectionsWithResponse request returning *ListIntegrationConnectionsResponse
+func (c *ClientWithResponses) ListIntegrationConnectionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsResponse, error) {
+	rsp, err := c.ListIntegrationConnections(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListIntegrationConnectionsResponse(rsp)
+}
+
+// GetIntegrationWithResponse request returning *GetIntegrationResponse
+func (c *ClientWithResponses) GetIntegrationWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*GetIntegrationResponse, error) {
+	rsp, err := c.GetIntegration(ctx, integrationName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetIntegrationResponse(rsp)
+}
+
+// ListIntegrationConnectionsByIntegrationWithResponse request returning *ListIntegrationConnectionsByIntegrationResponse
+func (c *ClientWithResponses) ListIntegrationConnectionsByIntegrationWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsByIntegrationResponse, error) {
+	rsp, err := c.ListIntegrationConnectionsByIntegration(ctx, integrationName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListIntegrationConnectionsByIntegrationResponse(rsp)
+}
+
+// CreateIntegrationConnectionWithBodyWithResponse request with arbitrary body returning *CreateIntegrationConnectionResponse
+func (c *ClientWithResponses) CreateIntegrationConnectionWithBodyWithResponse(ctx context.Context, integrationName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateIntegrationConnectionResponse, error) {
+	rsp, err := c.CreateIntegrationConnectionWithBody(ctx, integrationName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateIntegrationConnectionResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateIntegrationConnectionWithResponse(ctx context.Context, integrationName string, body CreateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateIntegrationConnectionResponse, error) {
+	rsp, err := c.CreateIntegrationConnection(ctx, integrationName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateIntegrationConnectionResponse(rsp)
+}
+
+// DeleteIntegrationConnectionWithResponse request returning *DeleteIntegrationConnectionResponse
+func (c *ClientWithResponses) DeleteIntegrationConnectionWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*DeleteIntegrationConnectionResponse, error) {
+	rsp, err := c.DeleteIntegrationConnection(ctx, integrationName, connectionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteIntegrationConnectionResponse(rsp)
+}
+
+// GetIntegrationConnectionWithResponse request returning *GetIntegrationConnectionResponse
+func (c *ClientWithResponses) GetIntegrationConnectionWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*GetIntegrationConnectionResponse, error) {
+	rsp, err := c.GetIntegrationConnection(ctx, integrationName, connectionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetIntegrationConnectionResponse(rsp)
+}
+
+// UpdateIntegrationConnectionWithBodyWithResponse request with arbitrary body returning *UpdateIntegrationConnectionResponse
+func (c *ClientWithResponses) UpdateIntegrationConnectionWithBodyWithResponse(ctx context.Context, integrationName string, connectionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateIntegrationConnectionResponse, error) {
+	rsp, err := c.UpdateIntegrationConnectionWithBody(ctx, integrationName, connectionName, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateIntegrationConnectionResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateIntegrationConnectionWithResponse(ctx context.Context, integrationName string, connectionName string, body UpdateIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateIntegrationConnectionResponse, error) {
+	rsp, err := c.UpdateIntegrationConnection(ctx, integrationName, connectionName, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateIntegrationConnectionResponse(rsp)
+}
+
+// ListIntegrationConnectionModelsWithResponse request returning *ListIntegrationConnectionModelsResponse
+func (c *ClientWithResponses) ListIntegrationConnectionModelsWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionModelsResponse, error) {
+	rsp, err := c.ListIntegrationConnectionModels(ctx, integrationName, connectionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListIntegrationConnectionModelsResponse(rsp)
+}
+
+// GetIntegrationConnectionModelWithResponse request returning *GetIntegrationConnectionModelResponse
+func (c *ClientWithResponses) GetIntegrationConnectionModelWithResponse(ctx context.Context, integrationName string, connectionName string, reqEditors ...RequestEditorFn) (*GetIntegrationConnectionModelResponse, error) {
+	rsp, err := c.GetIntegrationConnectionModel(ctx, integrationName, connectionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetIntegrationConnectionModelResponse(rsp)
+}
+
+// ListIntegrationModelsWithResponse request returning *ListIntegrationModelsResponse
+func (c *ClientWithResponses) ListIntegrationModelsWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*ListIntegrationModelsResponse, error) {
+	rsp, err := c.ListIntegrationModels(ctx, integrationName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListIntegrationModelsResponse(rsp)
+}
+
+// GetIntegrationModelWithResponse request returning *GetIntegrationModelResponse
+func (c *ClientWithResponses) GetIntegrationModelWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*GetIntegrationModelResponse, error) {
+	rsp, err := c.GetIntegrationModel(ctx, integrationName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetIntegrationModelResponse(rsp)
 }
 
 // ListLocationsWithResponse request returning *ListLocationsResponse
@@ -10602,84 +11436,6 @@ func ParseCreateAgentReleaseResponse(rsp *http.Response) (*CreateAgentReleaseRes
 	return response, nil
 }
 
-// ParseListModelsForAuthenticationProviderResponse parses an HTTP response from a ListModelsForAuthenticationProviderWithResponse call
-func ParseListModelsForAuthenticationProviderResponse(rsp *http.Response) (*ListModelsForAuthenticationProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListModelsForAuthenticationProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []AuthenticationProviderModel
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetModelWithRepoForAuthenticationProviderResponse parses an HTTP response from a GetModelWithRepoForAuthenticationProviderWithResponse call
-func ParseGetModelWithRepoForAuthenticationProviderResponse(rsp *http.Response) (*GetModelWithRepoForAuthenticationProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetModelWithRepoForAuthenticationProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AuthenticationProviderModel
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListOrganizationsForAuthenticationProviderResponse parses an HTTP response from a ListOrganizationsForAuthenticationProviderWithResponse call
-func ParseListOrganizationsForAuthenticationProviderResponse(rsp *http.Response) (*ListOrganizationsForAuthenticationProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListOrganizationsForAuthenticationProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []AuthenticationProviderOrganization
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetConfigurationResponse parses an HTTP response from a GetConfigurationWithResponse call
 func ParseGetConfigurationResponse(rsp *http.Response) (*GetConfigurationResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -11247,6 +12003,242 @@ func ParseGetAgentsHistoryResponse(rsp *http.Response) (*GetAgentsHistoryRespons
 		}
 		response.JSON200 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseListIntegrationConnectionsResponse parses an HTTP response from a ListIntegrationConnectionsWithResponse call
+func ParseListIntegrationConnectionsResponse(rsp *http.Response) (*ListIntegrationConnectionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListIntegrationConnectionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []IntegrationConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetIntegrationResponse parses an HTTP response from a GetIntegrationWithResponse call
+func ParseGetIntegrationResponse(rsp *http.Response) (*GetIntegrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetIntegrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListIntegrationConnectionsByIntegrationResponse parses an HTTP response from a ListIntegrationConnectionsByIntegrationWithResponse call
+func ParseListIntegrationConnectionsByIntegrationResponse(rsp *http.Response) (*ListIntegrationConnectionsByIntegrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListIntegrationConnectionsByIntegrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []IntegrationConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateIntegrationConnectionResponse parses an HTTP response from a CreateIntegrationConnectionWithResponse call
+func ParseCreateIntegrationConnectionResponse(rsp *http.Response) (*CreateIntegrationConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateIntegrationConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IntegrationConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteIntegrationConnectionResponse parses an HTTP response from a DeleteIntegrationConnectionWithResponse call
+func ParseDeleteIntegrationConnectionResponse(rsp *http.Response) (*DeleteIntegrationConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteIntegrationConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IntegrationConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetIntegrationConnectionResponse parses an HTTP response from a GetIntegrationConnectionWithResponse call
+func ParseGetIntegrationConnectionResponse(rsp *http.Response) (*GetIntegrationConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetIntegrationConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Integration
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateIntegrationConnectionResponse parses an HTTP response from a UpdateIntegrationConnectionWithResponse call
+func ParseUpdateIntegrationConnectionResponse(rsp *http.Response) (*UpdateIntegrationConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateIntegrationConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest IntegrationConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListIntegrationConnectionModelsResponse parses an HTTP response from a ListIntegrationConnectionModelsWithResponse call
+func ParseListIntegrationConnectionModelsResponse(rsp *http.Response) (*ListIntegrationConnectionModelsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListIntegrationConnectionModelsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetIntegrationConnectionModelResponse parses an HTTP response from a GetIntegrationConnectionModelWithResponse call
+func ParseGetIntegrationConnectionModelResponse(rsp *http.Response) (*GetIntegrationConnectionModelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetIntegrationConnectionModelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseListIntegrationModelsResponse parses an HTTP response from a ListIntegrationModelsWithResponse call
+func ParseListIntegrationModelsResponse(rsp *http.Response) (*ListIntegrationModelsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListIntegrationModelsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetIntegrationModelResponse parses an HTTP response from a GetIntegrationModelWithResponse call
+func ParseGetIntegrationModelResponse(rsp *http.Response) (*GetIntegrationModelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetIntegrationModelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -12572,144 +13564,146 @@ func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"ozy4NwEA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
