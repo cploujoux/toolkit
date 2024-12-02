@@ -54,9 +54,30 @@ func getResults(filePath string, recursive bool) ([]Result, error) {
 		defer file.Close()
 		reader = file
 	}
+	// Read the entire content as a string first
+	content, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, fmt.Errorf("error reading content: %v", err)
+	}
+
+	// Replace environment variables in the content
+	contentStr := string(content)
+	re := regexp.MustCompile(`\$([A-Za-z0-9_]+)|\${([A-Za-z0-9_]+)}`)
+	contentStr = re.ReplaceAllStringFunc(contentStr, func(match string) string {
+		// Remove $, ${, and } to get the env var name
+		varName := match
+		varName = strings.TrimPrefix(varName, "$")
+		varName = strings.TrimPrefix(varName, "{")
+		varName = strings.TrimSuffix(varName, "}")
+
+		if value, exists := os.LookupEnv(varName); exists {
+			return value
+		}
+		return match // Keep original if env var not found
+	})
 
 	// Lire et parser les documents YAML
-	decoder := yaml.NewDecoder(reader)
+	decoder := yaml.NewDecoder(strings.NewReader(contentStr))
 	for {
 		var result Result
 		err := decoder.Decode(&result)
