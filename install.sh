@@ -217,8 +217,6 @@ if [ -z "${VERSION}" ]; then
   echo "$PREFIX: checking GitHub for latest version"
   VERSION=$(github_last_release "$OWNER/$REPO")
 fi
-# if version starts with 'v', remove it
-VERSION=${VERSION#v}
 NAME=${BINARY}_${OS_TITLE}_${ARCH}.tar.gz
 if [ "$OS" = "windows" ]; then
   NAME="${NAME}.zip"
