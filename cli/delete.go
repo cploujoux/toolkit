@@ -92,33 +92,33 @@ func (resource Resource) DeleteFn(name string) {
 
 	if err, ok := results[1].Interface().(error); ok && err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return
 	}
 
 	// Check if the first result is a pointer to http.Response
 	response, ok := results[0].Interface().(*http.Response)
 	if !ok {
 		fmt.Println("the result is not a pointer to http.Response")
-		os.Exit(1)
+		return
 	}
 	// Read the content of http.Response.Body
 	defer response.Body.Close() // Ensure to close the ReadCloser
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(buf.String())
-		os.Exit(1)
+		ErrorHandler(resource.Kind, name, buf.String())
+		return
 	}
 
 	// Check if the content is an array or an object
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return
 	}
 	fmt.Printf("Resource %s:%s deleted\n", resource.Kind, name)
 }

@@ -65,11 +65,12 @@ func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) err
 	}
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
-		fmt.Println(err)
+		formattedError := fmt.Sprintf("Resource %s error: ", "workspace")
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 	if response.StatusCode >= 400 {
-		ErrorHandler(buf.String())
+		ErrorHandler("workspace", workspaceName, buf.String())
 		os.Exit(1)
 	}
 	return nil

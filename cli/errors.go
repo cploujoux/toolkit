@@ -12,7 +12,7 @@ type ErrorModel struct {
 	Stack []string `json:"stack"`
 }
 
-func ErrorHandler(body string) {
+func ErrorHandler(kind string, name string, body string) {
 	var error ErrorModel
 	if err := json.Unmarshal([]byte(body), &error); err != nil {
 		fmt.Println(err)
@@ -20,7 +20,7 @@ func ErrorHandler(body string) {
 	}
 
 	// Afficher l'erreur et le code
-	fmt.Printf("Error: %s (Code: %d)\n", error.Error, error.Code)
+	fmt.Printf("Resource %s:%s: %s (Code: %d)\n", kind, name, error.Error, error.Code)
 
 	// Afficher le stack trace seulement s'il existe
 	if verbose && len(error.Stack) > 0 {

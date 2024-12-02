@@ -41,10 +41,11 @@ func (r *Operations) GetCmd() *cobra.Command {
 
 func (resource Resource) GetFn(name string) {
 	ctx := context.Background()
+	formattedError := fmt.Sprintf("Resource %s:%s error: ", resource.Kind, name)
 	// Use reflect to call the function
 	funcValue := reflect.ValueOf(resource.Get)
 	if funcValue.Kind() != reflect.Func {
-		fmt.Println("fn is not a valid function")
+		fmt.Printf("%s%s", formattedError, "fn is not a valid function")
 		os.Exit(1)
 	}
 	// Create a slice for the arguments
@@ -59,39 +60,40 @@ func (resource Resource) GetFn(name string) {
 	}
 
 	if err, ok := results[1].Interface().(error); ok && err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 
 	// Check if the first result is a pointer to http.Response
 	response, ok := results[0].Interface().(*http.Response)
 	if !ok {
-		fmt.Println("the result is not a pointer to http.Response")
+		fmt.Printf("%s%s", formattedError, "the result is not a pointer to http.Response")
 		os.Exit(1)
 	}
 	// Read the content of http.Response.Body
 	defer response.Body.Close() // Ensure to close the ReadCloser
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(buf.String())
+		ErrorHandler(resource.Kind, name, buf.String())
 		os.Exit(1)
 	}
 
 	// Check if the content is an array or an object
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 	output(resource, []interface{}{res}, outputFormat)
 }
 
 func (resource Resource) ListFn() {
+	formattedError := fmt.Sprintf("Resource %s error: ", resource.Kind)
 	ctx := context.Background()
 	// Use reflect to call the function
 	funcValue := reflect.ValueOf(resource.List)
@@ -108,31 +110,31 @@ func (resource Resource) ListFn() {
 		return
 	}
 	if err, ok := results[1].Interface().(error); ok && err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 	// Check if the first result is a pointer to http.Response
 	response, ok := results[0].Interface().(*http.Response)
 	if !ok {
-		fmt.Println("the result is not a pointer to http.Response")
+		fmt.Printf("%s%s", formattedError, "the result is not a pointer to http.Response")
 		os.Exit(1)
 	}
 	// Read the content of http.Response.Body
 	defer response.Body.Close() // Ensure to close the ReadCloser
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 	if response.StatusCode >= 400 {
-		ErrorHandler(buf.String())
+		ErrorHandler(resource.Kind, "", buf.String())
 		os.Exit(1)
 	}
 
 	// Check if the content is an array or an object
 	var slices []interface{}
 	if err := json.Unmarshal(buf.Bytes(), &slices); err != nil {
-		fmt.Println(err)
+		fmt.Printf("%s%v", formattedError, err)
 		os.Exit(1)
 	}
 	// Check the output format

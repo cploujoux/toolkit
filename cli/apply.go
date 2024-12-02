@@ -117,10 +117,11 @@ func (resource Resource) handleResourceOperation(name string, spec interface{}, 
 }
 
 func (resource Resource) PutFn(resourceName string, name string, spec interface{}) {
+	formattedError := fmt.Sprintf("Resource %s:%s error: ", resourceName, name)
 	response, err := resource.handleResourceOperation(name, spec, "put")
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Printf("%s%v", formattedError, err)
+		return
 	}
 	if response == nil {
 		return
@@ -129,8 +130,8 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 	defer response.Body.Close()
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Printf("%s%v", formattedError, err)
+		return
 	}
 
 	if response.StatusCode == 404 {
@@ -140,23 +141,24 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(buf.String())
-		os.Exit(1)
+		ErrorHandler(resourceName, name, buf.String())
+		return
 	}
 
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Printf("%s%v", formattedError, err)
+		return
 	}
 	fmt.Printf("Resource %s:%s configured\n", resourceName, name)
 }
 
 func (resource Resource) PostFn(resourceName string, name string, spec interface{}) {
+	formattedError := fmt.Sprintf("Resource %s:%s error: ", resourceName, name)
 	response, err := resource.handleResourceOperation(name, spec, "post")
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Printf("%s%v\n", formattedError, err)
+		return
 	}
 	if response == nil {
 		return
@@ -165,19 +167,19 @@ func (resource Resource) PostFn(resourceName string, name string, spec interface
 	defer response.Body.Close()
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, response.Body); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Printf("%s%v\n", formattedError, err)
+		return
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(buf.String())
-		os.Exit(1)
+		ErrorHandler(resourceName, name, buf.String())
+		return
 	}
 
 	var res interface{}
 	if err := json.Unmarshal(buf.Bytes(), &res); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Printf("%s%v\n", formattedError, err)
+		return
 	}
 	fmt.Printf("Resource %s:%s created\n", resourceName, name)
 }
