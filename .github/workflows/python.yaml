@@ -38,7 +38,7 @@ jobs:
           VERSION="${VERSION#v}"
           # Split version into parts and increment minor version
           IFS='.' read -r major minor patch <<< "$VERSION"
-          minor=$((minor + 1))
+          patch=$((patch + 1))
           VERSION="${major}.${minor}.${patch}"
           echo "Current version: $VERSION"
           sed -i -E "s/^version = .*/version = \"${VERSION}.pre-${{ github.run_number }}\"/" sdk-python/pyproject.toml
