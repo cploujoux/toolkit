@@ -57,17 +57,17 @@ var resources = []*Resource{
 	},
 	{
 		Kind:     "Function",
-		Short:    "tl",
+		Short:    "fn",
 		Plural:   "functions",
 		Singular: "function",
-		SpecType: reflect.TypeOf(sdk.Function{}),
+		SpecType: reflect.TypeOf(sdk.FunctionWithDeployments{}),
 	},
 	{
 		Kind:     "Agent",
 		Short:    "ag",
 		Plural:   "agents",
 		Singular: "agent",
-		SpecType: reflect.TypeOf(sdk.Agent{}),
+		SpecType: reflect.TypeOf(sdk.AgentWithDeployments{}),
 	},
 	{
 		Kind:     "IntegrationConnection",
