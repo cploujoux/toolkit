@@ -22,10 +22,14 @@ func formatOperationId(operationId string) []string {
 		words[i] = strings.ToLower(word)
 	}
 
-	return words
+	return []string{words[0], strings.Join(words[1:], "")}
 }
 
 func getResults(filePath string, recursive bool) ([]Result, error) {
+	return getResultsWrapper(filePath, recursive, 0)
+}
+
+func getResultsWrapper(filePath string, recursive bool, n int) ([]Result, error) {
 	var reader io.Reader
 	var results []Result
 	// Choisir la source (stdin ou fichier)
@@ -38,10 +42,10 @@ func getResults(filePath string, recursive bool) ([]Result, error) {
 		}
 		// If the path is a directory, read all files in the directory
 		if fileInfo.IsDir() {
-			if !recursive && strings.Contains(filePath, "/") {
+			if n > 0 && !recursive && strings.Contains(filePath, "/") {
 				return nil, nil
 			}
-			return handleDirectory(filePath, recursive)
+			return handleDirectory(filePath, recursive, n)
 		}
 		// Skip non-YAML files
 		if !strings.HasSuffix(strings.ToLower(filePath), ".yml") && !strings.HasSuffix(strings.ToLower(filePath), ".yaml") {
@@ -92,7 +96,7 @@ func getResults(filePath string, recursive bool) ([]Result, error) {
 	return results, nil
 }
 
-func handleDirectory(filePath string, recursive bool) ([]Result, error) {
+func handleDirectory(filePath string, recursive bool, n int) ([]Result, error) {
 	var results []Result
 	files, err := os.ReadDir(filePath)
 	if err != nil {
@@ -101,7 +105,7 @@ func handleDirectory(filePath string, recursive bool) ([]Result, error) {
 
 	for _, file := range files {
 		path := fmt.Sprintf("%s/%s", filePath, file.Name())
-		fileResults, err := getResults(path, recursive)
+		fileResults, err := getResultsWrapper(path, recursive, n+1)
 		if err != nil {
 			fmt.Printf("error getting results for file %s: %v", path, err)
 			continue
