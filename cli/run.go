@@ -21,12 +21,13 @@ func (r *Operations) RunCmd() *cobra.Command {
 	var uploadFilePath string
 
 	cmd := &cobra.Command{
-		Use:   "run [resource-type] [resource-name]",
-		Args:  cobra.MaximumNArgs(2),
-		Short: "Run inference",
+		Use:     "run resource-type resource-name",
+		Args:    cobra.ExactArgs(2),
+		Short:   "Run a resource on beamlit",
+		Example: "bl run agent my-agent --data '{\"inputs\": \"Hello, world!\"}'",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) == 0 {
-				fmt.Println("Error: Model is required")
+			if len(args) == 0 || len(args) == 1 {
+				fmt.Println("Error: Resource type and name are required")
 				os.Exit(1)
 			}
 
