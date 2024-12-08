@@ -196,6 +196,7 @@ EOF
 OWNER=beamlit
 REPO=toolkit
 BINARY=beamlit
+BINARY_SHORT_NAME=bl
 BINDIR=${BINDIR:-./bin}
 PREFIX="$OWNER/$REPO"
 ARCH=$(uname_arch)
@@ -234,7 +235,8 @@ execute() {
   untar "${TMPDIR}/${NAME}" "${TMPDIR}"
   install -d "${BINDIR}"
   install "${TMPDIR}/${BINARY}" "${BINDIR}/${BINARY}"
-  echo "$PREFIX: installed ${BINDIR}/${BINARY}"
+  install "${TMPDIR}/${BINARY}" "${BINDIR}/${BINARY_SHORT_NAME}"
+  echo "$PREFIX: installed ${BINDIR}/${BINARY} and ${BINDIR}/${BINARY_SHORT_NAME}"
 }
 
 uname_os_check
