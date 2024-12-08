@@ -80,7 +80,8 @@ type ClientInterface interface {
         ctx context.Context,
         workspaceName string,
         environment string,
-        modelName string,
+        resourceType string,
+        resourceName string,
         method string,
         path string,
         headers map[string]string,
@@ -106,15 +107,15 @@ type ClientInterface interface {
 
 // RegisterCliCommands registers CLI commands for the client
 func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx context.Context) {
-    
+
     {{range . -}}
     {{$hasParams := .RequiresParamObject -}}
     {{$pathParams := .PathParams -}}
     {{$opid := .OperationId -}}
-    
+
     // Register CLI commands for {{$opid}}
     reg.CliCommand(ctx, "{{$opid}}", c.{{$opid}})
-    
+
     {{end -}}
 }
 

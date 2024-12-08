@@ -3,6 +3,7 @@ package sdk
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -12,7 +13,8 @@ func (c *Client) Run(
 	ctx context.Context,
 	workspaceName string,
 	environment string,
-	modelName string,
+	resourceType string,
+	resourceName string,
 	method string,
 	path string,
 	headers map[string]string,
@@ -24,7 +26,7 @@ func (c *Client) Run(
 		bodyReader = bytes.NewReader([]byte(body))
 	}
 
-	req, err := NewRunRequest(c.RunServer, method, path, headers, workspaceName, environment, modelName, bodyReader)
+	req, err := NewRunRequest(c.RunServer, method, path, headers, workspaceName, environment, resourceType, resourceName, bodyReader)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +45,8 @@ func NewRunRequest(
 	headers map[string]string,
 	workspaceName string,
 	environment string,
-	modelName string,
+	resourceType string,
+	resourceName string,
 	body io.Reader,
 ) (*http.Request, error) {
 	var err error
@@ -53,9 +56,9 @@ func NewRunRequest(
 		return nil, err
 	}
 	if path != "" {
-		path = workspaceName + "/models/" + modelName + "/" + path
+		path = fmt.Sprintf("%s/%ss/%s/%s", workspaceName, resourceType, resourceName, path)
 	} else {
-		path = workspaceName + "/models/" + modelName
+		path = fmt.Sprintf("%s/%ss/%s", workspaceName, resourceType, resourceName)
 	}
 
 	queryURL, err := runURL.Parse(path + "?environment=" + environment)

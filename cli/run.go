@@ -21,7 +21,7 @@ func (r *Operations) RunCmd() *cobra.Command {
 	var uploadFilePath string
 
 	cmd := &cobra.Command{
-		Use:   "run [model]",
+		Use:   "run [resource-type] [resource-name]",
 		Args:  cobra.MaximumNArgs(2),
 		Short: "Run inference",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -30,7 +30,8 @@ func (r *Operations) RunCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			model := args[0]
+			resourceType := args[0]
+			resourceName := args[1]
 			headers := make(map[string]string)
 
 			// Parse header flags into map
@@ -59,7 +60,8 @@ func (r *Operations) RunCmd() *cobra.Command {
 				context.Background(),
 				workspace,
 				environment,
-				model,
+				resourceType,
+				resourceName,
 				method,
 				path,
 				headers,
