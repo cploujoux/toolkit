@@ -1,19 +1,19 @@
 ---
-title: "bl get modelproviders"
-slug: bl_get_modelproviders
+title: "bl get agents"
+slug: bl_get_agents
 ---
-## bl get modelproviders
+## bl get agents
 
-Get a ModelProvider
+Get a Agent
 
 ```
-bl get modelproviders [flags]
+bl get agents [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for modelproviders
+  -h, --help   help for agents
 ```
 
 ### Options inherited from parent commands

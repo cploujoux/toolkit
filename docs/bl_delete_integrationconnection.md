@@ -1,19 +1,19 @@
 ---
-title: "bl get modelproviders"
-slug: bl_get_modelproviders
+title: "bl delete integrationconnection"
+slug: bl_delete_integrationconnection
 ---
-## bl get modelproviders
+## bl delete integrationconnection
 
-Get a ModelProvider
+Delete a IntegrationConnection
 
 ```
-bl get modelproviders [flags]
+bl delete integrationconnection name [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for modelproviders
+  -h, --help   help for integrationconnection
 ```
 
 ### Options inherited from parent commands
@@ -27,5 +27,5 @@ bl get modelproviders [flags]
 
 ### SEE ALSO
 
-* [bl get](bl_get.md)	 - Get a resource
+* [bl delete](bl_delete.md)	 - Delete a resource
 

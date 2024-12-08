@@ -6,7 +6,6 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
@@ -30,16 +29,14 @@ func (r *Operations) DocCmd() *cobra.Command {
 			switch format {
 			case "markdown":
 				const fmTemplate = `---
-date: %s
 title: "%s"
 slug: %s
 ---
 `
 				filePrepender := func(filename string) string {
-					now := time.Now().Format(time.RFC3339)
 					name := filepath.Base(filename)
 					base := strings.TrimSuffix(name, path.Ext(name))
-					return fmt.Sprintf(fmTemplate, now, strings.Replace(base, "_", " ", -1), base)
+					return fmt.Sprintf(fmTemplate, strings.Replace(base, "_", " ", -1), base)
 				}
 				linkHandler := func(name string) string {
 					return name

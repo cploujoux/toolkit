@@ -45,7 +45,7 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&filePath, "filename", "f", "", "Path to YAML file to apply")
-	cmd.Flags().BoolVarP(&recursive, "recursive", "R", false, "Process the directory used in -f, --filename recursively")
+	cmd.Flags().BoolVarP(&recursive, "recursive", "R", false, "Process the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.")
 	err := cmd.MarkFlagRequired("filename")
 	if err != nil {
 		fmt.Println(err)

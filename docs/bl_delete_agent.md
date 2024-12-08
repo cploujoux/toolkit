@@ -1,19 +1,19 @@
 ---
-title: "bl get modelproviders"
-slug: bl_get_modelproviders
+title: "bl delete agent"
+slug: bl_delete_agent
 ---
-## bl get modelproviders
+## bl delete agent
 
-Get a ModelProvider
+Delete a Agent
 
 ```
-bl get modelproviders [flags]
+bl delete agent name [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for modelproviders
+  -h, --help   help for agent
 ```
 
 ### Options inherited from parent commands
@@ -27,5 +27,5 @@ bl get modelproviders [flags]
 
 ### SEE ALSO
 
-* [bl get](bl_get.md)	 - Get a resource
+* [bl delete](bl_delete.md)	 - Delete a resource
 

@@ -1,19 +1,19 @@
 ---
-title: "bl get modelproviders"
-slug: bl_get_modelproviders
+title: "bl get integrationconnections"
+slug: bl_get_integrationconnections
 ---
-## bl get modelproviders
+## bl get integrationconnections
 
-Get a ModelProvider
+Get a IntegrationConnection
 
 ```
-bl get modelproviders [flags]
+bl get integrationconnections [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for modelproviders
+  -h, --help   help for integrationconnections
 ```
 
 ### Options inherited from parent commands

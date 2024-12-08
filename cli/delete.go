@@ -42,8 +42,8 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&filePath, "filename", "f", "", "Path to YAML file to apply")
-	cmd.Flags().BoolVarP(&recursive, "recursive", "R", false, "Process the directory used in -f, --filename recursively")
+	cmd.Flags().BoolVarP(&recursive, "recursive", "R", false, "Process the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.")
+	cmd.Flags().StringVarP(&filePath, "filename", "f", "", "containing the resource to delete.")
 	err := cmd.MarkFlagRequired("filename")
 	if err != nil {
 		fmt.Println(err)
@@ -52,7 +52,7 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 
 	for _, resource := range resources {
 		subcmd := &cobra.Command{
-			Use:     resource.Singular,
+			Use:     fmt.Sprintf("%s name [flags]", resource.Singular),
 			Aliases: []string{resource.Plural, resource.Short},
 			Short:   fmt.Sprintf("Delete a %s", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
