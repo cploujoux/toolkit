@@ -9,6 +9,7 @@ sdk:
 		definition.yml
 
 sdk-python:
+	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
 	openapi-python-client generate \
 		--path=definition.yml \
 		--output-path=./tmp-sdk-python \

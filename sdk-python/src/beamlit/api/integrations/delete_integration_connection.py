@@ -1,20 +1,20 @@
 from http import HTTPStatus
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.authentication_provider_model import AuthenticationProviderModel
+from ...models.integration_connection import IntegrationConnection
 from ...types import Response
 
 
 def _get_kwargs(
-    authentication_provider_name: str,
+    connection_name: str,
 ) -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": f"/authentication_providers/{authentication_provider_name}/models",
+        "method": "delete",
+        "url": f"/integrations/connections/{connection_name}",
     }
 
     return _kwargs
@@ -22,14 +22,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[List["AuthenticationProviderModel"]]:
+) -> Optional[IntegrationConnection]:
     if response.status_code == 200:
-        response_200 = []
-        _response_200 = response.json()
-        for response_200_item_data in _response_200:
-            response_200_item = AuthenticationProviderModel.from_dict(response_200_item_data)
-
-            response_200.append(response_200_item)
+        response_200 = IntegrationConnection.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +35,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[List["AuthenticationProviderModel"]]:
+) -> Response[IntegrationConnection]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,27 +45,27 @@ def _build_response(
 
 
 def sync_detailed(
-    authentication_provider_name: str,
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-) -> Response[List["AuthenticationProviderModel"]]:
-    """List models for a authentication provider
+    client: Union[AuthenticatedClient, Client],
+) -> Response[IntegrationConnection]:
+    """Delete integration
 
-     Returns a list of all models for an integration by ID.
+     Deletes an integration connection by integration name and connection name.
 
     Args:
-        authentication_provider_name (str):
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['AuthenticationProviderModel']]
+        Response[IntegrationConnection]
     """
 
     kwargs = _get_kwargs(
-        authentication_provider_name=authentication_provider_name,
+        connection_name=connection_name,
     )
 
     response = client.get_httpx_client().request(
@@ -81,53 +76,53 @@ def sync_detailed(
 
 
 def sync(
-    authentication_provider_name: str,
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-) -> Optional[List["AuthenticationProviderModel"]]:
-    """List models for a authentication provider
+    client: Union[AuthenticatedClient, Client],
+) -> Optional[IntegrationConnection]:
+    """Delete integration
 
-     Returns a list of all models for an integration by ID.
+     Deletes an integration connection by integration name and connection name.
 
     Args:
-        authentication_provider_name (str):
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['AuthenticationProviderModel']
+        IntegrationConnection
     """
 
     return sync_detailed(
-        authentication_provider_name=authentication_provider_name,
+        connection_name=connection_name,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    authentication_provider_name: str,
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-) -> Response[List["AuthenticationProviderModel"]]:
-    """List models for a authentication provider
+    client: Union[AuthenticatedClient, Client],
+) -> Response[IntegrationConnection]:
+    """Delete integration
 
-     Returns a list of all models for an integration by ID.
+     Deletes an integration connection by integration name and connection name.
 
     Args:
-        authentication_provider_name (str):
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['AuthenticationProviderModel']]
+        Response[IntegrationConnection]
     """
 
     kwargs = _get_kwargs(
-        authentication_provider_name=authentication_provider_name,
+        connection_name=connection_name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -136,28 +131,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    authentication_provider_name: str,
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-) -> Optional[List["AuthenticationProviderModel"]]:
-    """List models for a authentication provider
+    client: Union[AuthenticatedClient, Client],
+) -> Optional[IntegrationConnection]:
+    """Delete integration
 
-     Returns a list of all models for an integration by ID.
+     Deletes an integration connection by integration name and connection name.
 
     Args:
-        authentication_provider_name (str):
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['AuthenticationProviderModel']
+        IntegrationConnection
     """
 
     return (
         await asyncio_detailed(
-            authentication_provider_name=authentication_provider_name,
+            connection_name=connection_name,
             client=client,
         )
     ).parsed

@@ -3,12 +3,12 @@ from typing import Any, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="FunctionDeploymentPodTemplate")
+T = TypeVar("T", bound="FunctionDeploymentConfigurationType0")
 
 
 @_attrs_define
-class FunctionDeploymentPodTemplate:
-    """The pod template, should be a valid Kubernetes pod template"""
+class FunctionDeploymentConfigurationType0:
+    """Function configuration, this is a key value storage. In your function you can retrieve the value with config[key]"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -21,10 +21,10 @@ class FunctionDeploymentPodTemplate:
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         d = src_dict.copy()
-        function_deployment_pod_template = cls()
+        function_deployment_configuration_type_0 = cls()
 
-        function_deployment_pod_template.additional_properties = d
-        return function_deployment_pod_template
+        function_deployment_configuration_type_0.additional_properties = d
+        return function_deployment_configuration_type_0
 
     @property
     def additional_keys(self) -> list[str]:

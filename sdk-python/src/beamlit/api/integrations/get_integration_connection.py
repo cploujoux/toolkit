@@ -5,34 +5,24 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.agent import Agent
-from ...models.agent_with_deployments import AgentWithDeployments
+from ...models.integration import Integration
 from ...types import Response
 
 
 def _get_kwargs(
-    *,
-    body: AgentWithDeployments,
+    connection_name: str,
 ) -> dict[str, Any]:
-    headers: dict[str, Any] = {}
-
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/agents",
+        "method": "get",
+        "url": f"/integrations/connections/{connection_name}",
     }
 
-    _body = body.to_dict()
-
-    _kwargs["json"] = _body
-    headers["Content-Type"] = "application/json"
-
-    _kwargs["headers"] = headers
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Agent]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Integration]:
     if response.status_code == 200:
-        response_200 = Agent.from_dict(response.json())
+        response_200 = Integration.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -41,7 +31,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Agent]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Integration]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -51,26 +41,27 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-    body: AgentWithDeployments,
-) -> Response[Agent]:
-    """Create agent by name
+    client: Union[AuthenticatedClient, Client],
+) -> Response[Integration]:
+    """Get integration
+
+     Returns an integration connection by integration name and connection name.
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Agent]
+        Response[Integration]
     """
 
     kwargs = _get_kwargs(
-        body=body,
+        connection_name=connection_name,
     )
 
     response = client.get_httpx_client().request(
@@ -81,51 +72,53 @@ def sync_detailed(
 
 
 def sync(
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-    body: AgentWithDeployments,
-) -> Optional[Agent]:
-    """Create agent by name
+    client: Union[AuthenticatedClient, Client],
+) -> Optional[Integration]:
+    """Get integration
+
+     Returns an integration connection by integration name and connection name.
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Agent
+        Integration
     """
 
     return sync_detailed(
+        connection_name=connection_name,
         client=client,
-        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-    body: AgentWithDeployments,
-) -> Response[Agent]:
-    """Create agent by name
+    client: Union[AuthenticatedClient, Client],
+) -> Response[Integration]:
+    """Get integration
+
+     Returns an integration connection by integration name and connection name.
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Agent]
+        Response[Integration]
     """
 
     kwargs = _get_kwargs(
-        body=body,
+        connection_name=connection_name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -134,27 +127,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    connection_name: str,
     *,
-    client: AuthenticatedClient,
-    body: AgentWithDeployments,
-) -> Optional[Agent]:
-    """Create agent by name
+    client: Union[AuthenticatedClient, Client],
+) -> Optional[Integration]:
+    """Get integration
+
+     Returns an integration connection by integration name and connection name.
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Agent
+        Integration
     """
 
     return (
         await asyncio_detailed(
+            connection_name=connection_name,
             client=client,
-            body=body,
         )
     ).parsed

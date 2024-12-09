@@ -6,13 +6,14 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.agent import Agent
+from ...models.agent_with_deployments import AgentWithDeployments
 from ...types import Response
 
 
 def _get_kwargs(
     agent_name: str,
     *,
-    body: Agent,
+    body: AgentWithDeployments,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
@@ -54,13 +55,14 @@ def sync_detailed(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    body: Agent,
+    body: AgentWithDeployments,
 ) -> Response[Agent]:
     """Update agent by name
 
     Args:
         agent_name (str):
-        body (Agent): Agent parent of AgentDeployment
+        body (AgentWithDeployments): Logical object representing an agent but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -86,13 +88,14 @@ def sync(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    body: Agent,
+    body: AgentWithDeployments,
 ) -> Optional[Agent]:
     """Update agent by name
 
     Args:
         agent_name (str):
-        body (Agent): Agent parent of AgentDeployment
+        body (AgentWithDeployments): Logical object representing an agent but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -113,13 +116,14 @@ async def asyncio_detailed(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    body: Agent,
+    body: AgentWithDeployments,
 ) -> Response[Agent]:
     """Update agent by name
 
     Args:
         agent_name (str):
-        body (Agent): Agent parent of AgentDeployment
+        body (AgentWithDeployments): Logical object representing an agent but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -143,13 +147,14 @@ async def asyncio(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    body: Agent,
+    body: AgentWithDeployments,
 ) -> Optional[Agent]:
     """Update agent by name
 
     Args:
         agent_name (str):
-        body (Agent): Agent parent of AgentDeployment
+        body (AgentWithDeployments): Logical object representing an agent but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

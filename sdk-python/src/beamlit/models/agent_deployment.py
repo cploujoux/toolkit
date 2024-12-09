@@ -7,9 +7,9 @@ from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.agent_chain import AgentChain
-    from ..models.agent_deployment_configuration import AgentDeploymentConfiguration
-    from ..models.agent_deployment_pod_template import AgentDeploymentPodTemplate
-    from ..models.deployment_serverless_config import DeploymentServerlessConfig
+    from ..models.agent_deployment_configuration_type_0 import AgentDeploymentConfigurationType0
+    from ..models.agent_deployment_pod_template_type_0 import AgentDeploymentPodTemplateType0
+    from ..models.deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
     from ..models.flavor import Flavor
     from ..models.labels_type_0 import LabelsType0
     from ..models.runtime import Runtime
@@ -29,22 +29,24 @@ class AgentDeployment:
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         agent (Union[Unset, str]): The name of the agent
         agent_chain (Union[Unset, List['AgentChain']]): Agent chaining configuration
-        configuration (Union[Unset, AgentDeploymentConfiguration]): Agent configuration, this is a key value storage. In
-            your agent you can retrieve the value with config[key]
+        configuration (Union['AgentDeploymentConfigurationType0', None, Unset]): Agent configuration, this is a key
+            value storage. In your agent you can retrieve the value with config[key]
         description (Union[Unset, str]): Agent description, very important to have a clear description for your agent if
             you want to make it work with agent chaining
-        enabled (Union[Unset, bool]): Whether the agent deployment is enabled
+        enabled (Union[None, Unset, bool]): Whether the agent deployment is enabled
         environment (Union[Unset, str]): The name of the environment
         flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
         functions (Union[Unset, List[str]]): Functions used by the agent, those functions needs to be created before
             setting it here
+        integration_connections (Union[Unset, List[str]]):
         labels (Union['LabelsType0', None, Unset]): Labels
-        llm (Union[Unset, str]): LLM to use for agent, it should be compatible with function calling
-        pod_template (Union[Unset, AgentDeploymentPodTemplate]): The pod template, should be a valid Kubernetes pod
-            template
+        model (Union[Unset, str]): Model beamlit to use for agent, it should be compatible with function calling
+        pod_template (Union['AgentDeploymentPodTemplateType0', None, Unset]): The pod template, should be a valid
+            Kubernetes pod template
         policies (Union[Unset, List[str]]):
         runtime (Union[Unset, Runtime]): Set of configurations for a deployment
-        serverless_config (Union[Unset, DeploymentServerlessConfig]): Configuration for a serverless deployment
+        serverless_config (Union['DeploymentServerlessConfigType0', None, Unset]): Configuration for a serverless
+            deployment
         store_id (Union[Unset, str]): Create from a store registered function
         workspace (Union[Unset, str]): The workspace the agent deployment belongs to
     """
@@ -55,23 +57,27 @@ class AgentDeployment:
     updated_by: Union[Unset, str] = UNSET
     agent: Union[Unset, str] = UNSET
     agent_chain: Union[Unset, List["AgentChain"]] = UNSET
-    configuration: Union[Unset, "AgentDeploymentConfiguration"] = UNSET
+    configuration: Union["AgentDeploymentConfigurationType0", None, Unset] = UNSET
     description: Union[Unset, str] = UNSET
-    enabled: Union[Unset, bool] = UNSET
+    enabled: Union[None, Unset, bool] = UNSET
     environment: Union[Unset, str] = UNSET
     flavors: Union[Unset, List["Flavor"]] = UNSET
     functions: Union[Unset, List[str]] = UNSET
+    integration_connections: Union[Unset, List[str]] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
-    llm: Union[Unset, str] = UNSET
-    pod_template: Union[Unset, "AgentDeploymentPodTemplate"] = UNSET
+    model: Union[Unset, str] = UNSET
+    pod_template: Union["AgentDeploymentPodTemplateType0", None, Unset] = UNSET
     policies: Union[Unset, List[str]] = UNSET
     runtime: Union[Unset, "Runtime"] = UNSET
-    serverless_config: Union[Unset, "DeploymentServerlessConfig"] = UNSET
+    serverless_config: Union["DeploymentServerlessConfigType0", None, Unset] = UNSET
     store_id: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.agent_deployment_configuration_type_0 import AgentDeploymentConfigurationType0
+        from ..models.agent_deployment_pod_template_type_0 import AgentDeploymentPodTemplateType0
+        from ..models.deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
         from ..models.labels_type_0 import LabelsType0
 
         created_at = self.created_at
@@ -91,13 +97,21 @@ class AgentDeployment:
                 agent_chain_item = agent_chain_item_data.to_dict()
                 agent_chain.append(agent_chain_item)
 
-        configuration: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.configuration, Unset):
+        configuration: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.configuration, Unset):
+            configuration = UNSET
+        elif isinstance(self.configuration, AgentDeploymentConfigurationType0):
             configuration = self.configuration.to_dict()
+        else:
+            configuration = self.configuration
 
         description = self.description
 
-        enabled = self.enabled
+        enabled: Union[None, Unset, bool]
+        if isinstance(self.enabled, Unset):
+            enabled = UNSET
+        else:
+            enabled = self.enabled
 
         environment = self.environment
 
@@ -112,6 +126,10 @@ class AgentDeployment:
         if not isinstance(self.functions, Unset):
             functions = self.functions
 
+        integration_connections: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.integration_connections, Unset):
+            integration_connections = self.integration_connections
+
         labels: Union[Dict[str, Any], None, Unset]
         if isinstance(self.labels, Unset):
             labels = UNSET
@@ -120,11 +138,15 @@ class AgentDeployment:
         else:
             labels = self.labels
 
-        llm = self.llm
+        model = self.model
 
-        pod_template: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.pod_template, Unset):
+        pod_template: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.pod_template, Unset):
+            pod_template = UNSET
+        elif isinstance(self.pod_template, AgentDeploymentPodTemplateType0):
             pod_template = self.pod_template.to_dict()
+        else:
+            pod_template = self.pod_template
 
         policies: Union[Unset, List[str]] = UNSET
         if not isinstance(self.policies, Unset):
@@ -134,9 +156,13 @@ class AgentDeployment:
         if not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
-        serverless_config: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.serverless_config, Unset):
+        serverless_config: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.serverless_config, Unset):
+            serverless_config = UNSET
+        elif isinstance(self.serverless_config, DeploymentServerlessConfigType0):
             serverless_config = self.serverless_config.to_dict()
+        else:
+            serverless_config = self.serverless_config
 
         store_id = self.store_id
 
@@ -169,10 +195,12 @@ class AgentDeployment:
             field_dict["flavors"] = flavors
         if functions is not UNSET:
             field_dict["functions"] = functions
+        if integration_connections is not UNSET:
+            field_dict["integration_connections"] = integration_connections
         if labels is not UNSET:
             field_dict["labels"] = labels
-        if llm is not UNSET:
-            field_dict["llm"] = llm
+        if model is not UNSET:
+            field_dict["model"] = model
         if pod_template is not UNSET:
             field_dict["pod_template"] = pod_template
         if policies is not UNSET:
@@ -191,9 +219,9 @@ class AgentDeployment:
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.agent_chain import AgentChain
-        from ..models.agent_deployment_configuration import AgentDeploymentConfiguration
-        from ..models.agent_deployment_pod_template import AgentDeploymentPodTemplate
-        from ..models.deployment_serverless_config import DeploymentServerlessConfig
+        from ..models.agent_deployment_configuration_type_0 import AgentDeploymentConfigurationType0
+        from ..models.agent_deployment_pod_template_type_0 import AgentDeploymentPodTemplateType0
+        from ..models.deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
         from ..models.flavor import Flavor
         from ..models.labels_type_0 import LabelsType0
         from ..models.runtime import Runtime
@@ -216,16 +244,33 @@ class AgentDeployment:
 
             agent_chain.append(agent_chain_item)
 
-        _configuration = d.pop("configuration", UNSET)
-        configuration: Union[Unset, AgentDeploymentConfiguration]
-        if isinstance(_configuration, Unset):
-            configuration = UNSET
-        else:
-            configuration = AgentDeploymentConfiguration.from_dict(_configuration)
+        def _parse_configuration(data: object) -> Union["AgentDeploymentConfigurationType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                configuration_type_0 = AgentDeploymentConfigurationType0.from_dict(data)
+
+                return configuration_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["AgentDeploymentConfigurationType0", None, Unset], data)
+
+        configuration = _parse_configuration(d.pop("configuration", UNSET))
 
         description = d.pop("description", UNSET)
 
-        enabled = d.pop("enabled", UNSET)
+        def _parse_enabled(data: object) -> Union[None, Unset, bool]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            return cast(Union[None, Unset, bool], data)
+
+        enabled = _parse_enabled(d.pop("enabled", UNSET))
 
         environment = d.pop("environment", UNSET)
 
@@ -237,6 +282,8 @@ class AgentDeployment:
             flavors.append(componentsschemas_flavors_item)
 
         functions = cast(List[str], d.pop("functions", UNSET))
+
+        integration_connections = cast(List[str], d.pop("integration_connections", UNSET))
 
         def _parse_labels(data: object) -> Union["LabelsType0", None, Unset]:
             if data is None:
@@ -255,14 +302,24 @@ class AgentDeployment:
 
         labels = _parse_labels(d.pop("labels", UNSET))
 
-        llm = d.pop("llm", UNSET)
+        model = d.pop("model", UNSET)
 
-        _pod_template = d.pop("pod_template", UNSET)
-        pod_template: Union[Unset, AgentDeploymentPodTemplate]
-        if isinstance(_pod_template, Unset):
-            pod_template = UNSET
-        else:
-            pod_template = AgentDeploymentPodTemplate.from_dict(_pod_template)
+        def _parse_pod_template(data: object) -> Union["AgentDeploymentPodTemplateType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                pod_template_type_0 = AgentDeploymentPodTemplateType0.from_dict(data)
+
+                return pod_template_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["AgentDeploymentPodTemplateType0", None, Unset], data)
+
+        pod_template = _parse_pod_template(d.pop("pod_template", UNSET))
 
         policies = cast(List[str], d.pop("policies", UNSET))
 
@@ -273,12 +330,22 @@ class AgentDeployment:
         else:
             runtime = Runtime.from_dict(_runtime)
 
-        _serverless_config = d.pop("serverless_config", UNSET)
-        serverless_config: Union[Unset, DeploymentServerlessConfig]
-        if isinstance(_serverless_config, Unset):
-            serverless_config = UNSET
-        else:
-            serverless_config = DeploymentServerlessConfig.from_dict(_serverless_config)
+        def _parse_serverless_config(data: object) -> Union["DeploymentServerlessConfigType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                componentsschemas_deployment_serverless_config_type_0 = DeploymentServerlessConfigType0.from_dict(data)
+
+                return componentsschemas_deployment_serverless_config_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["DeploymentServerlessConfigType0", None, Unset], data)
+
+        serverless_config = _parse_serverless_config(d.pop("serverless_config", UNSET))
 
         store_id = d.pop("store_id", UNSET)
 
@@ -297,8 +364,9 @@ class AgentDeployment:
             environment=environment,
             flavors=flavors,
             functions=functions,
+            integration_connections=integration_connections,
             labels=labels,
-            llm=llm,
+            model=model,
             pod_template=pod_template,
             policies=policies,
             runtime=runtime,

@@ -9,11 +9,11 @@ if TYPE_CHECKING:
     from ..models.metric import Metric
 
 
-T = TypeVar("T", bound="ResourceDeploymentMetricsInferencePerSecondPerRegion")
+T = TypeVar("T", bound="ResourceDeploymentMetricsInferencePerSecondPerRegionType0")
 
 
 @_attrs_define
-class ResourceDeploymentMetricsInferencePerSecondPerRegion:
+class ResourceDeploymentMetricsInferencePerSecondPerRegionType0:
     """Historical requests per second (RPS) per location, for the model deployment
 
     Attributes:
@@ -51,12 +51,12 @@ class ResourceDeploymentMetricsInferencePerSecondPerRegion:
 
             region.append(componentsschemas_array_metric_item)
 
-        resource_deployment_metrics_inference_per_second_per_region = cls(
+        resource_deployment_metrics_inference_per_second_per_region_type_0 = cls(
             region=region,
         )
 
-        resource_deployment_metrics_inference_per_second_per_region.additional_properties = d
-        return resource_deployment_metrics_inference_per_second_per_region
+        resource_deployment_metrics_inference_per_second_per_region_type_0.additional_properties = d
+        return resource_deployment_metrics_inference_per_second_per_region_type_0
 
     @property
     def additional_keys(self) -> list[str]:

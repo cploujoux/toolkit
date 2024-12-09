@@ -4,31 +4,9 @@ import time
 from dataclasses import dataclass
 from typing import Generator, Optional
 
+import requests
+from beamlit.common.settings import get_settings
 from httpx import Auth, Request, Response, post
-
-
-@dataclass
-class DeviceLogin:
-    client_id: str
-    scope: str
-
-
-@dataclass
-class DeviceLoginResponse:
-    client_id: str
-    device_code: str
-    user_code: str
-    expires_in: int
-    interval: int
-    verification_uri: str
-    verification_uri_complete: str
-
-
-@dataclass
-class DeviceLoginFinalizeRequest:
-    grant_type: str
-    client_id: str
-    device_code: str
 
 
 @dataclass
@@ -39,7 +17,7 @@ class DeviceLoginFinalizeResponse:
     token_type: str
 
 
-class BearerToken(Auth):
+class ClientCredentials(Auth):
     def __init__(self, credentials, workspace_name: str, base_url: str):
         self.credentials = credentials
         self.workspace_name = workspace_name
@@ -50,7 +28,6 @@ class BearerToken(Auth):
         parts = self.credentials.access_token.split('.')
         if len(parts) != 3:
             return Exception("Invalid JWT token format")
-
         try:
             claims_bytes = base64.urlsafe_b64decode(parts[1] + '=' * (-len(parts[1]) % 4))
             claims = json.loads(claims_bytes)
@@ -65,6 +42,15 @@ class BearerToken(Auth):
         return None
 
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
+        settings = get_settings()
+        if self.credentials.client_credentials and not self.credentials.refresh_token:
+            headers = { "Authorization": f"Basic {self.credentials.client_credentials}" }
+            body = { "grant_type": "client_credentials" }
+            response = requests.post(f"{settings.base_url}/oauth/token", headers=headers, json=body)
+            response.raise_for_status()
+            self.credentials.access_token = response.json()['access_token']
+            self.credentials.refresh_token = response.json()['refresh_token']
+            self.credentials.expires_in = response.json()['expires_in']
         err = self.refresh_if_needed()
         if err:
             return err

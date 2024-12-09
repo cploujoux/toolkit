@@ -5,28 +5,35 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.authentication_provider_model import AuthenticationProviderModel
+from ...models.integration_connection import IntegrationConnection
 from ...types import Response
 
 
 def _get_kwargs(
-    authentication_provider_name: str,
-    model_repo_id: str,
-    model_id: str,
+    *,
+    body: IntegrationConnection,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": f"/authentication_providers/{authentication_provider_name}/models/{model_repo_id}/{model_id}",
+        "method": "post",
+        "url": "/integrations/connections",
     }
 
+    _body = body.to_dict()
+
+    _kwargs["json"] = _body
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[AuthenticationProviderModel]:
+) -> Optional[IntegrationConnection]:
     if response.status_code == 200:
-        response_200 = AuthenticationProviderModel.from_dict(response.json())
+        response_200 = IntegrationConnection.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -37,7 +44,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[AuthenticationProviderModel]:
+) -> Response[IntegrationConnection]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -47,33 +54,27 @@ def _build_response(
 
 
 def sync_detailed(
-    authentication_provider_name: str,
-    model_repo_id: str,
-    model_id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[AuthenticationProviderModel]:
-    """Get model for a authentication provider
+    body: IntegrationConnection,
+) -> Response[IntegrationConnection]:
+    """Create integration
 
-     Returns a model with a repository for an integration by ID.
+     Create a connection for an integration.
 
     Args:
-        authentication_provider_name (str):
-        model_repo_id (str):
-        model_id (str):
+        body (IntegrationConnection): Integration Connection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AuthenticationProviderModel]
+        Response[IntegrationConnection]
     """
 
     kwargs = _get_kwargs(
-        authentication_provider_name=authentication_provider_name,
-        model_repo_id=model_repo_id,
-        model_id=model_id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -84,65 +85,53 @@ def sync_detailed(
 
 
 def sync(
-    authentication_provider_name: str,
-    model_repo_id: str,
-    model_id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[AuthenticationProviderModel]:
-    """Get model for a authentication provider
+    body: IntegrationConnection,
+) -> Optional[IntegrationConnection]:
+    """Create integration
 
-     Returns a model with a repository for an integration by ID.
+     Create a connection for an integration.
 
     Args:
-        authentication_provider_name (str):
-        model_repo_id (str):
-        model_id (str):
+        body (IntegrationConnection): Integration Connection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AuthenticationProviderModel
+        IntegrationConnection
     """
 
     return sync_detailed(
-        authentication_provider_name=authentication_provider_name,
-        model_repo_id=model_repo_id,
-        model_id=model_id,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    authentication_provider_name: str,
-    model_repo_id: str,
-    model_id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[AuthenticationProviderModel]:
-    """Get model for a authentication provider
+    body: IntegrationConnection,
+) -> Response[IntegrationConnection]:
+    """Create integration
 
-     Returns a model with a repository for an integration by ID.
+     Create a connection for an integration.
 
     Args:
-        authentication_provider_name (str):
-        model_repo_id (str):
-        model_id (str):
+        body (IntegrationConnection): Integration Connection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AuthenticationProviderModel]
+        Response[IntegrationConnection]
     """
 
     kwargs = _get_kwargs(
-        authentication_provider_name=authentication_provider_name,
-        model_repo_id=model_repo_id,
-        model_id=model_id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -151,34 +140,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    authentication_provider_name: str,
-    model_repo_id: str,
-    model_id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[AuthenticationProviderModel]:
-    """Get model for a authentication provider
+    body: IntegrationConnection,
+) -> Optional[IntegrationConnection]:
+    """Create integration
 
-     Returns a model with a repository for an integration by ID.
+     Create a connection for an integration.
 
     Args:
-        authentication_provider_name (str):
-        model_repo_id (str):
-        model_id (str):
+        body (IntegrationConnection): Integration Connection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AuthenticationProviderModel
+        IntegrationConnection
     """
 
     return (
         await asyncio_detailed(
-            authentication_provider_name=authentication_provider_name,
-            model_repo_id=model_repo_id,
-            model_id=model_id,
             client=client,
+            body=body,
         )
     ).parsed

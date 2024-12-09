@@ -5,11 +5,12 @@ from .agent import Agent
 from .agent_chain import AgentChain
 from .agent_configuration import AgentConfiguration
 from .agent_deployment import AgentDeployment
-from .agent_deployment_configuration import AgentDeploymentConfiguration
+from .agent_deployment_configuration_type_0 import AgentDeploymentConfigurationType0
 from .agent_deployment_history import AgentDeploymentHistory
 from .agent_deployment_history_event import AgentDeploymentHistoryEvent
-from .agent_deployment_pod_template import AgentDeploymentPodTemplate
+from .agent_deployment_pod_template_type_0 import AgentDeploymentPodTemplateType0
 from .agent_release import AgentRelease
+from .agent_with_deployments import AgentWithDeployments
 from .api_key import ApiKey
 from .authentication_provider_model import AuthenticationProviderModel
 from .authentication_provider_organization import AuthenticationProviderOrganization
@@ -22,19 +23,28 @@ from .create_workspace_service_account_response_200 import CreateWorkspaceServic
 from .delete_workspace_service_account_response_200 import DeleteWorkspaceServiceAccountResponse200
 from .deployment_configuration import DeploymentConfiguration
 from .deployment_configurations import DeploymentConfigurations
-from .deployment_serverless_config import DeploymentServerlessConfig
+from .deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
 from .environment import Environment
 from .environment_metrics import EnvironmentMetrics
 from .flavor import Flavor
 from .function import Function
 from .function_configuration import FunctionConfiguration
 from .function_deployment import FunctionDeployment
-from .function_deployment_configuration import FunctionDeploymentConfiguration
-from .function_deployment_pod_template import FunctionDeploymentPodTemplate
+from .function_deployment_configuration_type_0 import FunctionDeploymentConfigurationType0
+from .function_deployment_pod_template_type_0 import FunctionDeploymentPodTemplateType0
 from .function_kit import FunctionKit
 from .function_provider_ref import FunctionProviderRef
 from .function_release import FunctionRelease
+from .function_with_deployments import FunctionWithDeployments
 from .get_workspace_service_accounts_response_200_item import GetWorkspaceServiceAccountsResponse200Item
+from .increase_and_rate_metric import IncreaseAndRateMetric
+from .integration import Integration
+from .integration_config import IntegrationConfig
+from .integration_connection import IntegrationConnection
+from .integration_connection_config import IntegrationConnectionConfig
+from .integration_connection_secret import IntegrationConnectionSecret
+from .integration_model import IntegrationModel
+from .integration_secret import IntegrationSecret
 from .invite_workspace_user_body import InviteWorkspaceUserBody
 from .labels_type_0 import LabelsType0
 from .location import Location
@@ -49,7 +59,7 @@ from .model_deployment_metrics_inference_per_second_per_region import ModelDeplo
 from .model_deployment_metrics_query_per_second_per_region_per_code import (
     ModelDeploymentMetricsQueryPerSecondPerRegionPerCode,
 )
-from .model_deployment_pod_template import ModelDeploymentPodTemplate
+from .model_deployment_pod_template_type_0 import ModelDeploymentPodTemplateType0
 from .model_metrics import ModelMetrics
 from .model_provider import ModelProvider
 from .model_provider_ref import ModelProviderRef
@@ -67,27 +77,31 @@ from .provider_config import ProviderConfig
 from .qps import QPS
 from .resource_deployment_log import ResourceDeploymentLog
 from .resource_deployment_metrics import ResourceDeploymentMetrics
-from .resource_deployment_metrics_inference_per_second_per_region import (
-    ResourceDeploymentMetricsInferencePerSecondPerRegion,
+from .resource_deployment_metrics_inference_per_region_type_0 import ResourceDeploymentMetricsInferencePerRegionType0
+from .resource_deployment_metrics_inference_per_second_per_region_type_0 import (
+    ResourceDeploymentMetricsInferencePerSecondPerRegionType0,
 )
-from .resource_deployment_metrics_query_per_second_per_region_per_code import (
-    ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode,
+from .resource_deployment_metrics_query_per_region_per_code_type_0 import (
+    ResourceDeploymentMetricsQueryPerRegionPerCodeType0,
+)
+from .resource_deployment_metrics_query_per_second_per_region_per_code_type_0 import (
+    ResourceDeploymentMetricsQueryPerSecondPerRegionPerCodeType0,
 )
 from .resource_metrics import ResourceMetrics
 from .runtime import Runtime
-from .runtime_readiness_probe import RuntimeReadinessProbe
+from .runtime_readiness_probe_type_0 import RuntimeReadinessProbeType0
 from .runtime_resources import RuntimeResources
 from .serverless_config import ServerlessConfig
 from .standard_fields_dynamo_db import StandardFieldsDynamoDb
 from .store_agent import StoreAgent
 from .store_agent_configuration import StoreAgentConfiguration
-from .store_agent_labels import StoreAgentLabels
+from .store_agent_labels_type_0 import StoreAgentLabelsType0
 from .store_configuration import StoreConfiguration
 from .store_configuration_option import StoreConfigurationOption
 from .store_function import StoreFunction
 from .store_function_configuration import StoreFunctionConfiguration
 from .store_function_kit import StoreFunctionKit
-from .store_function_labels import StoreFunctionLabels
+from .store_function_labels_type_0 import StoreFunctionLabelsType0
 from .store_function_parameter import StoreFunctionParameter
 from .update_workspace_service_account_body import UpdateWorkspaceServiceAccountBody
 from .update_workspace_service_account_response_200 import UpdateWorkspaceServiceAccountResponse200
@@ -102,11 +116,12 @@ __all__ = (
     "AgentChain",
     "AgentConfiguration",
     "AgentDeployment",
-    "AgentDeploymentConfiguration",
+    "AgentDeploymentConfigurationType0",
     "AgentDeploymentHistory",
     "AgentDeploymentHistoryEvent",
-    "AgentDeploymentPodTemplate",
+    "AgentDeploymentPodTemplateType0",
     "AgentRelease",
+    "AgentWithDeployments",
     "ApiKey",
     "AuthenticationProviderModel",
     "AuthenticationProviderOrganization",
@@ -119,19 +134,28 @@ __all__ = (
     "DeleteWorkspaceServiceAccountResponse200",
     "DeploymentConfiguration",
     "DeploymentConfigurations",
-    "DeploymentServerlessConfig",
+    "DeploymentServerlessConfigType0",
     "Environment",
     "EnvironmentMetrics",
     "Flavor",
     "Function",
     "FunctionConfiguration",
     "FunctionDeployment",
-    "FunctionDeploymentConfiguration",
-    "FunctionDeploymentPodTemplate",
+    "FunctionDeploymentConfigurationType0",
+    "FunctionDeploymentPodTemplateType0",
     "FunctionKit",
     "FunctionProviderRef",
     "FunctionRelease",
+    "FunctionWithDeployments",
     "GetWorkspaceServiceAccountsResponse200Item",
+    "IncreaseAndRateMetric",
+    "Integration",
+    "IntegrationConfig",
+    "IntegrationConnection",
+    "IntegrationConnectionConfig",
+    "IntegrationConnectionSecret",
+    "IntegrationModel",
+    "IntegrationSecret",
     "InviteWorkspaceUserBody",
     "LabelsType0",
     "Location",
@@ -144,7 +168,7 @@ __all__ = (
     "ModelDeploymentMetrics",
     "ModelDeploymentMetricsInferencePerSecondPerRegion",
     "ModelDeploymentMetricsQueryPerSecondPerRegionPerCode",
-    "ModelDeploymentPodTemplate",
+    "ModelDeploymentPodTemplateType0",
     "ModelMetrics",
     "ModelProvider",
     "ModelProviderRef",
@@ -162,23 +186,25 @@ __all__ = (
     "QPS",
     "ResourceDeploymentLog",
     "ResourceDeploymentMetrics",
-    "ResourceDeploymentMetricsInferencePerSecondPerRegion",
-    "ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode",
+    "ResourceDeploymentMetricsInferencePerRegionType0",
+    "ResourceDeploymentMetricsInferencePerSecondPerRegionType0",
+    "ResourceDeploymentMetricsQueryPerRegionPerCodeType0",
+    "ResourceDeploymentMetricsQueryPerSecondPerRegionPerCodeType0",
     "ResourceMetrics",
     "Runtime",
-    "RuntimeReadinessProbe",
+    "RuntimeReadinessProbeType0",
     "RuntimeResources",
     "ServerlessConfig",
     "StandardFieldsDynamoDb",
     "StoreAgent",
     "StoreAgentConfiguration",
-    "StoreAgentLabels",
+    "StoreAgentLabelsType0",
     "StoreConfiguration",
     "StoreConfigurationOption",
     "StoreFunction",
     "StoreFunctionConfiguration",
     "StoreFunctionKit",
-    "StoreFunctionLabels",
+    "StoreFunctionLabelsType0",
     "StoreFunctionParameter",
     "UpdateWorkspaceServiceAccountBody",
     "UpdateWorkspaceServiceAccountResponse200",

@@ -2,7 +2,7 @@ from .apikey import ApiKeyProvider
 from .authentication import (PublicProvider, RunClientWithCredentials,
                              new_client_with_credentials)
 from .credentials import (Config, ContextConfig, Credentials, WorkspaceConfig,
-                          load_credentials)
+                          load_credentials, load_credentials_from_config)
 from .device_mode import (BearerToken, DeviceLogin, DeviceLoginFinalizeRequest,
                           DeviceLoginFinalizeResponse, DeviceLoginResponse)
 
@@ -16,6 +16,7 @@ __all__ = (
     "Credentials",
     "WorkspaceConfig",
     "load_credentials",
+    "load_credentials_from_config",
     "BearerToken",
     "DeviceLogin",
     "DeviceLoginFinalizeRequest",

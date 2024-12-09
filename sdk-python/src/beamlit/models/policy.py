@@ -6,9 +6,7 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.flavor import Flavor
     from ..models.labels_type_0 import LabelsType0
-    from ..models.policy_location import PolicyLocation
 
 
 T = TypeVar("T", bound="Policy")
@@ -24,9 +22,9 @@ class Policy:
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         display_name (Union[Unset, str]): Policy display name
-        flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
+        flavors (Union[Unset, Any]): Flavors allowed by the policy. If not set, all flavors are allowed.
         labels (Union['LabelsType0', None, Unset]): Labels
-        locations (Union[Unset, List['PolicyLocation']]): PolicyLocations is a local type that wraps a slice of Location
+        locations (Union[Unset, Any]): Locations allowed by the policy. If not set, all locations are allowed.
         name (Union[Unset, str]): Policy name
         resource_types (Union[Unset, List[str]]): PolicyResourceTypes is a local type that wraps a slice of
             PolicyResourceType
@@ -39,9 +37,9 @@ class Policy:
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
-    flavors: Union[Unset, List["Flavor"]] = UNSET
+    flavors: Union[Unset, Any] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
-    locations: Union[Unset, List["PolicyLocation"]] = UNSET
+    locations: Union[Unset, Any] = UNSET
     name: Union[Unset, str] = UNSET
     resource_types: Union[Unset, List[str]] = UNSET
     type: Union[Unset, str] = UNSET
@@ -61,12 +59,7 @@ class Policy:
 
         display_name = self.display_name
 
-        flavors: Union[Unset, List[Dict[str, Any]]] = UNSET
-        if not isinstance(self.flavors, Unset):
-            flavors = []
-            for componentsschemas_flavors_item_data in self.flavors:
-                componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
-                flavors.append(componentsschemas_flavors_item)
+        flavors = self.flavors
 
         labels: Union[Dict[str, Any], None, Unset]
         if isinstance(self.labels, Unset):
@@ -76,12 +69,7 @@ class Policy:
         else:
             labels = self.labels
 
-        locations: Union[Unset, List[Dict[str, Any]]] = UNSET
-        if not isinstance(self.locations, Unset):
-            locations = []
-            for componentsschemas_policy_locations_item_data in self.locations:
-                componentsschemas_policy_locations_item = componentsschemas_policy_locations_item_data.to_dict()
-                locations.append(componentsschemas_policy_locations_item)
+        locations = self.locations
 
         name = self.name
 
@@ -125,9 +113,7 @@ class Policy:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
-        from ..models.flavor import Flavor
         from ..models.labels_type_0 import LabelsType0
-        from ..models.policy_location import PolicyLocation
 
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
@@ -140,12 +126,7 @@ class Policy:
 
         display_name = d.pop("display_name", UNSET)
 
-        flavors = []
-        _flavors = d.pop("flavors", UNSET)
-        for componentsschemas_flavors_item_data in _flavors or []:
-            componentsschemas_flavors_item = Flavor.from_dict(componentsschemas_flavors_item_data)
-
-            flavors.append(componentsschemas_flavors_item)
+        flavors = d.pop("flavors", UNSET)
 
         def _parse_labels(data: object) -> Union["LabelsType0", None, Unset]:
             if data is None:
@@ -164,14 +145,7 @@ class Policy:
 
         labels = _parse_labels(d.pop("labels", UNSET))
 
-        locations = []
-        _locations = d.pop("locations", UNSET)
-        for componentsschemas_policy_locations_item_data in _locations or []:
-            componentsschemas_policy_locations_item = PolicyLocation.from_dict(
-                componentsschemas_policy_locations_item_data
-            )
-
-            locations.append(componentsschemas_policy_locations_item)
+        locations = d.pop("locations", UNSET)
 
         name = d.pop("name", UNSET)
 

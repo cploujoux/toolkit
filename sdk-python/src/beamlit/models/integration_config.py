@@ -3,12 +3,12 @@ from typing import Any, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="StoreFunctionLabels")
+T = TypeVar("T", bound="IntegrationConfig")
 
 
 @_attrs_define
-class StoreFunctionLabels:
-    """Store function labels"""
+class IntegrationConfig:
+    """Integration config"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -21,10 +21,10 @@ class StoreFunctionLabels:
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         d = src_dict.copy()
-        store_function_labels = cls()
+        integration_config = cls()
 
-        store_function_labels.additional_properties = d
-        return store_function_labels
+        integration_config.additional_properties = d
+        return integration_config
 
     @property
     def additional_keys(self) -> list[str]:

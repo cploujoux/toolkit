@@ -3,12 +3,12 @@ from typing import Any, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="AgentDeploymentPodTemplate")
+T = TypeVar("T", bound="ModelDeploymentPodTemplateType0")
 
 
 @_attrs_define
-class AgentDeploymentPodTemplate:
-    """The pod template, should be a valid Kubernetes pod template"""
+class ModelDeploymentPodTemplateType0:
+    """The pod template for the deployment. Should be a Kubernetes PodTemplateSpec"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -21,10 +21,10 @@ class AgentDeploymentPodTemplate:
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         d = src_dict.copy()
-        agent_deployment_pod_template = cls()
+        model_deployment_pod_template_type_0 = cls()
 
-        agent_deployment_pod_template.additional_properties = d
-        return agent_deployment_pod_template
+        model_deployment_pod_template_type_0.additional_properties = d
+        return model_deployment_pod_template_type_0
 
     @property
     def additional_keys(self) -> list[str]:

@@ -1,30 +1,46 @@
-from typing import Any, Type, TypeVar
+from typing import Any, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="AgentDeploymentConfiguration")
+from ..types import UNSET, Unset
+
+T = TypeVar("T", bound="IntegrationSecret")
 
 
 @_attrs_define
-class AgentDeploymentConfiguration:
-    """Agent configuration, this is a key value storage. In your agent you can retrieve the value with config[key]"""
+class IntegrationSecret:
+    """Integration secret
 
+    Attributes:
+        api_key (Union[Unset, str]): The API key to use for the integration
+    """
+
+    api_key: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        api_key = self.api_key
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
+        field_dict.update({})
+        if api_key is not UNSET:
+            field_dict["api_key"] = api_key
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         d = src_dict.copy()
-        agent_deployment_configuration = cls()
+        api_key = d.pop("api_key", UNSET)
 
-        agent_deployment_configuration.additional_properties = d
-        return agent_deployment_configuration
+        integration_secret = cls(
+            api_key=api_key,
+        )
+
+        integration_secret.additional_properties = d
+        return integration_secret
 
     @property
     def additional_keys(self) -> list[str]:

@@ -6,12 +6,13 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.function import Function
+from ...models.function_with_deployments import FunctionWithDeployments
 from ...types import Response
 
 
 def _get_kwargs(
     *,
-    body: Function,
+    body: FunctionWithDeployments,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
@@ -52,12 +53,13 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    body: Function,
+    body: FunctionWithDeployments,
 ) -> Response[Function]:
     """Create function
 
     Args:
-        body (Function): Function parent of FunctionDeployment
+        body (FunctionWithDeployments): Logical object representing a function but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -81,12 +83,13 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    body: Function,
+    body: FunctionWithDeployments,
 ) -> Optional[Function]:
     """Create function
 
     Args:
-        body (Function): Function parent of FunctionDeployment
+        body (FunctionWithDeployments): Logical object representing a function but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -105,12 +108,13 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    body: Function,
+    body: FunctionWithDeployments,
 ) -> Response[Function]:
     """Create function
 
     Args:
-        body (Function): Function parent of FunctionDeployment
+        body (FunctionWithDeployments): Logical object representing a function but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -132,12 +136,13 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    body: Function,
+    body: FunctionWithDeployments,
 ) -> Optional[Function]:
     """Create function
 
     Args:
-        body (Function): Function parent of FunctionDeployment
+        body (FunctionWithDeployments): Logical object representing a function but with deployment
+            definition inside
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

@@ -5,6 +5,7 @@ from httpx import Auth, Request, Response
 
 from ..client import AuthenticatedClient
 from .apikey import ApiKeyProvider
+from .clientcredentials import ClientCredentials
 from .credentials import Credentials
 from .device_mode import BearerToken
 
@@ -29,6 +30,8 @@ def new_client_with_credentials(config: RunClientWithCredentials):
         provider = ApiKeyProvider(config.credentials, config.workspace)
     elif config.credentials.access_token:
         provider = BearerToken(config.credentials, config.workspace, config.api_url)
+    elif config.credentials.client_credentials:
+        provider = ClientCredentials(config.credentials, config.workspace, config.api_url)
     else:
         provider = PublicProvider()
 

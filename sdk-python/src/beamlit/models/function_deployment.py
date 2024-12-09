@@ -6,10 +6,10 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.deployment_serverless_config import DeploymentServerlessConfig
+    from ..models.deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
     from ..models.flavor import Flavor
-    from ..models.function_deployment_configuration import FunctionDeploymentConfiguration
-    from ..models.function_deployment_pod_template import FunctionDeploymentPodTemplate
+    from ..models.function_deployment_configuration_type_0 import FunctionDeploymentConfigurationType0
+    from ..models.function_deployment_pod_template_type_0 import FunctionDeploymentPodTemplateType0
     from ..models.function_kit import FunctionKit
     from ..models.labels_type_0 import LabelsType0
     from ..models.runtime import Runtime
@@ -28,22 +28,24 @@ class FunctionDeployment:
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
-        configuration (Union[Unset, FunctionDeploymentConfiguration]): Function configuration, this is a key value
-            storage. In your function you can retrieve the value with config[key]
+        configuration (Union['FunctionDeploymentConfigurationType0', None, Unset]): Function configuration, this is a
+            key value storage. In your function you can retrieve the value with config[key]
         description (Union[Unset, str]): Function description, very important for the agent function to work with an LLM
-        enabled (Union[Unset, bool]): Whether the function deployment is enabled
+        enabled (Union[None, Unset, bool]): Whether the function deployment is enabled
         environment (Union[Unset, str]): The name of the environment
         flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
         function (Union[Unset, str]): The name of the function
+        integration_connections (Union[Unset, List[str]]):
         kit (Union[Unset, List['FunctionKit']]): The kit of the function deployment
         labels (Union['LabelsType0', None, Unset]): Labels
         parameters (Union[Unset, List['StoreFunctionParameter']]): Function parameters, for your function to be callable
             with Agent
-        pod_template (Union[Unset, FunctionDeploymentPodTemplate]): The pod template, should be a valid Kubernetes pod
-            template
+        pod_template (Union['FunctionDeploymentPodTemplateType0', None, Unset]): The pod template, should be a valid
+            Kubernetes pod template
         policies (Union[Unset, List[str]]):
         runtime (Union[Unset, Runtime]): Set of configurations for a deployment
-        serverless_config (Union[Unset, DeploymentServerlessConfig]): Configuration for a serverless deployment
+        serverless_config (Union['DeploymentServerlessConfigType0', None, Unset]): Configuration for a serverless
+            deployment
         store_id (Union[Unset, str]): Create from a store registered function
         workspace (Union[Unset, str]): The workspace the function deployment belongs to
     """
@@ -52,24 +54,28 @@ class FunctionDeployment:
     created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
-    configuration: Union[Unset, "FunctionDeploymentConfiguration"] = UNSET
+    configuration: Union["FunctionDeploymentConfigurationType0", None, Unset] = UNSET
     description: Union[Unset, str] = UNSET
-    enabled: Union[Unset, bool] = UNSET
+    enabled: Union[None, Unset, bool] = UNSET
     environment: Union[Unset, str] = UNSET
     flavors: Union[Unset, List["Flavor"]] = UNSET
     function: Union[Unset, str] = UNSET
+    integration_connections: Union[Unset, List[str]] = UNSET
     kit: Union[Unset, List["FunctionKit"]] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
     parameters: Union[Unset, List["StoreFunctionParameter"]] = UNSET
-    pod_template: Union[Unset, "FunctionDeploymentPodTemplate"] = UNSET
+    pod_template: Union["FunctionDeploymentPodTemplateType0", None, Unset] = UNSET
     policies: Union[Unset, List[str]] = UNSET
     runtime: Union[Unset, "Runtime"] = UNSET
-    serverless_config: Union[Unset, "DeploymentServerlessConfig"] = UNSET
+    serverless_config: Union["DeploymentServerlessConfigType0", None, Unset] = UNSET
     store_id: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
+        from ..models.function_deployment_configuration_type_0 import FunctionDeploymentConfigurationType0
+        from ..models.function_deployment_pod_template_type_0 import FunctionDeploymentPodTemplateType0
         from ..models.labels_type_0 import LabelsType0
 
         created_at = self.created_at
@@ -80,13 +86,21 @@ class FunctionDeployment:
 
         updated_by = self.updated_by
 
-        configuration: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.configuration, Unset):
+        configuration: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.configuration, Unset):
+            configuration = UNSET
+        elif isinstance(self.configuration, FunctionDeploymentConfigurationType0):
             configuration = self.configuration.to_dict()
+        else:
+            configuration = self.configuration
 
         description = self.description
 
-        enabled = self.enabled
+        enabled: Union[None, Unset, bool]
+        if isinstance(self.enabled, Unset):
+            enabled = UNSET
+        else:
+            enabled = self.enabled
 
         environment = self.environment
 
@@ -98,6 +112,10 @@ class FunctionDeployment:
                 flavors.append(componentsschemas_flavors_item)
 
         function = self.function
+
+        integration_connections: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.integration_connections, Unset):
+            integration_connections = self.integration_connections
 
         kit: Union[Unset, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.kit, Unset):
@@ -121,9 +139,13 @@ class FunctionDeployment:
                 parameters_item = parameters_item_data.to_dict()
                 parameters.append(parameters_item)
 
-        pod_template: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.pod_template, Unset):
+        pod_template: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.pod_template, Unset):
+            pod_template = UNSET
+        elif isinstance(self.pod_template, FunctionDeploymentPodTemplateType0):
             pod_template = self.pod_template.to_dict()
+        else:
+            pod_template = self.pod_template
 
         policies: Union[Unset, List[str]] = UNSET
         if not isinstance(self.policies, Unset):
@@ -133,9 +155,13 @@ class FunctionDeployment:
         if not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
-        serverless_config: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.serverless_config, Unset):
+        serverless_config: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.serverless_config, Unset):
+            serverless_config = UNSET
+        elif isinstance(self.serverless_config, DeploymentServerlessConfigType0):
             serverless_config = self.serverless_config.to_dict()
+        else:
+            serverless_config = self.serverless_config
 
         store_id = self.store_id
 
@@ -164,6 +190,8 @@ class FunctionDeployment:
             field_dict["flavors"] = flavors
         if function is not UNSET:
             field_dict["function"] = function
+        if integration_connections is not UNSET:
+            field_dict["integration_connections"] = integration_connections
         if kit is not UNSET:
             field_dict["kit"] = kit
         if labels is not UNSET:
@@ -187,10 +215,10 @@ class FunctionDeployment:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
-        from ..models.deployment_serverless_config import DeploymentServerlessConfig
+        from ..models.deployment_serverless_config_type_0 import DeploymentServerlessConfigType0
         from ..models.flavor import Flavor
-        from ..models.function_deployment_configuration import FunctionDeploymentConfiguration
-        from ..models.function_deployment_pod_template import FunctionDeploymentPodTemplate
+        from ..models.function_deployment_configuration_type_0 import FunctionDeploymentConfigurationType0
+        from ..models.function_deployment_pod_template_type_0 import FunctionDeploymentPodTemplateType0
         from ..models.function_kit import FunctionKit
         from ..models.labels_type_0 import LabelsType0
         from ..models.runtime import Runtime
@@ -205,16 +233,33 @@ class FunctionDeployment:
 
         updated_by = d.pop("updated_by", UNSET)
 
-        _configuration = d.pop("configuration", UNSET)
-        configuration: Union[Unset, FunctionDeploymentConfiguration]
-        if isinstance(_configuration, Unset):
-            configuration = UNSET
-        else:
-            configuration = FunctionDeploymentConfiguration.from_dict(_configuration)
+        def _parse_configuration(data: object) -> Union["FunctionDeploymentConfigurationType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                configuration_type_0 = FunctionDeploymentConfigurationType0.from_dict(data)
+
+                return configuration_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["FunctionDeploymentConfigurationType0", None, Unset], data)
+
+        configuration = _parse_configuration(d.pop("configuration", UNSET))
 
         description = d.pop("description", UNSET)
 
-        enabled = d.pop("enabled", UNSET)
+        def _parse_enabled(data: object) -> Union[None, Unset, bool]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            return cast(Union[None, Unset, bool], data)
+
+        enabled = _parse_enabled(d.pop("enabled", UNSET))
 
         environment = d.pop("environment", UNSET)
 
@@ -226,6 +271,8 @@ class FunctionDeployment:
             flavors.append(componentsschemas_flavors_item)
 
         function = d.pop("function", UNSET)
+
+        integration_connections = cast(List[str], d.pop("integration_connections", UNSET))
 
         kit = []
         _kit = d.pop("kit", UNSET)
@@ -258,12 +305,22 @@ class FunctionDeployment:
 
             parameters.append(parameters_item)
 
-        _pod_template = d.pop("pod_template", UNSET)
-        pod_template: Union[Unset, FunctionDeploymentPodTemplate]
-        if isinstance(_pod_template, Unset):
-            pod_template = UNSET
-        else:
-            pod_template = FunctionDeploymentPodTemplate.from_dict(_pod_template)
+        def _parse_pod_template(data: object) -> Union["FunctionDeploymentPodTemplateType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                pod_template_type_0 = FunctionDeploymentPodTemplateType0.from_dict(data)
+
+                return pod_template_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["FunctionDeploymentPodTemplateType0", None, Unset], data)
+
+        pod_template = _parse_pod_template(d.pop("pod_template", UNSET))
 
         policies = cast(List[str], d.pop("policies", UNSET))
 
@@ -274,12 +331,22 @@ class FunctionDeployment:
         else:
             runtime = Runtime.from_dict(_runtime)
 
-        _serverless_config = d.pop("serverless_config", UNSET)
-        serverless_config: Union[Unset, DeploymentServerlessConfig]
-        if isinstance(_serverless_config, Unset):
-            serverless_config = UNSET
-        else:
-            serverless_config = DeploymentServerlessConfig.from_dict(_serverless_config)
+        def _parse_serverless_config(data: object) -> Union["DeploymentServerlessConfigType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                componentsschemas_deployment_serverless_config_type_0 = DeploymentServerlessConfigType0.from_dict(data)
+
+                return componentsschemas_deployment_serverless_config_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["DeploymentServerlessConfigType0", None, Unset], data)
+
+        serverless_config = _parse_serverless_config(d.pop("serverless_config", UNSET))
 
         store_id = d.pop("store_id", UNSET)
 
@@ -296,6 +363,7 @@ class FunctionDeployment:
             environment=environment,
             flavors=flavors,
             function=function,
+            integration_connections=integration_connections,
             kit=kit,
             labels=labels,
             parameters=parameters,

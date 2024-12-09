@@ -9,11 +9,11 @@ if TYPE_CHECKING:
     from ..models.qps import QPS
 
 
-T = TypeVar("T", bound="ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode")
+T = TypeVar("T", bound="ResourceDeploymentMetricsQueryPerSecondPerRegionPerCodeType0")
 
 
 @_attrs_define
-class ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode:
+class ResourceDeploymentMetricsQueryPerSecondPerRegionPerCodeType0:
     """RPS value (in last 24 hours) per response status code per location, for the model deployment
 
     Attributes:
@@ -49,12 +49,12 @@ class ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode:
         else:
             region = QPS.from_dict(_region)
 
-        resource_deployment_metrics_query_per_second_per_region_per_code = cls(
+        resource_deployment_metrics_query_per_second_per_region_per_code_type_0 = cls(
             region=region,
         )
 
-        resource_deployment_metrics_query_per_second_per_region_per_code.additional_properties = d
-        return resource_deployment_metrics_query_per_second_per_region_per_code
+        resource_deployment_metrics_query_per_second_per_region_per_code_type_0.additional_properties = d
+        return resource_deployment_metrics_query_per_second_per_region_per_code_type_0
 
     @property
     def additional_keys(self) -> list[str]:

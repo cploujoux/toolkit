@@ -5,16 +5,14 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.authentication_provider_organization import AuthenticationProviderOrganization
+from ...models.integration_connection import IntegrationConnection
 from ...types import Response
 
 
-def _get_kwargs(
-    authentication_provider_name: str,
-) -> dict[str, Any]:
+def _get_kwargs() -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/authentication_providers/{authentication_provider_name}/organizations",
+        "url": "/integrations/connections",
     }
 
     return _kwargs
@@ -22,12 +20,12 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[List["AuthenticationProviderOrganization"]]:
+) -> Optional[List["IntegrationConnection"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
         for response_200_item_data in _response_200:
-            response_200_item = AuthenticationProviderOrganization.from_dict(response_200_item_data)
+            response_200_item = IntegrationConnection.from_dict(response_200_item_data)
 
             response_200.append(response_200_item)
 
@@ -40,7 +38,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[List["AuthenticationProviderOrganization"]]:
+) -> Response[List["IntegrationConnection"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,28 +48,22 @@ def _build_response(
 
 
 def sync_detailed(
-    authentication_provider_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["AuthenticationProviderOrganization"]]:
-    """List organizations for an authentication provider
+) -> Response[List["IntegrationConnection"]]:
+    """List integrations connections
 
-     Returns a list of all organizations for an integration by ID.
-
-    Args:
-        authentication_provider_name (str):
+     Returns a list of all connections integrations in the workspace.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['AuthenticationProviderOrganization']]
+        Response[List['IntegrationConnection']]
     """
 
-    kwargs = _get_kwargs(
-        authentication_provider_name=authentication_provider_name,
-    )
+    kwargs = _get_kwargs()
 
     response = client.get_httpx_client().request(
         **kwargs,
@@ -81,54 +73,43 @@ def sync_detailed(
 
 
 def sync(
-    authentication_provider_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["AuthenticationProviderOrganization"]]:
-    """List organizations for an authentication provider
+) -> Optional[List["IntegrationConnection"]]:
+    """List integrations connections
 
-     Returns a list of all organizations for an integration by ID.
-
-    Args:
-        authentication_provider_name (str):
+     Returns a list of all connections integrations in the workspace.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['AuthenticationProviderOrganization']
+        List['IntegrationConnection']
     """
 
     return sync_detailed(
-        authentication_provider_name=authentication_provider_name,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    authentication_provider_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["AuthenticationProviderOrganization"]]:
-    """List organizations for an authentication provider
+) -> Response[List["IntegrationConnection"]]:
+    """List integrations connections
 
-     Returns a list of all organizations for an integration by ID.
-
-    Args:
-        authentication_provider_name (str):
+     Returns a list of all connections integrations in the workspace.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['AuthenticationProviderOrganization']]
+        Response[List['IntegrationConnection']]
     """
 
-    kwargs = _get_kwargs(
-        authentication_provider_name=authentication_provider_name,
-    )
+    kwargs = _get_kwargs()
 
     response = await client.get_async_httpx_client().request(**kwargs)
 
@@ -136,28 +117,23 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    authentication_provider_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["AuthenticationProviderOrganization"]]:
-    """List organizations for an authentication provider
+) -> Optional[List["IntegrationConnection"]]:
+    """List integrations connections
 
-     Returns a list of all organizations for an integration by ID.
-
-    Args:
-        authentication_provider_name (str):
+     Returns a list of all connections integrations in the workspace.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['AuthenticationProviderOrganization']
+        List['IntegrationConnection']
     """
 
     return (
         await asyncio_detailed(
-            authentication_provider_name=authentication_provider_name,
             client=client,
         )
     ).parsed

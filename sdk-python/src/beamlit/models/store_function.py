@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -8,7 +8,7 @@ from ..types import UNSET, Unset
 if TYPE_CHECKING:
     from ..models.store_configuration import StoreConfiguration
     from ..models.store_function_kit import StoreFunctionKit
-    from ..models.store_function_labels import StoreFunctionLabels
+    from ..models.store_function_labels_type_0 import StoreFunctionLabelsType0
     from ..models.store_function_parameter import StoreFunctionParameter
 
 
@@ -29,7 +29,7 @@ class StoreFunction:
         display_name (Union[Unset, str]): Store function display name
         image (Union[Unset, str]): Store function image
         kit (Union[Unset, List['StoreFunctionKit']]): Store function kit
-        labels (Union[Unset, StoreFunctionLabels]): Store function labels
+        labels (Union['StoreFunctionLabelsType0', None, Unset]): Store function labels
         name (Union[Unset, str]): Store function name
         parameters (Union[Unset, List['StoreFunctionParameter']]): Store function parameters
     """
@@ -43,12 +43,14 @@ class StoreFunction:
     display_name: Union[Unset, str] = UNSET
     image: Union[Unset, str] = UNSET
     kit: Union[Unset, List["StoreFunctionKit"]] = UNSET
-    labels: Union[Unset, "StoreFunctionLabels"] = UNSET
+    labels: Union["StoreFunctionLabelsType0", None, Unset] = UNSET
     name: Union[Unset, str] = UNSET
     parameters: Union[Unset, List["StoreFunctionParameter"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.store_function_labels_type_0 import StoreFunctionLabelsType0
+
         created_at = self.created_at
 
         created_by = self.created_by
@@ -77,9 +79,13 @@ class StoreFunction:
                 kit_item = kit_item_data.to_dict()
                 kit.append(kit_item)
 
-        labels: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.labels, Unset):
+        labels: Union[Dict[str, Any], None, Unset]
+        if isinstance(self.labels, Unset):
+            labels = UNSET
+        elif isinstance(self.labels, StoreFunctionLabelsType0):
             labels = self.labels.to_dict()
+        else:
+            labels = self.labels
 
         name = self.name
 
@@ -124,7 +130,7 @@ class StoreFunction:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_configuration import StoreConfiguration
         from ..models.store_function_kit import StoreFunctionKit
-        from ..models.store_function_labels import StoreFunctionLabels
+        from ..models.store_function_labels_type_0 import StoreFunctionLabelsType0
         from ..models.store_function_parameter import StoreFunctionParameter
 
         d = src_dict.copy()
@@ -156,12 +162,22 @@ class StoreFunction:
 
             kit.append(kit_item)
 
-        _labels = d.pop("labels", UNSET)
-        labels: Union[Unset, StoreFunctionLabels]
-        if isinstance(_labels, Unset):
-            labels = UNSET
-        else:
-            labels = StoreFunctionLabels.from_dict(_labels)
+        def _parse_labels(data: object) -> Union["StoreFunctionLabelsType0", None, Unset]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                labels_type_0 = StoreFunctionLabelsType0.from_dict(data)
+
+                return labels_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union["StoreFunctionLabelsType0", None, Unset], data)
+
+        labels = _parse_labels(d.pop("labels", UNSET))
 
         name = d.pop("name", UNSET)
 

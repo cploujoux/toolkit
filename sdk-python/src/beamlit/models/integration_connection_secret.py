@@ -1,30 +1,46 @@
-from typing import Any, Type, TypeVar
+from typing import Any, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="ModelDeploymentPodTemplate")
+from ..types import UNSET, Unset
+
+T = TypeVar("T", bound="IntegrationConnectionSecret")
 
 
 @_attrs_define
-class ModelDeploymentPodTemplate:
-    """The pod template for the deployment. Should be a Kubernetes PodTemplateSpec"""
+class IntegrationConnectionSecret:
+    """Integration secret
 
+    Attributes:
+        api_key (Union[Unset, str]): The API key to use for the integration
+    """
+
+    api_key: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        api_key = self.api_key
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
+        field_dict.update({})
+        if api_key is not UNSET:
+            field_dict["api_key"] = api_key
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         d = src_dict.copy()
-        model_deployment_pod_template = cls()
+        api_key = d.pop("api_key", UNSET)
 
-        model_deployment_pod_template.additional_properties = d
-        return model_deployment_pod_template
+        integration_connection_secret = cls(
+            api_key=api_key,
+        )
+
+        integration_connection_secret.additional_properties = d
+        return integration_connection_secret
 
     @property
     def additional_keys(self) -> list[str]:

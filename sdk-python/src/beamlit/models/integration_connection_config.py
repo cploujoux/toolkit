@@ -3,12 +3,12 @@ from typing import Any, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="FunctionDeploymentConfiguration")
+T = TypeVar("T", bound="IntegrationConnectionConfig")
 
 
 @_attrs_define
-class FunctionDeploymentConfiguration:
-    """Function configuration, this is a key value storage. In your function you can retrieve the value with config[key]"""
+class IntegrationConnectionConfig:
+    """Integration config"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -21,10 +21,10 @@ class FunctionDeploymentConfiguration:
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         d = src_dict.copy()
-        function_deployment_configuration = cls()
+        integration_connection_config = cls()
 
-        function_deployment_configuration.additional_properties = d
-        return function_deployment_configuration
+        integration_connection_config.additional_properties = d
+        return integration_connection_config
 
     @property
     def additional_keys(self) -> list[str]:
