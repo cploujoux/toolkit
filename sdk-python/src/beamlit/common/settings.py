@@ -23,7 +23,6 @@ def get_settings():
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        cli_parse_args=True,
         yaml_file="beamlit.yaml",
         env_prefix="bl_",
     )
