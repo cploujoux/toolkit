@@ -99,6 +99,8 @@ class ModelDeploymentMetrics:
         )
         from ..models.qps import QPS
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         inference_per_second_global = []
         _inference_per_second_global = d.pop("inference_per_second_global", UNSET)

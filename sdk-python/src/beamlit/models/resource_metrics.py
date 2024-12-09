@@ -74,6 +74,8 @@ class ResourceMetrics:
         from ..models.metric import Metric
         from ..models.qps import QPS
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         inference_global = []
         _inference_global = d.pop("inference_global", UNSET)

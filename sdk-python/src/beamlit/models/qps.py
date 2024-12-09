@@ -32,6 +32,8 @@ class QPS:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
         region_code = d.pop("region_code", UNSET)
 

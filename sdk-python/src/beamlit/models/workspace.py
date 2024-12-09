@@ -76,6 +76,8 @@ class Workspace:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.workspace_labels import WorkspaceLabels
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 

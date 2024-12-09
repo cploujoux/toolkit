@@ -88,6 +88,8 @@ class IntegrationModel:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 

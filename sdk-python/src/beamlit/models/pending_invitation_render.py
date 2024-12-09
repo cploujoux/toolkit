@@ -78,6 +78,8 @@ class PendingInvitationRender:
         from ..models.pending_invitation_render_workspace import PendingInvitationRenderWorkspace
         from ..models.pending_invitation_workspace_details import PendingInvitationWorkspaceDetails
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         email = d.pop("email", UNSET)
 

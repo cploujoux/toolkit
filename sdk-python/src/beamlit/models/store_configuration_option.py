@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar, Union, cast
+from typing import Any, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -13,23 +13,18 @@ class StoreConfigurationOption:
     """Store configuration options for a select type configuration
 
     Attributes:
-        if_ (Union[None, Unset, str]): Conditional rendering for the configuration option, example: provider ===
-            'openai'
+        if_ (Union[Unset, str]): Conditional rendering for the configuration option, example: provider === 'openai'
         label (Union[Unset, str]): Store configuration option label
         value (Union[Unset, str]): Store configuration option value
     """
 
-    if_: Union[None, Unset, str] = UNSET
+    if_: Union[Unset, str] = UNSET
     label: Union[Unset, str] = UNSET
     value: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        if_: Union[None, Unset, str]
-        if isinstance(self.if_, Unset):
-            if_ = UNSET
-        else:
-            if_ = self.if_
+        if_ = self.if_
 
         label = self.label
 
@@ -49,16 +44,10 @@ class StoreConfigurationOption:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
-
-        def _parse_if_(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
-
-        if_ = _parse_if_(d.pop("if", UNSET))
+        if_ = d.pop("if", UNSET)
 
         label = d.pop("label", UNSET)
 

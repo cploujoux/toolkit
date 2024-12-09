@@ -27,6 +27,8 @@ class DeploymentConfigurations:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.deployment_configuration import DeploymentConfiguration
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         deployment_configurations = cls()
 

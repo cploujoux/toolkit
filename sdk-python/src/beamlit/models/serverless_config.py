@@ -74,6 +74,8 @@ class ServerlessConfig:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
         last_pod_retention_period = d.pop("last_pod_retention_period", UNSET)
 

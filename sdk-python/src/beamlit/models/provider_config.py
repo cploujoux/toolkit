@@ -54,6 +54,8 @@ class ProviderConfig:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.runtime import Runtime
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         filename = d.pop("filename", UNSET)
 

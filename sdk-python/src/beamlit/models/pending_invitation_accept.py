@@ -46,6 +46,8 @@ class PendingInvitationAccept:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.workspace import Workspace
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         email = d.pop("email", UNSET)
 

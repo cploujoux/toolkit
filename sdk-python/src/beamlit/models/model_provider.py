@@ -110,6 +110,8 @@ class ModelProvider:
         from ..models.labels_type_0 import LabelsType0
         from ..models.provider_config import ProviderConfig
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 

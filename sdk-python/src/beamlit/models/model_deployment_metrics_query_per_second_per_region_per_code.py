@@ -41,6 +41,8 @@ class ModelDeploymentMetricsQueryPerSecondPerRegionPerCode:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.qps import QPS
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         _region = d.pop("region", UNSET)
         region: Union[Unset, QPS]

@@ -1,11 +1,12 @@
 from typing import List
 
-from beamlit.api.models import list_models
+from beamlit.api.models import get_model_deployment
 from beamlit.authentication import (RunClientWithCredentials,
                                     load_credentials_from_settings,
                                     new_client_with_credentials)
 from beamlit.common.settings import init, init_agent
 from beamlit.models.model import Model
+from beamlit.models.model_deployment import ModelDeployment
 from beamlit.run import RunClient
 
 settings = init()
@@ -16,10 +17,8 @@ client_config = RunClientWithCredentials(
     workspace=settings.workspace,
 )
 client = new_client_with_credentials(client_config)
+model_deployment: ModelDeployment = get_model_deployment.sync("all-minilm-l6-v2", "production", client=client)
 init_agent(client=client)
-models: List[Model] = list_models.sync(client=client)
-print(settings.agent_model)
-
 run_client = RunClient(client=client)
 response = run_client.run(
     "function",

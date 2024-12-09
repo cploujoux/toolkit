@@ -20,6 +20,8 @@ class IntegrationConfig:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
         integration_config = cls()
 

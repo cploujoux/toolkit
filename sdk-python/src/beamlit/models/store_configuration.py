@@ -20,7 +20,7 @@ class StoreConfiguration:
         available_models (Union[Unset, List[str]]): Available models for the configuration
         description (Union[Unset, str]): Store configuration description
         display_name (Union[Unset, str]): Store configuration display name
-        if_ (Union[None, Unset, str]): Conditional rendering for the configuration, example: provider === 'openai'
+        if_ (Union[Unset, str]): Conditional rendering for the configuration, example: provider === 'openai'
         name (Union[Unset, str]): Store configuration name
         options (Union[Unset, List['StoreConfigurationOption']]):
         required (Union[Unset, bool]): Store configuration required
@@ -31,7 +31,7 @@ class StoreConfiguration:
     available_models: Union[Unset, List[str]] = UNSET
     description: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
-    if_: Union[None, Unset, str] = UNSET
+    if_: Union[Unset, str] = UNSET
     name: Union[Unset, str] = UNSET
     options: Union[Unset, List["StoreConfigurationOption"]] = UNSET
     required: Union[Unset, bool] = UNSET
@@ -48,11 +48,7 @@ class StoreConfiguration:
 
         display_name = self.display_name
 
-        if_: Union[None, Unset, str]
-        if isinstance(self.if_, Unset):
-            if_ = UNSET
-        else:
-            if_ = self.if_
+        if_ = self.if_
 
         name = self.name
 
@@ -97,6 +93,8 @@ class StoreConfiguration:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_configuration_option import StoreConfigurationOption
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         available_models = cast(List[str], d.pop("available_models", UNSET))
 
@@ -104,14 +102,7 @@ class StoreConfiguration:
 
         display_name = d.pop("display_name", UNSET)
 
-        def _parse_if_(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
-
-        if_ = _parse_if_(d.pop("if", UNSET))
+        if_ = d.pop("if", UNSET)
 
         name = d.pop("name", UNSET)
 

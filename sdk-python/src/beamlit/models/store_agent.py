@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -6,7 +6,7 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.store_agent_labels_type_0 import StoreAgentLabelsType0
+    from ..models.store_agent_labels import StoreAgentLabels
     from ..models.store_configuration import StoreConfiguration
 
 
@@ -26,7 +26,7 @@ class StoreAgent:
         description (Union[Unset, str]): Store agent description
         display_name (Union[Unset, str]): Store agent display name
         image (Union[Unset, str]): Store agent image
-        labels (Union['StoreAgentLabelsType0', None, Unset]): Store agent labels
+        labels (Union[Unset, StoreAgentLabels]): Store agent labels
         name (Union[Unset, str]): Store agent name
     """
 
@@ -38,13 +38,11 @@ class StoreAgent:
     description: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     image: Union[Unset, str] = UNSET
-    labels: Union["StoreAgentLabelsType0", None, Unset] = UNSET
+    labels: Union[Unset, "StoreAgentLabels"] = UNSET
     name: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.store_agent_labels_type_0 import StoreAgentLabelsType0
-
         created_at = self.created_at
 
         created_by = self.created_by
@@ -66,13 +64,9 @@ class StoreAgent:
 
         image = self.image
 
-        labels: Union[Dict[str, Any], None, Unset]
-        if isinstance(self.labels, Unset):
-            labels = UNSET
-        elif isinstance(self.labels, StoreAgentLabelsType0):
+        labels: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
-        else:
-            labels = self.labels
 
         name = self.name
 
@@ -104,9 +98,11 @@ class StoreAgent:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
-        from ..models.store_agent_labels_type_0 import StoreAgentLabelsType0
+        from ..models.store_agent_labels import StoreAgentLabels
         from ..models.store_configuration import StoreConfiguration
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 
@@ -129,22 +125,12 @@ class StoreAgent:
 
         image = d.pop("image", UNSET)
 
-        def _parse_labels(data: object) -> Union["StoreAgentLabelsType0", None, Unset]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, dict):
-                    raise TypeError()
-                labels_type_0 = StoreAgentLabelsType0.from_dict(data)
-
-                return labels_type_0
-            except:  # noqa: E722
-                pass
-            return cast(Union["StoreAgentLabelsType0", None, Unset], data)
-
-        labels = _parse_labels(d.pop("labels", UNSET))
+        _labels = d.pop("labels", UNSET)
+        labels: Union[Unset, StoreAgentLabels]
+        if isinstance(_labels, Unset):
+            labels = UNSET
+        else:
+            labels = StoreAgentLabels.from_dict(_labels)
 
         name = d.pop("name", UNSET)
 

@@ -13,8 +13,13 @@ def generate_kit_function_code(settings: Settings, function: FunctionDeployment,
     export_code = ""
     code = ""
     for kit in kit:
-        body = {"function": kit.name, "workspace": settings.workspace, **kit.to_dict()}
-        new_code, export = generate_function_code(body, force_name_in_endpoint=function.function, kit=True)
+        fn = FunctionDeployment(
+            function=kit.name,
+            workspace=settings.workspace,
+            parameters=kit.parameters,
+            description=kit.description,
+        )
+        new_code, export = generate_function_code(settings, fn, force_name_in_endpoint=function.function, kit=True)
         code += new_code
         export_code += export
     return code, export_code
@@ -141,7 +146,7 @@ run_client = RunClient(client=client)
     if settings.agent_functions and len(settings.agent_functions) > 0:
         for function_config in settings.agent_functions:
             if function_config.kit and len(function_config.kit) > 0:
-                new_code, export = generate_kit_function_code(settings, function_config)
+                new_code, export = generate_kit_function_code(settings, function_config, function_config.kit)
                 code += new_code
                 export_code += export
             else:

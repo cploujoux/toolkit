@@ -67,6 +67,8 @@ class LocationResponse:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.flavor import Flavor
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         continent = d.pop("continent", UNSET)
 

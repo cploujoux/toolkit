@@ -6,7 +6,7 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.runtime_readiness_probe_type_0 import RuntimeReadinessProbeType0
+    from ..models.runtime_readiness_probe import RuntimeReadinessProbe
     from ..models.runtime_resources import RuntimeResources
 
 
@@ -24,8 +24,7 @@ class Runtime:
             Kubernetes EnvVar types
         image (Union[Unset, str]): The Docker image for the deployment
         model (Union[Unset, str]): The slug name of the origin model. Only used if the deployment is a ModelDeployment
-        readiness_probe (Union['RuntimeReadinessProbeType0', None, Unset]): The readiness probe. Should be a Kubernetes
-            Probe type
+        readiness_probe (Union[Unset, RuntimeReadinessProbe]): The readiness probe. Should be a Kubernetes Probe type
         resources (Union[Unset, RuntimeResources]): The resources for the deployment. Should be a Kubernetes
             ResourceRequirements type
         type (Union[Unset, str]): The type of origin for the deployment
@@ -36,14 +35,12 @@ class Runtime:
     envs: Union[Unset, List[Any]] = UNSET
     image: Union[Unset, str] = UNSET
     model: Union[Unset, str] = UNSET
-    readiness_probe: Union["RuntimeReadinessProbeType0", None, Unset] = UNSET
+    readiness_probe: Union[Unset, "RuntimeReadinessProbe"] = UNSET
     resources: Union[Unset, "RuntimeResources"] = UNSET
     type: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.runtime_readiness_probe_type_0 import RuntimeReadinessProbeType0
-
         args: Union[Unset, List[Any]] = UNSET
         if not isinstance(self.args, Unset):
             args = self.args
@@ -60,13 +57,9 @@ class Runtime:
 
         model = self.model
 
-        readiness_probe: Union[Dict[str, Any], None, Unset]
-        if isinstance(self.readiness_probe, Unset):
-            readiness_probe = UNSET
-        elif isinstance(self.readiness_probe, RuntimeReadinessProbeType0):
+        readiness_probe: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.readiness_probe, Unset):
             readiness_probe = self.readiness_probe.to_dict()
-        else:
-            readiness_probe = self.readiness_probe
 
         resources: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.resources, Unset):
@@ -98,9 +91,11 @@ class Runtime:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
-        from ..models.runtime_readiness_probe_type_0 import RuntimeReadinessProbeType0
+        from ..models.runtime_readiness_probe import RuntimeReadinessProbe
         from ..models.runtime_resources import RuntimeResources
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         args = cast(List[Any], d.pop("args", UNSET))
 
@@ -112,22 +107,12 @@ class Runtime:
 
         model = d.pop("model", UNSET)
 
-        def _parse_readiness_probe(data: object) -> Union["RuntimeReadinessProbeType0", None, Unset]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, dict):
-                    raise TypeError()
-                readiness_probe_type_0 = RuntimeReadinessProbeType0.from_dict(data)
-
-                return readiness_probe_type_0
-            except:  # noqa: E722
-                pass
-            return cast(Union["RuntimeReadinessProbeType0", None, Unset], data)
-
-        readiness_probe = _parse_readiness_probe(d.pop("readiness_probe", UNSET))
+        _readiness_probe = d.pop("readiness_probe", UNSET)
+        readiness_probe: Union[Unset, RuntimeReadinessProbe]
+        if isinstance(_readiness_probe, Unset):
+            readiness_probe = UNSET
+        else:
+            readiness_probe = RuntimeReadinessProbe.from_dict(_readiness_probe)
 
         _resources = d.pop("resources", UNSET)
         resources: Union[Unset, RuntimeResources]

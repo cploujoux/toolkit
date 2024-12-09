@@ -61,6 +61,8 @@ class IncreaseAndRateMetric:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.metric import Metric
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         inference_global = d.pop("inference_global", UNSET)
 

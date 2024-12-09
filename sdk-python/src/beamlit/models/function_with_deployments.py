@@ -101,6 +101,8 @@ class FunctionWithDeployments:
         from ..models.function_deployment import FunctionDeployment
         from ..models.labels_type_0 import LabelsType0
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 

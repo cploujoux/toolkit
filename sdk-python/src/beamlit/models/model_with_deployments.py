@@ -101,6 +101,8 @@ class ModelWithDeployments:
         from ..models.labels_type_0 import LabelsType0
         from ..models.model_deployment import ModelDeployment
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 

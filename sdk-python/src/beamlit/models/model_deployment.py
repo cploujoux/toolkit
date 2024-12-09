@@ -6,9 +6,12 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.deployment_serverless_config import DeploymentServerlessConfig
     from ..models.flavor import Flavor
     from ..models.labels_type_0 import LabelsType0
-    from ..models.model_deployment_pod_template_type_0 import ModelDeploymentPodTemplateType0
+    from ..models.model_deployment_pod_template import ModelDeploymentPodTemplate
+    from ..models.model_provider_ref import ModelProviderRef
+    from ..models.runtime import Runtime
 
 
 T = TypeVar("T", bound="ModelDeployment")
@@ -23,20 +26,20 @@ class ModelDeployment:
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
-        enabled (Union[None, Unset, bool]): If false, the model deployment will not be active nor serve requests
+        enabled (Union[Unset, bool]): If false, the model deployment will not be active nor serve requests
         environment (Union[Unset, str]): The name of the environment in which the model deployment is deployed
         flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
         integration_connections (Union[Unset, List[str]]):
         labels (Union['LabelsType0', None, Unset]): Labels
-        metric_port (Union[None, Unset, int]): The port to serve the metrics on
+        metric_port (Union[Unset, int]): The port to serve the metrics on
         model (Union[Unset, str]): The name of the parent model
-        model_provider_ref (Union[Unset, Any]): The reference for the origin of the model
-        pod_template (Union['ModelDeploymentPodTemplateType0', None, Unset]): The pod template for the deployment.
-            Should be a Kubernetes PodTemplateSpec
+        model_provider_ref (Union[Unset, ModelProviderRef]): Reference to a model provider
+        pod_template (Union[Unset, ModelDeploymentPodTemplate]): The pod template for the deployment. Should be a
+            Kubernetes PodTemplateSpec
         policies (Union[Unset, List[str]]):
-        runtime (Union[Unset, Any]): Configurations that describe which model is being served and how it is served
-        serverless_config (Union[Unset, Any]): The configuration for scaling the model deployment
-        serving_port (Union[None, Unset, int]): The port to serve the model on
+        runtime (Union[Unset, Runtime]): Set of configurations for a deployment
+        serverless_config (Union[Unset, DeploymentServerlessConfig]): Configuration for a serverless deployment
+        serving_port (Union[Unset, int]): The port to serve the model on
         workspace (Union[Unset, str]): The workspace the model deployment belongs to
     """
 
@@ -44,25 +47,24 @@ class ModelDeployment:
     created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
-    enabled: Union[None, Unset, bool] = UNSET
+    enabled: Union[Unset, bool] = UNSET
     environment: Union[Unset, str] = UNSET
     flavors: Union[Unset, List["Flavor"]] = UNSET
     integration_connections: Union[Unset, List[str]] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
-    metric_port: Union[None, Unset, int] = UNSET
+    metric_port: Union[Unset, int] = UNSET
     model: Union[Unset, str] = UNSET
-    model_provider_ref: Union[Unset, Any] = UNSET
-    pod_template: Union["ModelDeploymentPodTemplateType0", None, Unset] = UNSET
+    model_provider_ref: Union[Unset, "ModelProviderRef"] = UNSET
+    pod_template: Union[Unset, "ModelDeploymentPodTemplate"] = UNSET
     policies: Union[Unset, List[str]] = UNSET
-    runtime: Union[Unset, Any] = UNSET
-    serverless_config: Union[Unset, Any] = UNSET
-    serving_port: Union[None, Unset, int] = UNSET
+    runtime: Union[Unset, "Runtime"] = UNSET
+    serverless_config: Union[Unset, "DeploymentServerlessConfig"] = UNSET
+    serving_port: Union[Unset, int] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.labels_type_0 import LabelsType0
-        from ..models.model_deployment_pod_template_type_0 import ModelDeploymentPodTemplateType0
 
         created_at = self.created_at
 
@@ -72,11 +74,7 @@ class ModelDeployment:
 
         updated_by = self.updated_by
 
-        enabled: Union[None, Unset, bool]
-        if isinstance(self.enabled, Unset):
-            enabled = UNSET
-        else:
-            enabled = self.enabled
+        enabled = self.enabled
 
         environment = self.environment
 
@@ -99,37 +97,31 @@ class ModelDeployment:
         else:
             labels = self.labels
 
-        metric_port: Union[None, Unset, int]
-        if isinstance(self.metric_port, Unset):
-            metric_port = UNSET
-        else:
-            metric_port = self.metric_port
+        metric_port = self.metric_port
 
         model = self.model
 
-        model_provider_ref = self.model_provider_ref
+        model_provider_ref: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.model_provider_ref, Unset):
+            model_provider_ref = self.model_provider_ref.to_dict()
 
-        pod_template: Union[Dict[str, Any], None, Unset]
-        if isinstance(self.pod_template, Unset):
-            pod_template = UNSET
-        elif isinstance(self.pod_template, ModelDeploymentPodTemplateType0):
+        pod_template: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.pod_template, Unset):
             pod_template = self.pod_template.to_dict()
-        else:
-            pod_template = self.pod_template
 
         policies: Union[Unset, List[str]] = UNSET
         if not isinstance(self.policies, Unset):
             policies = self.policies
 
-        runtime = self.runtime
+        runtime: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.runtime, Unset):
+            runtime = self.runtime.to_dict()
 
-        serverless_config = self.serverless_config
+        serverless_config: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.serverless_config, Unset):
+            serverless_config = self.serverless_config.to_dict()
 
-        serving_port: Union[None, Unset, int]
-        if isinstance(self.serving_port, Unset):
-            serving_port = UNSET
-        else:
-            serving_port = self.serving_port
+        serving_port = self.serving_port
 
         workspace = self.workspace
 
@@ -177,10 +169,15 @@ class ModelDeployment:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+        from ..models.deployment_serverless_config import DeploymentServerlessConfig
         from ..models.flavor import Flavor
         from ..models.labels_type_0 import LabelsType0
-        from ..models.model_deployment_pod_template_type_0 import ModelDeploymentPodTemplateType0
+        from ..models.model_deployment_pod_template import ModelDeploymentPodTemplate
+        from ..models.model_provider_ref import ModelProviderRef
+        from ..models.runtime import Runtime
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 
@@ -190,14 +187,7 @@ class ModelDeployment:
 
         updated_by = d.pop("updated_by", UNSET)
 
-        def _parse_enabled(data: object) -> Union[None, Unset, bool]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, bool], data)
-
-        enabled = _parse_enabled(d.pop("enabled", UNSET))
+        enabled = d.pop("enabled", UNSET)
 
         environment = d.pop("environment", UNSET)
 
@@ -227,50 +217,41 @@ class ModelDeployment:
 
         labels = _parse_labels(d.pop("labels", UNSET))
 
-        def _parse_metric_port(data: object) -> Union[None, Unset, int]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, int], data)
-
-        metric_port = _parse_metric_port(d.pop("metric_port", UNSET))
+        metric_port = d.pop("metric_port", UNSET)
 
         model = d.pop("model", UNSET)
 
-        model_provider_ref = d.pop("model_provider_ref", UNSET)
+        _model_provider_ref = d.pop("model_provider_ref", UNSET)
+        model_provider_ref: Union[Unset, ModelProviderRef]
+        if isinstance(_model_provider_ref, Unset):
+            model_provider_ref = UNSET
+        else:
+            model_provider_ref = ModelProviderRef.from_dict(_model_provider_ref)
 
-        def _parse_pod_template(data: object) -> Union["ModelDeploymentPodTemplateType0", None, Unset]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, dict):
-                    raise TypeError()
-                pod_template_type_0 = ModelDeploymentPodTemplateType0.from_dict(data)
-
-                return pod_template_type_0
-            except:  # noqa: E722
-                pass
-            return cast(Union["ModelDeploymentPodTemplateType0", None, Unset], data)
-
-        pod_template = _parse_pod_template(d.pop("pod_template", UNSET))
+        _pod_template = d.pop("pod_template", UNSET)
+        pod_template: Union[Unset, ModelDeploymentPodTemplate]
+        if isinstance(_pod_template, Unset):
+            pod_template = UNSET
+        else:
+            pod_template = ModelDeploymentPodTemplate.from_dict(_pod_template)
 
         policies = cast(List[str], d.pop("policies", UNSET))
 
-        runtime = d.pop("runtime", UNSET)
+        _runtime = d.pop("runtime", UNSET)
+        runtime: Union[Unset, Runtime]
+        if isinstance(_runtime, Unset):
+            runtime = UNSET
+        else:
+            runtime = Runtime.from_dict(_runtime)
 
-        serverless_config = d.pop("serverless_config", UNSET)
+        _serverless_config = d.pop("serverless_config", UNSET)
+        serverless_config: Union[Unset, DeploymentServerlessConfig]
+        if isinstance(_serverless_config, Unset):
+            serverless_config = UNSET
+        else:
+            serverless_config = DeploymentServerlessConfig.from_dict(_serverless_config)
 
-        def _parse_serving_port(data: object) -> Union[None, Unset, int]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, int], data)
-
-        serving_port = _parse_serving_port(d.pop("serving_port", UNSET))
+        serving_port = d.pop("serving_port", UNSET)
 
         workspace = d.pop("workspace", UNSET)
 

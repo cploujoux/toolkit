@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     ) -> Tuple[PydanticBaseSettingsSource, ...]:
         return (env_settings, dotenv_settings, file_secret_settings, YamlConfigSettingsSource(settings_cls), init_settings, )
 
-def init_agent(client: AuthenticatedClient):
+def init_agent(client: AuthenticatedClient, destination: str = f"{os.getcwd()}/src/beamlit_generated.py"):
     from beamlit.api.agents import get_agent_deployment
     from beamlit.common.generate import generate
 
@@ -88,10 +88,6 @@ def init_agent(client: AuthenticatedClient):
     if agent_deployment.model:
         model_deployment = get_model_deployment.sync(agent_deployment.model, env , client=client)
         SETTINGS.agent_model = model_deployment
-
-
-    destination = f"{os.getcwd()}/src/beamlit_generated.py"
-
 
     content_generate = generate(destination, dry_run=True)
     compared_content = None

@@ -57,6 +57,8 @@ class FunctionKit:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_function_parameter import StoreFunctionParameter
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         description = d.pop("description", UNSET)
 

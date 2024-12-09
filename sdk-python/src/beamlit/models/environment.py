@@ -96,6 +96,8 @@ class Environment:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.labels_type_0 import LabelsType0
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 

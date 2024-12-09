@@ -87,6 +87,8 @@ class Metrics:
         from ..models.increase_and_rate_metric import IncreaseAndRateMetric
         from ..models.metric import Metric
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         inference_global = d.pop("inference_global", UNSET)
 

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -22,13 +22,13 @@ class AgentDeploymentHistory:
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         agent (Union[Unset, str]): Agent name
-        end (Union[None, Unset, str]): End time
+        end (Union[Unset, str]): End time
         environment (Union[Unset, str]): Environment name
         events (Union[Unset, List['AgentDeploymentHistoryEvent']]): Events
         request_id (Union[Unset, str]): Request ID
-        start (Union[None, Unset, str]): Start time
+        start (Union[Unset, str]): Start time
         status (Union[Unset, str]): Status, eg: running, success, failed
-        took (Union[None, Unset, int]): Number of milliseconds it took to complete the event
+        took (Union[Unset, int]): Number of milliseconds it took to complete the event
         workspace (Union[Unset, str]): The workspace the agent deployment belongs to
     """
 
@@ -37,13 +37,13 @@ class AgentDeploymentHistory:
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     agent: Union[Unset, str] = UNSET
-    end: Union[None, Unset, str] = UNSET
+    end: Union[Unset, str] = UNSET
     environment: Union[Unset, str] = UNSET
     events: Union[Unset, List["AgentDeploymentHistoryEvent"]] = UNSET
     request_id: Union[Unset, str] = UNSET
-    start: Union[None, Unset, str] = UNSET
+    start: Union[Unset, str] = UNSET
     status: Union[Unset, str] = UNSET
-    took: Union[None, Unset, int] = UNSET
+    took: Union[Unset, int] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -58,11 +58,7 @@ class AgentDeploymentHistory:
 
         agent = self.agent
 
-        end: Union[None, Unset, str]
-        if isinstance(self.end, Unset):
-            end = UNSET
-        else:
-            end = self.end
+        end = self.end
 
         environment = self.environment
 
@@ -75,19 +71,11 @@ class AgentDeploymentHistory:
 
         request_id = self.request_id
 
-        start: Union[None, Unset, str]
-        if isinstance(self.start, Unset):
-            start = UNSET
-        else:
-            start = self.start
+        start = self.start
 
         status = self.status
 
-        took: Union[None, Unset, int]
-        if isinstance(self.took, Unset):
-            took = UNSET
-        else:
-            took = self.took
+        took = self.took
 
         workspace = self.workspace
 
@@ -127,6 +115,8 @@ class AgentDeploymentHistory:
     def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
         from ..models.agent_deployment_history_event import AgentDeploymentHistoryEvent
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("created_at", UNSET)
 
@@ -138,14 +128,7 @@ class AgentDeploymentHistory:
 
         agent = d.pop("agent", UNSET)
 
-        def _parse_end(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
-
-        end = _parse_end(d.pop("end", UNSET))
+        end = d.pop("end", UNSET)
 
         environment = d.pop("environment", UNSET)
 
@@ -158,25 +141,11 @@ class AgentDeploymentHistory:
 
         request_id = d.pop("request_id", UNSET)
 
-        def _parse_start(data: object) -> Union[None, Unset, str]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, str], data)
-
-        start = _parse_start(d.pop("start", UNSET))
+        start = d.pop("start", UNSET)
 
         status = d.pop("status", UNSET)
 
-        def _parse_took(data: object) -> Union[None, Unset, int]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[None, Unset, int], data)
-
-        took = _parse_took(d.pop("took", UNSET))
+        took = d.pop("took", UNSET)
 
         workspace = d.pop("workspace", UNSET)
 
