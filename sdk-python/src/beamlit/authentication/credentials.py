@@ -116,7 +116,7 @@ def load_credentials(workspace_name: str) -> Credentials:
             return workspace.credentials
     return Credentials()
 
-def load_credentials_from_config(config: Settings) -> Credentials:
+def load_credentials_from_settings(config: Settings) -> Credentials:
     return Credentials(
         api_key=config.api_key,
         client_credentials=config.client_credentials

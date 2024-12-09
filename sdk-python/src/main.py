@@ -2,14 +2,14 @@ from typing import List
 
 from beamlit.api.models import list_models
 from beamlit.authentication import (RunClientWithCredentials,
-                                    load_credentials_from_config,
+                                    load_credentials_from_settings,
                                     new_client_with_credentials)
 from beamlit.common.settings import init, init_agent
 from beamlit.models.model import Model
 from beamlit.run import RunClient
 
 settings = init()
-credentials = load_credentials_from_config(settings)
+credentials = load_credentials_from_settings(settings)
 
 client_config = RunClientWithCredentials(
     credentials=credentials,

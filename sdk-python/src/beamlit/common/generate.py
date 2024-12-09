@@ -118,14 +118,14 @@ from langchain_core.callbacks import CallbackManagerForToolRun
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 from beamlit.authentication import (RunClientWithCredentials,
-                                    load_credentials_from_config,
+                                    load_credentials_from_settings,
                                     new_client_with_credentials)
 from beamlit.common.settings import get_settings
 from beamlit.run import RunClient
 
 logger = getLogger(__name__)
 settings = get_settings()
-credentials = load_credentials_from_config(settings)
+credentials = load_credentials_from_settings(settings)
 
 client_config = RunClientWithCredentials(
     credentials=credentials,
