@@ -23,7 +23,27 @@ class ClientCredentials(Auth):
         self.workspace_name = workspace_name
         self.base_url = base_url
 
+    def get_headers(self):
+        err = self.refresh_if_needed()
+        if err:
+            raise err
+
+        return {
+            'X-Beamlit-Authorization': f'Bearer {self.credentials.access_token}',
+            'X-Beamlit-Workspace': self.workspace_name
+        }
+
     def refresh_if_needed(self) -> Optional[Exception]:
+        settings = get_settings()
+        if self.credentials.client_credentials and not self.credentials.refresh_token:
+            headers = { "Authorization": f"Basic {self.credentials.client_credentials}" }
+            body = { "grant_type": "client_credentials" }
+            response = requests.post(f"{settings.base_url}/oauth/token", headers=headers, json=body)
+            response.raise_for_status()
+            self.credentials.access_token = response.json()['access_token']
+            self.credentials.refresh_token = response.json()['refresh_token']
+            self.credentials.expires_in = response.json()['expires_in']
+
         # Need to refresh token if expires in less than 10 minutes
         parts = self.credentials.access_token.split('.')
         if len(parts) != 3:
@@ -42,15 +62,6 @@ class ClientCredentials(Auth):
         return None
 
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
-        settings = get_settings()
-        if self.credentials.client_credentials and not self.credentials.refresh_token:
-            headers = { "Authorization": f"Basic {self.credentials.client_credentials}" }
-            body = { "grant_type": "client_credentials" }
-            response = requests.post(f"{settings.base_url}/oauth/token", headers=headers, json=body)
-            response.raise_for_status()
-            self.credentials.access_token = response.json()['access_token']
-            self.credentials.refresh_token = response.json()['refresh_token']
-            self.credentials.expires_in = response.json()['expires_in']
         err = self.refresh_if_needed()
         if err:
             return err

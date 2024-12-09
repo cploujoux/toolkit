@@ -14,6 +14,7 @@ class Credentials:
     expires_in: int = 0
     device_code: str = ""
     client_credentials: str = ""
+
 @dataclass
 class WorkspaceConfig:
     name: str

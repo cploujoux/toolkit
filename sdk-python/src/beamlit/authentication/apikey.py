@@ -8,6 +8,12 @@ class ApiKeyProvider(Auth):
         self.credentials = credentials
         self.workspace_name = workspace_name
 
+    def get_headers(self):
+        return {
+            'X-Beamlit-Api-Key': self.credentials.api_key,
+            'X-Beamlit-Workspace': self.workspace_name
+        }
+
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
         request.headers['X-Beamlit-Api-Key'] = self.credentials.api_key
         request.headers['X-Beamlit-Workspace'] = self.workspace_name

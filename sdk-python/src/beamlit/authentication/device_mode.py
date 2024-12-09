@@ -2,7 +2,7 @@ import base64
 import json
 import time
 from dataclasses import dataclass
-from typing import Generator, Optional
+from typing import Dict, Generator, Optional
 
 from httpx import Auth, Request, Response, post
 
@@ -44,6 +44,15 @@ class BearerToken(Auth):
         self.credentials = credentials
         self.workspace_name = workspace_name
         self.base_url = base_url
+
+    def get_headers(self) -> Dict[str, str]:
+        err = self.refresh_if_needed()
+        if err:
+            raise err
+        return {
+            'X-Beamlit-Authorization': f'Bearer {self.credentials.access_token}',
+            'X-Beamlit-Workspace': self.workspace_name
+        }
 
     def refresh_if_needed(self) -> Optional[Exception]:
         # Need to refresh token if expires in less than 10 minutes

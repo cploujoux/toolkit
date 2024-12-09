@@ -19,6 +19,8 @@ class ColoredFormatter(logging.Formatter):
 def init(log_level: str):
     logging.getLogger("uvicorn.access").handlers.clear()
     logging.getLogger("uvicorn.access").propagate = False
+    logging.getLogger("uvicorn.error").handlers.clear()
+    logging.getLogger("uvicorn.error").propagate = False
     logging.getLogger("httpx").handlers.clear()
     logging.getLogger("httpx").propagate = False
 
