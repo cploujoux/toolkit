@@ -38,4 +38,8 @@ lint:
 install:
 	uv pip install openapi-python-client
 
+tag:
+	git tag v$(ARGS)
+	git push origin v$(ARGS)
+
 .PHONY: sdk sdk-python sdk-ts
