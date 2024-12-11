@@ -1,31 +1,39 @@
 package cli
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/user"
 	"path/filepath"
+	"slices"
 	"text/template"
 
+	"github.com/beamlit/toolkit/sdk"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
+// CreateAgentAppOptions contains all the configuration options needed to create a new agent app.
 type CreateAgentAppOptions struct {
-	Directory          string
-	ProjectName        string
-	ProjectDescription string
-	Model              string
-	Template           string
-	Author             string
-	License            string
-	Features           []string
-	Ruff               string
+	Directory          string   // Target directory for the new agent app
+	ProjectName        string   // Name of the project
+	ProjectDescription string   // Description of the project
+	Model              string   // Selected AI model
+	Template           string   // Template to use for the project
+	Author             string   // Author of the project
+	License            string   // License type (mit, apache, gpl)
+	Features           []string // Additional features to include
+	Ruff               string   // Ruff configuration
 }
 
+// getTheme returns a custom theme configuration for the CLI interface using the Dracula color scheme.
+// It customizes various UI elements like buttons, text inputs, and selection indicators.
 func getTheme() *huh.Theme {
 	t := huh.ThemeBase()
 	var (
@@ -71,6 +79,56 @@ func getTheme() *huh.Theme {
 	return t
 }
 
+// retrieveModels fetches and returns a list of available model deployments from the API.
+// It filters the models to only include supported runtime types (openai, anthropic, mistral, etc.).
+// Returns an error if the API calls fail or if there are parsing issues.
+func retrieveModels() ([]sdk.ModelDeployment, error) {
+	var modelDeployments []sdk.ModelDeployment
+	ctx := context.Background()
+	res, err := client.ListModels(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var models []sdk.Model
+	err = json.Unmarshal(body, &models)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, model := range models {
+		res, err := client.GetModelDeployment(ctx, *model.Name, "production")
+		if err != nil {
+			return nil, err
+		}
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return nil, err
+		}
+		var modelDeployment sdk.ModelDeployment
+		err = json.Unmarshal(body, &modelDeployment)
+		if err != nil {
+			return nil, err
+		}
+		if modelDeployment.Runtime != nil {
+			runtimeType := *modelDeployment.Runtime.Type
+			supportedRuntimes := []string{"openai", "anthropic", "mistral", "cohere", "xai", "vertex", "bedrock"}
+			if slices.Contains(supportedRuntimes, runtimeType) {
+				modelDeployments = append(modelDeployments, modelDeployment)
+			}
+		}
+	}
+	return modelDeployments, nil
+}
+
+// promptCreateAgentApp displays an interactive form to collect user input for creating a new agent app.
+// It prompts for project name, model selection, template, author, license, and additional features.
+// Takes a directory string parameter and returns a CreateAgentAppOptions struct with the user's selections.
 func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 	var (
 		projectName string
@@ -94,14 +152,28 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 				Title("Project Name").
 				Description("Name of your agent app").
 				Value(&projectName),
-			huh.NewInput().
+			huh.NewSelect[string]().
 				Title("Beamlit Model").
 				Description("Model to use for your agent app").
+				Height(5).
+				OptionsFunc(func() []huh.Option[string] {
+					options := []huh.Option[string]{}
+					models, err := retrieveModels()
+					if err != nil {
+						return options
+					}
+					for _, model := range models {
+						options = append(options, huh.NewOption(*model.Model, *model.Model))
+					}
+					return options
+				}, &model).
 				Value(&model),
 			huh.NewInput().
 				Title("Template").
 				Description("Template to use for your agent app").
 				Value(&template),
+		),
+		huh.NewGroup(
 			huh.NewInput().
 				Title("Author").
 				Value(&author),
@@ -140,6 +212,13 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 	}
 }
 
+// createAgentApp handles the actual creation of the agent app based on the provided options.
+// It performs the following steps:
+// 1. Creates the project directory
+// 2. Clones the templates repository
+// 3. Processes template files
+// 4. Installs dependencies using uv sync
+// Returns an error if any step fails.
 func createAgentApp(opts CreateAgentAppOptions) error {
 	// Create project directory
 	if err := os.MkdirAll(opts.Directory, 0755); err != nil {
@@ -212,6 +291,10 @@ func createAgentApp(opts CreateAgentAppOptions) error {
 	return nil
 }
 
+// CreateAgentAppCmd returns a cobra.Command that implements the 'create-agent-app' CLI command.
+// The command creates a new Beamlit agent app in the specified directory after collecting
+// necessary configuration through an interactive prompt.
+// Usage: bl create-agent-app [directory]
 func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
@@ -253,8 +336,8 @@ func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 				return
 			}
 			fmt.Printf(`Your beamlit agent app has been created. Start working on it:
-cd %s && source .venv/bin/activate
-bl serve --local
+cd %s && source .venv/bin/activate;
+bl serve --local;
 `, opts.Directory)
 		},
 	}

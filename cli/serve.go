@@ -25,8 +25,6 @@ func (r *Operations) ServeCmd() *cobra.Command {
 			bl serve --local --port 1338
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// args := []string{"beamlit.serve.app:app"}
-			fmt.Println(args)
 			uvicorn := exec.Command(
 				"uvicorn",
 				"beamlit.serve.app:app",
