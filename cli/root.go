@@ -67,6 +67,7 @@ func Execute() error {
 	rootCmd.AddCommand(reg.RunCmd())
 	rootCmd.AddCommand(reg.DocCmd())
 	rootCmd.AddCommand(reg.MetricsModelDeploymentCmd())
+	rootCmd.AddCommand(reg.ServeCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")

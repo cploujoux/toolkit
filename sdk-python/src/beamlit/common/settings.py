@@ -55,6 +55,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         yaml_file="beamlit.yaml",
         env_prefix="bl_",
+        env_nested_delimiter="_",
     )
 
     workspace: str
