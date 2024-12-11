@@ -23,11 +23,9 @@ sdk-ts:
 	npx @hey-api/openapi-ts -i ./definition.yml -o sdk-ts -c @hey-api/client-fetch
 
 build:
-	goreleaser release --snapshot --clean
-	cp ./dist/beamlit_darwin_arm64/beamlit ./beamlit
-
-dev:
-	alias bl="go run main.go"
+	goreleaser release --snapshot --clean --skip homebrew
+	cp ./dist/beamlit_darwin_arm64/beamlit ~/.local/bin/beamlit
+	cp ~/.local/bin/beamlit ~/.local/bin/bl
 
 doc:
 	rm -rf docs

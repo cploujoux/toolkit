@@ -236,14 +236,17 @@ func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 			opts := promptCreateAgentApp(args[0])
 
 			var err error
-			spinner.New().
+			spinnerErr := spinner.New().
 				Title("Creating your beamlit agent app...").
 				Action(func() {
 					err = createAgentApp(opts)
 
 				}).
 				Run()
-
+			if spinnerErr != nil {
+				fmt.Println("Error creating agent app", spinnerErr)
+				return
+			}
 			if err != nil {
 				fmt.Println("Error creating agent app", err)
 				os.RemoveAll(opts.Directory)

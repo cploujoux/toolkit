@@ -16,6 +16,9 @@ var environment string
 var client *sdk.ClientWithResponses
 var reg *Operations
 var verbose bool
+var version string
+var commit string
+var date string
 
 var rootCmd = &cobra.Command{
 	Use:   "bl",
@@ -53,7 +56,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func Execute() error {
+func Execute(releaseVersion string, releaseCommit string, releaseDate string) error {
 	reg = &Operations{
 		BaseURL: BASE_URL,
 	}
@@ -69,6 +72,7 @@ func Execute() error {
 	rootCmd.AddCommand(reg.MetricsModelDeploymentCmd())
 	rootCmd.AddCommand(reg.ServeCmd())
 	rootCmd.AddCommand(reg.CreateAgentAppCmd())
+	rootCmd.AddCommand(reg.VersionCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")
@@ -79,6 +83,15 @@ func Execute() error {
 	}
 	if environment == "" {
 		environment = sdk.CurrentContext().Environment
+	}
+	if version == "" {
+		version = releaseVersion
+	}
+	if commit == "" {
+		commit = releaseCommit
+	}
+	if date == "" {
+		date = releaseDate
 	}
 	return rootCmd.Execute()
 }
