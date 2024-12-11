@@ -1,11 +1,11 @@
 from beamlit.api.models import get_model_deployment
-from beamlit.authentication import get_authentication_headers, new_client_from_settings
+from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import init
 from beamlit.models.model_deployment import ModelDeployment
 from beamlit.run import RunClient
 
 settings = init()
-client = new_client_from_settings(settings)
+client = new_client()
 model_deployment: ModelDeployment = get_model_deployment.sync("gpt-4o-mini", "production", client=client)
 # init_agent(client=client)
 run_client = RunClient(client=client)
