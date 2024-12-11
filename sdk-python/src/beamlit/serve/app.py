@@ -1,4 +1,6 @@
 import importlib
+import os
+import sys
 import traceback
 from logging import getLogger
 from uuid import uuid4
@@ -10,6 +12,9 @@ from fastapi.responses import JSONResponse
 from beamlit.common.settings import get_settings, init
 
 from .middlewares import AccessLogMiddleware, AddProcessTimeHeader
+
+sys.path.insert(0, os.getcwd())
+sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
 
 def import_module():
