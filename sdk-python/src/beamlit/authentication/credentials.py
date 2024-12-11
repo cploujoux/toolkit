@@ -1,10 +1,13 @@
 from dataclasses import dataclass
+from logging import getLogger
 from pathlib import Path
 from typing import List
 
 import yaml
 
 from beamlit.common.settings import Settings
+
+logger = getLogger(__name__)
 
 
 @dataclass
@@ -120,32 +123,35 @@ def load_credentials(workspace_name: str) -> Credentials:
     return Credentials()
 
 
-def load_credentials_from_settings(config: Settings) -> Credentials:
-    return Credentials(api_key=config.api_key, client_credentials=config.client_credentials)
+def load_credentials_from_settings(settings: Settings) -> Credentials:
+    return Credentials(
+        api_key=settings.authentication.api_key,
+        client_credentials=settings.authentication.client_credentials,
+    )
 
 
 def create_home_dir_if_missing():
     home_dir = Path.home()
     if not home_dir:
-        print("Error getting home directory")
+        logger.error("Error getting home directory")
         return
 
     credentials_dir = home_dir / ".beamlit"
     credentials_file = credentials_dir / "credentials.json"
 
     if credentials_file.exists():
-        print("You are already logged in. Enter a new API key to overwrite it.")
+        logger.warning("You are already logged in. Enter a new API key to overwrite it.")
     else:
         try:
             credentials_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
         except Exception as e:
-            print(f"Error creating credentials directory: {e}")
+            logger.error(f"Error creating credentials directory: {e}")
 
 
 def save_credentials(workspace_name: str, credentials: Credentials):
     create_home_dir_if_missing()
     if not credentials.access_token and not credentials.api_key:
-        print("No credentials to save, error")
+        logger.info("No credentials to save, error")
         return
 
     config = load_config()

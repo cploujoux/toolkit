@@ -66,9 +66,7 @@ def new_client_with_credentials(config: RunClientWithCredentials):
     elif config.credentials.access_token:
         provider = BearerToken(config.credentials, config.workspace, config.api_url)
     elif config.credentials.client_credentials:
-        provider = ClientCredentials(
-            config.credentials, config.workspace, config.api_url
-        )
+        provider = ClientCredentials(config.credentials, config.workspace, config.api_url)
     else:
         provider = PublicProvider()
 
@@ -76,7 +74,13 @@ def new_client_with_credentials(config: RunClientWithCredentials):
 
 
 def get_authentication_headers(settings: Settings) -> Dict[str, str]:
-    credentials = load_credentials_from_settings(settings)
+    context = current_context()
+    if context.workspace:
+        credentials = load_credentials(context.workspace)
+    else:
+        settings = get_settings()
+        credentials = load_credentials_from_settings(settings)
+
     config = RunClientWithCredentials(
         credentials=credentials,
         workspace=settings.workspace,
@@ -87,9 +91,7 @@ def get_authentication_headers(settings: Settings) -> Dict[str, str]:
     elif config.credentials.access_token:
         provider = BearerToken(config.credentials, config.workspace, config.api_url)
     elif config.credentials.client_credentials:
-        provider = ClientCredentials(
-            config.credentials, config.workspace, config.api_url
-        )
+        provider = ClientCredentials(config.credentials, config.workspace, config.api_url)
 
     if provider is None:
         return None

@@ -62,12 +62,12 @@ def get_chat_model(agent_model: AgentDeployment):
         raise ValueError("agent_model not found in configuration")
     if agent_model.runtime is None:
         raise ValueError("runtime not found in agent model")
-    if agent_model.runtime.type is None:
+    if agent_model.runtime.type_ is None:
         raise ValueError("type not found in runtime")
     if agent_model.runtime.model is None:
         raise ValueError("model not found in runtime")
 
-    provider = agent_model.runtime.type
+    provider = agent_model.runtime.type_
     model = agent_model.runtime.model
 
     kwargs = {

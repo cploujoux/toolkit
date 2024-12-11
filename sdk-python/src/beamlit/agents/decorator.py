@@ -34,7 +34,10 @@ def get_functions(dir="src/functions", from_decorator="function"):
 
                         # Look for function definitions with decorators
                         for node in ast.walk(tree):
-                            if not isinstance(node, ast.FunctionDef) or len(node.decorator_list) == 0:
+                            if (
+                                not isinstance(node, ast.FunctionDef)
+                                or len(node.decorator_list) == 0
+                            ):
                                 continue
                             decorator = node.decorator_list[0]
 
@@ -56,7 +59,9 @@ def get_functions(dir="src/functions", from_decorator="function"):
                                 is_kit = False
                                 if isinstance(decorator, ast.Call):
                                     for keyword in decorator.keywords:
-                                        if keyword.arg == "kit" and isinstance(keyword.value, ast.Constant):
+                                        if keyword.arg == "kit" and isinstance(
+                                            keyword.value, ast.Constant
+                                        ):
                                             is_kit = keyword.value.value
                                 if is_kit:
                                     kit_functions = get_functions(
@@ -87,9 +92,9 @@ def agent(
 
         def wrapped(*args, **kwargs):
             return func(
-                settings.agent,
-                settings.agent_chat_model,
-                settings.agent_functions,
+                settings.agent.agent,
+                settings.agent.chat_model,
+                settings.agent.functions,
                 *args,
                 **kwargs,
             )
@@ -97,33 +102,46 @@ def agent(
         return wrapped
 
     # Initialize functions array to store decorated functions
-    functions = get_functions()
-    settings.agent_functions = functions
+    functions = get_functions(dir=settings.agent.functions_directory)
+    settings.agent.functions = functions
 
     if bl_agent.model and chat_model is None:
         client = new_client()
         try:
-            response = get_model_deployment.sync_detailed(bl_agent.model, settings.environment, client=client)
-            settings.agent_model = response.parsed
+            response = get_model_deployment.sync_detailed(
+                bl_agent.model, settings.environment, client=client
+            )
+            settings.agent.model = response.parsed
         except UnexpectedStatus as e:
             if e.status_code == 404 and settings.environment != "production":
                 try:
-                    response = get_model_deployment.sync_detailed(bl_agent.model, "production", client=client)
-                    settings.agent_model = response.parsed
+                    response = get_model_deployment.sync_detailed(
+                        bl_agent.model, "production", client=client
+                    )
+                    settings.agent.model = response.parsed
                 except UnexpectedStatus as e:
                     if e.status_code == 404:
                         raise ValueError(f"Model {bl_agent.model} not found")
             else:
                 raise e
+        chat_model = get_chat_model(settings.agent.model)
+        settings.agent.chat_model = chat_model
+        runtime = settings.agent.model.runtime
+        logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
 
-        chat_model = get_chat_model(settings.agent_model)
-        settings.agent_chat_model = chat_model
-        runtime = settings.agent_model.runtime
-        logger.info(f"Chat model configured, using: {runtime.type}:{runtime.model}")
+    if len(functions) == 0:
+        raise ValueError(
+            "You must define at least one function, you can define this function in directory "
+            f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
+            "from beamlit.functions import function\n\n"
+            "@function()\n"
+            "def hello_world(query: str):\n"
+            "    return 'Hello, world!'\n"
+        )
 
     if agent is None and chat_model is not None:
         memory = MemorySaver()
         agent = create_react_agent(chat_model, functions, checkpointer=memory)
-        settings.agent = agent
+        settings.agent.agent = agent
 
     return wrapper

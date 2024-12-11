@@ -155,8 +155,8 @@ run_client = RunClient(client=client)
     export_code = "\n\nfunctions = ["
     export_chain = "\n\nchains = ["
     code = imports
-    if settings.agent_functions and len(settings.agent_functions) > 0:
-        for function_config in settings.agent_functions:
+    if settings.agent.functions and len(settings.agent.functions) > 0:
+        for function_config in settings.agent.functions:
             if function_config.kit and len(function_config.kit) > 0:
                 new_code, export = generate_kit_function_code(settings, function_config, function_config.kit)
                 code += new_code
@@ -165,15 +165,15 @@ run_client = RunClient(client=client)
                 new_code, export = generate_function_code(settings, function_config)
                 code += new_code
                 export_code += export
-    if settings.agent_chain and len(settings.agent_chain) > 0:
-        for agent in settings.agent_chain:
+    if settings.agent.chain and len(settings.agent.chain) > 0:
+        for agent in settings.agent.chain:
             new_code, export = generate_chain_code(settings, agent)
             code += new_code
             export_chain += export
-    if settings.agent_functions and len(settings.agent_functions) > 0:
+    if settings.agent.functions and len(settings.agent.functions) > 0:
         export_code = export_code[:-1]
     export_code += "]"
-    if settings.agent_chain and len(settings.agent_chain) > 0:
+    if settings.agent.chain and len(settings.agent.chain) > 0:
         export_chain = export_chain[:-1]
     export_chain += "]"
     content = code + export_code + export_chain
