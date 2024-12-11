@@ -53,7 +53,9 @@ class CoreSpec:
         if not isinstance(self.flavors, Unset):
             flavors = []
             for componentsschemas_flavors_item_data in self.flavors:
-                componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
+                componentsschemas_flavors_item = (
+                    componentsschemas_flavors_item_data.to_dict()
+                )
                 flavors.append(componentsschemas_flavors_item)
 
         integration_connections: Union[Unset, List[str]] = UNSET
@@ -119,11 +121,15 @@ class CoreSpec:
         flavors = []
         _flavors = d.pop("flavors", UNSET)
         for componentsschemas_flavors_item_data in _flavors or []:
-            componentsschemas_flavors_item = Flavor.from_dict(componentsschemas_flavors_item_data)
+            componentsschemas_flavors_item = Flavor.from_dict(
+                componentsschemas_flavors_item_data
+            )
 
             flavors.append(componentsschemas_flavors_item)
 
-        integration_connections = cast(List[str], d.pop("integrationConnections", UNSET))
+        integration_connections = cast(
+            List[str], d.pop("integrationConnections", UNSET)
+        )
 
         _pod_template = d.pop("podTemplate", UNSET)
         pod_template: Union[Unset, PodTemplateSpec]

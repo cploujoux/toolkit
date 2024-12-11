@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import httpx
 
@@ -18,7 +18,7 @@ def _get_kwargs() -> dict[str, Any]:
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[List["Model"]]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[list["Model"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
@@ -34,7 +34,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[List["Model"]]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[list["Model"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -46,7 +46,7 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-) -> Response[List["Model"]]:
+) -> Response[list["Model"]]:
     """List models
 
      Returns a list of all models in the workspace.
@@ -56,7 +56,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['Model']]
+        Response[list['Model']]
     """
 
     kwargs = _get_kwargs()
@@ -71,7 +71,7 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-) -> Optional[List["Model"]]:
+) -> Optional[list["Model"]]:
     """List models
 
      Returns a list of all models in the workspace.
@@ -81,7 +81,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['Model']
+        list['Model']
     """
 
     return sync_detailed(
@@ -92,7 +92,7 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-) -> Response[List["Model"]]:
+) -> Response[list["Model"]]:
     """List models
 
      Returns a list of all models in the workspace.
@@ -102,7 +102,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['Model']]
+        Response[list['Model']]
     """
 
     kwargs = _get_kwargs()
@@ -115,7 +115,7 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-) -> Optional[List["Model"]]:
+) -> Optional[list["Model"]]:
     """List models
 
      Returns a list of all models in the workspace.
@@ -125,7 +125,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['Model']
+        list['Model']
     """
 
     return (

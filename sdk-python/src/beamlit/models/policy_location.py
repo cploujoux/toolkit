@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -14,40 +14,40 @@ class PolicyLocation:
 
     Attributes:
         name (Union[Unset, str]): Policy location name
-        type (Union[Unset, str]): Policy location type
+        type_ (Union[Unset, str]): Policy location type
     """
 
     name: Union[Unset, str] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         name = self.name
 
-        type = self.type
+        type_ = self.type_
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if name is not UNSET:
             field_dict["name"] = name
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         if not src_dict:
             return None
         d = src_dict.copy()
         name = d.pop("name", UNSET)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         policy_location = cls(
             name=name,
-            type=type,
+            type_=type_,
         )
 
         policy_location.additional_properties = d

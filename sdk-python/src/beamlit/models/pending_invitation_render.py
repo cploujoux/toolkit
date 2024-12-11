@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -40,17 +40,17 @@ class PendingInvitationRender:
 
         invited_at = self.invited_at
 
-        invited_by: Union[Unset, Dict[str, Any]] = UNSET
+        invited_by: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.invited_by, Unset):
             invited_by = self.invited_by.to_dict()
 
         role = self.role
 
-        workspace: Union[Unset, Dict[str, Any]] = UNSET
+        workspace: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.workspace, Unset):
             workspace = self.workspace.to_dict()
 
-        workspace_details: Union[Unset, Dict[str, Any]] = UNSET
+        workspace_details: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.workspace_details, Unset):
             workspace_details = self.workspace_details.to_dict()
 
@@ -73,7 +73,7 @@ class PendingInvitationRender:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.pending_invitation_render_invited_by import PendingInvitationRenderInvitedBy
         from ..models.pending_invitation_render_workspace import PendingInvitationRenderWorkspace
         from ..models.pending_invitation_workspace_details import PendingInvitationWorkspaceDetails

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -24,7 +24,7 @@ class ModelDeploymentMetrics:
     """Metrics for a single model deployment
 
     Attributes:
-        inference_per_second_global (Union[Unset, List['Metric']]): Array of metrics
+        inference_per_second_global (Union[Unset, list['Metric']]): Array of metrics
         inference_per_second_per_region (Union[Unset, ModelDeploymentMetricsInferencePerSecondPerRegion]): Historical
             requests per second (RPS) per location, for the model deployment
         query_per_second_global (Union[Unset, float]): RPS value (in last 24 hours) for the model deployment globally
@@ -36,7 +36,7 @@ class ModelDeploymentMetrics:
             value (in last 24 hours) per response status code per location, for the model deployment
     """
 
-    inference_per_second_global: Union[Unset, List["Metric"]] = UNSET
+    inference_per_second_global: Union[Unset, list["Metric"]] = UNSET
     inference_per_second_per_region: Union[Unset, "ModelDeploymentMetricsInferencePerSecondPerRegion"] = UNSET
     query_per_second_global: Union[Unset, float] = UNSET
     query_per_second_per_code_global: Union[Unset, "QPS"] = UNSET
@@ -45,28 +45,28 @@ class ModelDeploymentMetrics:
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        inference_per_second_global: Union[Unset, List[Dict[str, Any]]] = UNSET
+        inference_per_second_global: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.inference_per_second_global, Unset):
             inference_per_second_global = []
             for componentsschemas_array_metric_item_data in self.inference_per_second_global:
                 componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 inference_per_second_global.append(componentsschemas_array_metric_item)
 
-        inference_per_second_per_region: Union[Unset, Dict[str, Any]] = UNSET
+        inference_per_second_per_region: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.inference_per_second_per_region, Unset):
             inference_per_second_per_region = self.inference_per_second_per_region.to_dict()
 
         query_per_second_global = self.query_per_second_global
 
-        query_per_second_per_code_global: Union[Unset, Dict[str, Any]] = UNSET
+        query_per_second_per_code_global: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.query_per_second_per_code_global, Unset):
             query_per_second_per_code_global = self.query_per_second_per_code_global.to_dict()
 
-        query_per_second_per_region: Union[Unset, Dict[str, Any]] = UNSET
+        query_per_second_per_region: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.query_per_second_per_region, Unset):
             query_per_second_per_region = self.query_per_second_per_region.to_dict()
 
-        query_per_second_per_region_per_code: Union[Unset, Dict[str, Any]] = UNSET
+        query_per_second_per_region_per_code: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.query_per_second_per_region_per_code, Unset):
             query_per_second_per_region_per_code = self.query_per_second_per_region_per_code.to_dict()
 
@@ -89,7 +89,7 @@ class ModelDeploymentMetrics:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.metric import Metric
         from ..models.model_deployment_metrics_inference_per_second_per_region import (
             ModelDeploymentMetricsInferencePerSecondPerRegion,

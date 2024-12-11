@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -16,13 +16,13 @@ class StoreFunctionParameter:
         description (Union[Unset, str]): Store function parameter description
         name (Union[Unset, str]): Store function parameter name
         required (Union[Unset, bool]): Store function parameter required
-        type (Union[Unset, str]): Store function parameter type
+        type_ (Union[Unset, str]): Store function parameter type
     """
 
     description: Union[Unset, str] = UNSET
     name: Union[Unset, str] = UNSET
     required: Union[Unset, bool] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -32,7 +32,7 @@ class StoreFunctionParameter:
 
         required = self.required
 
-        type = self.type
+        type_ = self.type_
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -43,13 +43,13 @@ class StoreFunctionParameter:
             field_dict["name"] = name
         if required is not UNSET:
             field_dict["required"] = required
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         if not src_dict:
             return None
         d = src_dict.copy()
@@ -59,13 +59,13 @@ class StoreFunctionParameter:
 
         required = d.pop("required", UNSET)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         store_function_parameter = cls(
             description=description,
             name=name,
             required=required,
-            type=type,
+            type_=type_,
         )
 
         store_function_parameter.additional_properties = d

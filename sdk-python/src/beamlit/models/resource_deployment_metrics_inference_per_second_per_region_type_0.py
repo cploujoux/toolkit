@@ -28,7 +28,9 @@ class ResourceDeploymentMetricsInferencePerSecondPerRegionType0:
         if not isinstance(self.region, Unset):
             region = []
             for componentsschemas_array_metric_item_data in self.region:
-                componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
+                componentsschemas_array_metric_item = (
+                    componentsschemas_array_metric_item_data.to_dict()
+                )
                 region.append(componentsschemas_array_metric_item)
 
         field_dict: dict[str, Any] = {}
@@ -47,7 +49,9 @@ class ResourceDeploymentMetricsInferencePerSecondPerRegionType0:
         region = []
         _region = d.pop("region", UNSET)
         for componentsschemas_array_metric_item_data in _region or []:
-            componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
+            componentsschemas_array_metric_item = Metric.from_dict(
+                componentsschemas_array_metric_item_data
+            )
 
             region.append(componentsschemas_array_metric_item)
 

@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import httpx
 
@@ -22,7 +22,7 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[List["ApiKey"]]:
+) -> Optional[list["ApiKey"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
@@ -40,7 +40,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[List["ApiKey"]]:
+) -> Response[list["ApiKey"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -53,7 +53,7 @@ def sync_detailed(
     client_id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["ApiKey"]]:
+) -> Response[list["ApiKey"]]:
     """List API keys for service account
 
      Returns a list of all API keys for a service account.
@@ -66,7 +66,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['ApiKey']]
+        Response[list['ApiKey']]
     """
 
     kwargs = _get_kwargs(
@@ -84,7 +84,7 @@ def sync(
     client_id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["ApiKey"]]:
+) -> Optional[list["ApiKey"]]:
     """List API keys for service account
 
      Returns a list of all API keys for a service account.
@@ -97,7 +97,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['ApiKey']
+        list['ApiKey']
     """
 
     return sync_detailed(
@@ -110,7 +110,7 @@ async def asyncio_detailed(
     client_id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["ApiKey"]]:
+) -> Response[list["ApiKey"]]:
     """List API keys for service account
 
      Returns a list of all API keys for a service account.
@@ -123,7 +123,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['ApiKey']]
+        Response[list['ApiKey']]
     """
 
     kwargs = _get_kwargs(
@@ -139,7 +139,7 @@ async def asyncio(
     client_id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["ApiKey"]]:
+) -> Optional[list["ApiKey"]]:
     """List API keys for service account
 
      Returns a list of all API keys for a service account.
@@ -152,7 +152,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['ApiKey']
+        list['ApiKey']
     """
 
     return (

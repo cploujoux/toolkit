@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import httpx
 
@@ -20,7 +20,7 @@ def _get_kwargs() -> dict[str, Any]:
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[List["StoreAgent"]]:
+) -> Optional[list["StoreAgent"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
@@ -38,7 +38,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[List["StoreAgent"]]:
+) -> Response[list["StoreAgent"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,7 +50,7 @@ def _build_response(
 def sync_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[List["StoreAgent"]]:
+) -> Response[list["StoreAgent"]]:
     """List all store agent
 
     Raises:
@@ -58,7 +58,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['StoreAgent']]
+        Response[list['StoreAgent']]
     """
 
     kwargs = _get_kwargs()
@@ -73,7 +73,7 @@ def sync_detailed(
 def sync(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[List["StoreAgent"]]:
+) -> Optional[list["StoreAgent"]]:
     """List all store agent
 
     Raises:
@@ -81,7 +81,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['StoreAgent']
+        list['StoreAgent']
     """
 
     return sync_detailed(
@@ -92,7 +92,7 @@ def sync(
 async def asyncio_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[List["StoreAgent"]]:
+) -> Response[list["StoreAgent"]]:
     """List all store agent
 
     Raises:
@@ -100,7 +100,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['StoreAgent']]
+        Response[list['StoreAgent']]
     """
 
     kwargs = _get_kwargs()
@@ -113,7 +113,7 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[List["StoreAgent"]]:
+) -> Optional[list["StoreAgent"]]:
     """List all store agent
 
     Raises:
@@ -121,7 +121,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['StoreAgent']
+        list['StoreAgent']
     """
 
     return (

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -28,7 +28,7 @@ class Integration:
         labels (Union['LabelsType0', None, Unset]): Labels
         name (Union[Unset, str]): Integration name
         secret (Union[Unset, IntegrationSecret]): Integration secret
-        type (Union[Unset, str]): Integration type
+        type_ (Union[Unset, str]): Integration type
         workspace (Union[Unset, str]): Workspace name
     """
 
@@ -41,7 +41,7 @@ class Integration:
     labels: Union["LabelsType0", None, Unset] = UNSET
     name: Union[Unset, str] = UNSET
     secret: Union[Unset, "IntegrationSecret"] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -56,13 +56,13 @@ class Integration:
 
         updated_by = self.updated_by
 
-        config: Union[Unset, Dict[str, Any]] = UNSET
+        config: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.config, Unset):
             config = self.config.to_dict()
 
         display_name = self.display_name
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -72,11 +72,11 @@ class Integration:
 
         name = self.name
 
-        secret: Union[Unset, Dict[str, Any]] = UNSET
+        secret: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.secret, Unset):
             secret = self.secret.to_dict()
 
-        type = self.type
+        type_ = self.type_
 
         workspace = self.workspace
 
@@ -101,15 +101,15 @@ class Integration:
             field_dict["name"] = name
         if secret is not UNSET:
             field_dict["secret"] = secret
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
         if workspace is not UNSET:
             field_dict["workspace"] = workspace
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.integration_config import IntegrationConfig
         from ..models.integration_secret import IntegrationSecret
         from ..models.labels_type_0 import LabelsType0
@@ -160,7 +160,7 @@ class Integration:
         else:
             secret = IntegrationSecret.from_dict(_secret)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         workspace = d.pop("workspace", UNSET)
 
@@ -174,7 +174,7 @@ class Integration:
             labels=labels,
             name=name,
             secret=secret,
-            type=type,
+            type_=type_,
             workspace=workspace,
         )
 

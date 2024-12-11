@@ -3,6 +3,6 @@ dist
 dist/
 /beamlit
 .DS_Store
-venv
+.venv
 tmp
 beamlit_generated.py

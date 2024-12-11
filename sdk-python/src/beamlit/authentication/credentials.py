@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 
 import yaml
+
 from beamlit.common.settings import Settings
 
 
@@ -14,6 +15,7 @@ class Credentials:
     expires_in: int = 0
     device_code: str = ""
     client_credentials: str = ""
+
 
 @dataclass
 class WorkspaceConfig:
@@ -69,15 +71,15 @@ def save_config(config: Config):
                 "name": ws.name,
                 "credentials": {
                     "access_token": ws.credentials.access_token,
-                    "api_key": ws.credentials.api_key
-                }
+                    "api_key": ws.credentials.api_key,
+                },
             }
             for ws in config.workspaces
         ],
         "context": {
             "workspace": config.context.workspace,
-            "environment": config.context.environment
-        }
+            "environment": config.context.environment,
+        },
     }
 
     home_dir = Path.home()
@@ -117,11 +119,10 @@ def load_credentials(workspace_name: str) -> Credentials:
             return workspace.credentials
     return Credentials()
 
+
 def load_credentials_from_settings(config: Settings) -> Credentials:
-    return Credentials(
-        api_key=config.api_key,
-        client_credentials=config.client_credentials
-    )
+    return Credentials(api_key=config.api_key, client_credentials=config.client_credentials)
+
 
 def create_home_dir_if_missing():
     home_dir = Path.home()

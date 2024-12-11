@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -19,7 +19,7 @@ class Metrics:
 
     Attributes:
         inference_global (Union[Unset, Any]): Historical requests for all resources globally
-        inference_per_second_global (Union[Unset, List['Metric']]): Array of metrics
+        inference_per_second_global (Union[Unset, list['Metric']]): Array of metrics
         query (Union[Unset, Any]): Number of requests for all resources globally
         query_per_second (Union[Unset, float]): RPS value (in last 24 hours) per location, for all resources globally
         agents (Union[Unset, IncreaseAndRateMetric]): Metrics for resources
@@ -28,7 +28,7 @@ class Metrics:
     """
 
     inference_global: Union[Unset, Any] = UNSET
-    inference_per_second_global: Union[Unset, List["Metric"]] = UNSET
+    inference_per_second_global: Union[Unset, list["Metric"]] = UNSET
     query: Union[Unset, Any] = UNSET
     query_per_second: Union[Unset, float] = UNSET
     agents: Union[Unset, "IncreaseAndRateMetric"] = UNSET
@@ -39,7 +39,7 @@ class Metrics:
     def to_dict(self) -> dict[str, Any]:
         inference_global = self.inference_global
 
-        inference_per_second_global: Union[Unset, List[Dict[str, Any]]] = UNSET
+        inference_per_second_global: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.inference_per_second_global, Unset):
             inference_per_second_global = []
             for componentsschemas_array_metric_item_data in self.inference_per_second_global:
@@ -50,15 +50,15 @@ class Metrics:
 
         query_per_second = self.query_per_second
 
-        agents: Union[Unset, Dict[str, Any]] = UNSET
+        agents: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.agents, Unset):
             agents = self.agents.to_dict()
 
-        functions: Union[Unset, Dict[str, Any]] = UNSET
+        functions: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.functions, Unset):
             functions = self.functions.to_dict()
 
-        models: Union[Unset, Dict[str, Any]] = UNSET
+        models: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.models, Unset):
             models = self.models.to_dict()
 
@@ -83,7 +83,7 @@ class Metrics:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.increase_and_rate_metric import IncreaseAndRateMetric
         from ..models.metric import Metric
 

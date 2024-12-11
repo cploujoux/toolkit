@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -26,7 +26,7 @@ class FunctionWithDeployments:
         labels (Union['LabelsType0', None, Unset]): Labels
         name (Union[Unset, str]): Function name
         workspace (Union[Unset, str]): Workspace name
-        deployments (Union[Unset, List['FunctionDeployment']]):
+        deployments (Union[Unset, list['FunctionDeployment']]):
     """
 
     created_at: Union[Unset, str] = UNSET
@@ -37,7 +37,7 @@ class FunctionWithDeployments:
     labels: Union["LabelsType0", None, Unset] = UNSET
     name: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
-    deployments: Union[Unset, List["FunctionDeployment"]] = UNSET
+    deployments: Union[Unset, list["FunctionDeployment"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -53,7 +53,7 @@ class FunctionWithDeployments:
 
         display_name = self.display_name
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -65,7 +65,7 @@ class FunctionWithDeployments:
 
         workspace = self.workspace
 
-        deployments: Union[Unset, List[Dict[str, Any]]] = UNSET
+        deployments: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.deployments, Unset):
             deployments = []
             for componentsschemas_function_deployments_item_data in self.deployments:
@@ -97,7 +97,7 @@ class FunctionWithDeployments:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.function_deployment import FunctionDeployment
         from ..models.labels_type_0 import LabelsType0
 

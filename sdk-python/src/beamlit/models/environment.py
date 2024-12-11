@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -24,7 +24,7 @@ class Environment:
         display_name (Union[Unset, str]): The display name of the environment
         labels (Union['LabelsType0', None, Unset]): Labels
         name (Union[Unset, str]): The name of the environment
-        policies (Union[Unset, List[Any]]): The policies attached to the environment
+        policies (Union[Unset, list[Any]]): The policies attached to the environment
         workspace (Union[Unset, str]): The workspace the environment belongs to
     """
 
@@ -35,7 +35,7 @@ class Environment:
     display_name: Union[Unset, str] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
     name: Union[Unset, str] = UNSET
-    policies: Union[Unset, List[Any]] = UNSET
+    policies: Union[Unset, list[Any]] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -52,7 +52,7 @@ class Environment:
 
         display_name = self.display_name
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -62,7 +62,7 @@ class Environment:
 
         name = self.name
 
-        policies: Union[Unset, List[Any]] = UNSET
+        policies: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.policies, Unset):
             policies = self.policies
 
@@ -93,7 +93,7 @@ class Environment:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.labels_type_0 import LabelsType0
 
         if not src_dict:
@@ -128,7 +128,7 @@ class Environment:
 
         name = d.pop("name", UNSET)
 
-        policies = cast(List[Any], d.pop("policies", UNSET))
+        policies = cast(list[Any], d.pop("policies", UNSET))
 
         workspace = d.pop("workspace", UNSET)
 

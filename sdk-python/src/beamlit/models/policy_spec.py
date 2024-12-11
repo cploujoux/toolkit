@@ -36,14 +36,18 @@ class PolicySpec:
         if not isinstance(self.flavors, Unset):
             flavors = []
             for componentsschemas_flavors_item_data in self.flavors:
-                componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
+                componentsschemas_flavors_item = (
+                    componentsschemas_flavors_item_data.to_dict()
+                )
                 flavors.append(componentsschemas_flavors_item)
 
         locations: Union[Unset, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.locations, Unset):
             locations = []
             for componentsschemas_policy_locations_item_data in self.locations:
-                componentsschemas_policy_locations_item = componentsschemas_policy_locations_item_data.to_dict()
+                componentsschemas_policy_locations_item = (
+                    componentsschemas_policy_locations_item_data.to_dict()
+                )
                 locations.append(componentsschemas_policy_locations_item)
 
         resource_types: Union[Unset, List[str]] = UNSET
@@ -75,7 +79,9 @@ class PolicySpec:
         flavors = []
         _flavors = d.pop("flavors", UNSET)
         for componentsschemas_flavors_item_data in _flavors or []:
-            componentsschemas_flavors_item = Flavor.from_dict(componentsschemas_flavors_item_data)
+            componentsschemas_flavors_item = Flavor.from_dict(
+                componentsschemas_flavors_item_data
+            )
 
             flavors.append(componentsschemas_flavors_item)
 

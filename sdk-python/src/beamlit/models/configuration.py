@@ -1,4 +1,4 @@
-from typing import Any, List, Type, TypeVar, Union, cast
+from typing import Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -13,20 +13,20 @@ class Configuration:
     """Configuration
 
     Attributes:
-        continents (Union[Unset, List[Any]]): Continents
-        countries (Union[Unset, List[Any]]): Countries
+        continents (Union[Unset, list[Any]]): Continents
+        countries (Union[Unset, list[Any]]): Countries
     """
 
-    continents: Union[Unset, List[Any]] = UNSET
-    countries: Union[Unset, List[Any]] = UNSET
+    continents: Union[Unset, list[Any]] = UNSET
+    countries: Union[Unset, list[Any]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        continents: Union[Unset, List[Any]] = UNSET
+        continents: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.continents, Unset):
             continents = self.continents
 
-        countries: Union[Unset, List[Any]] = UNSET
+        countries: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.countries, Unset):
             countries = self.countries
 
@@ -41,13 +41,13 @@ class Configuration:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         if not src_dict:
             return None
         d = src_dict.copy()
-        continents = cast(List[Any], d.pop("continents", UNSET))
+        continents = cast(list[Any], d.pop("continents", UNSET))
 
-        countries = cast(List[Any], d.pop("countries", UNSET))
+        countries = cast(list[Any], d.pop("countries", UNSET))
 
         configuration = cls(
             continents=continents,

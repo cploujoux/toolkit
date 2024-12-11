@@ -1,4 +1,4 @@
-from typing import Any, List, Type, TypeVar, Union, cast
+from typing import Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -21,7 +21,7 @@ class IntegrationModel:
         name (Union[Unset, str]): Provider model name
         pipeline_tag (Union[Unset, str]): Provider model pipeline tag
         private (Union[Unset, bool]): Provider model private
-        tags (Union[Unset, List[str]]): Provider model tags
+        tags (Union[Unset, list[str]]): Provider model tags
         trending_score (Union[Unset, int]): Provider model trending score
     """
 
@@ -33,7 +33,7 @@ class IntegrationModel:
     name: Union[Unset, str] = UNSET
     pipeline_tag: Union[Unset, str] = UNSET
     private: Union[Unset, bool] = UNSET
-    tags: Union[Unset, List[str]] = UNSET
+    tags: Union[Unset, list[str]] = UNSET
     trending_score: Union[Unset, int] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -54,7 +54,7 @@ class IntegrationModel:
 
         private = self.private
 
-        tags: Union[Unset, List[str]] = UNSET
+        tags: Union[Unset, list[str]] = UNSET
         if not isinstance(self.tags, Unset):
             tags = self.tags
 
@@ -87,7 +87,7 @@ class IntegrationModel:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         if not src_dict:
             return None
         d = src_dict.copy()
@@ -107,7 +107,7 @@ class IntegrationModel:
 
         private = d.pop("private", UNSET)
 
-        tags = cast(List[str], d.pop("tags", UNSET))
+        tags = cast(list[str], d.pop("tags", UNSET))
 
         trending_score = d.pop("trending_score", UNSET)
 

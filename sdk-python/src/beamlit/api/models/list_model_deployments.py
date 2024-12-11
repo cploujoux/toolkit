@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import httpx
 
@@ -22,7 +22,7 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[List["ModelDeployment"]]:
+) -> Optional[list["ModelDeployment"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
@@ -40,7 +40,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[List["ModelDeployment"]]:
+) -> Response[list["ModelDeployment"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -53,7 +53,7 @@ def sync_detailed(
     model_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["ModelDeployment"]]:
+) -> Response[list["ModelDeployment"]]:
     """List model deployments
 
      Returns a list of all deployments for a model.
@@ -66,7 +66,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['ModelDeployment']]
+        Response[list['ModelDeployment']]
     """
 
     kwargs = _get_kwargs(
@@ -84,7 +84,7 @@ def sync(
     model_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["ModelDeployment"]]:
+) -> Optional[list["ModelDeployment"]]:
     """List model deployments
 
      Returns a list of all deployments for a model.
@@ -97,7 +97,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['ModelDeployment']
+        list['ModelDeployment']
     """
 
     return sync_detailed(
@@ -110,7 +110,7 @@ async def asyncio_detailed(
     model_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["ModelDeployment"]]:
+) -> Response[list["ModelDeployment"]]:
     """List model deployments
 
      Returns a list of all deployments for a model.
@@ -123,7 +123,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['ModelDeployment']]
+        Response[list['ModelDeployment']]
     """
 
     kwargs = _get_kwargs(
@@ -139,7 +139,7 @@ async def asyncio(
     model_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["ModelDeployment"]]:
+) -> Optional[list["ModelDeployment"]]:
     """List model deployments
 
      Returns a list of all deployments for a model.
@@ -152,7 +152,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['ModelDeployment']
+        list['ModelDeployment']
     """
 
     return (

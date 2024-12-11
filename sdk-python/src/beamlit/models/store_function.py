@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -24,28 +24,28 @@ class StoreFunction:
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
-        configuration (Union[Unset, List['StoreConfiguration']]): Store function configuration
+        configuration (Union[Unset, list['StoreConfiguration']]): Store function configuration
         description (Union[Unset, str]): Store function description
         display_name (Union[Unset, str]): Store function display name
         image (Union[Unset, str]): Store function image
-        kit (Union[Unset, List['StoreFunctionKit']]): Store function kit
+        kit (Union[Unset, list['StoreFunctionKit']]): Store function kit
         labels (Union[Unset, StoreFunctionLabels]): Store function labels
         name (Union[Unset, str]): Store function name
-        parameters (Union[Unset, List['StoreFunctionParameter']]): Store function parameters
+        parameters (Union[Unset, list['StoreFunctionParameter']]): Store function parameters
     """
 
     created_at: Union[Unset, str] = UNSET
     created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
-    configuration: Union[Unset, List["StoreConfiguration"]] = UNSET
+    configuration: Union[Unset, list["StoreConfiguration"]] = UNSET
     description: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     image: Union[Unset, str] = UNSET
-    kit: Union[Unset, List["StoreFunctionKit"]] = UNSET
+    kit: Union[Unset, list["StoreFunctionKit"]] = UNSET
     labels: Union[Unset, "StoreFunctionLabels"] = UNSET
     name: Union[Unset, str] = UNSET
-    parameters: Union[Unset, List["StoreFunctionParameter"]] = UNSET
+    parameters: Union[Unset, list["StoreFunctionParameter"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -57,7 +57,7 @@ class StoreFunction:
 
         updated_by = self.updated_by
 
-        configuration: Union[Unset, List[Dict[str, Any]]] = UNSET
+        configuration: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.configuration, Unset):
             configuration = []
             for configuration_item_data in self.configuration:
@@ -70,20 +70,20 @@ class StoreFunction:
 
         image = self.image
 
-        kit: Union[Unset, List[Dict[str, Any]]] = UNSET
+        kit: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.kit, Unset):
             kit = []
             for kit_item_data in self.kit:
                 kit_item = kit_item_data.to_dict()
                 kit.append(kit_item)
 
-        labels: Union[Unset, Dict[str, Any]] = UNSET
+        labels: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
 
         name = self.name
 
-        parameters: Union[Unset, List[Dict[str, Any]]] = UNSET
+        parameters: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.parameters, Unset):
             parameters = []
             for parameters_item_data in self.parameters:
@@ -121,7 +121,7 @@ class StoreFunction:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_configuration import StoreConfiguration
         from ..models.store_function_kit import StoreFunctionKit
         from ..models.store_function_labels import StoreFunctionLabels

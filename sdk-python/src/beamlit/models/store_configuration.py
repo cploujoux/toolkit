@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -17,30 +17,30 @@ class StoreConfiguration:
     """Store configuration for resources (eg: agent, function, etc)
 
     Attributes:
-        available_models (Union[Unset, List[str]]): Available models for the configuration
+        available_models (Union[Unset, list[str]]): Available models for the configuration
         description (Union[Unset, str]): Store configuration description
         display_name (Union[Unset, str]): Store configuration display name
         if_ (Union[Unset, str]): Conditional rendering for the configuration, example: provider === 'openai'
         name (Union[Unset, str]): Store configuration name
-        options (Union[Unset, List['StoreConfigurationOption']]):
+        options (Union[Unset, list['StoreConfigurationOption']]):
         required (Union[Unset, bool]): Store configuration required
         secret (Union[Unset, bool]): Store configuration secret
-        type (Union[Unset, str]): Store configuration type
+        type_ (Union[Unset, str]): Store configuration type
     """
 
-    available_models: Union[Unset, List[str]] = UNSET
+    available_models: Union[Unset, list[str]] = UNSET
     description: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     if_: Union[Unset, str] = UNSET
     name: Union[Unset, str] = UNSET
-    options: Union[Unset, List["StoreConfigurationOption"]] = UNSET
+    options: Union[Unset, list["StoreConfigurationOption"]] = UNSET
     required: Union[Unset, bool] = UNSET
     secret: Union[Unset, bool] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        available_models: Union[Unset, List[str]] = UNSET
+        available_models: Union[Unset, list[str]] = UNSET
         if not isinstance(self.available_models, Unset):
             available_models = self.available_models
 
@@ -52,7 +52,7 @@ class StoreConfiguration:
 
         name = self.name
 
-        options: Union[Unset, List[Dict[str, Any]]] = UNSET
+        options: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.options, Unset):
             options = []
             for options_item_data in self.options:
@@ -63,7 +63,7 @@ class StoreConfiguration:
 
         secret = self.secret
 
-        type = self.type
+        type_ = self.type_
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -84,19 +84,19 @@ class StoreConfiguration:
             field_dict["required"] = required
         if secret is not UNSET:
             field_dict["secret"] = secret
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_configuration_option import StoreConfigurationOption
 
         if not src_dict:
             return None
         d = src_dict.copy()
-        available_models = cast(List[str], d.pop("available_models", UNSET))
+        available_models = cast(list[str], d.pop("available_models", UNSET))
 
         description = d.pop("description", UNSET)
 
@@ -117,7 +117,7 @@ class StoreConfiguration:
 
         secret = d.pop("secret", UNSET)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         store_configuration = cls(
             available_models=available_models,
@@ -128,7 +128,7 @@ class StoreConfiguration:
             options=options,
             required=required,
             secret=secret,
-            type=type,
+            type_=type_,
         )
 
         store_configuration.additional_properties = d

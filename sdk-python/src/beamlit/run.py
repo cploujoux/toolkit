@@ -1,8 +1,8 @@
 import urllib.parse
-from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 import requests
+
 from beamlit.client import AuthenticatedClient
 from beamlit.common.settings import get_settings
 
@@ -18,10 +18,10 @@ class RunClient:
         environment: str,
         method: str,
         path: str = "",
-        headers: Optional[Dict[str, str]] = None,
-        json: Optional[Dict[str, Any]] = None,
-        data: Optional[str] = None,
-        params: Optional[Dict[str, str]] = None,
+        headers: dict[str, str] | None = None,
+        json: dict[str, Any] | None = None,
+        data: str | None = None,
+        params: dict[str, str] | None = None,
     ) -> requests.Response:
         settings = get_settings()
         headers = headers or {}

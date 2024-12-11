@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -56,7 +56,7 @@ class IntegrationConnection:
 
         updated_by = self.updated_by
 
-        config: Union[Unset, Dict[str, Any]] = UNSET
+        config: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.config, Unset):
             config = self.config.to_dict()
 
@@ -64,7 +64,7 @@ class IntegrationConnection:
 
         integration = self.integration
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -74,7 +74,7 @@ class IntegrationConnection:
 
         name = self.name
 
-        secret: Union[Unset, Dict[str, Any]] = UNSET
+        secret: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.secret, Unset):
             secret = self.secret.to_dict()
 
@@ -109,7 +109,7 @@ class IntegrationConnection:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.integration_connection_config import IntegrationConnectionConfig
         from ..models.integration_connection_secret import IntegrationConnectionSecret
         from ..models.labels_type_0 import LabelsType0

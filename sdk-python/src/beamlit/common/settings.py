@@ -1,25 +1,28 @@
 import os
 from logging import getLogger
-from typing import Dict, List, Tuple, Type, Union
+from typing import Any, List, Tuple, Type, Union
+
+from langchain_core.language_models.chat_models import BaseChatModel
+from langgraph.graph.graph import CompiledGraph
+from pydantic import Field
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, YamlConfigSettingsSource
 
 from beamlit.api.functions import get_function_deployment
 from beamlit.api.models import get_model_deployment
 from beamlit.client import AuthenticatedClient
 from beamlit.common.logger import init as init_logger
-from beamlit.models.agent_chain import AgentChain
 from beamlit.models.agent_deployment import AgentDeployment
 from beamlit.models.function_deployment import FunctionDeployment
 from beamlit.models.model_deployment import ModelDeployment
 from beamlit.types import UNSET, Unset
-from pydantic import Field
-from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
-                               SettingsConfigDict, YamlConfigSettingsSource)
 
 global SETTINGS
 SETTINGS = None
 
+
 def get_settings():
     return SETTINGS
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -39,9 +42,13 @@ class Settings(BaseSettings):
     api_key: Union[None, str] = None
     jwt: Union[None, str] = None
     client_credentials: Union[None, str] = None
-    agent_chain:  Union[Unset, List[AgentDeployment]] = UNSET
+    agent_module: str = Field(default="main.main")
+    agent_chain: Union[Unset, List[AgentDeployment]] = UNSET
     agent_functions: Union[Unset, List[FunctionDeployment]] = UNSET
     agent_model: Union[Unset, ModelDeployment] = UNSET
+    agent: Union[None, CompiledGraph, BaseChatModel] = None
+    agent_chat_model: Union[None, BaseChatModel] = None
+    agent_functions: Union[None, List[Any]] = None
 
     @classmethod
     def settings_customise_sources(
@@ -52,9 +59,19 @@ class Settings(BaseSettings):
         dotenv_settings: PydanticBaseSettingsSource,
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> Tuple[PydanticBaseSettingsSource, ...]:
-        return (env_settings, dotenv_settings, file_secret_settings, YamlConfigSettingsSource(settings_cls), init_settings, )
+        return (
+            env_settings,
+            dotenv_settings,
+            file_secret_settings,
+            YamlConfigSettingsSource(settings_cls),
+            init_settings,
+        )
 
-def init_agent(client: AuthenticatedClient, destination: str = f"{os.getcwd()}/src/beamlit_generated.py"):
+
+def init_agent(
+    client: AuthenticatedClient,
+    destination: str = f"{os.getcwd()}/src/beamlit_generated.py",
+):
     from beamlit.api.agents import get_agent_deployment
     from beamlit.common.generate import generate
 
@@ -86,17 +103,18 @@ def init_agent(client: AuthenticatedClient, destination: str = f"{os.getcwd()}/s
                 agent_chain_deployments.append(agent_deployment)
         SETTINGS.agent_chain = agent_chain_deployments
     if agent_deployment.model:
-        model_deployment = get_model_deployment.sync(agent_deployment.model, env , client=client)
+        model_deployment = get_model_deployment.sync(agent_deployment.model, env, client=client)
         SETTINGS.agent_model = model_deployment
 
     content_generate = generate(destination, dry_run=True)
     compared_content = None
     if os.path.exists(destination):
-        compared_content = open(destination, "r").read()
+        compared_content = open(destination).read()
 
     if not os.path.exists(destination) or (compared_content and content_generate != compared_content):
         logger.info("Generating agent code")
         generate(destination)
+
 
 def init() -> Settings:
     """Parse the beamlit.yaml file to get configurations."""

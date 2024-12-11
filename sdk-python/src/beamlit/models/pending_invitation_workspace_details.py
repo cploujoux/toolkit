@@ -1,4 +1,4 @@
-from typing import Any, List, Type, TypeVar, Union, cast
+from typing import Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -13,16 +13,16 @@ class PendingInvitationWorkspaceDetails:
     """Workspace details
 
     Attributes:
-        emails (Union[Unset, List[Any]]): List of user emails in the workspace
+        emails (Union[Unset, list[Any]]): List of user emails in the workspace
         user_number (Union[Unset, float]): Number of users in the workspace
     """
 
-    emails: Union[Unset, List[Any]] = UNSET
+    emails: Union[Unset, list[Any]] = UNSET
     user_number: Union[Unset, float] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        emails: Union[Unset, List[Any]] = UNSET
+        emails: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.emails, Unset):
             emails = self.emails
 
@@ -39,11 +39,11 @@ class PendingInvitationWorkspaceDetails:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         if not src_dict:
             return None
         d = src_dict.copy()
-        emails = cast(List[Any], d.pop("emails", UNSET))
+        emails = cast(list[Any], d.pop("emails", UNSET))
 
         user_number = d.pop("user_number", UNSET)
 

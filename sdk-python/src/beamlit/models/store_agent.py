@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -22,7 +22,7 @@ class StoreAgent:
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
-        configuration (Union[Unset, List['StoreConfiguration']]): Store agent configuration
+        configuration (Union[Unset, list['StoreConfiguration']]): Store agent configuration
         description (Union[Unset, str]): Store agent description
         display_name (Union[Unset, str]): Store agent display name
         image (Union[Unset, str]): Store agent image
@@ -34,7 +34,7 @@ class StoreAgent:
     created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
-    configuration: Union[Unset, List["StoreConfiguration"]] = UNSET
+    configuration: Union[Unset, list["StoreConfiguration"]] = UNSET
     description: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     image: Union[Unset, str] = UNSET
@@ -51,7 +51,7 @@ class StoreAgent:
 
         updated_by = self.updated_by
 
-        configuration: Union[Unset, List[Dict[str, Any]]] = UNSET
+        configuration: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.configuration, Unset):
             configuration = []
             for configuration_item_data in self.configuration:
@@ -64,7 +64,7 @@ class StoreAgent:
 
         image = self.image
 
-        labels: Union[Unset, Dict[str, Any]] = UNSET
+        labels: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
 
@@ -97,7 +97,7 @@ class StoreAgent:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_agent_labels import StoreAgentLabels
         from ..models.store_configuration import StoreConfiguration
 

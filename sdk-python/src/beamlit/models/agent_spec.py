@@ -64,7 +64,9 @@ class AgentSpec:
         if not isinstance(self.flavors, Unset):
             flavors = []
             for componentsschemas_flavors_item_data in self.flavors:
-                componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
+                componentsschemas_flavors_item = (
+                    componentsschemas_flavors_item_data.to_dict()
+                )
                 flavors.append(componentsschemas_flavors_item)
 
         integration_connections: Union[Unset, List[str]] = UNSET
@@ -91,7 +93,9 @@ class AgentSpec:
         if not isinstance(self.agent_chain, Unset):
             agent_chain = []
             for componentsschemas_agent_chains_item_data in self.agent_chain:
-                componentsschemas_agent_chains_item = componentsschemas_agent_chains_item_data.to_dict()
+                componentsschemas_agent_chains_item = (
+                    componentsschemas_agent_chains_item_data.to_dict()
+                )
                 agent_chain.append(componentsschemas_agent_chains_item)
 
         description = self.description
@@ -158,11 +162,15 @@ class AgentSpec:
         flavors = []
         _flavors = d.pop("flavors", UNSET)
         for componentsschemas_flavors_item_data in _flavors or []:
-            componentsschemas_flavors_item = Flavor.from_dict(componentsschemas_flavors_item_data)
+            componentsschemas_flavors_item = Flavor.from_dict(
+                componentsschemas_flavors_item_data
+            )
 
             flavors.append(componentsschemas_flavors_item)
 
-        integration_connections = cast(List[str], d.pop("integrationConnections", UNSET))
+        integration_connections = cast(
+            List[str], d.pop("integrationConnections", UNSET)
+        )
 
         _pod_template = d.pop("podTemplate", UNSET)
         pod_template: Union[Unset, PodTemplateSpec]
@@ -190,7 +198,9 @@ class AgentSpec:
         agent_chain = []
         _agent_chain = d.pop("agentChain", UNSET)
         for componentsschemas_agent_chains_item_data in _agent_chain or []:
-            componentsschemas_agent_chains_item = AgentChain.from_dict(componentsschemas_agent_chains_item_data)
+            componentsschemas_agent_chains_item = AgentChain.from_dict(
+                componentsschemas_agent_chains_item_data
+            )
 
             agent_chain.append(componentsschemas_agent_chains_item)
 

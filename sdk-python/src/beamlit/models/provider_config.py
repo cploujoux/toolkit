@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -18,23 +18,23 @@ class ProviderConfig:
 
     Attributes:
         filename (Union[Unset, str]): The file name to use for the model
-        presigned_url (Union[Unset, List[Any]]): The presigned URLs to upload the model to
+        presigned_url (Union[Unset, list[Any]]): The presigned URLs to upload the model to
         runtime (Union[Unset, Runtime]): Set of configurations for a deployment
     """
 
     filename: Union[Unset, str] = UNSET
-    presigned_url: Union[Unset, List[Any]] = UNSET
+    presigned_url: Union[Unset, list[Any]] = UNSET
     runtime: Union[Unset, "Runtime"] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         filename = self.filename
 
-        presigned_url: Union[Unset, List[Any]] = UNSET
+        presigned_url: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.presigned_url, Unset):
             presigned_url = self.presigned_url
 
-        runtime: Union[Unset, Dict[str, Any]] = UNSET
+        runtime: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
@@ -51,7 +51,7 @@ class ProviderConfig:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.runtime import Runtime
 
         if not src_dict:
@@ -59,7 +59,7 @@ class ProviderConfig:
         d = src_dict.copy()
         filename = d.pop("filename", UNSET)
 
-        presigned_url = cast(List[Any], d.pop("presigned_url", UNSET))
+        presigned_url = cast(list[Any], d.pop("presigned_url", UNSET))
 
         _runtime = d.pop("runtime", UNSET)
         runtime: Union[Unset, Runtime]

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -27,7 +27,7 @@ class ModelProvider:
         display_name (Union[Unset, str]): Model provider display name
         labels (Union['LabelsType0', None, Unset]): Labels
         name (Union[Unset, str]): Model provider name
-        type (Union[Unset, str]): Model provider type
+        type_ (Union[Unset, str]): Model provider type
         workspace (Union[Unset, str]): Workspace name
     """
 
@@ -40,7 +40,7 @@ class ModelProvider:
     display_name: Union[Unset, str] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
     name: Union[Unset, str] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -57,13 +57,13 @@ class ModelProvider:
 
         comment = self.comment
 
-        config: Union[Unset, Dict[str, Any]] = UNSET
+        config: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.config, Unset):
             config = self.config.to_dict()
 
         display_name = self.display_name
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -73,7 +73,7 @@ class ModelProvider:
 
         name = self.name
 
-        type = self.type
+        type_ = self.type_
 
         workspace = self.workspace
 
@@ -98,15 +98,15 @@ class ModelProvider:
             field_dict["labels"] = labels
         if name is not UNSET:
             field_dict["name"] = name
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
         if workspace is not UNSET:
             field_dict["workspace"] = workspace
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.labels_type_0 import LabelsType0
         from ..models.provider_config import ProviderConfig
 
@@ -151,7 +151,7 @@ class ModelProvider:
 
         name = d.pop("name", UNSET)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         workspace = d.pop("workspace", UNSET)
 
@@ -165,7 +165,7 @@ class ModelProvider:
             display_name=display_name,
             labels=labels,
             name=name,
-            type=type,
+            type_=type_,
             workspace=workspace,
         )
 

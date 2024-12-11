@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -18,38 +18,38 @@ class Runtime:
     """Set of configurations for a deployment
 
     Attributes:
-        args (Union[Unset, List[Any]]): The arguments to pass to the deployment runtime
-        command (Union[Unset, List[Any]]): The command to run the deployment
-        envs (Union[Unset, List[Any]]): The environment variables to set in the deployment. Should be a list of
+        args (Union[Unset, list[Any]]): The arguments to pass to the deployment runtime
+        command (Union[Unset, list[Any]]): The command to run the deployment
+        envs (Union[Unset, list[Any]]): The environment variables to set in the deployment. Should be a list of
             Kubernetes EnvVar types
         image (Union[Unset, str]): The Docker image for the deployment
         model (Union[Unset, str]): The slug name of the origin model. Only used if the deployment is a ModelDeployment
         readiness_probe (Union[Unset, RuntimeReadinessProbe]): The readiness probe. Should be a Kubernetes Probe type
         resources (Union[Unset, RuntimeResources]): The resources for the deployment. Should be a Kubernetes
             ResourceRequirements type
-        type (Union[Unset, str]): The type of origin for the deployment
+        type_ (Union[Unset, str]): The type of origin for the deployment
     """
 
-    args: Union[Unset, List[Any]] = UNSET
-    command: Union[Unset, List[Any]] = UNSET
-    envs: Union[Unset, List[Any]] = UNSET
+    args: Union[Unset, list[Any]] = UNSET
+    command: Union[Unset, list[Any]] = UNSET
+    envs: Union[Unset, list[Any]] = UNSET
     image: Union[Unset, str] = UNSET
     model: Union[Unset, str] = UNSET
     readiness_probe: Union[Unset, "RuntimeReadinessProbe"] = UNSET
     resources: Union[Unset, "RuntimeResources"] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        args: Union[Unset, List[Any]] = UNSET
+        args: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.args, Unset):
             args = self.args
 
-        command: Union[Unset, List[Any]] = UNSET
+        command: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.command, Unset):
             command = self.command
 
-        envs: Union[Unset, List[Any]] = UNSET
+        envs: Union[Unset, list[Any]] = UNSET
         if not isinstance(self.envs, Unset):
             envs = self.envs
 
@@ -57,15 +57,15 @@ class Runtime:
 
         model = self.model
 
-        readiness_probe: Union[Unset, Dict[str, Any]] = UNSET
+        readiness_probe: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.readiness_probe, Unset):
             readiness_probe = self.readiness_probe.to_dict()
 
-        resources: Union[Unset, Dict[str, Any]] = UNSET
+        resources: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.resources, Unset):
             resources = self.resources.to_dict()
 
-        type = self.type
+        type_ = self.type_
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -84,24 +84,24 @@ class Runtime:
             field_dict["readiness_probe"] = readiness_probe
         if resources is not UNSET:
             field_dict["resources"] = resources
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.runtime_readiness_probe import RuntimeReadinessProbe
         from ..models.runtime_resources import RuntimeResources
 
         if not src_dict:
             return None
         d = src_dict.copy()
-        args = cast(List[Any], d.pop("args", UNSET))
+        args = cast(list[Any], d.pop("args", UNSET))
 
-        command = cast(List[Any], d.pop("command", UNSET))
+        command = cast(list[Any], d.pop("command", UNSET))
 
-        envs = cast(List[Any], d.pop("envs", UNSET))
+        envs = cast(list[Any], d.pop("envs", UNSET))
 
         image = d.pop("image", UNSET)
 
@@ -121,7 +121,7 @@ class Runtime:
         else:
             resources = RuntimeResources.from_dict(_resources)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         runtime = cls(
             args=args,
@@ -131,7 +131,7 @@ class Runtime:
             model=model,
             readiness_probe=readiness_probe,
             resources=resources,
-            type=type,
+            type_=type_,
         )
 
         runtime.additional_properties = d

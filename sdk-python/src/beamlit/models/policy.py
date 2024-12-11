@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -24,13 +24,13 @@ class Policy:
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         display_name (Union[Unset, str]): Policy display name
-        flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
+        flavors (Union[Unset, list['Flavor']]): Types of hardware available for deployments
         labels (Union['LabelsType0', None, Unset]): Labels
-        locations (Union[Unset, List['PolicyLocation']]): PolicyLocations is a local type that wraps a slice of Location
+        locations (Union[Unset, list['PolicyLocation']]): PolicyLocations is a local type that wraps a slice of Location
         name (Union[Unset, str]): Policy name
-        resource_types (Union[Unset, List[str]]): PolicyResourceTypes is a local type that wraps a slice of
+        resource_types (Union[Unset, list[str]]): PolicyResourceTypes is a local type that wraps a slice of
             PolicyResourceType
-        type (Union[Unset, str]): Policy type, can be location or flavor
+        type_ (Union[Unset, str]): Policy type, can be location or flavor
         workspace (Union[Unset, str]): The workspace the policy belongs to
     """
 
@@ -39,12 +39,12 @@ class Policy:
     updated_at: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
-    flavors: Union[Unset, List["Flavor"]] = UNSET
+    flavors: Union[Unset, list["Flavor"]] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
-    locations: Union[Unset, List["PolicyLocation"]] = UNSET
+    locations: Union[Unset, list["PolicyLocation"]] = UNSET
     name: Union[Unset, str] = UNSET
-    resource_types: Union[Unset, List[str]] = UNSET
-    type: Union[Unset, str] = UNSET
+    resource_types: Union[Unset, list[str]] = UNSET
+    type_: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -61,14 +61,14 @@ class Policy:
 
         display_name = self.display_name
 
-        flavors: Union[Unset, List[Dict[str, Any]]] = UNSET
+        flavors: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.flavors, Unset):
             flavors = []
             for componentsschemas_flavors_item_data in self.flavors:
                 componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
                 flavors.append(componentsschemas_flavors_item)
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -76,7 +76,7 @@ class Policy:
         else:
             labels = self.labels
 
-        locations: Union[Unset, List[Dict[str, Any]]] = UNSET
+        locations: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.locations, Unset):
             locations = []
             for componentsschemas_policy_locations_item_data in self.locations:
@@ -85,11 +85,11 @@ class Policy:
 
         name = self.name
 
-        resource_types: Union[Unset, List[str]] = UNSET
+        resource_types: Union[Unset, list[str]] = UNSET
         if not isinstance(self.resource_types, Unset):
             resource_types = self.resource_types
 
-        type = self.type
+        type_ = self.type_
 
         workspace = self.workspace
 
@@ -116,15 +116,15 @@ class Policy:
             field_dict["name"] = name
         if resource_types is not UNSET:
             field_dict["resource_types"] = resource_types
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
         if workspace is not UNSET:
             field_dict["workspace"] = workspace
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.flavor import Flavor
         from ..models.labels_type_0 import LabelsType0
         from ..models.policy_location import PolicyLocation
@@ -177,9 +177,9 @@ class Policy:
 
         name = d.pop("name", UNSET)
 
-        resource_types = cast(List[str], d.pop("resource_types", UNSET))
+        resource_types = cast(list[str], d.pop("resource_types", UNSET))
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         workspace = d.pop("workspace", UNSET)
 
@@ -194,7 +194,7 @@ class Policy:
             locations=locations,
             name=name,
             resource_types=resource_types,
-            type=type,
+            type_=type_,
             workspace=workspace,
         )
 

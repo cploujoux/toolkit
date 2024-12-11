@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -19,7 +19,7 @@ class Location:
     Attributes:
         continent (Union[Unset, str]): Location continent
         country (Union[Unset, str]): Location country
-        flavors (Union[Unset, List['Flavor']]): Location flavors
+        flavors (Union[Unset, list['Flavor']]): Location flavors
         location (Union[Unset, str]): Location name
         name (Union[Unset, str]): Location name
         status (Union[Unset, str]): Location status
@@ -27,7 +27,7 @@ class Location:
 
     continent: Union[Unset, str] = UNSET
     country: Union[Unset, str] = UNSET
-    flavors: Union[Unset, List["Flavor"]] = UNSET
+    flavors: Union[Unset, list["Flavor"]] = UNSET
     location: Union[Unset, str] = UNSET
     name: Union[Unset, str] = UNSET
     status: Union[Unset, str] = UNSET
@@ -38,7 +38,7 @@ class Location:
 
         country = self.country
 
-        flavors: Union[Unset, List[Dict[str, Any]]] = UNSET
+        flavors: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.flavors, Unset):
             flavors = []
             for flavors_item_data in self.flavors:
@@ -70,7 +70,7 @@ class Location:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.flavor import Flavor
 
         if not src_dict:

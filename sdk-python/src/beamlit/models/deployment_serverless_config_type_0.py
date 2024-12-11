@@ -122,7 +122,9 @@ class DeploymentServerlessConfigType0:
                 return data
             return cast(Union[None, Unset, str], data)
 
-        last_pod_retention_period = _parse_last_pod_retention_period(d.pop("last_pod_retention_period", UNSET))
+        last_pod_retention_period = _parse_last_pod_retention_period(
+            d.pop("last_pod_retention_period", UNSET)
+        )
 
         def _parse_max_num_replicas(data: object) -> Union[None, Unset, int]:
             if data is None:

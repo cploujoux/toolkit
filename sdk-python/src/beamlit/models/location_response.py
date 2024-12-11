@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -19,14 +19,14 @@ class LocationResponse:
     Attributes:
         continent (Union[Unset, str]): Continent of the location
         country (Union[Unset, str]): Country of the location
-        flavors (Union[Unset, List['Flavor']]): Hardware flavors available in the location
+        flavors (Union[Unset, list['Flavor']]): Hardware flavors available in the location
         location (Union[Unset, str]): Name of the location
         status (Union[Unset, str]): Status of the location
     """
 
     continent: Union[Unset, str] = UNSET
     country: Union[Unset, str] = UNSET
-    flavors: Union[Unset, List["Flavor"]] = UNSET
+    flavors: Union[Unset, list["Flavor"]] = UNSET
     location: Union[Unset, str] = UNSET
     status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -36,7 +36,7 @@ class LocationResponse:
 
         country = self.country
 
-        flavors: Union[Unset, List[Dict[str, Any]]] = UNSET
+        flavors: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.flavors, Unset):
             flavors = []
             for flavors_item_data in self.flavors:
@@ -64,7 +64,7 @@ class LocationResponse:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.flavor import Flavor
 
         if not src_dict:

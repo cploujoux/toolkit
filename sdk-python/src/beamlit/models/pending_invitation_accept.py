@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -28,7 +28,7 @@ class PendingInvitationAccept:
     def to_dict(self) -> dict[str, Any]:
         email = self.email
 
-        workspace: Union[Unset, Dict[str, Any]] = UNSET
+        workspace: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.workspace, Unset):
             workspace = self.workspace.to_dict()
 
@@ -43,7 +43,7 @@ class PendingInvitationAccept:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.workspace import Workspace
 
         if not src_dict:

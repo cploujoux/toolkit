@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -18,40 +18,40 @@ class ResourceMetrics:
     """Metrics for a single resource (eg. model, function)
 
     Attributes:
-        inference_global (Union[Unset, List['Metric']]): Array of metrics
-        inference_per_second_global (Union[Unset, List['Metric']]): Array of metrics
+        inference_global (Union[Unset, list['Metric']]): Array of metrics
+        inference_per_second_global (Union[Unset, list['Metric']]): Array of metrics
         query_per_region (Union[Unset, QPS]): Query per second per element, can be per response status code (e.g. 200,
             400) or per location
         query_per_second_per_region (Union[Unset, QPS]): Query per second per element, can be per response status code
             (e.g. 200, 400) or per location
     """
 
-    inference_global: Union[Unset, List["Metric"]] = UNSET
-    inference_per_second_global: Union[Unset, List["Metric"]] = UNSET
+    inference_global: Union[Unset, list["Metric"]] = UNSET
+    inference_per_second_global: Union[Unset, list["Metric"]] = UNSET
     query_per_region: Union[Unset, "QPS"] = UNSET
     query_per_second_per_region: Union[Unset, "QPS"] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        inference_global: Union[Unset, List[Dict[str, Any]]] = UNSET
+        inference_global: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.inference_global, Unset):
             inference_global = []
             for componentsschemas_array_metric_item_data in self.inference_global:
                 componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 inference_global.append(componentsschemas_array_metric_item)
 
-        inference_per_second_global: Union[Unset, List[Dict[str, Any]]] = UNSET
+        inference_per_second_global: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.inference_per_second_global, Unset):
             inference_per_second_global = []
             for componentsschemas_array_metric_item_data in self.inference_per_second_global:
                 componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 inference_per_second_global.append(componentsschemas_array_metric_item)
 
-        query_per_region: Union[Unset, Dict[str, Any]] = UNSET
+        query_per_region: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.query_per_region, Unset):
             query_per_region = self.query_per_region.to_dict()
 
-        query_per_second_per_region: Union[Unset, Dict[str, Any]] = UNSET
+        query_per_second_per_region: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.query_per_second_per_region, Unset):
             query_per_second_per_region = self.query_per_second_per_region.to_dict()
 
@@ -70,7 +70,7 @@ class ResourceMetrics:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.metric import Metric
         from ..models.qps import QPS
 

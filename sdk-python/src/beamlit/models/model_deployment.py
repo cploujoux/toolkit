@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -28,15 +28,15 @@ class ModelDeployment:
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         enabled (Union[Unset, bool]): If false, the model deployment will not be active nor serve requests
         environment (Union[Unset, str]): The name of the environment in which the model deployment is deployed
-        flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
-        integration_connections (Union[Unset, List[str]]):
+        flavors (Union[Unset, list['Flavor']]): Types of hardware available for deployments
+        integration_connections (Union[Unset, list[str]]):
         labels (Union['LabelsType0', None, Unset]): Labels
         metric_port (Union[Unset, int]): The port to serve the metrics on
         model (Union[Unset, str]): The name of the parent model
         model_provider_ref (Union[Unset, ModelProviderRef]): Reference to a model provider
         pod_template (Union[Unset, ModelDeploymentPodTemplate]): The pod template for the deployment. Should be a
             Kubernetes PodTemplateSpec
-        policies (Union[Unset, List[str]]):
+        policies (Union[Unset, list[str]]):
         runtime (Union[Unset, Runtime]): Set of configurations for a deployment
         serverless_config (Union[Unset, DeploymentServerlessConfig]): Configuration for a serverless deployment
         serving_port (Union[Unset, int]): The port to serve the model on
@@ -49,14 +49,14 @@ class ModelDeployment:
     updated_by: Union[Unset, str] = UNSET
     enabled: Union[Unset, bool] = UNSET
     environment: Union[Unset, str] = UNSET
-    flavors: Union[Unset, List["Flavor"]] = UNSET
-    integration_connections: Union[Unset, List[str]] = UNSET
+    flavors: Union[Unset, list["Flavor"]] = UNSET
+    integration_connections: Union[Unset, list[str]] = UNSET
     labels: Union["LabelsType0", None, Unset] = UNSET
     metric_port: Union[Unset, int] = UNSET
     model: Union[Unset, str] = UNSET
     model_provider_ref: Union[Unset, "ModelProviderRef"] = UNSET
     pod_template: Union[Unset, "ModelDeploymentPodTemplate"] = UNSET
-    policies: Union[Unset, List[str]] = UNSET
+    policies: Union[Unset, list[str]] = UNSET
     runtime: Union[Unset, "Runtime"] = UNSET
     serverless_config: Union[Unset, "DeploymentServerlessConfig"] = UNSET
     serving_port: Union[Unset, int] = UNSET
@@ -78,18 +78,18 @@ class ModelDeployment:
 
         environment = self.environment
 
-        flavors: Union[Unset, List[Dict[str, Any]]] = UNSET
+        flavors: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.flavors, Unset):
             flavors = []
             for componentsschemas_flavors_item_data in self.flavors:
                 componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
                 flavors.append(componentsschemas_flavors_item)
 
-        integration_connections: Union[Unset, List[str]] = UNSET
+        integration_connections: Union[Unset, list[str]] = UNSET
         if not isinstance(self.integration_connections, Unset):
             integration_connections = self.integration_connections
 
-        labels: Union[Dict[str, Any], None, Unset]
+        labels: Union[None, Unset, dict[str, Any]]
         if isinstance(self.labels, Unset):
             labels = UNSET
         elif isinstance(self.labels, LabelsType0):
@@ -101,23 +101,23 @@ class ModelDeployment:
 
         model = self.model
 
-        model_provider_ref: Union[Unset, Dict[str, Any]] = UNSET
+        model_provider_ref: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.model_provider_ref, Unset):
             model_provider_ref = self.model_provider_ref.to_dict()
 
-        pod_template: Union[Unset, Dict[str, Any]] = UNSET
+        pod_template: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.pod_template, Unset):
             pod_template = self.pod_template.to_dict()
 
-        policies: Union[Unset, List[str]] = UNSET
+        policies: Union[Unset, list[str]] = UNSET
         if not isinstance(self.policies, Unset):
             policies = self.policies
 
-        runtime: Union[Unset, Dict[str, Any]] = UNSET
+        runtime: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
-        serverless_config: Union[Unset, Dict[str, Any]] = UNSET
+        serverless_config: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.serverless_config, Unset):
             serverless_config = self.serverless_config.to_dict()
 
@@ -168,7 +168,7 @@ class ModelDeployment:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.deployment_serverless_config import DeploymentServerlessConfig
         from ..models.flavor import Flavor
         from ..models.labels_type_0 import LabelsType0
@@ -198,7 +198,7 @@ class ModelDeployment:
 
             flavors.append(componentsschemas_flavors_item)
 
-        integration_connections = cast(List[str], d.pop("integration_connections", UNSET))
+        integration_connections = cast(list[str], d.pop("integration_connections", UNSET))
 
         def _parse_labels(data: object) -> Union["LabelsType0", None, Unset]:
             if data is None:
@@ -235,7 +235,7 @@ class ModelDeployment:
         else:
             pod_template = ModelDeploymentPodTemplate.from_dict(_pod_template)
 
-        policies = cast(List[str], d.pop("policies", UNSET))
+        policies = cast(list[str], d.pop("policies", UNSET))
 
         _runtime = d.pop("runtime", UNSET)
         runtime: Union[Unset, Runtime]

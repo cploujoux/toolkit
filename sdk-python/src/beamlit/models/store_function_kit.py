@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -20,13 +20,13 @@ class StoreFunctionKit:
         description (Union[Unset, str]): Description of the function kit, very important for the agent to work with your
             kit
         name (Union[Unset, str]): The kit name, very important for the agent to work with your kit
-        parameters (Union[Unset, List['StoreFunctionParameter']]): Kit parameters, for your kit to be callable with an
+        parameters (Union[Unset, list['StoreFunctionParameter']]): Kit parameters, for your kit to be callable with an
             Agent
     """
 
     description: Union[Unset, str] = UNSET
     name: Union[Unset, str] = UNSET
-    parameters: Union[Unset, List["StoreFunctionParameter"]] = UNSET
+    parameters: Union[Unset, list["StoreFunctionParameter"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -34,7 +34,7 @@ class StoreFunctionKit:
 
         name = self.name
 
-        parameters: Union[Unset, List[Dict[str, Any]]] = UNSET
+        parameters: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.parameters, Unset):
             parameters = []
             for parameters_item_data in self.parameters:
@@ -54,7 +54,7 @@ class StoreFunctionKit:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.store_function_parameter import StoreFunctionParameter
 
         if not src_dict:

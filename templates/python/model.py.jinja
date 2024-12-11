@@ -1,4 +1,4 @@
-from typing import Any, TypeVar, Type, Optional, BinaryIO, TextIO, TYPE_CHECKING
+from typing import Any, TypeVar, Optional, BinaryIO, TextIO, TYPE_CHECKING
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -129,7 +129,7 @@ return field_dict
 {% endif %}
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
     {% for lazy_import in model.lazy_imports %}
         {{ lazy_import }}
     {% endfor %}
