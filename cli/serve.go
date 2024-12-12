@@ -17,13 +17,12 @@ func (r *Operations) ServeCmd() *cobra.Command {
 	var module string
 
 	cmd := &cobra.Command{
-		Use:   "serve",
-		Args:  cobra.MaximumNArgs(1),
-		Short: "Serve a beamlit project",
-		Long:  "Serve a beamlit project",
-		Example: `
-			bl serve --local --port 1338
-		`,
+		Use:     "serve",
+		Args:    cobra.MaximumNArgs(1),
+		Aliases: []string{"s", "se"},
+		Short:   "Serve a beamlit project",
+		Long:    "Serve a beamlit project",
+		Example: `  bl serve --local --port 1338`,
 		Run: func(cmd *cobra.Command, args []string) {
 			uvicorn := exec.Command(
 				"uvicorn",

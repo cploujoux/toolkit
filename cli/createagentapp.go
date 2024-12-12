@@ -294,17 +294,16 @@ func createAgentApp(opts CreateAgentAppOptions) error {
 // CreateAgentAppCmd returns a cobra.Command that implements the 'create-agent-app' CLI command.
 // The command creates a new Beamlit agent app in the specified directory after collecting
 // necessary configuration through an interactive prompt.
-// Usage: bl create-agent-app [directory]
+// Usage: bl create-agent-app directory
 func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:   "create-agent-app [directory]",
-		Args:  cobra.MaximumNArgs(2),
-		Short: "Create a new beamlit agent app",
-		Long:  "Create a new beamlit agent app",
-		Example: `
-			bl create-agent-app
-		`,
+		Use:     "create-agent-app directory",
+		Args:    cobra.MaximumNArgs(2),
+		Aliases: []string{"ca", "caa"},
+		Short:   "Create a new beamlit agent app",
+		Long:    "Create a new beamlit agent app",
+		Example: `bl create-agent-app`,
 		Run: func(cmd *cobra.Command, args []string) {
 
 			if len(args) < 1 {
