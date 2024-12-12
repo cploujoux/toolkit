@@ -51,7 +51,6 @@ def new_client():
     else:
         settings = get_settings()
         credentials = load_credentials_from_settings(settings)
-
         client_config = RunClientWithCredentials(
             credentials=credentials,
             workspace=settings.workspace,

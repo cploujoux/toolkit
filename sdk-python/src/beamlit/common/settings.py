@@ -39,10 +39,14 @@ class SettingsAgent(BaseSettings):
     module: str = Field(default="main.main")
 
 
+class SettingsAuthenticationClient(BaseSettings):
+    credentials: Union[None, str] = None
+
+
 class SettingsAuthentication(BaseSettings):
     api_key: Union[None, str] = None
     jwt: Union[None, str] = None
-    client_credentials: Union[None, str] = None
+    client: SettingsAuthenticationClient = SettingsAuthenticationClient()
 
 
 class SettingsServer(BaseSettings):
@@ -56,6 +60,7 @@ class Settings(BaseSettings):
         yaml_file="beamlit.yaml",
         env_prefix="bl_",
         env_nested_delimiter="_",
+        extra="ignore",
     )
 
     workspace: str

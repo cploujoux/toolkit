@@ -9,6 +9,7 @@ import (
 )
 
 var BASE_URL = "https://api.beamlit.dev/v0"
+var APP_URL = "https://app.beamlit.dev"
 var RUN_URL = "https://run.beamlit.dev"
 var workspace string
 var outputFormat string
@@ -30,10 +31,14 @@ var rootCmd = &cobra.Command{
 		if runUrl := os.Getenv("BEAMLIT_RUN_URL"); runUrl != "" {
 			RUN_URL = runUrl
 		}
+		if appUrl := os.Getenv("BEAMLIT_APP_URL"); appUrl != "" {
+			APP_URL = appUrl
+		}
 
 		reg = &Operations{
 			BaseURL: BASE_URL,
 			RunURL:  RUN_URL,
+			AppURL:  APP_URL,
 		}
 		credentials := sdk.LoadCredentials(workspace)
 		var err error
@@ -59,6 +64,8 @@ var rootCmd = &cobra.Command{
 func Execute(releaseVersion string, releaseCommit string, releaseDate string) error {
 	reg = &Operations{
 		BaseURL: BASE_URL,
+		RunURL:  RUN_URL,
+		AppURL:  APP_URL,
 	}
 
 	rootCmd.AddCommand(reg.ListOrSetWorkspacesCmd())
@@ -72,6 +79,7 @@ func Execute(releaseVersion string, releaseCommit string, releaseDate string) er
 	rootCmd.AddCommand(reg.MetricsModelDeploymentCmd())
 	rootCmd.AddCommand(reg.ServeCmd())
 	rootCmd.AddCommand(reg.CreateAgentAppCmd())
+	rootCmd.AddCommand(reg.DeployAgentAppCmd())
 	rootCmd.AddCommand(reg.VersionCmd())
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")

@@ -130,7 +130,7 @@ def load_credentials(workspace_name: str) -> Credentials:
 def load_credentials_from_settings(settings: Settings) -> Credentials:
     return Credentials(
         api_key=settings.authentication.api_key,
-        client_credentials=settings.authentication.client_credentials,
+        client_credentials=settings.authentication.client.credentials,
     )
 
 

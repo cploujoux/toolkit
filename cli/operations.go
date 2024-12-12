@@ -7,6 +7,7 @@ import (
 type Operations struct {
 	BaseURL string
 	RunURL  string
+	AppURL  string
 }
 
 func (r *Operations) CliCommand(ctx context.Context, operationId string, fn interface{}) {

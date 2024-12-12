@@ -46,6 +46,20 @@ func (r *Operations) ServeCmd() *cobra.Command {
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_SERVER_HOST=%s", host))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", module))
 
+			// Add all current environment variables if not already set
+			for _, envVar := range os.Environ() {
+				found := false
+				for _, existingVar := range uvicorn.Env {
+					if envVar == existingVar {
+						found = true
+						break
+					}
+				}
+				if !found {
+					uvicorn.Env = append(uvicorn.Env, envVar)
+				}
+			}
+
 			err := uvicorn.Start()
 			if err != nil {
 				fmt.Printf("Error starting server: %v\n", err)

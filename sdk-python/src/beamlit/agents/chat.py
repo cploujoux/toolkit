@@ -37,12 +37,13 @@ def get_chat_model(agent_model: AgentDeployment):
     headers = get_authentication_headers(settings)
     headers["X-Beamlit-Environment"] = agent_model.environment
 
-    jwt = headers.pop("X-Beamlit-Authorization").replace("Bearer ", "")
+    jwt = headers.get("X-Beamlit-Authorization", "").replace("Bearer ", "")
     params = {"environment": agent_model.environment}
     chat_classes = {
         "openai": {
             "func": get_openai_chat_model,
             "kwargs": {
+                "http_async_client": client.get_async_httpx_client(),
                 "http_client": client.get_httpx_client(),
             },
         },

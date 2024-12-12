@@ -3,7 +3,7 @@
 from collections.abc import Callable
 from logging import getLogger
 
-from langchain_core.tools import create_schema_from_function, tool
+from langchain_core.tools import create_schema_from_function
 
 from beamlit.authentication import new_client
 from beamlit.common.settings import get_settings
@@ -58,7 +58,7 @@ def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
     def wrapper(func: Callable) -> Callable:
         if bl_kit and not func.__doc__ and bl_kit.description:
             func.__doc__ = bl_kit.description
-        return tool(func, **kwargs)
+        return func
 
     return wrapper
 
@@ -83,8 +83,7 @@ def function(
                     func,
                     parse_docstring=func.__doc__,
                 )
-            return tool(remote_func, **kwargs)
-        return tool(func, **kwargs)
+            return remote_func
+        return func
 
-    return wrapper
     return wrapper

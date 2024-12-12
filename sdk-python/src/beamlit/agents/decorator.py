@@ -1,9 +1,11 @@
 # Import necessary modules
 import ast
+import asyncio
 import importlib
 import os
 from logging import getLogger
 
+from langchain_core.tools import Tool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
@@ -35,7 +37,7 @@ def get_functions(dir="src/functions", from_decorator="function"):
                         # Look for function definitions with decorators
                         for node in ast.walk(tree):
                             if (
-                                not isinstance(node, ast.FunctionDef)
+                                (not isinstance(node, ast.FunctionDef) and not isinstance(node, ast.AsyncFunctionDef))
                                 or len(node.decorator_list) == 0
                             ):
                                 continue
@@ -73,7 +75,10 @@ def get_functions(dir="src/functions", from_decorator="function"):
                                 # Get the decorated function
                                 if not is_kit and hasattr(module, func_name):
                                     func = getattr(module, func_name)
-                                    functions.append(func)
+                                    if asyncio.iscoroutinefunction(func):
+                                        functions.append(Tool(name=func.__name__, description=func.__doc__, func=func, coroutine=func))
+                                    else:
+                                        functions.append(Tool(name=func.__name__, description=func.__doc__, func=func))
                     except Exception as e:
                         logger.warning(f"Error processing {file_path}: {e!s}")
     return functions
