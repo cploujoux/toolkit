@@ -84,7 +84,6 @@ func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string
 
 	body, _ := io.ReadAll(res.Body)
 
-	fmt.Println(string(body))
 	var finalizeResponse sdk.DeviceLoginFinalizeResponse
 	if err := json.Unmarshal(body, &finalizeResponse); err != nil {
 		panic(err)

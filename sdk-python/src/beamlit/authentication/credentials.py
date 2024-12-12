@@ -43,6 +43,28 @@ class Config:
         if self.context is None:
             self.context = ContextConfig()
 
+    def to_json(self) -> dict:
+        return {
+            "workspaces": [
+                {
+                    "name": ws.name,
+                    "credentials": {
+                        "api_key": ws.credentials.api_key,
+                        "access_token": ws.credentials.access_token,
+                        "refresh_token": ws.credentials.refresh_token,
+                        "expires_in": ws.credentials.expires_in,
+                        "device_code": ws.credentials.device_code,
+                        "client_credentials": ws.credentials.client_credentials,
+                    },
+                }
+                for ws in self.workspaces
+            ],
+            "context": {
+                "workspace": self.context.workspace,
+                "environment": self.context.environment,
+            },
+        }
+
 
 def load_config() -> Config:
     config = Config()
@@ -68,23 +90,6 @@ def load_config() -> Config:
 
 
 def save_config(config: Config):
-    data = {
-        "workspaces": [
-            {
-                "name": ws.name,
-                "credentials": {
-                    "access_token": ws.credentials.access_token,
-                    "api_key": ws.credentials.api_key,
-                },
-            }
-            for ws in config.workspaces
-        ],
-        "context": {
-            "workspace": config.context.workspace,
-            "environment": config.context.environment,
-        },
-    }
-
     home_dir = Path.home()
     if not home_dir:
         raise RuntimeError("Could not determine home directory")
@@ -93,9 +98,8 @@ def save_config(config: Config):
     config_file = config_dir / "config.yaml"
 
     config_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
-
     with open(config_file, "w", encoding="utf-8") as f:
-        yaml.dump(data, f)
+        yaml.dump(config.to_json(), f)
 
 
 def list_workspaces() -> List[str]:

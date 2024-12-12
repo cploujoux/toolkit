@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     )
 
     workspace: str
-    environment: str
+    environment: str = Field(default="production")
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")
     base_url: str = Field(default="https://api.beamlit.dev/v0")
