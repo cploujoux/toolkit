@@ -8,8 +8,7 @@ from logging import getLogger
 from typing import Callable, Literal
 
 from beamlit.common.settings import Settings, get_settings, init
-from beamlit.models import (AgentChain, AgentDeployment, Flavor,
-                            FunctionDeployment, Runtime,
+from beamlit.models import (Agent, AgentChain, Flavor, Function, Runtime,
                             StoreFunctionParameter)
 
 sys.path.insert(0, os.getcwd())
@@ -23,6 +22,7 @@ class Resource:
     name: str
     decorator: ast.Call
     func: Callable
+
 
 def get_resources(from_decorator, dir="src") -> list[Resource]:
     """
@@ -53,7 +53,8 @@ def get_resources(from_decorator, dir="src") -> list[Resource]:
                         # Look for function definitions with decorators
                         for node in ast.walk(tree):
                             if (
-                                not isinstance(node, ast.FunctionDef) and not isinstance(node, ast.AsyncFunctionDef)
+                                not isinstance(node, ast.FunctionDef)
+                                and not isinstance(node, ast.AsyncFunctionDef)
                             ) or len(node.decorator_list) == 0:
                                 continue
                             decorator = node.decorator_list[0]
@@ -75,7 +76,6 @@ def get_resources(from_decorator, dir="src") -> list[Resource]:
 
                                 # Get the decorated function
                                 if hasattr(module, func_name) and isinstance(decorator, ast.Call):
-
                                     resources.append(
                                         Resource(
                                             type=decorator_name,
@@ -103,18 +103,19 @@ def get_parameters(resource: Resource) -> list[StoreFunctionParameter]:
     parameters = []
     # Get function signature
     import inspect
+
     sig = inspect.signature(resource.func)
     # Get docstring for parameter descriptions
     docstring = inspect.getdoc(resource.func)
     param_descriptions = {}
     if docstring:
         # Parse docstring for parameter descriptions
-        lines = docstring.split('\n')
+        lines = docstring.split("\n")
         for line in lines:
             line = line.strip().lower()
-            if line.startswith(':param '):
+            if line.startswith(":param "):
                 # Extract parameter name and description
-                param_line = line[7:].split(':', 1)
+                param_line = line[7:].split(":", 1)
                 if len(param_line) == 2:
                     param_name = param_line[0].strip()
                     param_desc = param_line[1].strip()
@@ -122,18 +123,17 @@ def get_parameters(resource: Resource) -> list[StoreFunctionParameter]:
     for name, param in sig.parameters.items():
         # Skip *args and **kwargs parameters
         if param.kind in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD):
-
             continue
 
         param_type = "string"  # Default type
         type_mapping = {
-            'str': 'string',
-            'int': 'integer',
-            'float': 'number',
-            'bool': 'boolean',
-            'list': 'array',
-            'dict': 'object',
-            'none': 'null'
+            "str": "string",
+            "int": "integer",
+            "float": "number",
+            "bool": "boolean",
+            "list": "array",
+            "dict": "object",
+            "none": "null",
         }
         if param.annotation != inspect.Parameter.empty:
             # Map Python types to OpenAPI types
@@ -146,7 +146,7 @@ def get_parameters(resource: Resource) -> list[StoreFunctionParameter]:
             name=name,
             type_=type_mapping.get(param_type, "string"),
             required=param.default == inspect.Parameter.empty,
-            description=param_descriptions.get(name, f"Parameter {name}")
+            description=param_descriptions.get(name, f"Parameter {name}"),
         )
         parameters.append(parameter)
 
@@ -169,17 +169,18 @@ def get_description(description: str | None, resource: Resource) -> str:
     doc = resource.func.__doc__
     if doc:
         # Split docstring into sections and get only the description part
-        doc_lines = doc.split('\n')
+        doc_lines = doc.split("\n")
         description_lines = []
         for line in doc_lines:
             line = line.strip()
             # Stop when we hit param/return sections
-            if line.startswith(':param') or line.startswith(':return'):
+            if line.startswith(":param") or line.startswith(":return"):
                 break
             if line:
                 description_lines.append(line)
-        return ' '.join(description_lines).strip()
+        return " ".join(description_lines).strip()
     return ""
+
 
 def get_kwargs(arg: ast.Call) -> dict:
     """
@@ -197,8 +198,13 @@ def get_kwargs(arg: ast.Call) -> dict:
             kwargs[keyword.arg] = keyword.value.value
         elif isinstance(keyword.value, (ast.List, ast.Tuple)):
             kwargs[keyword.arg] = [
-                AgentChain(**get_kwargs(elem)) if isinstance(elem, ast.Call) and isinstance(elem.func, ast.Name) and elem.func.id == "AgentChain"
-                else elem.value if isinstance(elem, ast.Constant) else elem
+                AgentChain(**get_kwargs(elem))
+                if isinstance(elem, ast.Call)
+                and isinstance(elem.func, ast.Name)
+                and elem.func.id == "AgentChain"
+                else elem.value
+                if isinstance(elem, ast.Constant)
+                else elem
                 for elem in keyword.value.elts
             ]
         elif isinstance(keyword.value, ast.Dict):
@@ -210,13 +216,17 @@ def get_kwargs(arg: ast.Call) -> dict:
                     kwargs[keyword.arg][k.value] = get_kwargs(v)
     return kwargs
 
+
 def get_runtime(type: str, name: str) -> Runtime:
     settings = get_settings()
     registry_url = settings.registry_url.replace("https://", "").replace("http://", "")
     image = f"{registry_url}/{settings.workspace}/{type}s/{name}"
     return Runtime(image=image)
 
-def get_beamlit_deployment_from_resource(resource: Resource) -> AgentDeployment | FunctionDeployment:
+
+def get_beamlit_deployment_from_resource(
+    resource: Resource,
+) -> Agent | Function:
     """
     Creates a deployment configuration from a resource.
 
@@ -224,58 +234,58 @@ def get_beamlit_deployment_from_resource(resource: Resource) -> AgentDeployment 
         resource (Resource): The resource to create a deployment for
 
     Returns:
-        AgentDeployment | FunctionDeployment: The deployment configuration
+        Agent | Function: The deployment configuration
     """
     for arg in resource.decorator.args:
         if isinstance(arg, ast.Call):
-            if isinstance(arg.func, ast.Name) and arg.func.id == "AgentDeployment":
+            if isinstance(arg.func, ast.Name) and arg.func.id == "Agent":
                 kwargs = get_kwargs(arg)
                 description = kwargs.pop("description", None)
-                return AgentDeployment(
+                return Agent(
                     **kwargs,
                     description=get_description(description, resource),
-                    runtime=get_runtime("agent", kwargs.get("agent", resource.name))
+                    runtime=get_runtime("agent", kwargs.get("agent", resource.name)),
                 )
             if isinstance(arg.func, ast.Name) and arg.func.id == "FunctionDeployment":
                 kwargs = get_kwargs(arg)
                 description = kwargs.pop("description", None)
-                return FunctionDeployment(
+                return Function(
                     **kwargs,
                     parameters=get_parameters(resource),
                     description=get_description(description, resource),
-                    runtime=get_runtime("function", kwargs.get("function", resource.name))
+                    runtime=get_runtime("function", kwargs.get("function", resource.name)),
                 )
     for arg in resource.decorator.keywords:
         if isinstance(arg.value, ast.Call):
             if isinstance(arg.value.func, ast.Name) and arg.value.func.id == "AgentDeployment":
                 kwargs = get_kwargs(arg.value)
                 description = kwargs.pop("description", None)
-                return AgentDeployment(
+                return Agent(
                     **kwargs,
                     description=get_description(description, resource),
-                    runtime=get_runtime("agent", kwargs.get("agent", resource.name))
+                    runtime=get_runtime("agent", kwargs.get("agent", resource.name)),
                 )
             if isinstance(arg.value.func, ast.Name) and arg.value.func.id == "FunctionDeployment":
                 kwargs = get_kwargs(arg.value)
                 description = kwargs.pop("description", None)
-                return FunctionDeployment(
+                return Function(
                     **kwargs,
                     parameters=get_parameters(resource),
                     description=get_description(description, resource),
-                    runtime=get_runtime("function", kwargs.get("function", resource.name))
+                    runtime=get_runtime("function", kwargs.get("function", resource.name)),
                 )
     if resource.type == "agent":
-        return AgentDeployment(
+        return Agent(
             agent=resource.name,
-            description=get_description(None,resource),
-            runtime=get_runtime("agent", resource.name)
+            description=get_description(None, resource),
+            runtime=get_runtime("agent", resource.name),
         )
     if resource.type == "function":
-        return FunctionDeployment(
+        return Function(
             function=resource.name,
             parameters=get_parameters(resource),
-            description=get_description(None,resource),
-            runtime=get_runtime("function", resource.name)
+            description=get_description(None, resource),
+            runtime=get_runtime("function", resource.name),
         )
     return None
 
@@ -293,6 +303,7 @@ def get_flavors(flavors: list[Flavor]) -> str:
     if not flavors:
         return "[]"
     return json.dumps([flavor.to_dict() for flavor in flavors])
+
 
 def format_parameters(parameters: list[StoreFunctionParameter]) -> str:
     """
@@ -317,6 +328,7 @@ def format_parameters(parameters: list[StoreFunctionParameter]) -> str:
 
     return "\n".join(formatted)
 
+
 def format_agent_chain(agent_chain: list[AgentChain]) -> str:
     """
     Formats agent chain configuration into YAML-compatible string.
@@ -339,7 +351,10 @@ def format_agent_chain(agent_chain: list[AgentChain]) -> str:
             formatted.append(f"        description: {agent.description}")
     return "\n".join(formatted)
 
-def get_agent_yaml(agent: AgentDeployment, functions: list[tuple[Resource, FunctionDeployment]], settings: Settings) -> str:
+
+def get_agent_yaml(
+    agent: Agent, functions: list[tuple[Resource, Function]], settings: Settings
+) -> str:
     """
     Generates YAML configuration for an agent deployment.
 
@@ -355,25 +370,26 @@ def get_agent_yaml(agent: AgentDeployment, functions: list[tuple[Resource, Funct
 apiVersion: beamlit.com/v1alpha1
 kind: Agent
 metadata:
-  name: {agent.agent}
+  name: {agent.metadata.name}
 spec:
-  display_name: {agent.agent}
+  display_name: {agent.metadata.name}
   deployments:
   - environment: {settings.environment}
     enabled: true
-    policies: [{", ".join(agent.policies or [])}]
-    functions: [{", ".join([f"{function.function}" for (_, function) in functions])}]
-    agent_chain: {format_agent_chain(agent.agent_chain)}
-    model: {agent.model}
+    policies: [{", ".join(agent.spec.policies or [])}]
+    functions: [{", ".join([f"{function.metadata.name}" for (_, function) in functions])}]
+    agent_chain: {format_agent_chain(agent.spec.agent_chain)}
+    model: {agent.spec.model}
     runtime:
-      image: {agent.runtime.image}
+      image: {agent.spec.runtime.image}
 """
-    if agent.description:
+    if agent.spec.description:
         template += f"""    description: |
-      {agent.description}"""
+      {agent.spec.description}"""
     return template
 
-def get_function_yaml(function: FunctionDeployment, settings: Settings) -> str:
+
+def get_function_yaml(function: Function, settings: Settings) -> str:
     """
     Generates YAML configuration for a function deployment.
 
@@ -388,28 +404,32 @@ def get_function_yaml(function: FunctionDeployment, settings: Settings) -> str:
 apiVersion: beamlit.com/v1alpha1
 kind: Function
 metadata:
-  name: {function.function}
+  name: {function.metadata.name}
+  display_name: {function.metadata.display_name or function.metadata.name}
+  environment: {settings.environment}
 spec:
-  display_name: {function.function}
-  deployments:
-  - environment: {settings.environment}
-    enabled: true
-    policies: [{", ".join(function.policies or [])}]
-    description: |
-      {function.description}
-    parameters: {format_parameters(function.parameters)}
-    runtime:
-      image: {function.runtime.image}
+  enabled: true
+  policies: [{", ".join(function.spec.policies or [])}]
+  description: |
+    {function.spec.description}
+  parameters: {format_parameters(function.spec.parameters)}
+  runtime:
+    image: {function.spec.runtime.image}
 """
 
-def dockerfile(type: Literal["agent", "function"], resource: Resource, deployment: AgentDeployment | FunctionDeployment) -> str:
+
+def dockerfile(
+    type: Literal["agent", "function"],
+    resource: Resource,
+    deployment: Agent | Function,
+) -> str:
     """
     Generates Dockerfile content for agent or function deployment.
 
     Args:
         type (Literal["agent", "function"]): Type of deployment
         resource (Resource): Resource to be deployed
-        deployment (AgentDeployment | FunctionDeployment): Deployment configuration
+        deployment (Agent | Function): Resource configuration
 
     Returns:
         str: Dockerfile content
@@ -421,7 +441,7 @@ def dockerfile(type: Literal["agent", "function"], resource: Resource, deploymen
     cmd = ["bl", "serve", "--port", "80", "--module", module]
     if type == "agent":
         cmd.append("--remote")
-    cmd_str = ','.join([f'"{c}"' for c in cmd])
+    cmd_str = ",".join([f'"{c}"' for c in cmd])
 
     return f"""
 FROM python:3.12-slim
@@ -448,6 +468,7 @@ ENV PATH="/beamlit/.venv/bin:$PATH"
 ENTRYPOINT [{cmd_str}]
 """
 
+
 def generate_beamlit_deployment(directory: str):
     """
     Generates all necessary deployment files for Beamlit agents and functions.
@@ -463,8 +484,8 @@ def generate_beamlit_deployment(directory: str):
     settings = init()
     logger = getLogger(__name__)
     logger.info(f"Importing server module: {settings.server.module}")
-    functions: list[tuple[Resource, FunctionDeployment]] = []
-    agents: list[tuple[Resource, AgentDeployment]] = []
+    functions: list[tuple[Resource, Function]] = []
+    agents: list[tuple[Resource, Agent]] = []
     for agent in get_resources("agent"):
         agent_deployment = get_beamlit_deployment_from_resource(agent)
         if agent_deployment:
@@ -479,7 +500,7 @@ def generate_beamlit_deployment(directory: str):
     # Create directory if it doesn't exist
     os.makedirs(agents_dir, exist_ok=True)
     os.makedirs(functions_dir, exist_ok=True)
-    for (resource, agent) in agents:
+    for resource, agent in agents:
         # write deployment file
         agent_dir = os.path.join(agents_dir, agent.agent)
         os.makedirs(agent_dir, exist_ok=True)
@@ -490,7 +511,7 @@ def generate_beamlit_deployment(directory: str):
         with open(os.path.join(agent_dir, f"Dockerfile"), "w") as f:
             content = dockerfile("agent", resource, agent)
             f.write(content)
-    for (resource, function) in functions:
+    for resource, function in functions:
         # write deployment file
         function_dir = os.path.join(functions_dir, function.function)
         os.makedirs(function_dir, exist_ok=True)

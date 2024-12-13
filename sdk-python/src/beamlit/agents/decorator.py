@@ -5,15 +5,14 @@ import importlib
 import os
 from logging import getLogger
 
-from langchain_core.tools import Tool
-from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
-
-from beamlit.api.models import get_model_deployment
+from beamlit.api.models import get_model
 from beamlit.authentication import new_client
 from beamlit.common.settings import get_settings, init
 from beamlit.errors import UnexpectedStatus
-from beamlit.models import AgentDeployment
+from beamlit.models import Agent
+from langchain_core.tools import Tool
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.prebuilt import create_react_agent
 
 from .chat import get_chat_model
 
@@ -37,9 +36,9 @@ def get_functions(dir="src/functions", from_decorator="function"):
                         # Look for function definitions with decorators
                         for node in ast.walk(tree):
                             if (
-                                (not isinstance(node, ast.FunctionDef) and not isinstance(node, ast.AsyncFunctionDef))
-                                or len(node.decorator_list) == 0
-                            ):
+                                not isinstance(node, ast.FunctionDef)
+                                and not isinstance(node, ast.AsyncFunctionDef)
+                            ) or len(node.decorator_list) == 0:
                                 continue
                             decorator = node.decorator_list[0]
 
@@ -76,16 +75,29 @@ def get_functions(dir="src/functions", from_decorator="function"):
                                 if not is_kit and hasattr(module, func_name):
                                     func = getattr(module, func_name)
                                     if asyncio.iscoroutinefunction(func):
-                                        functions.append(Tool(name=func.__name__, description=func.__doc__, func=func, coroutine=func))
+                                        functions.append(
+                                            Tool(
+                                                name=func.__name__,
+                                                description=func.__doc__,
+                                                func=func,
+                                                coroutine=func,
+                                            )
+                                        )
                                     else:
-                                        functions.append(Tool(name=func.__name__, description=func.__doc__, func=func))
+                                        functions.append(
+                                            Tool(
+                                                name=func.__name__,
+                                                description=func.__doc__,
+                                                func=func,
+                                            )
+                                        )
                     except Exception as e:
                         logger.warning(f"Error processing {file_path}: {e!s}")
     return functions
 
 
 def agent(
-    bl_agent: AgentDeployment = None,
+    bl_agent: Agent = None,
     chat_model=None,
     agent=None,
 ):
@@ -110,28 +122,28 @@ def agent(
     functions = get_functions(dir=settings.agent.functions_directory)
     settings.agent.functions = functions
 
-    if bl_agent.model and chat_model is None:
+    if bl_agent.spec.model and chat_model is None:
         client = new_client()
         try:
-            response = get_model_deployment.sync_detailed(
-                bl_agent.model, settings.environment, client=client
+            response = get_model.sync_detailed(
+                bl_agent.spec.model, environment=settings.environment, client=client
             )
             settings.agent.model = response.parsed
         except UnexpectedStatus as e:
             if e.status_code == 404 and settings.environment != "production":
                 try:
-                    response = get_model_deployment.sync_detailed(
-                        bl_agent.model, "production", client=client
+                    response = get_model.sync_detailed(
+                        bl_agent.spec.model, environment="production", client=client
                     )
                     settings.agent.model = response.parsed
                 except UnexpectedStatus as e:
                     if e.status_code == 404:
-                        raise ValueError(f"Model {bl_agent.model} not found")
+                        raise ValueError(f"Model {bl_agent.spec.model} not found")
             else:
                 raise e
         chat_model = get_chat_model(settings.agent.model)
         settings.agent.chat_model = chat_model
-        runtime = settings.agent.model.runtime
+        runtime = settings.agent.model.spec.runtime
         logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
 
     if len(functions) == 0:
