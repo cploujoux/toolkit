@@ -11,6 +11,7 @@ import (
 var BASE_URL = "https://api.beamlit.dev/v0"
 var APP_URL = "https://app.beamlit.dev"
 var RUN_URL = "https://run.beamlit.dev"
+var REGISTRY_URL = "https://serverless-registry-production.beamlit.workers.dev"
 var workspace string
 var outputFormat string
 var environment string
@@ -36,9 +37,10 @@ var rootCmd = &cobra.Command{
 		}
 
 		reg = &Operations{
-			BaseURL: BASE_URL,
-			RunURL:  RUN_URL,
-			AppURL:  APP_URL,
+			BaseURL:     BASE_URL,
+			RunURL:      RUN_URL,
+			AppURL:      APP_URL,
+			RegistryURL: REGISTRY_URL,
 		}
 		credentials := sdk.LoadCredentials(workspace)
 		var err error
@@ -63,9 +65,10 @@ var rootCmd = &cobra.Command{
 
 func Execute(releaseVersion string, releaseCommit string, releaseDate string) error {
 	reg = &Operations{
-		BaseURL: BASE_URL,
-		RunURL:  RUN_URL,
-		AppURL:  APP_URL,
+		BaseURL:     BASE_URL,
+		RunURL:      RUN_URL,
+		AppURL:      APP_URL,
+		RegistryURL: REGISTRY_URL,
 	}
 
 	rootCmd.AddCommand(reg.ListOrSetWorkspacesCmd())

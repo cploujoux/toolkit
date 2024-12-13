@@ -48,6 +48,10 @@ func NewBearerTokenProvider(credentials Credentials, workspaceName string, baseU
 	return &BearerToken{credentials: credentials, workspaceName: workspaceName, baseUrl: baseUrl}
 }
 
+func (s *BearerToken) GetCredentials() Credentials {
+	return s.credentials
+}
+
 func (s *BearerToken) RefreshIfNeeded() error {
 	// Need to refresh the token if access token expires in less than 10 minutes
 	parts := strings.Split(s.credentials.AccessToken, ".")

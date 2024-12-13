@@ -27,19 +27,10 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 			cat file.yaml | bl apply -f -
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			results, err := getResults(filePath, recursive)
+			err := r.Apply(filePath, recursive)
 			if err != nil {
-				fmt.Printf("error getting results: %v", err)
+				fmt.Println(err)
 				os.Exit(1)
-			}
-
-			for _, result := range results {
-				for _, resource := range resources {
-					if resource.Kind == result.Kind {
-						name := result.Metadata.(map[string]interface{})["name"].(string)
-						resource.PutFn(resource.Kind, name, result)
-					}
-				}
 			}
 		},
 	}
@@ -53,6 +44,24 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 	}
 
 	return cmd
+}
+
+func (r *Operations) Apply(filePath string, recursive bool) error {
+	results, err := getResults(filePath, recursive)
+	if err != nil {
+		return fmt.Errorf("error getting results: %w", err)
+	}
+
+	// À ce stade, results contient tous vos documents YAML
+	for _, result := range results {
+		for _, resource := range resources {
+			if resource.Kind == result.Kind {
+				name := result.Metadata.(map[string]interface{})["name"].(string)
+				resource.PutFn(resource.Kind, name, result.Spec)
+			}
+		}
+	}
+	return nil
 }
 
 // Helper function to handle common resource operations
