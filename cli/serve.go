@@ -85,7 +85,7 @@ func (r *Operations) ServeCmd() *cobra.Command {
 	cmd.Flags().IntVarP(&port, "port", "p", 1338, "Bind socket to this host")
 	cmd.Flags().StringVarP(&host, "host", "H", "0.0.0.0", "Bind socket to this port. If 0, an available port will be picked")
 	cmd.Flags().StringVarP(&module, "module", "m", "agent.main", "Module to serve, can be an agent or a function")
-	cmd.Flags().BoolVarP(&hotreload, "hotreload", "h", false, "Watch for changes in the project")
+	cmd.Flags().BoolVarP(&hotreload, "hotreload", "", false, "Watch for changes in the project")
 	cmd.Flags().BoolVarP(&remote, "remote", "r", false, "Serve the project remotely. It will use functions deployed on beamlit cloud")
 	return cmd
 }
