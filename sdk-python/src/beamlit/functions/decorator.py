@@ -12,9 +12,9 @@ from langchain_core.tools import create_schema_from_function
 logger = getLogger(__name__)
 
 
-def get_remote_function(func: Callable, bl_function: Function):
+def get_remote_function(func: Callable, function: Function):
     settings = get_settings()
-    name = (bl_function and bl_function.metadata and bl_function.metadata.name) or func.__name__
+    name = (function and function.metadata and function.metadata.name) or func.__name__
 
     def _partial(*args, **kwargs):
         # Get function signature parameters
@@ -62,15 +62,15 @@ def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
     return wrapper
 
 
-def function(*args, bl_function: Function = None, kit=False, **kwargs: dict) -> Callable:
+def function(*args, function: Function = None, kit=False, **kwargs: dict) -> Callable:
     """Create function tools with Beamlit and LangChain integration."""
     settings = get_settings()
 
     def wrapper(func: Callable) -> Callable:
-        if bl_function and not func.__doc__ and bl_function.spec and bl_function.spec.description:
-            func.__doc__ = bl_function.spec.description
+        if function and not func.__doc__ and function.spec and function.spec.description:
+            func.__doc__ = function.spec.description
         if settings.remote:
-            remote_func = get_remote_function(func, bl_function)
+            remote_func = get_remote_function(func, function)
             if not kwargs.get("args_schema"):
                 kwargs["args_schema"] = create_schema_from_function(
                     func.__name__,
