@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"reflect"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -99,23 +98,6 @@ func (resource Resource) GetFn(name string, options map[string]string) {
 		os.Exit(1)
 	}
 	output(resource, []interface{}{res}, outputFormat)
-}
-
-func retrieveListParams(typeParams reflect.Type, options map[string]string) reflect.Value {
-	paramsValue := reflect.New(typeParams)
-
-	elemValue := paramsValue.Elem()
-	for fieldName, value := range options {
-		field := elemValue.FieldByName(strings.Title(fieldName))
-		if field.IsValid() && field.CanSet() {
-			if field.Kind() == reflect.Ptr {
-				ptrValue := reflect.New(field.Type().Elem())
-				ptrValue.Elem().SetString(value)
-				field.Set(ptrValue)
-			}
-		}
-	}
-	return paramsValue
 }
 
 func (resource Resource) ListFn(options map[string]string) {

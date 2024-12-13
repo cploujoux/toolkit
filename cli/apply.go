@@ -33,11 +33,11 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			// À ce stade, results contient tous vos documents YAML
 			for _, result := range results {
 				for _, resource := range resources {
 					if resource.Kind == result.Kind {
-						// resource.PutFn(resource.Kind, result.Metadata.Name, result.Spec)
+						name := result.Metadata.(map[string]interface{})["name"].(string)
+						resource.PutFn(resource.Kind, name, result)
 					}
 				}
 			}
@@ -56,7 +56,7 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 }
 
 // Helper function to handle common resource operations
-func (resource Resource) handleResourceOperation(name string, spec interface{}, operation string) (*http.Response, error) {
+func (resource Resource) handleResourceOperation(name string, resourceObject interface{}, operation string) (*http.Response, error) {
 	ctx := context.Background()
 
 	// Get the appropriate function based on operation
@@ -72,7 +72,7 @@ func (resource Resource) handleResourceOperation(name string, spec interface{}, 
 	}
 
 	// Handle spec conversion
-	specJson, err := json.Marshal(spec)
+	specJson, err := json.Marshal(resourceObject)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling spec: %v", err)
 	}
@@ -116,9 +116,9 @@ func (resource Resource) handleResourceOperation(name string, spec interface{}, 
 	return response, nil
 }
 
-func (resource Resource) PutFn(resourceName string, name string, spec interface{}) {
+func (resource Resource) PutFn(resourceName string, name string, resourceObject interface{}) {
 	formattedError := fmt.Sprintf("Resource %s:%s error: ", resourceName, name)
-	response, err := resource.handleResourceOperation(name, spec, "put")
+	response, err := resource.handleResourceOperation(name, resourceObject, "put")
 	if err != nil {
 		fmt.Printf("%s%v", formattedError, err)
 		return
@@ -136,7 +136,7 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 
 	if response.StatusCode == 404 {
 		// Need to create the resource
-		resource.PostFn(resourceName, name, spec)
+		resource.PostFn(resourceName, name, resourceObject)
 		return
 	}
 
@@ -153,9 +153,9 @@ func (resource Resource) PutFn(resourceName string, name string, spec interface{
 	fmt.Printf("Resource %s:%s configured\n", resourceName, name)
 }
 
-func (resource Resource) PostFn(resourceName string, name string, spec interface{}) {
+func (resource Resource) PostFn(resourceName string, name string, resourceObject interface{}) {
 	formattedError := fmt.Sprintf("Resource %s:%s error: ", resourceName, name)
-	response, err := resource.handleResourceOperation(name, spec, "post")
+	response, err := resource.handleResourceOperation(name, resourceObject, "post")
 	if err != nil {
 		fmt.Printf("%s%v\n", formattedError, err)
 		return
