@@ -36,6 +36,9 @@ func (r *Operations) ServeCmd() *cobra.Command {
 
 			uvicorn.Stdout = os.Stdout
 			uvicorn.Stderr = os.Stderr
+			if environment == "" {
+				environment = "production"
+			}
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_ENVIRONMENT=%s", environment))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_WORKSPACE=%s", workspace))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_REMOTE=%t", remote))
