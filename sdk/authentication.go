@@ -26,14 +26,16 @@ type RunClientWithCredentials struct {
 	Workspace   string
 }
 
-func NewClientWithCredentials(config RunClientWithCredentials) (*ClientWithResponses, error) {
-	var provider AuthProvider
-	if config.Credentials.APIKey != "" {
-		provider = NewApiKeyProvider(config.Credentials, config.Workspace)
-	} else if config.Credentials.AccessToken != "" {
-		provider = NewBearerTokenProvider(config.Credentials, config.Workspace, config.ApiURL)
-	} else {
-		provider = NewPublicProvider()
+func GetAuthProvider(credentials Credentials, workspace string, apiUrl string) AuthProvider {
+	if credentials.APIKey != "" {
+		return NewApiKeyProvider(credentials, workspace)
+	} else if credentials.AccessToken != "" {
+		return NewBearerTokenProvider(credentials, workspace, apiUrl)
 	}
+	return NewPublicProvider()
+}
+
+func NewClientWithCredentials(config RunClientWithCredentials) (*ClientWithResponses, error) {
+	provider := GetAuthProvider(config.Credentials, config.Workspace, config.ApiURL)
 	return NewClientWithResponses(config.ApiURL, config.RunURL, WithRequestEditorFn(provider.Intercept))
 }

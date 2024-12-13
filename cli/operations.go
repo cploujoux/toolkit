@@ -2,12 +2,20 @@ package cli
 
 import (
 	"context"
+	"strings"
 )
 
 type Operations struct {
-	BaseURL string
-	RunURL  string
-	AppURL  string
+	BaseURL     string
+	RunURL      string
+	AppURL      string
+	RegistryURL string
+}
+
+func (r *Operations) GetRegistryURL() string {
+	registryURL := strings.Replace(r.RegistryURL, "https://", "", 1)
+	registryURL = strings.Replace(registryURL, "http://", "", 1)
+	return registryURL
 }
 
 func (r *Operations) CliCommand(ctx context.Context, operationId string, fn interface{}) {

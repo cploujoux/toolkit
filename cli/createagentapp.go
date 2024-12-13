@@ -29,7 +29,6 @@ type CreateAgentAppOptions struct {
 	Author             string   // Author of the project
 	License            string   // License type (mit, apache, gpl)
 	Features           []string // Additional features to include
-	Ruff               string   // Ruff configuration
 }
 
 // getTheme returns a custom theme configuration for the CLI interface using the Dracula color scheme.
