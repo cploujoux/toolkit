@@ -2,16 +2,6 @@ import os
 from logging import getLogger
 from typing import List, Tuple, Type, Union
 
-from langchain_core.language_models.chat_models import BaseChatModel
-from langgraph.graph.graph import CompiledGraph
-from pydantic import Field
-from pydantic_settings import (
-    BaseSettings,
-    PydanticBaseSettingsSource,
-    SettingsConfigDict,
-    YamlConfigSettingsSource,
-)
-
 from beamlit.api.functions import get_function_deployment
 from beamlit.api.models import get_model_deployment
 from beamlit.client import AuthenticatedClient
@@ -20,6 +10,11 @@ from beamlit.models.agent_deployment import AgentDeployment
 from beamlit.models.function_deployment import FunctionDeployment
 from beamlit.models.model_deployment import ModelDeployment
 from beamlit.types import UNSET, Unset
+from langchain_core.language_models.chat_models import BaseChatModel
+from langgraph.graph.graph import CompiledGraph
+from pydantic import Field
+from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
+                               SettingsConfigDict, YamlConfigSettingsSource)
 
 global SETTINGS
 SETTINGS = None
@@ -65,6 +60,7 @@ class Settings(BaseSettings):
 
     workspace: str
     environment: str = Field(default="production")
+    remote: bool = Field(default=False)
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")
     base_url: str = Field(default="https://api.beamlit.dev/v0")

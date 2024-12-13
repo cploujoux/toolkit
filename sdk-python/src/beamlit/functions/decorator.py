@@ -3,12 +3,11 @@
 from collections.abc import Callable
 from logging import getLogger
 
-from langchain_core.tools import create_schema_from_function
-
 from beamlit.authentication import new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import FunctionDeployment, FunctionKit
 from beamlit.run import RunClient
+from langchain_core.tools import create_schema_from_function
 
 logger = getLogger(__name__)
 
@@ -72,10 +71,7 @@ def function(
     def wrapper(func: Callable) -> Callable:
         if bl_function and not func.__doc__ and bl_function.description:
             func.__doc__ = bl_function.description
-        if (
-            settings.environment == "development"
-            or settings.environment == "production"
-        ):
+        if settings.remote:
             remote_func = get_remote_function(func, bl_function)
             if not kwargs.get("args_schema"):
                 kwargs["args_schema"] = create_schema_from_function(

@@ -12,9 +12,9 @@ import (
 func (r *Operations) ServeCmd() *cobra.Command {
 	var port int
 	var host string
-	var watch bool
-	var local bool
+	var hotreload bool
 	var module string
+	var remote bool
 
 	cmd := &cobra.Command{
 		Use:     "serve",
@@ -27,21 +27,18 @@ func (r *Operations) ServeCmd() *cobra.Command {
 			uvicorn := exec.Command(
 				"uvicorn",
 				"beamlit.serve.app:app",
-				"--reload",
 				"--port",
 				fmt.Sprintf("%d", port),
 			)
-			uvicornEnvironment := "production"
-			if local {
-				uvicornEnvironment = "local"
-			} else if watch {
-				uvicornEnvironment = "development"
+			if hotreload {
+				uvicorn.Args = append(uvicorn.Args, "--reload")
 			}
 
 			uvicorn.Stdout = os.Stdout
 			uvicorn.Stderr = os.Stderr
-			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_ENVIRONMENT=%s", uvicornEnvironment))
+			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_ENVIRONMENT=%s", environment))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_WORKSPACE=%s", workspace))
+			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_REMOTE=%t", remote))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_SERVER_PORT=%d", port))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_SERVER_HOST=%s", host))
 			uvicorn.Env = append(uvicorn.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", module))
@@ -88,7 +85,7 @@ func (r *Operations) ServeCmd() *cobra.Command {
 	cmd.Flags().IntVarP(&port, "port", "p", 1338, "Bind socket to this host")
 	cmd.Flags().StringVarP(&host, "host", "H", "0.0.0.0", "Bind socket to this port. If 0, an available port will be picked")
 	cmd.Flags().StringVarP(&module, "module", "m", "agent.main", "Module to serve, can be an agent or a function")
-	cmd.Flags().BoolVarP(&watch, "watch", "W", false, "Watch for changes in the project, save changes to beamlit development environment and execute on it")
-	cmd.Flags().BoolVarP(&local, "local", "l", false, "Serve the project locally, without using the cloud")
+	cmd.Flags().BoolVarP(&hotreload, "hotreload", "h", false, "Watch for changes in the project")
+	cmd.Flags().BoolVarP(&remote, "remote", "r", false, "Serve the project remotely. It will use functions deployed on beamlit cloud")
 	return cmd
 }
