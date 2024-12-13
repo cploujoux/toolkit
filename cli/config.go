@@ -7,16 +7,18 @@ import (
 )
 
 type Resource struct {
-	Kind     string
-	Short    string
-	Plural   string
-	Singular string
-	SpecType reflect.Type
-	List     interface{}
-	Get      interface{}
-	Delete   interface{}
-	Put      interface{}
-	Post     interface{}
+	Kind           string
+	Short          string
+	Plural         string
+	Singular       string
+	SpecType       reflect.Type
+	ListParamsType reflect.Type
+	GetParamsType  reflect.Type
+	List           interface{}
+	Get            interface{}
+	Delete         interface{}
+	Put            interface{}
+	Post           interface{}
 }
 
 var resources = []*Resource{
@@ -35,11 +37,13 @@ var resources = []*Resource{
 		SpecType: reflect.TypeOf(sdk.Policy{}),
 	},
 	{
-		Kind:     "Model",
-		Short:    "ml",
-		Plural:   "models",
-		Singular: "model",
-		SpecType: reflect.TypeOf(sdk.ModelWithDeployments{}),
+		Kind:           "Model",
+		Short:          "ml",
+		Plural:         "models",
+		Singular:       "model",
+		SpecType:       reflect.TypeOf(sdk.Model{}),
+		ListParamsType: reflect.TypeOf(sdk.ListModelsParams{}),
+		GetParamsType:  reflect.TypeOf(sdk.GetModelParams{}),
 	},
 	{
 		Kind:     "ModelProvider",
@@ -53,21 +57,25 @@ var resources = []*Resource{
 		Short:    "loc",
 		Plural:   "locations",
 		Singular: "location",
-		SpecType: reflect.TypeOf(sdk.Location{}),
+		SpecType: reflect.TypeOf(sdk.LocationResponse{}),
 	},
 	{
-		Kind:     "Function",
-		Short:    "fn",
-		Plural:   "functions",
-		Singular: "function",
-		SpecType: reflect.TypeOf(sdk.FunctionWithDeployments{}),
+		Kind:           "Function",
+		Short:          "fn",
+		Plural:         "functions",
+		Singular:       "function",
+		SpecType:       reflect.TypeOf(sdk.Function{}),
+		ListParamsType: reflect.TypeOf(sdk.ListFunctionsParams{}),
+		GetParamsType:  reflect.TypeOf(sdk.GetFunctionParams{}),
 	},
 	{
-		Kind:     "Agent",
-		Short:    "ag",
-		Plural:   "agents",
-		Singular: "agent",
-		SpecType: reflect.TypeOf(sdk.AgentWithDeployments{}),
+		Kind:           "Agent",
+		Short:          "ag",
+		Plural:         "agents",
+		Singular:       "agent",
+		SpecType:       reflect.TypeOf(sdk.Agent{}),
+		ListParamsType: reflect.TypeOf(sdk.ListAgentsParams{}),
+		GetParamsType:  reflect.TypeOf(sdk.GetAgentParams{}),
 	},
 	{
 		Kind:     "IntegrationConnection",

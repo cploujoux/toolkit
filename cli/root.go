@@ -92,6 +92,9 @@ func Execute(releaseVersion string, releaseCommit string, releaseDate string) er
 	if environment == "" {
 		environment = sdk.CurrentContext().Environment
 	}
+	if environment == "" {
+		environment = "production"
+	}
 	if version == "" {
 		version = releaseVersion
 	}

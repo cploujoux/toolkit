@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -24,12 +25,15 @@ func (r *Operations) GetCmd() *cobra.Command {
 			Aliases: []string{resource.Singular, resource.Short},
 			Short:   fmt.Sprintf("Get a %s", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
+				options := map[string]string{
+					"environment": environment,
+				}
 				if len(args) == 0 {
-					resource.ListFn()
+					resource.ListFn(options)
 					return
 				}
 				if len(args) == 1 {
-					resource.GetFn(args[0])
+					resource.GetFn(args[0], options)
 				}
 			},
 		}
@@ -39,7 +43,7 @@ func (r *Operations) GetCmd() *cobra.Command {
 	return cmd
 }
 
-func (resource Resource) GetFn(name string) {
+func (resource Resource) GetFn(name string, options map[string]string) {
 	ctx := context.Background()
 	formattedError := fmt.Sprintf("Resource %s:%s error: ", resource.Kind, name)
 	// Use reflect to call the function
@@ -50,6 +54,11 @@ func (resource Resource) GetFn(name string) {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(name)} // Add the context and the resource name
+
+	if resource.GetParamsType != nil {
+		paramsValue := retrieveListParams(resource.GetParamsType, options)
+		fnargs = append(fnargs, paramsValue)
+	}
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
@@ -92,7 +101,24 @@ func (resource Resource) GetFn(name string) {
 	output(resource, []interface{}{res}, outputFormat)
 }
 
-func (resource Resource) ListFn() {
+func retrieveListParams(typeParams reflect.Type, options map[string]string) reflect.Value {
+	paramsValue := reflect.New(typeParams)
+
+	elemValue := paramsValue.Elem()
+	for fieldName, value := range options {
+		field := elemValue.FieldByName(strings.Title(fieldName))
+		if field.IsValid() && field.CanSet() {
+			if field.Kind() == reflect.Ptr {
+				ptrValue := reflect.New(field.Type().Elem())
+				ptrValue.Elem().SetString(value)
+				field.Set(ptrValue)
+			}
+		}
+	}
+	return paramsValue
+}
+
+func (resource Resource) ListFn(options map[string]string) {
 	formattedError := fmt.Sprintf("Resource %s error: ", resource.Kind)
 	ctx := context.Background()
 	// Use reflect to call the function
@@ -103,6 +129,13 @@ func (resource Resource) ListFn() {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx)} // Add the context
+
+	// Handle the options if the resource has ListParamsType
+	if resource.ListParamsType != nil {
+		paramsValue := retrieveListParams(resource.ListParamsType, options)
+		fnargs = append(fnargs, paramsValue)
+	}
+
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
 	// Handle the results based on your needs
