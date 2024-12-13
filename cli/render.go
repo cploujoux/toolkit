@@ -83,11 +83,8 @@ func printJson(resource Resource, slices []interface{}) {
 			formatted = append(formatted, Result{
 				ApiVersion: "beamlit.com/v1alpha1",
 				Kind:       resource.Kind,
-				Metadata: ResultMetadata{
-					Workspace: sliceMap["workspace"].(string),
-					Name:      sliceMap["name"].(string),
-				},
-				Spec: slice,
+				Metadata:   sliceMap["metadata"],
+				Spec:       sliceMap["spec"],
 			})
 		}
 	}
@@ -107,11 +104,8 @@ func printYaml(resource Resource, slices []interface{}, pretty bool) {
 			formatted = append(formatted, Result{
 				ApiVersion: "beamlit.com/v1alpha1",
 				Kind:       resource.Kind,
-				Metadata: ResultMetadata{
-					Workspace: sliceMap["workspace"].(string),
-					Name:      sliceMap["name"].(string),
-				},
-				Spec: slice,
+				Metadata:   sliceMap["metadata"],
+				Spec:       sliceMap["spec"],
 			})
 		}
 	}

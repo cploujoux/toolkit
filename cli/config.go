@@ -53,13 +53,6 @@ var resources = []*Resource{
 		SpecType: reflect.TypeOf(sdk.ModelProvider{}),
 	},
 	{
-		Kind:     "Location",
-		Short:    "loc",
-		Plural:   "locations",
-		Singular: "location",
-		SpecType: reflect.TypeOf(sdk.LocationResponse{}),
-	},
-	{
 		Kind:           "Function",
 		Short:          "fn",
 		Plural:         "functions",

@@ -37,7 +37,7 @@ func (r *Operations) ApplyCmd() *cobra.Command {
 			for _, result := range results {
 				for _, resource := range resources {
 					if resource.Kind == result.Kind {
-						resource.PutFn(resource.Kind, result.Metadata.Name, result.Spec)
+						// resource.PutFn(resource.Kind, result.Metadata.Name, result.Spec)
 					}
 				}
 			}

@@ -35,7 +35,7 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 			for _, result := range results {
 				for _, resource := range resources {
 					if resource.Kind == result.Kind {
-						resource.DeleteFn(result.Metadata.Name)
+						// resource.DeleteFn(result.Metadata.Name)
 					}
 				}
 			}
