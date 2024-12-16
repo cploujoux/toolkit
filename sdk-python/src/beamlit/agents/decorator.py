@@ -159,7 +159,7 @@ def agent(
                 runtime = settings.agent.model.spec.runtime
                 logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
 
-        if len(functions) == 0:
+        if overwrite_agent is None and len(functions) == 0:
             raise ValueError(
                 "You must define at least one function, you can define this function in directory "
                 f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
