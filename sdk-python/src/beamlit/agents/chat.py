@@ -29,6 +29,15 @@ def get_anthropic_chat_model(**kwargs):
 
     return ChatAnthropic(**kwargs)
 
+def get_xai_chat_model(**kwargs):
+    from langchain_xai import ChatXAI  # type: ignore
+
+    return ChatXAI(**kwargs)
+
+def get_cohere_chat_model(**kwargs):
+    from langchain_cohere import ChatCohere  # type: ignore
+
+    return ChatCohere(**kwargs)
 
 def get_chat_model(agent_model: Model):
     settings = get_settings()
@@ -55,6 +64,20 @@ def get_chat_model(agent_model: Model):
             "func": get_mistral_chat_model,
             "kwargs": {
                 "api_key": jwt,
+            },
+        },
+        "xai": {
+            "func": get_xai_chat_model,
+            "kwargs": {
+                "api_key": jwt,
+                "xai_api_base": get_base_url(),
+            },
+            "remove_kwargs": ["base_url"],
+        },
+        "cohere": {
+            "func": get_cohere_chat_model,
+            "kwargs": {
+                "cohere_api_key": jwt,
             },
         },
     }
@@ -85,4 +108,7 @@ def get_chat_model(agent_model: Model):
         chat_class = chat_classes["openai"]
     if "kwargs" in chat_class:
         kwargs.update(chat_class["kwargs"])
+    if "remove_kwargs" in chat_class:
+        for key in chat_class["remove_kwargs"]:
+            kwargs.pop(key, None)
     return chat_class["func"](**kwargs)
