@@ -100,8 +100,8 @@ def get_functions(dir="src/functions", from_decorator="function"):
 
 def agent(
     agent: Agent | dict = None,
-    chat_model=None,
-    overwrite_agent=None,
+    override_chat_model=None,
+    override_agent=None,
 ):
     logger = getLogger(__name__)
     try:
@@ -109,6 +109,8 @@ def agent(
             raise Exception(
                 'agent must be a dictionary, example: @agent(agent={"metadata": {"name": "my_agent"}})'
             )
+
+        chat_model = override_chat_model or None
 
         settings = init()
 
@@ -161,7 +163,7 @@ def agent(
                 runtime = settings.agent.model.spec.runtime
                 logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
 
-        if overwrite_agent is None and len(functions) == 0:
+        if override_agent is None and len(functions) == 0:
             raise ValueError(
                 "You must define at least one function, you can define this function in directory "
                 f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
@@ -171,12 +173,12 @@ def agent(
                 "    return 'Hello, world!'\n"
             )
 
-        if overwrite_agent is None and chat_model is not None:
+        if override_agent is None and chat_model is not None:
             memory = MemorySaver()
             agent = create_react_agent(chat_model, functions, checkpointer=memory)
             settings.agent.agent = agent
         else:
-            settings.agent.agent = overwrite_agent
+            settings.agent.agent = override_agent
         return wrapper
     except Exception as e:
         logger.error(f"Error in agent decorator: {e!s} at line {e.__traceback__.tb_lineno}")
