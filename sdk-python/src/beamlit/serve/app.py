@@ -1,3 +1,4 @@
+import asyncio
 import importlib
 import os
 import sys
@@ -6,10 +7,9 @@ from logging import getLogger
 from uuid import uuid4
 
 from asgi_correlation_id import CorrelationIdMiddleware
+from beamlit.common.settings import get_settings, init
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
-
-from beamlit.common.settings import get_settings, init
 
 from .middlewares import AccessLogMiddleware, AddProcessTimeHeader
 
@@ -53,7 +53,10 @@ async def root(request: Request):
     logger = getLogger(__name__)
     try:
         body = await request.json()
-        response = await func(body)
+        if not asyncio.iscoroutinefunction(func):
+            response = func(body)
+        else:
+            response = await func(body)
         if isinstance(response, Response):
             return response
         if type(response) is str:
