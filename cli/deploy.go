@@ -70,7 +70,18 @@ func dockerLogin(registryURL string, apiUrl string) error {
 
 func buildBeamlitDeployment(dockerfile string, destination string) error {
 	fmt.Printf("Building beamlit deployment from %s to %s\n", dockerfile, destination)
-	cmd := exec.Command("docker", "build", "-t", destination, "--push", "-f", dockerfile, ".")
+	cmd := exec.Command(
+		"docker",
+		"build",
+		"-t",
+		destination,
+		"--push",
+		"--platform",
+		"linux/amd64",
+		"-f",
+		dockerfile,
+		".",
+	)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	// Create a channel to catch interrupt signals
