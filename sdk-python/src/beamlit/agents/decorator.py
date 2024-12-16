@@ -105,7 +105,7 @@ def agent(
 ):
     logger = getLogger(__name__)
     try:
-        if not isinstance(agent, dict):
+        if agent is not None and not isinstance(agent, dict):
             raise Exception(
                 'agent must be a dictionary, example: @agent(agent={"metadata": {"name": "my_agent"}})'
             )
@@ -132,36 +132,37 @@ def agent(
         functions = get_functions(dir=settings.agent.functions_directory)
         settings.agent.functions = functions
 
-        metadata = Metadata(**agent.get("metadata", {}))
-        spec = AgentSpec(**agent.get("spec", {}))
-        agent = Agent(metadata=metadata, spec=spec)
-        if agent.spec.model and chat_model is None:
-            client = new_client()
-            try:
-                response = get_model.sync_detailed(
-                    agent.spec.model, environment=settings.environment, client=client
-                )
-                settings.agent.model = response.parsed
-            except UnexpectedStatus as e:
-                if e.status_code == 404 and settings.environment != "production":
-                    try:
-                        response = get_model.sync_detailed(
-                            agent.spec.model, environment="production", client=client
-                        )
-                        settings.agent.model = response.parsed
-                    except UnexpectedStatus as e:
-                        if e.status_code == 404:
-                            raise ValueError(f"Model {agent.spec.model} not found")
-                else:
+        if agent is not None:
+            metadata = Metadata(**agent.get("metadata", {}))
+            spec = AgentSpec(**agent.get("spec", {}))
+            agent = Agent(metadata=metadata, spec=spec)
+            if agent.spec.model and chat_model is None:
+                client = new_client()
+                try:
+                    response = get_model.sync_detailed(
+                        agent.spec.model, environment=settings.environment, client=client
+                    )
+                    settings.agent.model = response.parsed
+                except UnexpectedStatus as e:
+                    if e.status_code == 404 and settings.environment != "production":
+                        try:
+                            response = get_model.sync_detailed(
+                                agent.spec.model, environment="production", client=client
+                            )
+                            settings.agent.model = response.parsed
+                        except UnexpectedStatus as e:
+                            if e.status_code == 404:
+                                raise ValueError(f"Model {agent.spec.model} not found")
+                    else:
+                        raise e
+                except Exception as e:
                     raise e
-            except Exception as e:
-                raise e
 
-            if settings.agent.model:
-                chat_model = get_chat_model(settings.agent.model)
-                settings.agent.chat_model = chat_model
-                runtime = settings.agent.model.spec.runtime
-                logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
+                if settings.agent.model:
+                    chat_model = get_chat_model(settings.agent.model)
+                    settings.agent.chat_model = chat_model
+                    runtime = settings.agent.model.spec.runtime
+                    logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(
