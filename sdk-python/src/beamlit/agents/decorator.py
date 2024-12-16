@@ -22,6 +22,8 @@ def get_functions(dir="src/functions", from_decorator="function"):
     logger = getLogger(__name__)
 
     # Walk through all Python files in functions directory and subdirectories
+    if not os.path.exists(dir):
+        return []
     for root, _, files in os.walk(dir):
         for file in files:
             if file.endswith(".py"):
