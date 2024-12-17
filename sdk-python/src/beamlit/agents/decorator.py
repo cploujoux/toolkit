@@ -112,20 +112,10 @@ def agent(
             )
 
         chat_model = override_chat_model or None
-
-        @functools.wraps(func)
-        def wrapped(*args, **kwargs):
-            return func(
-                settings.agent.agent,
-                settings.agent.chat_model,
-                settings.agent.functions,
-                *args,
-                **kwargs,
-            )
+        settings = init()
 
         def wrapper(func):
-            settings = get_settings()
-
+            @functools.wraps(func)
             def wrapped(*args, **kwargs):
                 return func(
                     settings.agent.agent,

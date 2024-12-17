@@ -86,4 +86,3 @@ def function(*args, function: Function = None, kit=False, **kwargs: dict) -> Cal
         return func
 
     return wrapper
-    return wrapper
