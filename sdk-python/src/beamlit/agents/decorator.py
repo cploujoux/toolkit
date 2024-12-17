@@ -1,6 +1,7 @@
 # Import necessary modules
 import ast
 import asyncio
+import functools
 import importlib
 import os
 from logging import getLogger
@@ -112,7 +113,15 @@ def agent(
 
         chat_model = override_chat_model or None
 
-        settings = init()
+        @functools.wraps(func)
+        def wrapped(*args, **kwargs):
+            return func(
+                settings.agent.agent,
+                settings.agent.chat_model,
+                settings.agent.functions,
+                *args,
+                **kwargs,
+            )
 
         def wrapper(func):
             settings = get_settings()

@@ -17,7 +17,7 @@ func (r *Operations) DeviceModeLogin(workspace string, environment string) {
 	url := r.BaseURL + "/login/device"
 
 	payload := sdk.DeviceLogin{
-		ClientID: "moon",
+		ClientID: "beamlit",
 		Scope:    "offline_access",
 	}
 
