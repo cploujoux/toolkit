@@ -1,5 +1,6 @@
 """Decorators for creating function tools with Beamlit and LangChain integration."""
 
+import json
 from collections.abc import Callable
 from logging import getLogger
 
@@ -30,17 +31,21 @@ def get_remote_function(func: Callable, bl_function: FunctionDeployment):
                 resource_name=name,
                 environment=settings.environment,
                 method="POST",
-                headers={},
-                json=kwargs,
+                headers={"Content-Type": "application/json"},
+                data=json.dumps(kwargs),
             )
+            content = response.text
             if response.status_code >= 400:
                 content = f"{response.status_code}:{response.text}"
+                logger.error(f"Error calling remote function: {content}")
                 return f"Error calling remote function: {content}"
             logger.debug(
                 f"Response from remote function: NAME={name}"
-                f" RESPONSE={response.json()} ENVIRONMENT={settings.environment}"
+                f" RESPONSE={content} ENVIRONMENT={settings.environment}"
             )
-            return response.json()
+            if response.headers.get("content-type") == "application/json":
+                return response.json()
+            return content
         except Exception as e:
             logger.error(f"Error calling function {bl_function.id}: {e}")
             raise e
@@ -82,4 +87,5 @@ def function(
             return remote_func
         return func
 
+    return wrapper
     return wrapper
