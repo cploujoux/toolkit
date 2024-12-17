@@ -53,10 +53,13 @@ async def root(request: Request):
     logger = getLogger(__name__)
     try:
         body = await request.json()
-        if not asyncio.iscoroutinefunction(func):
-            response = func(body)
-        else:
+
+        original_func = getattr(func, '__wrapped__', func)
+        if asyncio.iscoroutinefunction(func) or asyncio.iscoroutinefunction(original_func):
             response = await func(body)
+        else:
+            response = func(body)
+
         if isinstance(response, Response):
             return response
         if type(response) is str:
