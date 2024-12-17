@@ -512,7 +512,7 @@ func createAgentApp(opts CreateAgentAppOptions) error {
 		return fmt.Errorf("failed to remove templates directory: %w", err)
 	}
 	// Run uv sync to install dependencies
-	uvSyncCmd := exec.Command("uv", "sync")
+	uvSyncCmd := exec.Command("uv", "sync", "--refresh")
 	uvSyncCmd.Dir = opts.Directory
 	if err := uvSyncCmd.Run(); err != nil {
 		return fmt.Errorf("failed to run uv sync: %w", err)

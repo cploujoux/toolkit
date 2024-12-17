@@ -1,6 +1,7 @@
 # Import necessary modules
 import ast
 import asyncio
+import functools
 import importlib
 import os
 from logging import getLogger
@@ -94,6 +95,7 @@ def agent(
     def wrapper(func):
         settings = get_settings()
 
+        @functools.wraps(func)
         def wrapped(*args, **kwargs):
             return func(
                 settings.agent.agent,
