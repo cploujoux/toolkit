@@ -104,7 +104,7 @@ def agent(
     agent: Agent | dict = None,
     override_chat_model=None,
     override_agent=None,
-    remote_functions=None,
+    beamlit_mcp_servers=None,
 ):
     logger = getLogger(__name__)
     try:
@@ -165,15 +165,15 @@ def agent(
                     runtime = settings.agent.model.spec.runtime
                     logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
 
-        if remote_functions:
-            for func in remote_functions:
+        if beamlit_mcp_servers:
+            for server in beamlit_mcp_servers:
                 try:
-                    mcp_client = MCPClient(client, func)
+                    mcp_client = MCPClient(client, server)
                     toolkit = MCPToolkit(client=mcp_client)
                     toolkit.initialize()
                     functions.extend(toolkit.get_tools())
                 except Exception as e:
-                    logger.warn(f"Failed to load remote function {func}: {e!s}")
+                    logger.warn(f"Failed to initialize MCP server {server}: {e!s}")
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(
