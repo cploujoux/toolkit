@@ -63,7 +63,7 @@ class MCPTool(BaseTool):
     MCP server tool
     """
 
-    client: McpClient
+    client: MCPClient
     handle_tool_error: bool | str | Callable[[ToolException], str] | None = True
 
     @t.override
@@ -94,7 +94,7 @@ class MCPToolkit(BaseToolkit):
     MCP server toolkit
     """
 
-    client: McpClient
+    client: MCPClient
     """The MCP session used to obtain the tools"""
 
     _tools: ListToolsResult | None = None

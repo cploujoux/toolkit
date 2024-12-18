@@ -2,15 +2,20 @@ import asyncio
 import uuid
 
 from beamlit.agents import agent
-from beamlit.models import AgentDeployment
 
 
 @agent(
-    AgentDeployment(
-        agent="agent-custom",
-        description="A chat agent using Beamlit to handle your tasks.",
-        model="gpt-4o-mini",
-    ),
+    agent={
+        "metadata": {
+            "name": "agent-custom",
+            "environment": "production",
+        },
+        "spec": {
+            "description": "A chat agent using Beamlit to handle your tasks.",
+            "model": "gpt-4o-mini",
+        },
+    },
+    beamlit_mcp_servers=["brave-search"],
 )
 async def main(agent, chat_model, tools, body, headers=None, query_params=None, **_):
     agent_config = {"configurable": {"thread_id": str(uuid.uuid4())}}
@@ -20,7 +25,7 @@ async def main(agent, chat_model, tools, body, headers=None, query_params=None, 
     agent_body = {"messages": [("user", body["input"])]}
     responses = []
 
-    for chunk in agent.stream(agent_body, config=agent_config):
+    async for chunk in agent.astream(agent_body, config=agent_config):
         responses.append(chunk)
     content = responses[-1]
     return content["agent"]["messages"][-1].content

@@ -7,9 +7,9 @@ from beamlit.models import Model
 logger = getLogger(__name__)
 
 
-def get_base_url(agent_model: Model):
+def get_base_url(name: str):
     settings = get_settings()
-    return f"{settings.run_url}/{settings.workspace}/models/{agent_model.metadata.name}/v1"
+    return f"{settings.run_url}/{settings.workspace}/models/{name}/v1"
 
 
 def get_mistral_chat_model(**kwargs):
@@ -39,15 +39,16 @@ def get_cohere_chat_model(**kwargs):
 
     return ChatCohere(**kwargs)
 
-def get_chat_model(agent_model: Model):
+def get_chat_model(name: str, agent_model: Model):
     settings = get_settings()
     client = new_client()
 
+    environment = (agent_model.metadata and agent_model.metadata.environment) or settings.environment
     headers = get_authentication_headers(settings)
-    headers["X-Beamlit-Environment"] = agent_model.metadata.environment
+    headers["X-Beamlit-Environment"] = environment
 
     jwt = headers.get("X-Beamlit-Authorization", "").replace("Bearer ", "")
-    params = {"environment": agent_model.metadata.environment}
+    params = {"environment": environment}
     chat_classes = {
         "openai": {
             "func": get_openai_chat_model,
@@ -70,7 +71,7 @@ def get_chat_model(agent_model: Model):
             "func": get_xai_chat_model,
             "kwargs": {
                 "api_key": jwt,
-                "xai_api_base": get_base_url(),
+                "xai_api_base": get_base_url(name),
             },
             "remove_kwargs": ["base_url"],
         },
@@ -82,21 +83,27 @@ def get_chat_model(agent_model: Model):
         },
     }
 
-    if agent_model is None:
-        raise ValueError("agent_model not found in configuration")
-    if agent_model.spec.runtime is None:
-        raise ValueError("runtime not found in agent model")
-    if agent_model.spec.runtime.type_ is None:
-        raise ValueError("type not found in runtime")
-    if agent_model.spec.runtime.model is None:
-        raise ValueError("model not found in runtime")
+    provider = (
+        agent_model.spec
+        and agent_model.spec.runtime
+        and agent_model.spec.runtime.type_
+    )
+    if not provider:
+        logger.warning("Provider not found in agent model, defaulting to OpenAI")
+        provider = "openai"
 
-    provider = agent_model.spec.runtime.type_
-    model = agent_model.spec.runtime.model
+    model = (
+        agent_model.spec
+        and agent_model.spec.runtime
+        and agent_model.spec.runtime.model
+    )
+    if not model:
+        logger.warning("Model not found in agent model, defaulting to gpt-4o-mini")
+        model = "gpt-4o-mini"
 
     kwargs = {
         "model": model,
-        "base_url": get_base_url(agent_model),
+        "base_url": get_base_url(name),
         "default_query": params,
         "default_headers": headers,
         "api_key": "fake_api_key",
@@ -111,4 +118,4 @@ def get_chat_model(agent_model: Model):
     if "remove_kwargs" in chat_class:
         for key in chat_class["remove_kwargs"]:
             kwargs.pop(key, None)
-    return chat_class["func"](**kwargs)
+    return chat_class["func"](**kwargs), provider, model
