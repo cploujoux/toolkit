@@ -150,7 +150,7 @@ func (resource Resource) PutFn(resourceName string, name string, resourceObject 
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(resourceName, name, buf.String())
+		ErrorHandler(response.Request, resourceName, name, buf.String())
 		return
 	}
 
@@ -181,7 +181,7 @@ func (resource Resource) PostFn(resourceName string, name string, resourceObject
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(resourceName, name, buf.String())
+		ErrorHandler(response.Request, resourceName, name, buf.String())
 		return
 	}
 

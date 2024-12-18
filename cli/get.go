@@ -87,7 +87,7 @@ func (resource Resource) GetFn(name string, options map[string]string) {
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(resource.Kind, name, buf.String())
+		ErrorHandler(response.Request, resource.Kind, name, buf.String())
 		os.Exit(1)
 	}
 
@@ -142,7 +142,7 @@ func (resource Resource) ListFn(options map[string]string) {
 		os.Exit(1)
 	}
 	if response.StatusCode >= 400 {
-		ErrorHandler(resource.Kind, "", buf.String())
+		ErrorHandler(response.Request, resource.Kind, "", buf.String())
 		os.Exit(1)
 	}
 
