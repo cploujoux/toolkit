@@ -8,8 +8,9 @@ from logging import getLogger
 
 from beamlit.api.models import get_model
 from beamlit.authentication import new_client
-from beamlit.common.settings import get_settings, init
+from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
+from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Agent, AgentSpec, Metadata
 from langchain_core.tools import Tool
 from langgraph.checkpoint.memory import MemorySaver
@@ -103,6 +104,7 @@ def agent(
     agent: Agent | dict = None,
     override_chat_model=None,
     override_agent=None,
+    remote_functions=None,
 ):
     logger = getLogger(__name__)
     try:
@@ -111,6 +113,7 @@ def agent(
                 'agent must be a dictionary, example: @agent(agent={"metadata": {"name": "my_agent"}})'
             )
 
+        client = new_client()
         chat_model = override_chat_model or None
         settings = init()
 
@@ -136,7 +139,6 @@ def agent(
             spec = AgentSpec(**agent.get("spec", {}))
             agent = Agent(metadata=metadata, spec=spec)
             if agent.spec.model and chat_model is None:
-                client = new_client()
                 try:
                     response = get_model.sync_detailed(
                         agent.spec.model, environment=settings.environment, client=client
@@ -162,6 +164,16 @@ def agent(
                     settings.agent.chat_model = chat_model
                     runtime = settings.agent.model.spec.runtime
                     logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
+
+        if remote_functions:
+            for func in remote_functions:
+                try:
+                    mcp_client = MCPClient(client, func)
+                    toolkit = MCPToolkit(client=mcp_client)
+                    toolkit.initialize()
+                    functions.extend(toolkit.get_tools())
+                except Exception as e:
+                    logger.warn(f"Failed to load remote function {func}: {e!s}")
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(

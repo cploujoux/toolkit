@@ -37,7 +37,7 @@ def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
     return Schema
 
 
-class McpClient:
+class MCPClient:
     def __init__(self, client: AuthenticatedClient, server_name: str):
         self.client = client
         self.server_name = server_name
