@@ -105,7 +105,7 @@ def agent(
     agent: Agent | dict = None,
     override_chat_model=None,
     override_agent=None,
-    beamlit_mcp_servers=None,
+    mcp_hub=None,
 ):
     logger = getLogger(__name__)
     try:
@@ -165,8 +165,8 @@ def agent(
                     settings.agent.chat_model = chat_model
                     logger.info(f"Chat model configured, using: {provider}:{model}")
 
-        if beamlit_mcp_servers:
-            for server in beamlit_mcp_servers:
+        if mcp_hub:
+            for server in mcp_hub:
                 try:
                     mcp_client = MCPClient(client, server)
                     toolkit = MCPToolkit(client=mcp_client)

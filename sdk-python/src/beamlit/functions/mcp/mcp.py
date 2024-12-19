@@ -10,15 +10,14 @@ import typing_extensions as t
 from beamlit.authentication import new_client
 from beamlit.authentication.authentication import (AuthenticatedClient,
                                                    new_client)
+from beamlit.common.settings import get_settings
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
 from mcp import ListToolsResult
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema as cs
 
 client = new_client()
-
-RUN_URL = "http://localhost:8787"
-SUB_ID = "test"
+settings = get_settings()
 
 
 def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
@@ -41,20 +40,26 @@ class MCPClient:
     def __init__(self, client: AuthenticatedClient, server_name: str):
         self.client = client
         self.server_name = server_name
+        self.headers = {"Api-Key": "1234567890"}
 
     def list_tools(self) -> requests.Response:
         client = self.client.get_httpx_client()
-        url = urllib.parse.urljoin(RUN_URL, f"{self.server_name}/{SUB_ID}/tools/list")
+        url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/list")
 
-        response = client.request("GET", url)
+        response = client.request("GET", url, headers=self.headers)
         response.raise_for_status()
         return response
 
     def call_tool(self, tool_name: str, arguments: dict[str, Any] = None) -> requests.Response:
         client = self.client.get_httpx_client()
-        url = urllib.parse.urljoin(RUN_URL, f"{self.server_name}/{SUB_ID}/tools/call")
+        url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/call")
 
-        response = client.request("POST", url, json={"name": tool_name, "arguments": arguments})
+        response = client.request(
+            "POST",
+            url,
+            json={"name": tool_name, "arguments": arguments},
+            headers=self.headers,
+        )
         response.raise_for_status()
         return response
 
@@ -122,8 +127,3 @@ class MCPToolkit(BaseToolkit):
             # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
             for tool in self._tools.tools
         ]
-
-
-def get_generic_tools(name):
-    mcp_client = McpClient(client, name)
-    return MCPToolkit(client=mcp_client)

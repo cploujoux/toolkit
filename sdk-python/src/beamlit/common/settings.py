@@ -64,6 +64,7 @@ class Settings(BaseSettings):
     name: str = Field(default="beamlit-agent")
     base_url: str = Field(default="https://api.beamlit.dev/v0")
     run_url: str = Field(default="https://run.beamlit.dev")
+    mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.dev")
     registry_url: str = Field(default="https://serverless-registry-production.beamlit.workers.dev")
     log_level: str = Field(default="INFO")
     agent: SettingsAgent = SettingsAgent()
