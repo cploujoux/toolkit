@@ -24,7 +24,7 @@ class Runtime:
             Kubernetes EnvVar types
         image (Union[Unset, str]): The Docker image for the deployment
         metric_port (Union[Unset, int]): The port to serve the metrics on
-        model (Union[Unset, str]): The slug name of the origin model. Only used if the deployment is a ModelDeployment
+        model (Union[Unset, str]): The slug name of the origin model. Only used if the deployment is a Deployment
         readiness_probe (Union[Unset, RuntimeReadinessProbe]): The readiness probe. Should be a Kubernetes Probe type
         resources (Union[Unset, RuntimeResources]): The resources for the deployment. Should be a Kubernetes
             ResourceRequirements type

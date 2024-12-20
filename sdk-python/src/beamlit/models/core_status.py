@@ -5,34 +5,29 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="IncreaseAndRateMetric")
+T = TypeVar("T", bound="CoreStatus")
 
 
 @_attrs_define
-class IncreaseAndRateMetric:
-    """Metrics for resources
+class CoreStatus:
+    """Core status
 
     Attributes:
-        inference_global (Union[Unset, Any]): Historical requests for all resources globally
-        query (Union[Unset, Any]): Number of requests for all resources globally
+        deployment_status (Union[Unset, str]): The status of the core, can be CREATED, UPDATED, DELETED, DEPLOYED,
+            DISABLED, or FAILED
     """
 
-    inference_global: Union[Unset, Any] = UNSET
-    query: Union[Unset, Any] = UNSET
+    deployment_status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        inference_global = self.inference_global
-
-        query = self.query
+        deployment_status = self.deployment_status
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if inference_global is not UNSET:
-            field_dict["inference_global"] = inference_global
-        if query is not UNSET:
-            field_dict["query"] = query
+        if deployment_status is not UNSET:
+            field_dict["deploymentStatus"] = deployment_status
 
         return field_dict
 
@@ -41,17 +36,14 @@ class IncreaseAndRateMetric:
         if not src_dict:
             return None
         d = src_dict.copy()
-        inference_global = d.pop("inference_global", UNSET)
+        deployment_status = d.pop("deploymentStatus", UNSET)
 
-        query = d.pop("query", UNSET)
-
-        increase_and_rate_metric = cls(
-            inference_global=inference_global,
-            query=query,
+        core_status = cls(
+            deployment_status=deployment_status,
         )
 
-        increase_and_rate_metric.additional_properties = d
-        return increase_and_rate_metric
+        core_status.additional_properties = d
+        return core_status
 
     @property
     def additional_keys(self) -> list[str]:
