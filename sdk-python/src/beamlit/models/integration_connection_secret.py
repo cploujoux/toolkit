@@ -26,7 +26,7 @@ class IntegrationConnectionSecret:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if api_key is not UNSET:
-            field_dict["api_key"] = api_key
+            field_dict["apiKey"] = api_key
 
         return field_dict
 
@@ -35,7 +35,7 @@ class IntegrationConnectionSecret:
         if not src_dict:
             return None
         d = src_dict.copy()
-        api_key = d.pop("api_key", UNSET)
+        api_key = d.pop("apiKey", UNSET)
 
         integration_connection_secret = cls(
             api_key=api_key,

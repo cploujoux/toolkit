@@ -52,7 +52,7 @@ class Metrics:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if inference_global is not UNSET:
-            field_dict["inference_global"] = inference_global
+            field_dict["inferenceGlobal"] = inference_global
         if query is not UNSET:
             field_dict["query"] = query
         if agents is not UNSET:
@@ -71,7 +71,7 @@ class Metrics:
         if not src_dict:
             return None
         d = src_dict.copy()
-        inference_global = d.pop("inference_global", UNSET)
+        inference_global = d.pop("inferenceGlobal", UNSET)
 
         query = d.pop("query", UNSET)
 

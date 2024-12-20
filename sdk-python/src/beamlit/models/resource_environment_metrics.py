@@ -72,17 +72,17 @@ class ResourceEnvironmentMetrics:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if inference_global is not UNSET:
-            field_dict["inference_global"] = inference_global
+            field_dict["inferenceGlobal"] = inference_global
         if inference_per_region is not UNSET:
-            field_dict["inference_per_region"] = inference_per_region
+            field_dict["inferencePerRegion"] = inference_per_region
         if query_global is not UNSET:
             field_dict["query_global"] = query_global
         if query_per_code_global is not UNSET:
-            field_dict["query_per_code_global"] = query_per_code_global
+            field_dict["queryPerCodeGlobal"] = query_per_code_global
         if query_per_region is not UNSET:
-            field_dict["query_per_region"] = query_per_region
+            field_dict["queryPerRegion"] = query_per_region
         if query_per_region_per_code is not UNSET:
-            field_dict["query_per_region_per_code"] = query_per_region_per_code
+            field_dict["queryPerRegionPerCode"] = query_per_region_per_code
 
         return field_dict
 
@@ -101,13 +101,13 @@ class ResourceEnvironmentMetrics:
             return None
         d = src_dict.copy()
         inference_global = []
-        _inference_global = d.pop("inference_global", UNSET)
+        _inference_global = d.pop("inferenceGlobal", UNSET)
         for componentsschemas_array_metric_item_data in _inference_global or []:
             componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
 
             inference_global.append(componentsschemas_array_metric_item)
 
-        _inference_per_region = d.pop("inference_per_region", UNSET)
+        _inference_per_region = d.pop("inferencePerRegion", UNSET)
         inference_per_region: Union[Unset, ResourceEnvironmentMetricsInferencePerRegion]
         if isinstance(_inference_per_region, Unset):
             inference_per_region = UNSET
@@ -116,21 +116,21 @@ class ResourceEnvironmentMetrics:
 
         query_global = d.pop("query_global", UNSET)
 
-        _query_per_code_global = d.pop("query_per_code_global", UNSET)
+        _query_per_code_global = d.pop("queryPerCodeGlobal", UNSET)
         query_per_code_global: Union[Unset, QPS]
         if isinstance(_query_per_code_global, Unset):
             query_per_code_global = UNSET
         else:
             query_per_code_global = QPS.from_dict(_query_per_code_global)
 
-        _query_per_region = d.pop("query_per_region", UNSET)
+        _query_per_region = d.pop("queryPerRegion", UNSET)
         query_per_region: Union[Unset, QPS]
         if isinstance(_query_per_region, Unset):
             query_per_region = UNSET
         else:
             query_per_region = QPS.from_dict(_query_per_region)
 
-        _query_per_region_per_code = d.pop("query_per_region_per_code", UNSET)
+        _query_per_region_per_code = d.pop("queryPerRegionPerCode", UNSET)
         query_per_region_per_code: Union[Unset, ResourceEnvironmentMetricsQueryPerRegionPerCode]
         if isinstance(_query_per_region_per_code, Unset):
             query_per_region_per_code = UNSET

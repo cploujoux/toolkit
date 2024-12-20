@@ -43,9 +43,9 @@ class ResourceMetrics:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if inference_global is not UNSET:
-            field_dict["inference_global"] = inference_global
+            field_dict["inferenceGlobal"] = inference_global
         if query_per_region is not UNSET:
-            field_dict["query_per_region"] = query_per_region
+            field_dict["queryPerRegion"] = query_per_region
 
         return field_dict
 
@@ -58,13 +58,13 @@ class ResourceMetrics:
             return None
         d = src_dict.copy()
         inference_global = []
-        _inference_global = d.pop("inference_global", UNSET)
+        _inference_global = d.pop("inferenceGlobal", UNSET)
         for componentsschemas_array_metric_item_data in _inference_global or []:
             componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
 
             inference_global.append(componentsschemas_array_metric_item)
 
-        _query_per_region = d.pop("query_per_region", UNSET)
+        _query_per_region = d.pop("queryPerRegion", UNSET)
         query_per_region: Union[Unset, QPS]
         if isinstance(_query_per_region, Unset):
             query_per_region = UNSET
