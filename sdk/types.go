@@ -15,7 +15,7 @@ type ContextConfig struct {
 }
 
 type Credentials struct {
-	APIKey       string `yaml:"api_key"`
+	APIKey       string `yaml:"apiKey"`
 	AccessToken  string `yaml:"access_token"`
 	RefreshToken string `yaml:"refresh_token"`
 	ExpiresIn    int    `yaml:"expires_in"`
