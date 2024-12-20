@@ -70,7 +70,7 @@ class AgentHistoryEvent:
         if status is not UNSET:
             field_dict["status"] = status
         if sub_function is not UNSET:
-            field_dict["sub_function"] = sub_function
+            field_dict["subFunction"] = sub_function
         if took is not UNSET:
             field_dict["took"] = took
         if type_ is not UNSET:
@@ -95,7 +95,7 @@ class AgentHistoryEvent:
 
         status = d.pop("status", UNSET)
 
-        sub_function = d.pop("sub_function", UNSET)
+        sub_function = d.pop("subFunction", UNSET)
 
         took = d.pop("took", UNSET)
 

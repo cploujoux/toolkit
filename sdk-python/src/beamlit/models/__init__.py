@@ -13,6 +13,7 @@ from .configuration import Configuration
 from .continent import Continent
 from .core_spec import CoreSpec
 from .core_spec_configurations import CoreSpecConfigurations
+from .core_status import CoreStatus
 from .country import Country
 from .create_api_key_for_service_account_body import CreateApiKeyForServiceAccountBody
 from .create_workspace_service_account_body import CreateWorkspaceServiceAccountBody
@@ -30,6 +31,7 @@ from .function_release import FunctionRelease
 from .function_spec import FunctionSpec
 from .get_workspace_service_accounts_response_200_item import GetWorkspaceServiceAccountsResponse200Item
 from .increase_and_rate_metric import IncreaseAndRateMetric
+from .integration_config import IntegrationConfig
 from .integration_connection import IntegrationConnection
 from .integration_connection_config import IntegrationConnectionConfig
 from .integration_connection_secret import IntegrationConnectionSecret
@@ -71,13 +73,7 @@ from .resource_deployment_metrics_query_per_second_per_region_per_code import (
 )
 from .resource_environment_metrics import ResourceEnvironmentMetrics
 from .resource_environment_metrics_inference_per_region import ResourceEnvironmentMetricsInferencePerRegion
-from .resource_environment_metrics_inference_per_second_per_region import (
-    ResourceEnvironmentMetricsInferencePerSecondPerRegion,
-)
 from .resource_environment_metrics_query_per_region_per_code import ResourceEnvironmentMetricsQueryPerRegionPerCode
-from .resource_environment_metrics_query_per_second_per_region_per_code import (
-    ResourceEnvironmentMetricsQueryPerSecondPerRegionPerCode,
-)
 from .resource_log import ResourceLog
 from .resource_metrics import ResourceMetrics
 from .runtime import Runtime
@@ -116,6 +112,7 @@ __all__ = (
     "Continent",
     "CoreSpec",
     "CoreSpecConfigurations",
+    "CoreStatus",
     "Country",
     "CreateApiKeyForServiceAccountBody",
     "CreateWorkspaceServiceAccountBody",
@@ -133,6 +130,7 @@ __all__ = (
     "FunctionSpec",
     "GetWorkspaceServiceAccountsResponse200Item",
     "IncreaseAndRateMetric",
+    "IntegrationConfig",
     "IntegrationConnection",
     "IntegrationConnectionConfig",
     "IntegrationConnectionSecret",
@@ -170,9 +168,7 @@ __all__ = (
     "ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode",
     "ResourceEnvironmentMetrics",
     "ResourceEnvironmentMetricsInferencePerRegion",
-    "ResourceEnvironmentMetricsInferencePerSecondPerRegion",
     "ResourceEnvironmentMetricsQueryPerRegionPerCode",
-    "ResourceEnvironmentMetricsQueryPerSecondPerRegionPerCode",
     "ResourceLog",
     "ResourceMetrics",
     "Runtime",

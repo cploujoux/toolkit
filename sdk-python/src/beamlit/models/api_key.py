@@ -70,7 +70,7 @@ class ApiKey:
         if updated_by is not UNSET:
             field_dict["updatedBy"] = updated_by
         if api_key is not UNSET:
-            field_dict["api_key"] = api_key
+            field_dict["apiKey"] = api_key
         if expires_in is not UNSET:
             field_dict["expires_in"] = expires_in
         if id is not UNSET:
@@ -97,7 +97,7 @@ class ApiKey:
 
         updated_by = d.pop("updatedBy", UNSET)
 
-        api_key = d.pop("api_key", UNSET)
+        api_key = d.pop("apiKey", UNSET)
 
         expires_in = d.pop("expires_in", UNSET)
 

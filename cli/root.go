@@ -85,7 +85,7 @@ func Execute(releaseVersion string, releaseCommit string, releaseDate string) er
 	rootCmd.AddCommand(reg.DeleteCmd())
 	rootCmd.AddCommand(reg.RunCmd())
 	rootCmd.AddCommand(reg.DocCmd())
-	rootCmd.AddCommand(reg.MetricsModelDeploymentCmd())
+	rootCmd.AddCommand(reg.MetricsModelCmd())
 	rootCmd.AddCommand(reg.ServeCmd())
 	rootCmd.AddCommand(reg.CreateAgentAppCmd())
 	rootCmd.AddCommand(reg.DeployAgentAppCmd())

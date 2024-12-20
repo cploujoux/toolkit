@@ -12,7 +12,7 @@ logger = getLogger(__name__)
 
 @dataclass
 class Credentials:
-    api_key: str = ""
+    apiKey: str = ""
     access_token: str = ""
     refresh_token: str = ""
     expires_in: int = 0
@@ -49,7 +49,7 @@ class Config:
                 {
                     "name": ws.name,
                     "credentials": {
-                        "api_key": ws.credentials.api_key,
+                        "apiKey": ws.credentials.apiKey,
                         "access_token": ws.credentials.access_token,
                         "refresh_token": ws.credentials.refresh_token,
                         "expires_in": ws.credentials.expires_in,
@@ -129,7 +129,7 @@ def load_credentials(workspace_name: str) -> Credentials:
 
 def load_credentials_from_settings(settings: Settings) -> Credentials:
     return Credentials(
-        api_key=settings.authentication.api_key,
+        apiKey=settings.authentication.apiKey,
         client_credentials=settings.authentication.client.credentials,
     )
 
@@ -154,7 +154,7 @@ def create_home_dir_if_missing():
 
 def save_credentials(workspace_name: str, credentials: Credentials):
     create_home_dir_if_missing()
-    if not credentials.access_token and not credentials.api_key:
+    if not credentials.access_token and not credentials.apiKey:
         logger.info("No credentials to save, error")
         return
 

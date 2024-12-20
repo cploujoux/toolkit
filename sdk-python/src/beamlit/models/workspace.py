@@ -68,7 +68,7 @@ class Workspace:
         if updated_by is not UNSET:
             field_dict["updatedBy"] = updated_by
         if display_name is not UNSET:
-            field_dict["display_name"] = display_name
+            field_dict["displayName"] = display_name
         if labels is not UNSET:
             field_dict["labels"] = labels
         if name is not UNSET:
@@ -93,7 +93,7 @@ class Workspace:
 
         updated_by = d.pop("updatedBy", UNSET)
 
-        display_name = d.pop("display_name", UNSET)
+        display_name = d.pop("displayName", UNSET)
 
         _labels = d.pop("labels", UNSET)
         labels: Union[Unset, WorkspaceLabels]

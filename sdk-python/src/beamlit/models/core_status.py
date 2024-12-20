@@ -5,28 +5,29 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="IntegrationConnectionSecret")
+T = TypeVar("T", bound="CoreStatus")
 
 
 @_attrs_define
-class IntegrationConnectionSecret:
-    """Integration secret
+class CoreStatus:
+    """Core status
 
     Attributes:
-        api_key (Union[Unset, str]): The API key to use for the integration
+        deployment_status (Union[Unset, str]): The status of the core, can be CREATED, UPDATED, DELETED, DEPLOYED,
+            DISABLED, or FAILED
     """
 
-    api_key: Union[Unset, str] = UNSET
+    deployment_status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        api_key = self.api_key
+        deployment_status = self.deployment_status
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if api_key is not UNSET:
-            field_dict["apiKey"] = api_key
+        if deployment_status is not UNSET:
+            field_dict["deploymentStatus"] = deployment_status
 
         return field_dict
 
@@ -35,14 +36,14 @@ class IntegrationConnectionSecret:
         if not src_dict:
             return None
         d = src_dict.copy()
-        api_key = d.pop("apiKey", UNSET)
+        deployment_status = d.pop("deploymentStatus", UNSET)
 
-        integration_connection_secret = cls(
-            api_key=api_key,
+        core_status = cls(
+            deployment_status=deployment_status,
         )
 
-        integration_connection_secret.additional_properties = d
-        return integration_connection_secret
+        core_status.additional_properties = d
+        return core_status
 
     @property
     def additional_keys(self) -> list[str]:

@@ -87,7 +87,7 @@ class ModelProvider:
         if config is not UNSET:
             field_dict["config"] = config
         if display_name is not UNSET:
-            field_dict["display_name"] = display_name
+            field_dict["displayName"] = display_name
         if labels is not UNSET:
             field_dict["labels"] = labels
         if name is not UNSET:
@@ -124,7 +124,7 @@ class ModelProvider:
         else:
             config = ProviderConfig.from_dict(_config)
 
-        display_name = d.pop("display_name", UNSET)
+        display_name = d.pop("displayName", UNSET)
 
         _labels = d.pop("labels", UNSET)
         labels: Union[Unset, MetadataLabels]

@@ -19,7 +19,7 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
-func (r *Operations) MetricsModelDeploymentCmd() *cobra.Command {
+func (r *Operations) MetricsModelCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "metrics [name]",
 		Args:  cobra.MaximumNArgs(2),
@@ -52,8 +52,8 @@ func (r *Operations) MetricsModelDeploymentCmd() *cobra.Command {
 
 			p.Title.Text = fmt.Sprintf("Model Deployment: %s", args[0])
 			p.X.Label.Text = "Time"
-			p.Y.Label.Text = "RPS"
-			line, err := plotter.NewLine(getPoints(*metric.InferencePerSecondGlobal))
+			p.Y.Label.Text = "Request total"
+			line, err := plotter.NewLine(getPoints(*metric.InferenceGlobal))
 			if err != nil {
 				panic(err)
 			}

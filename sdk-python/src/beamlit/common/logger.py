@@ -11,8 +11,10 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
+        n_spaces = len("CRITICAL") - len(record.levelname)
+        tab = " " * n_spaces
         color = self.COLORS.get(record.levelname, "\033[0m")
-        record.levelname = f"{color}{record.levelname}\033[0m"
+        record.levelname = f"{color}{record.levelname}\033[0m:{tab}"
         return super().format(record)
 
 
@@ -25,5 +27,5 @@ def init(log_level: str):
     logging.getLogger("httpx").propagate = False
 
     handler = logging.StreamHandler()
-    handler.setFormatter(ColoredFormatter("%(levelname)s:\t  %(name)s - %(message)s"))
+    handler.setFormatter(ColoredFormatter(f"%(levelname)s %(name)s - %(message)s"))
     logging.basicConfig(level=log_level, handlers=[handler])

@@ -64,7 +64,7 @@ class PendingInvitation:
         if email is not UNSET:
             field_dict["email"] = email
         if invited_by is not UNSET:
-            field_dict["invited_by"] = invited_by
+            field_dict["invitedBy"] = invited_by
         if role is not UNSET:
             field_dict["role"] = role
         if workspace is not UNSET:
@@ -87,7 +87,7 @@ class PendingInvitation:
 
         email = d.pop("email", UNSET)
 
-        invited_by = d.pop("invited_by", UNSET)
+        invited_by = d.pop("invitedBy", UNSET)
 
         role = d.pop("role", UNSET)
 

@@ -6,10 +6,12 @@ from logging import getLogger
 from typing import Literal
 
 from beamlit.common.settings import Settings, get_settings, init
-from beamlit.models import (Agent, EnvironmentMetadata, AgentSpec, AgentChain, Flavor, Function, FunctionSpec,
-                            Runtime)
-from .format import arg_to_dict, format_parameters, format_agent_chain
-from .parser import get_resources, Resource, get_parameters, get_description
+from beamlit.models import (Agent, AgentChain, AgentSpec, EnvironmentMetadata,
+                            Flavor, Function, FunctionSpec, Runtime)
+
+from .format import arg_to_dict, format_agent_chain, format_parameters
+from .parser import Resource, get_description, get_parameters, get_resources
+
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
@@ -27,8 +29,8 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
     deployment.metadata.environment = settings.environment
     if not deployment.metadata.name:
         deployment.metadata.name = resource.name
-    if not deployment.metadata.display_name:
-        deployment.metadata.display_name = deployment.metadata.name
+    if not deployment.metadata.displayName:
+        deployment.metadata.displayName = deployment.metadata.name
     if not deployment.spec.description:
         deployment.spec.description = get_description(None, resource)
     if not deployment.spec.runtime:
@@ -97,7 +99,7 @@ def get_agent_yaml(
     Generates YAML configuration for an agent deployment.
 
     Args:
-        agent (AgentDeployment): Agent deployment configuration
+        agent (Agent): Agent deployment configuration
         functions (list[tuple[Resource, FunctionDeployment]]): List of associated functions
         settings (Settings): Application settings
 
@@ -109,14 +111,14 @@ apiVersion: beamlit.com/v1alpha1
 kind: Agent
 metadata:
   name: {agent.metadata.name}
-  display_name: {agent.metadata.display_name or agent.metadata.name}
+  displayName: {agent.metadata.displayName or agent.metadata.name}
   environment: {settings.environment}
   workspace: {settings.workspace}
 spec:
   enabled: true
   policies: [{", ".join(agent.spec.policies or [])}]
   functions: [{", ".join([f"{function.metadata.name}" for (_, function) in functions])}]
-  agent_chain: {format_agent_chain(agent.spec.agent_chain)}
+  agentChain: {format_agent_chain(agent.spec.agentChain)}
   model: {agent.spec.model}
   runtime:
     image: {agent.spec.runtime.image}
@@ -143,7 +145,7 @@ apiVersion: beamlit.com/v1alpha1
 kind: Function
 metadata:
   name: {function.metadata.name}
-  display_name: {function.metadata.display_name or function.metadata.name}
+  displayName: {function.metadata.displayName or function.metadata.name}
   environment: {settings.environment}
 spec:
   enabled: true

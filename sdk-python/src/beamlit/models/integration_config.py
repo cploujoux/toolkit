@@ -1,32 +1,20 @@
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="IntegrationConnectionSecret")
+T = TypeVar("T", bound="IntegrationConfig")
 
 
 @_attrs_define
-class IntegrationConnectionSecret:
-    """Integration secret
+class IntegrationConfig:
+    """Integration config"""
 
-    Attributes:
-        api_key (Union[Unset, str]): The API key to use for the integration
-    """
-
-    api_key: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        api_key = self.api_key
-
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
-        if api_key is not UNSET:
-            field_dict["apiKey"] = api_key
 
         return field_dict
 
@@ -35,14 +23,10 @@ class IntegrationConnectionSecret:
         if not src_dict:
             return None
         d = src_dict.copy()
-        api_key = d.pop("apiKey", UNSET)
+        integration_config = cls()
 
-        integration_connection_secret = cls(
-            api_key=api_key,
-        )
-
-        integration_connection_secret.additional_properties = d
-        return integration_connection_secret
+        integration_config.additional_properties = d
+        return integration_config
 
     @property
     def additional_keys(self) -> list[str]:
