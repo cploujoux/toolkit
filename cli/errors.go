@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type ErrorModel struct {
@@ -23,6 +24,8 @@ func ErrorHandler(request *http.Request, kind string, name string, body string) 
 	// Afficher l'erreur et le code
 
 	workspace := request.Header.Get("X-Beamlit-Workspace")
+	workspace = strings.ReplaceAll(workspace, "\n", "")
+	workspace = strings.ReplaceAll(workspace, "\r", "")
 	if workspace != "" {
 		if error.Code == 401 {
 			resourceFullName := fmt.Sprintf("%s:%s", kind, name)
