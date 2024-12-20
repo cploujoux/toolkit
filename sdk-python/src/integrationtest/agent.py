@@ -16,6 +16,7 @@ from beamlit.agents import agent
         },
     },
     mcp_hub=["brave-search"],
+    remote_functions=["github"],
 )
 async def main(agent, chat_model, tools, body, headers=None, query_params=None, **_):
     agent_config = {"configurable": {"thread_id": str(uuid.uuid4())}}

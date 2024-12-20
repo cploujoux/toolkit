@@ -11,6 +11,7 @@ from beamlit.authentication import new_client
 from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
+from beamlit.functions.remote.remote import RemoteToolkit
 from beamlit.models import Agent, AgentMetadata, AgentSpec
 from langchain_core.tools import Tool
 from langgraph.checkpoint.memory import MemorySaver
@@ -106,6 +107,7 @@ def agent(
     override_chat_model=None,
     override_agent=None,
     mcp_hub=None,
+    remote_functions=None,
 ):
     logger = getLogger(__name__)
     try:
@@ -174,6 +176,16 @@ def agent(
                     functions.extend(toolkit.get_tools())
                 except Exception as e:
                     logger.warn(f"Failed to initialize MCP server {server}: {e!s}")
+
+        if remote_functions:
+
+            for function in remote_functions:
+                try:
+                    toolkit = RemoteToolkit(client, function)
+                    toolkit.initialize()
+                    functions.extend(toolkit.get_tools())
+                except Exception as e:
+                    logger.warn(f"Failed to initialize remote function {function}: {e!s}")
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(

@@ -5,16 +5,13 @@ from typing import Any, Callable
 
 import pydantic
 import pydantic_core
-import requests
 import typing_extensions as t
+from beamlit.api.functions import get_function
 from beamlit.authentication.authentication import AuthenticatedClient
-from beamlit.common.settings import get_settings
+from beamlit.models.function import Function
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
-from mcp import ListToolsResult
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema as cs
-
-settings = get_settings()
 
 
 def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
@@ -33,38 +30,12 @@ def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
     return Schema
 
 
-class MCPClient:
-    def __init__(self, client: AuthenticatedClient, server_name: str):
-        self.client = client
-        self.server_name = server_name
-        self.headers = {"Api-Key": "1234567890"}
-
-    def list_tools(self) -> requests.Response:
-        client = self.client.get_httpx_client()
-        url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/list")
-
-        response = client.request("GET", url, headers=self.headers)
-        response.raise_for_status()
-        return response
-
-    def call_tool(self, tool_name: str, arguments: dict[str, Any] = None) -> requests.Response:
-        client = self.client.get_httpx_client()
-        url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/call")
-        response = client.request(
-            "POST",
-            url,
-            json={"name": tool_name, "arguments": arguments},
-            headers=self.headers,
-        )
-        response.raise_for_status()
-        return response
-
-class MCPTool(BaseTool):
+class RemoteTool(BaseTool):
     """
-    MCP server tool
+    Remote tool
     """
 
-    client: MCPClient
+    client: AuthenticatedClient
     handle_tool_error: bool | str | Callable[[ToolException], str] | None = True
 
     @t.override
@@ -90,36 +61,43 @@ class MCPTool(BaseTool):
         assert self.args_schema is not None  # noqa: S101
         return self.args_schema
 
-class MCPToolkit(BaseToolkit):
+class RemoteToolkit(BaseToolkit):
     """
-    MCP server toolkit
+    Remote toolkit
     """
 
-    client: MCPClient
-    """The MCP session used to obtain the tools"""
-
-    _tools: ListToolsResult | None = None
+    client: AuthenticatedClient
+    function: str
+    _function: Function | None = None
 
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
         """Initialize the session and retrieve tools list"""
-        if self._tools is None:
-            response = self.client.list_tools()
-            self._tools = ListToolsResult(**response.json())
+        if self._function is None:
+            self._function = get_function(self.function, client=self.client)
 
     @t.override
     def get_tools(self) -> list[BaseTool]:
         if self._tools is None:
             raise RuntimeError("Must initialize the toolkit first")
 
-        return [
-            MCPTool(
+        if self._function.spec.kit:
+            return [
+                RemoteTool(
                 client=self.client,
-                name=tool.name,
-                description=tool.description or "",
-                args_schema=create_schema_model(tool.inputSchema),
+                name=func.name,
+                description=func.description or "",
+                args_schema=create_schema_model(func.parameters),
+                )
+                for func in self._function.spec.kit
+            ]
+
+        return [
+            RemoteTool(
+                client=self.client,
+                name=self._function.metadata.name,
+                description=self._function.spec.description or "",
+                args_schema=create_schema_model(self._function.spec.parameters),
             )
-            # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
-            for tool in self._tools.tools
         ]
