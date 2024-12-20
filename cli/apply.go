@@ -57,7 +57,7 @@ func (r *Operations) Apply(filePath string, recursive bool) error {
 		for _, resource := range resources {
 			if resource.Kind == result.Kind {
 				name := result.Metadata.(map[string]interface{})["name"].(string)
-				resource.PutFn(resource.Kind, name, result.Spec)
+				resource.PutFn(resource.Kind, name, result)
 			}
 		}
 	}
