@@ -8,9 +8,11 @@ from logging import getLogger
 
 from beamlit.api.models import get_model
 from beamlit.authentication import new_client
-from beamlit.common.settings import get_settings, init
+from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
-from beamlit.models import Agent, AgentSpec, Metadata
+from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
+from beamlit.functions.remote.remote import RemoteToolkit
+from beamlit.models import Agent, AgentMetadata, AgentSpec
 from langchain_core.tools import Tool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -24,6 +26,7 @@ def get_functions(dir="src/functions", from_decorator="function"):
 
     # Walk through all Python files in functions directory and subdirectories
     if not os.path.exists(dir):
+        logger.warn(f"Functions directory {dir} not found")
         return []
     for root, _, files in os.walk(dir):
         for file in files:
@@ -103,6 +106,8 @@ def agent(
     agent: Agent | dict = None,
     override_chat_model=None,
     override_agent=None,
+    mcp_hub=None,
+    remote_functions=None,
 ):
     logger = getLogger(__name__)
     try:
@@ -111,6 +116,7 @@ def agent(
                 'agent must be a dictionary, example: @agent(agent={"metadata": {"name": "my_agent"}})'
             )
 
+        client = new_client()
         chat_model = override_chat_model or None
         settings = init()
 
@@ -132,11 +138,10 @@ def agent(
         settings.agent.functions = functions
 
         if agent is not None:
-            metadata = Metadata(**agent.get("metadata", {}))
+            metadata = AgentMetadata(**agent.get("metadata", {}))
             spec = AgentSpec(**agent.get("spec", {}))
             agent = Agent(metadata=metadata, spec=spec)
             if agent.spec.model and chat_model is None:
-                client = new_client()
                 try:
                     response = get_model.sync_detailed(
                         agent.spec.model, environment=settings.environment, client=client
@@ -158,10 +163,29 @@ def agent(
                     raise e
 
                 if settings.agent.model:
-                    chat_model = get_chat_model(settings.agent.model)
+                    chat_model, provider, model = get_chat_model(agent.spec.model, settings.agent.model)
                     settings.agent.chat_model = chat_model
-                    runtime = settings.agent.model.spec.runtime
-                    logger.info(f"Chat model configured, using: {runtime.type_}:{runtime.model}")
+                    logger.info(f"Chat model configured, using: {provider}:{model}")
+
+        if mcp_hub:
+            for server in mcp_hub:
+                try:
+                    mcp_client = MCPClient(client, server)
+                    toolkit = MCPToolkit(client=mcp_client)
+                    toolkit.initialize()
+                    functions.extend(toolkit.get_tools())
+                except Exception as e:
+                    logger.warn(f"Failed to initialize MCP server {server}: {e!s}")
+
+        if remote_functions:
+
+            for function in remote_functions:
+                try:
+                    toolkit = RemoteToolkit(client, function)
+                    toolkit.initialize()
+                    functions.extend(toolkit.get_tools())
+                except Exception as e:
+                    logger.warn(f"Failed to initialize remote function {function}: {e!s}")
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(

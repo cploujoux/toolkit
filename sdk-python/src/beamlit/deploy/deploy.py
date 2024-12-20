@@ -6,10 +6,12 @@ from logging import getLogger
 from typing import Literal
 
 from beamlit.common.settings import Settings, get_settings, init
-from beamlit.models import (Agent, EnvironmentMetadata, AgentSpec, AgentChain, Flavor, Function, FunctionSpec,
-                            Runtime)
-from .format import arg_to_dict, format_parameters, format_agent_chain
-from .parser import get_resources, Resource, get_parameters, get_description
+from beamlit.models import (Agent, AgentChain, AgentSpec, EnvironmentMetadata,
+                            Flavor, Function, FunctionSpec, Runtime)
+
+from .format import arg_to_dict, format_agent_chain, format_parameters
+from .parser import Resource, get_description, get_parameters, get_resources
+
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
@@ -97,7 +99,7 @@ def get_agent_yaml(
     Generates YAML configuration for an agent deployment.
 
     Args:
-        agent (AgentDeployment): Agent deployment configuration
+        agent (Agent): Agent deployment configuration
         functions (list[tuple[Resource, FunctionDeployment]]): List of associated functions
         settings (Settings): Application settings
 
