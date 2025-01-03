@@ -18,11 +18,9 @@ class EnvironmentMetrics:
 
     Attributes:
         inference_global (Union[Unset, list['Metric']]): Array of metrics
-        inference_per_second_global (Union[Unset, list['Metric']]): Array of metrics
     """
 
     inference_global: Union[Unset, list["Metric"]] = UNSET
-    inference_per_second_global: Union[Unset, list["Metric"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -33,20 +31,11 @@ class EnvironmentMetrics:
                 componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 inference_global.append(componentsschemas_array_metric_item)
 
-        inference_per_second_global: Union[Unset, list[dict[str, Any]]] = UNSET
-        if not isinstance(self.inference_per_second_global, Unset):
-            inference_per_second_global = []
-            for componentsschemas_array_metric_item_data in self.inference_per_second_global:
-                componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
-                inference_per_second_global.append(componentsschemas_array_metric_item)
-
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if inference_global is not UNSET:
-            field_dict["inference_global"] = inference_global
-        if inference_per_second_global is not UNSET:
-            field_dict["inference_per_second_global"] = inference_per_second_global
+            field_dict["inferenceGlobal"] = inference_global
 
         return field_dict
 
@@ -58,22 +47,14 @@ class EnvironmentMetrics:
             return None
         d = src_dict.copy()
         inference_global = []
-        _inference_global = d.pop("inference_global", UNSET)
+        _inference_global = d.pop("inferenceGlobal", UNSET)
         for componentsschemas_array_metric_item_data in _inference_global or []:
             componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
 
             inference_global.append(componentsschemas_array_metric_item)
 
-        inference_per_second_global = []
-        _inference_per_second_global = d.pop("inference_per_second_global", UNSET)
-        for componentsschemas_array_metric_item_data in _inference_per_second_global or []:
-            componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
-
-            inference_per_second_global.append(componentsschemas_array_metric_item)
-
         environment_metrics = cls(
             inference_global=inference_global,
-            inference_per_second_global=inference_per_second_global,
         )
 
         environment_metrics.additional_properties = d

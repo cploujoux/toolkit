@@ -38,7 +38,7 @@ class SettingsAuthenticationClient(BaseSettings):
 
 
 class SettingsAuthentication(BaseSettings):
-    api_key: Union[None, str] = None
+    apiKey: Union[None, str] = None
     jwt: Union[None, str] = None
     client: SettingsAuthenticationClient = SettingsAuthenticationClient()
 
@@ -118,13 +118,13 @@ def init_agent(
                 functions.append(function)
         settings.agent.functions = functions
 
-    if agent.spec.agent_chain:
-        for chain in agent.spec.agent_chain:
+    if agent.spec.agentChain:
+        for chain in agent.spec.agentChain:
             if chain.enabled:
-                agent_chain = get_agent.sync(chain.name, environment=env, client=client)
+                agentChain = get_agent.sync(chain.name, environment=env, client=client)
                 if chain.description:
-                    agent_chain.spec.description = chain.description
-                agents_chain.append(agent_chain)
+                    agentChain.spec.description = chain.description
+                agents_chain.append(agentChain)
         settings.agent.chain = agents_chain
     if agent.spec.model:
         model = get_model.sync(agent.spec.model, environment=env, client=client)

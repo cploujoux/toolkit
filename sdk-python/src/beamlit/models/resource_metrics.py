@@ -19,17 +19,12 @@ class ResourceMetrics:
 
     Attributes:
         inference_global (Union[Unset, list['Metric']]): Array of metrics
-        inference_per_second_global (Union[Unset, list['Metric']]): Array of metrics
         query_per_region (Union[Unset, QPS]): Query per second per element, can be per response status code (e.g. 200,
             400) or per location
-        query_per_second_per_region (Union[Unset, QPS]): Query per second per element, can be per response status code
-            (e.g. 200, 400) or per location
     """
 
     inference_global: Union[Unset, list["Metric"]] = UNSET
-    inference_per_second_global: Union[Unset, list["Metric"]] = UNSET
     query_per_region: Union[Unset, "QPS"] = UNSET
-    query_per_second_per_region: Union[Unset, "QPS"] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -40,32 +35,17 @@ class ResourceMetrics:
                 componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 inference_global.append(componentsschemas_array_metric_item)
 
-        inference_per_second_global: Union[Unset, list[dict[str, Any]]] = UNSET
-        if not isinstance(self.inference_per_second_global, Unset):
-            inference_per_second_global = []
-            for componentsschemas_array_metric_item_data in self.inference_per_second_global:
-                componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
-                inference_per_second_global.append(componentsschemas_array_metric_item)
-
         query_per_region: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.query_per_region, Unset):
             query_per_region = self.query_per_region.to_dict()
-
-        query_per_second_per_region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_second_per_region, Unset):
-            query_per_second_per_region = self.query_per_second_per_region.to_dict()
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if inference_global is not UNSET:
-            field_dict["inference_global"] = inference_global
-        if inference_per_second_global is not UNSET:
-            field_dict["inference_per_second_global"] = inference_per_second_global
+            field_dict["inferenceGlobal"] = inference_global
         if query_per_region is not UNSET:
-            field_dict["query_per_region"] = query_per_region
-        if query_per_second_per_region is not UNSET:
-            field_dict["query_per_second_per_region"] = query_per_second_per_region
+            field_dict["queryPerRegion"] = query_per_region
 
         return field_dict
 
@@ -78,38 +58,22 @@ class ResourceMetrics:
             return None
         d = src_dict.copy()
         inference_global = []
-        _inference_global = d.pop("inference_global", UNSET)
+        _inference_global = d.pop("inferenceGlobal", UNSET)
         for componentsschemas_array_metric_item_data in _inference_global or []:
             componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
 
             inference_global.append(componentsschemas_array_metric_item)
 
-        inference_per_second_global = []
-        _inference_per_second_global = d.pop("inference_per_second_global", UNSET)
-        for componentsschemas_array_metric_item_data in _inference_per_second_global or []:
-            componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
-
-            inference_per_second_global.append(componentsschemas_array_metric_item)
-
-        _query_per_region = d.pop("query_per_region", UNSET)
+        _query_per_region = d.pop("queryPerRegion", UNSET)
         query_per_region: Union[Unset, QPS]
         if isinstance(_query_per_region, Unset):
             query_per_region = UNSET
         else:
             query_per_region = QPS.from_dict(_query_per_region)
 
-        _query_per_second_per_region = d.pop("query_per_second_per_region", UNSET)
-        query_per_second_per_region: Union[Unset, QPS]
-        if isinstance(_query_per_second_per_region, Unset):
-            query_per_second_per_region = UNSET
-        else:
-            query_per_second_per_region = QPS.from_dict(_query_per_second_per_region)
-
         resource_metrics = cls(
             inference_global=inference_global,
-            inference_per_second_global=inference_per_second_global,
             query_per_region=query_per_region,
-            query_per_second_per_region=query_per_second_per_region,
         )
 
         resource_metrics.additional_properties = d

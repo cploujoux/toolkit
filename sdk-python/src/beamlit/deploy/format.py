@@ -47,21 +47,21 @@ def format_parameters(parameters: list[StoreFunctionParameter]) -> str:
     return "\n".join(formatted)
 
 
-def format_agent_chain(agent_chain: list[AgentChain]) -> str:
+def format_agent_chain(agentChain: list[AgentChain]) -> str:
     """
     Formats agent chain configuration into YAML-compatible string.
 
     Args:
-        agent_chain (list[AgentChain]): List of agent chain configurations
+        agentChain (list[AgentChain]): List of agent chain configurations
 
     Returns:
         str: YAML-formatted string of agent chain
     """
-    if not agent_chain:
+    if not agentChain:
         return "[]"
     formatted = []
 
-    for agent in agent_chain:
+    for agent in agentChain:
         formatted.append(f"""
       - agent: {agent.name}
         enabled: {agent.enabled}""")

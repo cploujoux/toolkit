@@ -60,15 +60,15 @@ class PendingInvitationRender:
         if email is not UNSET:
             field_dict["email"] = email
         if invited_at is not UNSET:
-            field_dict["invited_at"] = invited_at
+            field_dict["invitedAt"] = invited_at
         if invited_by is not UNSET:
-            field_dict["invited_by"] = invited_by
+            field_dict["invitedBy"] = invited_by
         if role is not UNSET:
             field_dict["role"] = role
         if workspace is not UNSET:
             field_dict["workspace"] = workspace
         if workspace_details is not UNSET:
-            field_dict["workspace_details"] = workspace_details
+            field_dict["workspaceDetails"] = workspace_details
 
         return field_dict
 
@@ -83,9 +83,9 @@ class PendingInvitationRender:
         d = src_dict.copy()
         email = d.pop("email", UNSET)
 
-        invited_at = d.pop("invited_at", UNSET)
+        invited_at = d.pop("invitedAt", UNSET)
 
-        _invited_by = d.pop("invited_by", UNSET)
+        _invited_by = d.pop("invitedBy", UNSET)
         invited_by: Union[Unset, PendingInvitationRenderInvitedBy]
         if isinstance(_invited_by, Unset):
             invited_by = UNSET
@@ -101,7 +101,7 @@ class PendingInvitationRender:
         else:
             workspace = PendingInvitationRenderWorkspace.from_dict(_workspace)
 
-        _workspace_details = d.pop("workspace_details", UNSET)
+        _workspace_details = d.pop("workspaceDetails", UNSET)
         workspace_details: Union[Unset, PendingInvitationWorkspaceDetails]
         if isinstance(_workspace_details, Unset):
             workspace_details = UNSET

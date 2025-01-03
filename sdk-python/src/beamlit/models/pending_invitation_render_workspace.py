@@ -30,7 +30,7 @@ class PendingInvitationRenderWorkspace:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if display_name is not UNSET:
-            field_dict["display_name"] = display_name
+            field_dict["displayName"] = display_name
         if name is not UNSET:
             field_dict["name"] = name
 
@@ -41,7 +41,7 @@ class PendingInvitationRenderWorkspace:
         if not src_dict:
             return None
         d = src_dict.copy()
-        display_name = d.pop("display_name", UNSET)
+        display_name = d.pop("displayName", UNSET)
 
         name = d.pop("name", UNSET)
 

@@ -60,7 +60,7 @@ def new_client():
 
 def new_client_with_credentials(config: RunClientWithCredentials):
     provider: Auth = None
-    if config.credentials.api_key:
+    if config.credentials.apiKey:
         provider = ApiKeyProvider(config.credentials, config.workspace)
     elif config.credentials.access_token:
         provider = BearerToken(config.credentials, config.workspace, config.api_url)
@@ -85,7 +85,7 @@ def get_authentication_headers(settings: Settings) -> Dict[str, str]:
         workspace=settings.workspace,
     )
     provider = None
-    if config.credentials.api_key:
+    if config.credentials.apiKey:
         provider = ApiKeyProvider(config.credentials, config.workspace)
     elif config.credentials.access_token:
         provider = BearerToken(config.credentials, config.workspace, config.api_url)

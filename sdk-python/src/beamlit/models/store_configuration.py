@@ -69,11 +69,11 @@ class StoreConfiguration:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if available_models is not UNSET:
-            field_dict["available_models"] = available_models
+            field_dict["availableModels"] = available_models
         if description is not UNSET:
             field_dict["description"] = description
         if display_name is not UNSET:
-            field_dict["display_name"] = display_name
+            field_dict["displayName"] = display_name
         if if_ is not UNSET:
             field_dict["if"] = if_
         if name is not UNSET:
@@ -96,11 +96,11 @@ class StoreConfiguration:
         if not src_dict:
             return None
         d = src_dict.copy()
-        available_models = cast(list[str], d.pop("available_models", UNSET))
+        available_models = cast(list[str], d.pop("availableModels", UNSET))
 
         description = d.pop("description", UNSET)
 
-        display_name = d.pop("display_name", UNSET)
+        display_name = d.pop("displayName", UNSET)
 
         if_ = d.pop("if", UNSET)
 

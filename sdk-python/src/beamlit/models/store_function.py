@@ -106,7 +106,7 @@ class StoreFunction:
         if description is not UNSET:
             field_dict["description"] = description
         if display_name is not UNSET:
-            field_dict["display_name"] = display_name
+            field_dict["displayName"] = display_name
         if image is not UNSET:
             field_dict["image"] = image
         if kit is not UNSET:
@@ -147,7 +147,7 @@ class StoreFunction:
 
         description = d.pop("description", UNSET)
 
-        display_name = d.pop("display_name", UNSET)
+        display_name = d.pop("displayName", UNSET)
 
         image = d.pop("image", UNSET)
 
