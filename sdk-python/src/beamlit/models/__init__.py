@@ -29,6 +29,9 @@ from .function_kit import FunctionKit
 from .function_metadata import FunctionMetadata
 from .function_release import FunctionRelease
 from .function_spec import FunctionSpec
+from .get_trace_ids_response_200 import GetTraceIdsResponse200
+from .get_trace_logs_response_200 import GetTraceLogsResponse200
+from .get_trace_response_200 import GetTraceResponse200
 from .get_workspace_service_accounts_response_200_item import GetWorkspaceServiceAccountsResponse200Item
 from .increase_and_rate_metric import IncreaseAndRateMetric
 from .integration_config import IntegrationConfig
@@ -128,6 +131,9 @@ __all__ = (
     "FunctionMetadata",
     "FunctionRelease",
     "FunctionSpec",
+    "GetTraceIdsResponse200",
+    "GetTraceLogsResponse200",
+    "GetTraceResponse200",
     "GetWorkspaceServiceAccountsResponse200Item",
     "IncreaseAndRateMetric",
     "IntegrationConfig",

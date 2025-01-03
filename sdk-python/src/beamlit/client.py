@@ -1,3 +1,4 @@
+import os
 import ssl
 from typing import Any, Optional, Union
 
@@ -37,8 +38,13 @@ class Client:
 
     """
 
+    # Determine the base URL based on the environment
+    default_base_url = "https://api.beamlit.com/v0"
+    if os.getenv("BL_ENV") == "dev":
+        default_base_url = "https://api.beamlit.dev/v0"
+
     raise_on_unexpected_status: bool = field(default=True, kw_only=True)
-    _base_url: str = field(alias="base_url", default="https://api.beamlit.dev/v0")
+    _base_url: str = field(alias="base_url", default=default_base_url)
     _cookies: dict[str, str] = field(factory=dict, kw_only=True, alias="cookies")
     _headers: dict[str, str] = field(factory=dict, kw_only=True, alias="headers")
     _provider: httpx.Auth = field(default=None, alias="provider")
@@ -169,8 +175,13 @@ class AuthenticatedClient:
         provider: AuthProvider to use for authentication
     """
 
+    # Determine the base URL based on the environment
+    default_base_url = "https://api.beamlit.com/v0"
+    if os.getenv("BL_ENV") == "dev":
+        default_base_url = "https://api.beamlit.dev/v0"
+
     raise_on_unexpected_status: bool = field(default=True, kw_only=True)
-    _base_url: str = field(alias="base_url", default="https://api.beamlit.dev/v0")
+    _base_url: str = field(alias="base_url", default=default_base_url)
     _cookies: dict[str, str] = field(factory=dict, kw_only=True, alias="cookies")
     _headers: dict[str, str] = field(factory=dict, kw_only=True, alias="headers")
     _provider: httpx.Auth = field(default=None, alias="provider")
