@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, Generator
+import os
 
 from httpx import Auth, Request, Response
 
@@ -26,8 +27,13 @@ class PublicProvider(Auth):
 class RunClientWithCredentials:
     credentials: Credentials
     workspace: str
-    api_url: str = "https://api.beamlit.dev/v0"
-    run_url: str = "https://run.beamlit.dev/v0"
+    api_url: str = "https://api.beamlit.com/v0"
+    run_url: str = "https://run.beamlit.com/v0"
+
+    def __post_init__(self):
+        if os.getenv('BL_ENV') == 'dev':
+            self.api_url = "https://api.beamlit.dev/v0"
+            self.run_url = "https://run.beamlit.dev/v0"
 
 
 def new_client_from_settings(settings: Settings):

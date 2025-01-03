@@ -62,14 +62,22 @@ class Settings(BaseSettings):
     remote: bool = Field(default=False)
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")
-    base_url: str = Field(default="https://api.beamlit.dev/v0")
-    run_url: str = Field(default="https://run.beamlit.dev")
-    mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.dev")
-    registry_url: str = Field(default="https://serverless-registry-production.beamlit.workers.dev")
+    base_url: str = Field(default="https://api.beamlit.com/v0")
+    run_url: str = Field(default="https://run.beamlit.com")
+    mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.com")
+    registry_url: str = Field(default="https://serverless-registry-production.beamlit.workers.com")
     log_level: str = Field(default="INFO")
     agent: SettingsAgent = SettingsAgent()
     server: SettingsServer = SettingsServer()
     authentication: SettingsAuthentication = SettingsAuthentication()
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        if os.getenv('BL_ENV') == 'dev':
+            self.base_url = "https://api.beamlit.dev/v0"
+            self.run_url = "https://run.beamlit.dev"
+            self.mcp_hub_url = "https://mcp-hub-server.beamlit.workers.dev"
+            self.registry_url = "https://serverless-registry-production.beamlit.workers.dev"
 
     @classmethod
     def settings_customise_sources(
