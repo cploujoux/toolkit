@@ -199,8 +199,8 @@ COPY pyproject.toml /beamlit/pyproject.toml
 COPY uv.lock /beamlit/uv.lock
 RUN uv sync --no-cache
 
-COPY README.md /beamlit/README.md
-COPY LICENSE /beamlit/LICENSE
+COPY README.m[d] /beamlit/README.md
+COPY LICENS[E] /beamlit/LICENSE
 COPY src /beamlit/src
 
 ENV PATH="/beamlit/.venv/bin:$PATH"

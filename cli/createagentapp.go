@@ -358,6 +358,8 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 	currentUser, err := user.Current()
 	if err == nil {
 		agentAppOptions.Author = currentUser.Username
+	} else {
+		agentAppOptions.Author = "beamlit"
 	}
 	form := huh.NewForm(
 		huh.NewGroup(
@@ -365,9 +367,6 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 				Title("Project Name").
 				Description("Name of your agent app").
 				Value(&agentAppOptions.ProjectName),
-			huh.NewInput().
-				Title("Author").
-				Value(&agentAppOptions.Author),
 			huh.NewSelect[string]().
 				Title("Template").
 				Description("Template to use for your agent app").
@@ -567,7 +566,7 @@ func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 			}
 			fmt.Printf(`Your beamlit agent app has been created. Start working on it:
 cd %s && source .venv/bin/activate;
-bl serve --local;
+bl serve --hotreload;
 `, opts.Directory)
 		},
 	}
