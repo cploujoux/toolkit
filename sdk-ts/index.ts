@@ -1,14 +1,7 @@
-import { newClientWithCredentials } from "./src/authentication/authentication";
-import { listAgents } from "./src/client";
+import { newClient } from "./src/authentication/authentication";
+import { listModels } from "./src/client";
 
-const client = newClientWithCredentials({
-  apiUrl: "https://api.beamlit.dev/v0",
-  credentials: {
-    apiKey: process.env.BL_API_KEY,
-  },
-  workspace: "main",
-});
-
-listAgents({ client })
+const clientContext = newClient();
+listModels({ client: clientContext })
   .then((res) => console.log(res.data))
   .catch((err) => console.log(err));
