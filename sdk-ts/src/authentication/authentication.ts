@@ -68,13 +68,13 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
     provider = new BearerToken(
       config.credentials,
       config.workspace,
-      config.apiUrl || "https://api.beamlit.dev/v0"
+      config.apiUrl || "https://api.beamlit.com/v0"
     );
   } else if (config.credentials.client_credentials) {
     provider = new ClientCredentials(
       config.credentials,
       config.workspace,
-      config.apiUrl || "https://api.beamlit.dev/v0"
+      config.apiUrl || "https://api.beamlit.com/v0"
     );
   } else {
     provider = new PublicAuth();
@@ -120,13 +120,13 @@ export async function getAuthenticationHeaders(
     provider = new BearerToken(
       config.credentials,
       config.workspace,
-      config.apiUrl || "https://api.beamlit.dev/v0"
+      config.apiUrl || "https://api.beamlit.com/v0"
     );
   } else if (config.credentials.client_credentials) {
     provider = new ClientCredentials(
       config.credentials,
       config.workspace,
-      config.apiUrl || "https://api.beamlit.dev/v0"
+      config.apiUrl || "https://api.beamlit.com/v0"
     );
   }
 
