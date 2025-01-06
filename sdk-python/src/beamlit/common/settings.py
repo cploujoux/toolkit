@@ -18,11 +18,6 @@ from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
 global SETTINGS
 SETTINGS = None
 
-
-def get_settings():
-    return SETTINGS
-
-
 class SettingsAgent(BaseSettings):
     agent: Union[None, CompiledGraph, BaseChatModel] = None
     chain: Union[Unset, list[Agent]] = UNSET
@@ -95,6 +90,9 @@ class Settings(BaseSettings):
             YamlConfigSettingsSource(settings_cls),
             init_settings,
         )
+
+def get_settings() -> Settings:
+    return SETTINGS
 
 
 def init_agent(

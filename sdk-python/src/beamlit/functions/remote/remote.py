@@ -1,20 +1,21 @@
 import asyncio
-import urllib.parse
 import warnings
 from typing import Any, Callable
 
 import pydantic
-import pydantic_core
 import typing_extensions as t
+from dataclasses import dataclass
 from beamlit.api.functions import get_function
 from beamlit.authentication.authentication import AuthenticatedClient
-from beamlit.models.function import Function
-from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
+from beamlit.run import RunClient
+from beamlit.common.settings import get_settings
+from beamlit.models import Function, StoreFunctionParameter
+from langchain_core.tools.base import BaseTool, ToolException
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema as cs
 
 
-def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
+def create_schema_model(parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
     # Create a new model class that returns our JSON schema.
     # LangChain requires a BaseModel class.
     class Schema(pydantic.BaseModel):
@@ -25,6 +26,18 @@ def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
         def __get_pydantic_json_schema__(
             cls, core_schema: cs.CoreSchema, handler: pydantic.GetJsonSchemaHandler
         ) -> JsonSchemaValue:
+            schema = {
+                "type": "object",
+                "properties": {},
+                "required": [],
+            }
+            for parameter in parameters:
+                schema["properties"][parameter.name] = {
+                    "type": parameter.type_,
+                    "description": parameter.description,
+                }
+                if parameter.required:
+                    schema["required"].append(parameter.name)
             return schema
 
     return Schema
@@ -35,7 +48,7 @@ class RemoteTool(BaseTool):
     Remote tool
     """
 
-    client: AuthenticatedClient
+    client: RunClient
     handle_tool_error: bool | str | Callable[[ToolException], str] | None = True
 
     @t.override
@@ -48,12 +61,15 @@ class RemoteTool(BaseTool):
 
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
-        result = self.client.call_tool(self.name, arguments=kwargs)
-        response = result.json()
-        content = pydantic_core.to_json(response["content"]).decode()
-        if response["isError"]:
-            raise ToolException(content)
-        return content
+        settings = get_settings()
+        result = self.client.run(
+            "function",
+            self.name,
+            settings.environment,
+            "POST",
+            kwargs,
+        )
+        return result.text
 
     @t.override
     @property
@@ -61,7 +77,8 @@ class RemoteTool(BaseTool):
         assert self.args_schema is not None  # noqa: S101
         return self.args_schema
 
-class RemoteToolkit(BaseToolkit):
+@dataclass
+class RemoteToolkit:
     """
     Remote toolkit
     """
@@ -75,27 +92,27 @@ class RemoteToolkit(BaseToolkit):
     def initialize(self) -> None:
         """Initialize the session and retrieve tools list"""
         if self._function is None:
-            self._function = get_function(self.function, client=self.client)
+            self._function = get_function.sync_detailed(self.function, client=self.client).parsed
 
     @t.override
     def get_tools(self) -> list[BaseTool]:
-        if self._tools is None:
+        if self._function is None:
             raise RuntimeError("Must initialize the toolkit first")
 
         if self._function.spec.kit:
             return [
                 RemoteTool(
-                client=self.client,
-                name=func.name,
-                description=func.description or "",
-                args_schema=create_schema_model(func.parameters),
+                    client=RunClient(self.client),
+                    name=func.name,
+                    description=func.description or "",
+                    args_schema=create_schema_model(func.parameters),
                 )
                 for func in self._function.spec.kit
             ]
 
         return [
             RemoteTool(
-                client=self.client,
+                client=RunClient(self.client),
                 name=self._function.metadata.name,
                 description=self._function.spec.description or "",
                 args_schema=create_schema_model(self._function.spec.parameters),

@@ -37,7 +37,7 @@ class ClientCredentials(Auth):
     def refresh_if_needed(self) -> Optional[Exception]:
         settings = get_settings()
         if self.credentials.client_credentials and not self.credentials.refresh_token:
-            headers = {"Authorization": f"Basic {self.credentials.client_credentials}"}
+            headers = {"Authorization": f"Basic {self.credentials.client_credentials}", "Content-Type": "application/json"}
             body = {"grant_type": "client_credentials"}
             response = requests.post(f"{settings.base_url}/oauth/token", headers=headers, json=body)
             response.raise_for_status()

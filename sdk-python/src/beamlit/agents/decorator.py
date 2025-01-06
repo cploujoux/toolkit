@@ -18,7 +18,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
 from .chat import get_chat_model
-
+from .chain import ChainToolkit
 
 def get_functions(dir="src/functions", from_decorator="function"):
     functions = []
@@ -178,7 +178,6 @@ def agent(
                     logger.warn(f"Failed to initialize MCP server {server}: {e!s}")
 
         if remote_functions:
-
             for function in remote_functions:
                 try:
                     toolkit = RemoteToolkit(client, function)
@@ -186,6 +185,11 @@ def agent(
                     functions.extend(toolkit.get_tools())
                 except Exception as e:
                     logger.warn(f"Failed to initialize remote function {function}: {e!s}")
+
+        if agent.spec.agent_chain:
+            toolkit = ChainToolkit(client, agent.spec.agent_chain)
+            toolkit.initialize()
+            functions.extend(toolkit.get_tools())
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(

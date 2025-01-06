@@ -47,15 +47,15 @@ def new_client_from_settings(settings: Settings):
 
 
 def new_client():
+    settings = get_settings()
     context = current_context()
-    if context.workspace:
+    if context.workspace and not settings.authentication.client.credentials:
         credentials = load_credentials(context.workspace)
         client_config = RunClientWithCredentials(
             credentials=credentials,
             workspace=context.workspace,
         )
     else:
-        settings = get_settings()
         credentials = load_credentials_from_settings(settings)
         client_config = RunClientWithCredentials(
             credentials=credentials,
