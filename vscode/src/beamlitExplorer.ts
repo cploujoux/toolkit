@@ -1,6 +1,3 @@
-import { Model } from "@beamlit/sdk";
-import { Agent } from "http";
-import * as yaml from "js-yaml";
 import path from "path";
 import * as vscode from "vscode";
 import { BeamlitWorkspaceProvider } from "./beamlitWorkspaceProvider";
@@ -48,8 +45,7 @@ export class BeamlitExplorer implements vscode.TreeDataProvider<ResourceNode> {
         new ResourceTypeNode(
           resource.metadata?.name ?? resource.metadata?.displayName ?? "",
           element.resourceType,
-          "",
-          resource
+          ""
         )
     );
   }
@@ -79,13 +75,11 @@ class ResourceTypeNode extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     public readonly resourceType: string,
-    public readonly description: string,
-    public readonly content: Agent | Model | Function
+    public readonly description: string
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.contextValue = "resource";
     this.description = description;
-    this.content = content;
     this.iconPath = {
       light: vscode.Uri.file(
         path.join(__dirname, "..", "resources", "file-light.svg")
@@ -94,11 +88,10 @@ class ResourceTypeNode extends vscode.TreeItem {
         path.join(__dirname, "..", "resources", "file-dark.svg")
       ),
     };
-    const yamlContent = yaml.dump(this.content);
     this.command = {
       command: "beamlit.selectResource",
       title: "Select Resource",
-      arguments: [this.resourceType, this.label, yamlContent],
+      arguments: [this.resourceType, this.label],
     };
   }
 }

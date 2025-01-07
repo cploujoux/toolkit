@@ -1,5 +1,5 @@
 {
-  "name": "beamlit",
+  "name": "vscode-beamlit-tools",
   "displayName": "Beamlit",
   "description": "Ship AI agents that just work.",
   "version": "0.0.1",
@@ -12,28 +12,41 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "views": {
+      "beamlitView": [
+        {
+          "id": "extension.vsBeamlitExplorer",
+          "name": "Beamlit"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "beamlit-explorer",
+          "id": "beamlitView",
           "title": "Beamlit",
           "icon": "resources/beamlit.png"
         }
       ]
     },
-    "views": {
-      "beamlit-explorer": [
+    "menus": {
+      "view/title": [
         {
-          "id": "beamlit",
-          "name": "Beamlit"
+          "command": "beamlit.refresh",
+          "when": "view == extension.vsBeamlitExplorer",
+          "group": "navigation"
         }
       ]
     },
     "commands": [
       {
         "command": "beamlit.refresh",
-        "title": "Beamlit: Refresh",
-        "icon": "$(refresh)"
+        "title": "Refresh",
+        "category": "Beamlit",
+        "icon": {
+          "light": "resources/refresh-light.svg",
+          "dark": "resources/refresh-dark.svg"
+        }
       }
     ]
   },

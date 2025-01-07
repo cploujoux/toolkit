@@ -1,56 +1,74 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import path from "path";
 import * as vscode from "vscode";
 import { BeamlitExplorer } from "./beamlitExplorer";
 import { BeamlitWorkspaceProvider } from "./beamlitWorkspaceProvider";
+import { BeamlitResourceVirtualFileSystemProvider } from "./beamlitresource.virtualfs";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   // Create and register the resource data provider
   const resourceProvider = new BeamlitWorkspaceProvider();
-  resourceProvider.refreshResources().catch((err) => {
-    vscode.window.showErrorMessage(
-      `Beamlit: Failed to refresh resources because ${err.message}`
-    );
-  });
   const treeDataProvider = new BeamlitExplorer(resourceProvider);
 
+  resourceProvider
+    .refreshResources()
+    .then(() => treeDataProvider.refresh())
+    .catch((err) => {
+      vscode.window.showErrorMessage(
+        `Beamlit: Failed to refresh resources because ${err.message}`
+      );
+    });
+
   // Register the TreeDataProvider
-  const treeView = vscode.window.createTreeView("beamlit", {
+  const treeView = vscode.window.createTreeView("extension.vsBeamlitExplorer", {
     treeDataProvider: treeDataProvider,
     showCollapseAll: true,
   });
+  const resourceDocProvider = new BeamlitResourceVirtualFileSystemProvider();
 
   // Register commands
   context.subscriptions.push(
-    vscode.commands.registerCommand("beamlit.refresh", () => {
-      treeDataProvider.refresh();
-    }),
-    vscode.commands.registerCommand(
-      "beamlit.selectResource",
-      async (resourceType: string, resourceId: string, content: string) => {
-        const newFileUri = vscode.Uri.file(
-          path.join(
-            vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "./",
-            resourceId + ".yaml"
-          )
-        ).with({ scheme: "untitled" });
-        vscode.window.showInformationMessage(newFileUri.toString());
-        await vscode.workspace.openTextDocument(newFileUri);
-
-        // Fill in initial content
-        const edit = new vscode.WorkspaceEdit();
-        edit.insert(newFileUri, new vscode.Position(0, 0), content);
-        await vscode.workspace.applyEdit(edit);
-
-        // Show the editor
-        vscode.commands.executeCommand("vscode.open", newFileUri);
-      }
+    vscode.commands.registerCommand("beamlit.refresh", () =>
+      refresh(treeDataProvider, resourceProvider)
     ),
-    treeView
+    vscode.commands.registerCommand("beamlit.selectResource", selectResource),
+    treeView,
+    vscode.workspace.registerFileSystemProvider(
+      "beamlit",
+      resourceDocProvider,
+      { isReadonly: true }
+    )
   );
+}
+
+async function selectResource(resourceType: string, resourceId: string) {
+  const uri = vscode.Uri.parse(
+    `beamlit://${resourceId}/${resourceId}.yaml?resourceType=${resourceType}&resourceId=${resourceId}`
+  );
+  const doc = await vscode.workspace.openTextDocument(uri);
+  await vscode.window.showTextDocument(doc);
+}
+
+async function refresh(
+  treeDataProvider: BeamlitExplorer,
+  resourceProvider: BeamlitWorkspaceProvider
+) {
+  const statusBarMessage = vscode.window.setStatusBarMessage(
+    "Refreshing resources..."
+  );
+  resourceProvider
+    .refreshResources()
+    .then(() => treeDataProvider.refresh())
+    .catch((err) => {
+      vscode.window.showErrorMessage(
+        `Beamlit: Failed to refresh resources because ${err.message}`
+      );
+    })
+    .finally(() => {
+      statusBarMessage.dispose();
+    });
 }
 
 // This method is called when your extension is deactivated
