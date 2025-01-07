@@ -6,7 +6,7 @@
   "icon": "resources/beamlit.png",
   "publisher": "beamlit",
   "engines": {
-    "vscode": "^1.96.0"
+    "vscode": "^1.90.0"
   },
   "categories": [
     "Other"
@@ -76,7 +76,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@types/vscode": "^1.96.0",
+    "@types/vscode": "^1.90.0",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
     "@vscode/test-cli": "^0.0.10",
