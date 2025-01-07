@@ -69,10 +69,10 @@ class Settings(BaseSettings):
     def __init__(self, **data):
         super().__init__(**data)
         if os.getenv('BL_ENV') == 'dev':
-            self.base_url = "https://api.beamlit.dev/v0"
-            self.run_url = "https://run.beamlit.dev"
-            self.mcp_hub_url = "https://mcp-hub-server.beamlit.workers.dev"
-            self.registry_url = "https://eu.registry.beamlit.dev"
+            self.base_url = os.getenv('BL_BASE_URL') or "https://api.beamlit.dev/v0"
+            self.run_url = os.getenv('BL_RUN_URL') or "https://run.beamlit.dev"
+            self.mcp_hub_url = os.getenv('BL_MCP_HUB_URL') or "https://mcp-hub-server.beamlit.workers.dev"
+            self.registry_url = os.getenv('BL_REGISTRY_URL') or "https://eu.registry.beamlit.dev"
 
     @classmethod
     def settings_customise_sources(
