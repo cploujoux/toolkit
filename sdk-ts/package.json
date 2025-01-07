@@ -13,6 +13,10 @@
   "keywords": [],
   "author": "cploujoux",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beamlit/toolkit/sdk-ts"
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@tsconfig/node20": "^20.1.4",

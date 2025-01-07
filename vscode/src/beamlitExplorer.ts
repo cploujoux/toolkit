@@ -26,6 +26,9 @@ export class BeamlitExplorer implements vscode.TreeDataProvider<ResourceNode> {
         agents: "Agents",
         models: "Models",
         functions: "Functions",
+        environments: "Environments",
+        policies: "Policies",
+        integrations: "Integrations",
       };
       return resources.map((resource) => {
         return new ResourceNode(

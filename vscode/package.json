@@ -3,14 +3,21 @@
   "displayName": "Beamlit",
   "description": "Ship AI agents that just work.",
   "version": "0.0.1",
+  "icon": "resources/beamlit.png",
+  "publisher": "beamlit",
   "engines": {
     "vscode": "^1.96.0"
   },
   "categories": [
     "Other"
   ],
+  "license": "Apache-2.0",
   "activationEvents": [],
   "main": "./dist/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beamlit/toolkit/vscode"
+  },
   "contributes": {
     "views": {
       "beamlitView": [

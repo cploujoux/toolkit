@@ -1,4 +1,11 @@
-import { getAgent, getFunction, getModel } from "@beamlit/sdk";
+import {
+  getAgent,
+  getEnvironment,
+  getFunction,
+  getIntegrationConnection,
+  getModel,
+  getPolicy,
+} from "@beamlit/sdk";
 import { newClient } from "@beamlit/sdk/src/authentication/authentication";
 import * as yaml from "js-yaml";
 import * as querystring from "querystring";
@@ -59,7 +66,7 @@ export class BeamlitResourceVirtualFileSystemProvider
 
   async readFileAsync(uri: Uri): Promise<Uint8Array> {
     const content = await this.loadResource(uri);
-    return new Buffer(content, "utf8");
+    return Buffer.from(content, "utf8");
   }
 
   async loadResource(uri: Uri): Promise<string> {
@@ -67,18 +74,21 @@ export class BeamlitResourceVirtualFileSystemProvider
     const client = newClient();
     const resourceType = (query.resourceType as string) || "agents";
     const resourceId = (query.resourceId as string) || "";
-    const func: Record<
-      string,
-      typeof getAgent | typeof getFunction | typeof getModel
-    > = {
+    const func: Record<string, CallableFunction> = {
       agents: getAgent,
       functions: getFunction,
       models: getModel,
+      environments: getEnvironment,
+      policies: getPolicy,
+      integrations: getIntegrationConnection,
     };
     const kind: Record<string, string> = {
       agents: "Agent",
       functions: "Function",
       models: "Model",
+      environments: "Environment",
+      policies: "Policy",
+      integrations: "Integration",
     };
     const status = window.setStatusBarMessage(
       `Loading ${kind[resourceType]} ${resourceId}...`
@@ -89,6 +99,9 @@ export class BeamlitResourceVirtualFileSystemProvider
         functionName: resourceId,
         agentName: resourceId,
         modelName: resourceId,
+        environmentName: resourceId,
+        policyName: resourceId,
+        connectionName: resourceId,
       },
       throwOnError: true,
     });
