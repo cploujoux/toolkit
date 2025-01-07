@@ -17,16 +17,18 @@ from langchain_core.tools import Tool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
-from .chat import get_chat_model
 from .chain import ChainToolkit
+from .chat import get_chat_model
 
-def get_functions(dir="src/functions", from_decorator="function"):
+
+def get_functions(dir="src/functions", from_decorator="function", remote_functions_empty=True):
     functions = []
     logger = getLogger(__name__)
 
     # Walk through all Python files in functions directory and subdirectories
     if not os.path.exists(dir):
-        logger.warn(f"Functions directory {dir} not found")
+        if remote_functions_empty:
+            logger.warn(f"Functions directory {dir} not found")
         return []
     for root, _, files in os.walk(dir):
         for file in files:
@@ -74,6 +76,7 @@ def get_functions(dir="src/functions", from_decorator="function"):
                                     kit_functions = get_functions(
                                         dir=os.path.join(root),
                                         from_decorator="kit",
+                                        remote_functions_empty=remote_functions_empty,
                                     )
                                     functions.extend(kit_functions)
 
@@ -134,7 +137,10 @@ def agent(
             return wrapped
 
         # Initialize functions array to store decorated functions
-        functions = get_functions(dir=settings.agent.functions_directory)
+        functions = get_functions(
+            dir=settings.agent.functions_directory,
+            remote_functions_empty=not remote_functions,
+        )
         settings.agent.functions = functions
 
         if agent is not None:
