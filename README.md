@@ -20,8 +20,8 @@ import (
 	"github.com/beamlit/toolkit/sdk"
 )
 
-var BASE_URL = "https://api.beamlit.dev/v0"
-var RUN_URL = "https://run.beamlit.dev"
+var BASE_URL = "https://api.beamlit.com/v0"
+var RUN_URL = "https://run.beamlit.com"
 
 func init() {
 	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {

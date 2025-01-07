@@ -38,7 +38,7 @@ class Client:
     """
 
     raise_on_unexpected_status: bool = field(default=True, kw_only=True)
-    _base_url: str = field(alias="base_url", default="https://api.beamlit.dev/v0")
+    _base_url: str = field(alias="base_url", default="")
     _cookies: dict[str, str] = field(factory=dict, kw_only=True, alias="cookies")
     _headers: dict[str, str] = field(factory=dict, kw_only=True, alias="headers")
     _provider: httpx.Auth = field(default=None, alias="provider")
@@ -48,6 +48,12 @@ class Client:
     _httpx_args: dict[str, Any] = field(factory=dict, kw_only=True, alias="httpx_args")
     _client: Optional[httpx.Client] = field(default=None, init=False)
     _async_client: Optional[httpx.AsyncClient] = field(default=None, init=False)
+
+    def __post_init__(self):
+        from .common.settings import get_settings
+
+        settings = get_settings()
+        self._base_url = settings.base_url
 
     def with_headers(self, headers: dict[str, str]) -> "Client":
         """Get a new client matching this one with additional headers"""
@@ -170,7 +176,7 @@ class AuthenticatedClient:
     """
 
     raise_on_unexpected_status: bool = field(default=True, kw_only=True)
-    _base_url: str = field(alias="base_url", default="https://api.beamlit.dev/v0")
+    _base_url: str = field(alias="base_url", default="")
     _cookies: dict[str, str] = field(factory=dict, kw_only=True, alias="cookies")
     _headers: dict[str, str] = field(factory=dict, kw_only=True, alias="headers")
     _provider: httpx.Auth = field(default=None, alias="provider")
@@ -180,6 +186,12 @@ class AuthenticatedClient:
     _httpx_args: dict[str, Any] = field(factory=dict, kw_only=True, alias="httpx_args")
     _client: Optional[httpx.Client] = field(default=None, init=False)
     _async_client: Optional[httpx.AsyncClient] = field(default=None, init=False)
+
+    def __post_init__(self):
+        from .common.settings import get_settings
+
+        settings = get_settings()
+        self._base_url = settings.base_url
 
     def with_headers(self, headers: dict[str, str]) -> "AuthenticatedClient":
         """Get a new client matching this one with additional headers"""

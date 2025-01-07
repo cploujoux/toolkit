@@ -29,8 +29,8 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
     deployment.metadata.environment = settings.environment
     if not deployment.metadata.name:
         deployment.metadata.name = resource.name
-    if not deployment.metadata.displayName:
-        deployment.metadata.displayName = deployment.metadata.name
+    if not deployment.metadata.display_name:
+        deployment.metadata.display_name = deployment.metadata.name
     if not deployment.spec.description:
         deployment.spec.description = get_description(None, resource)
     if not deployment.spec.runtime:
@@ -111,14 +111,14 @@ apiVersion: beamlit.com/v1alpha1
 kind: Agent
 metadata:
   name: {agent.metadata.name}
-  displayName: {agent.metadata.displayName or agent.metadata.name}
+  displayName: {agent.metadata.display_name or agent.metadata.name}
   environment: {settings.environment}
   workspace: {settings.workspace}
 spec:
   enabled: true
   policies: [{", ".join(agent.spec.policies or [])}]
   functions: [{", ".join([f"{function.metadata.name}" for (_, function) in functions])}]
-  agentChain: {format_agent_chain(agent.spec.agentChain)}
+  agentChain: {format_agent_chain(agent.spec.agent_chain)}
   model: {agent.spec.model}
   runtime:
     image: {agent.spec.runtime.image}
@@ -145,7 +145,7 @@ apiVersion: beamlit.com/v1alpha1
 kind: Function
 metadata:
   name: {function.metadata.name}
-  displayName: {function.metadata.displayName or function.metadata.name}
+  displayName: {function.metadata.display_name or function.metadata.name}
   environment: {settings.environment}
 spec:
   enabled: true

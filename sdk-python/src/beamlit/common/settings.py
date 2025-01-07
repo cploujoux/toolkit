@@ -18,11 +18,6 @@ from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
 global SETTINGS
 SETTINGS = None
 
-
-def get_settings():
-    return SETTINGS
-
-
 class SettingsAgent(BaseSettings):
     agent: Union[None, CompiledGraph, BaseChatModel] = None
     chain: Union[Unset, list[Agent]] = UNSET
@@ -62,14 +57,22 @@ class Settings(BaseSettings):
     remote: bool = Field(default=False)
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")
-    base_url: str = Field(default="https://api.beamlit.dev/v0")
-    run_url: str = Field(default="https://run.beamlit.dev")
-    mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.dev")
-    registry_url: str = Field(default="https://serverless-registry-production.beamlit.workers.dev")
+    base_url: str = Field(default="https://api.beamlit.com/v0")
+    run_url: str = Field(default="https://run.beamlit.com")
+    mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.com")
+    registry_url: str = Field(default="https://us.registry.beamlit.com")
     log_level: str = Field(default="INFO")
     agent: SettingsAgent = SettingsAgent()
     server: SettingsServer = SettingsServer()
     authentication: SettingsAuthentication = SettingsAuthentication()
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        if os.getenv('BL_ENV') == 'dev':
+            self.base_url = os.getenv('BL_BASE_URL') or "https://api.beamlit.dev/v0"
+            self.run_url = os.getenv('BL_RUN_URL') or "https://run.beamlit.dev"
+            self.mcp_hub_url = os.getenv('BL_MCP_HUB_URL') or "https://mcp-hub-server.beamlit.workers.dev"
+            self.registry_url = os.getenv('BL_REGISTRY_URL') or "https://eu.registry.beamlit.dev"
 
     @classmethod
     def settings_customise_sources(
@@ -87,6 +90,9 @@ class Settings(BaseSettings):
             YamlConfigSettingsSource(settings_cls),
             init_settings,
         )
+
+def get_settings() -> Settings:
+    return SETTINGS
 
 
 def init_agent(

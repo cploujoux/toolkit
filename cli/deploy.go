@@ -54,7 +54,7 @@ func dockerLogin(registryURL string, apiUrl string) error {
 	cmd.Stderr = nil
 
 	if err := cmd.Start(); err != nil {
-		fmt.Printf("Could not login to beamlit registry: %v", err)
+		fmt.Printf("Could not login to beamlit registry (%s): %v", registryURL, err)
 		return err
 	}
 
@@ -172,7 +172,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 
 			err := dockerLogin(r.GetRegistryURL(), r.BaseURL)
 			if err != nil {
-				fmt.Printf("Could not login to beamlit registry: %v\n", err)
+				fmt.Printf("Could not login to beamlit registry (%s): %v\n", r.GetRegistryURL(), err)
 				os.Exit(1)
 			}
 

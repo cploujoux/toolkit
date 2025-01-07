@@ -11,26 +11,35 @@ from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
 from mcp import ListToolsResult
-from pydantic.json_schema import JsonSchemaValue
-from pydantic_core import core_schema as cs
 
 settings = get_settings()
 
+def create_dynamic_schema(name: str, schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
+    field_definitions = {}
+    for k, v in schema["properties"].items():
+        field_type = str
+        if v["type"] == "number":
+            field_type = float
+        elif v["type"] == "integer":
+            field_type = int
+        elif v["type"] == "boolean":
+            field_type = bool
+        description = v.get("description") or ""
+        default_ = v.get("default")
+        fields = {}
+        if default_ is not None:
+            fields["default"] = default_
+        if description is not None:
+            fields["description"] = description
+        field_definitions[k] = (
+            field_type,
+            pydantic.Field(**fields)
+        )
+    return pydantic.create_model(
+        f"{name}Schema",
+        **field_definitions
+    )
 
-def create_schema_model(schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
-    # Create a new model class that returns our JSON schema.
-    # LangChain requires a BaseModel class.
-    class Schema(pydantic.BaseModel):
-        model_config = pydantic.ConfigDict(extra="allow")
-
-        @t.override
-        @classmethod
-        def __get_pydantic_json_schema__(
-            cls, core_schema: cs.CoreSchema, handler: pydantic.GetJsonSchemaHandler
-        ) -> JsonSchemaValue:
-            return schema
-
-    return Schema
 
 
 class MCPClient:
@@ -42,7 +51,6 @@ class MCPClient:
     def list_tools(self) -> requests.Response:
         client = self.client.get_httpx_client()
         url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/list")
-
         response = client.request("GET", url, headers=self.headers)
         response.raise_for_status()
         return response
@@ -118,7 +126,7 @@ class MCPToolkit(BaseToolkit):
                 client=self.client,
                 name=tool.name,
                 description=tool.description or "",
-                args_schema=create_schema_model(tool.inputSchema),
+                args_schema=create_dynamic_schema(tool.name, tool.inputSchema),
             )
             # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
             for tool in self._tools.tools
