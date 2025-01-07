@@ -1,6 +1,8 @@
-# Visual studio Code Beamlit
-
-Extension for developers building agents to run on Beamlit platform.
+<p align="center">
+  <img alt="Beamlit Logo" src="https://beamlit.com/logo_short.png" height="140" />
+  <h3 align="center">Visual studio Code extension for Beamlit</h3>
+  <p align="center">Extension for developers building agents to run on Beamlit platform.</p>
+</p>
 
 ## Features
 
@@ -28,7 +30,8 @@ bl login YOUR_WORKSPACE
 ## Known Issues
 
 - Have to login with CLI before using the extension
-- Cannot switch workspace
+- You cannot switch workspace, to do so you need to use the cli to login or switch context to the workspace you want
+- You cannot create resources on Beamlit platform
 
 ## Following extension guidelines
 
