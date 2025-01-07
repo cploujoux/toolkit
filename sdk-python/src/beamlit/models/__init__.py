@@ -93,6 +93,7 @@ from .store_function_kit import StoreFunctionKit
 from .store_function_labels import StoreFunctionLabels
 from .store_function_parameter import StoreFunctionParameter
 from .time_fields import TimeFields
+from .trace_ids_response import TraceIdsResponse
 from .update_workspace_service_account_body import UpdateWorkspaceServiceAccountBody
 from .update_workspace_service_account_response_200 import UpdateWorkspaceServiceAccountResponse200
 from .update_workspace_user_role_body import UpdateWorkspaceUserRoleBody
@@ -191,6 +192,7 @@ __all__ = (
     "StoreFunctionLabels",
     "StoreFunctionParameter",
     "TimeFields",
+    "TraceIdsResponse",
     "UpdateWorkspaceServiceAccountBody",
     "UpdateWorkspaceServiceAccountResponse200",
     "UpdateWorkspaceUserRoleBody",
