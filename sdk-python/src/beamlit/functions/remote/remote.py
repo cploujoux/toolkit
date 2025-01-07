@@ -1,46 +1,37 @@
 import asyncio
 import warnings
-from typing import Any, Callable
+from dataclasses import dataclass
+from typing import Callable, Literal
 
 import pydantic
 import typing_extensions as t
-from dataclasses import dataclass
 from beamlit.api.functions import get_function
 from beamlit.authentication.authentication import AuthenticatedClient
-from beamlit.run import RunClient
 from beamlit.common.settings import get_settings
 from beamlit.models import Function, StoreFunctionParameter
+from beamlit.run import RunClient
 from langchain_core.tools.base import BaseTool, ToolException
-from pydantic.json_schema import JsonSchemaValue
-from pydantic_core import core_schema as cs
 
 
-def create_schema_model(parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
-    # Create a new model class that returns our JSON schema.
-    # LangChain requires a BaseModel class.
-    class Schema(pydantic.BaseModel):
-        model_config = pydantic.ConfigDict(extra="allow")
+def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
+    field_definitions = {}
+    for param in parameters:
+        field_type = str
+        if param.type_ == "number":
+            field_type = float
+        elif param.type_ == "integer":
+            field_type = int
+        elif param.type_ == "boolean":
+            field_type = bool
 
-        @t.override
-        @classmethod
-        def __get_pydantic_json_schema__(
-            cls, core_schema: cs.CoreSchema, handler: pydantic.GetJsonSchemaHandler
-        ) -> JsonSchemaValue:
-            schema = {
-                "type": "object",
-                "properties": {},
-                "required": [],
-            }
-            for parameter in parameters:
-                schema["properties"][parameter.name] = {
-                    "type": parameter.type_,
-                    "description": parameter.description,
-                }
-                if parameter.required:
-                    schema["required"].append(parameter.name)
-            return schema
-
-    return Schema
+        field_definitions[param.name] = (
+            field_type,
+            pydantic.Field(description=param.description or "")
+        )
+    return pydantic.create_model(
+        f"{name}Schema",
+        **field_definitions
+    )
 
 
 class RemoteTool(BaseTool):
@@ -49,6 +40,8 @@ class RemoteTool(BaseTool):
     """
 
     client: RunClient
+    resource_name: str
+    kit: bool = False
     handle_tool_error: bool | str | Callable[[ToolException], str] | None = True
 
     @t.override
@@ -62,12 +55,15 @@ class RemoteTool(BaseTool):
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
         settings = get_settings()
+        body = {**kwargs}
+        if self.kit:
+            body["name"] = self.name
         result = self.client.run(
             "function",
-            self.name,
+            self.resource_name,
             settings.environment,
             "POST",
-            kwargs,
+            json=body
         )
         return result.text
 
@@ -104,8 +100,10 @@ class RemoteToolkit:
                 RemoteTool(
                     client=RunClient(self.client),
                     name=func.name,
+                    resource_name=self._function.metadata.name,
+                    kit=True,
                     description=func.description or "",
-                    args_schema=create_schema_model(func.parameters),
+                    args_schema=create_dynamic_schema(func.name, func.parameters),
                 )
                 for func in self._function.spec.kit
             ]
@@ -114,7 +112,11 @@ class RemoteToolkit:
             RemoteTool(
                 client=RunClient(self.client),
                 name=self._function.metadata.name,
+                resource_name=self._function.metadata.name,
                 description=self._function.spec.description or "",
-                args_schema=create_schema_model(self._function.spec.parameters),
+                args_schema=create_dynamic_schema(
+                    self._function.metadata.name,
+                    self._function.spec.parameters
+                ),
             )
         ]

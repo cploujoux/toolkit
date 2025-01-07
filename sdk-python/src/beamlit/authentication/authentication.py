@@ -80,7 +80,7 @@ def new_client_with_credentials(config: RunClientWithCredentials):
 
 def get_authentication_headers(settings: Settings) -> Dict[str, str]:
     context = current_context()
-    if context.workspace:
+    if context.workspace and not settings.authentication.client.credentials:
         credentials = load_credentials(context.workspace)
     else:
         settings = get_settings()
