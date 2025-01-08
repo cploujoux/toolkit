@@ -1,7 +1,8 @@
 <p align="center">
   <img alt="Beamlit Logo" src="https://beamlit.com/logo_short.png" height="140" />
-  <h3 align="center">Visual studio Code extension for Beamlit</h3>
-  <p align="center">Extension for developers building agents to run on Beamlit platform.</p>
+  <h3 align="center">Visual Studio Code extension for Beamlit</h3>
+  <p align="center">The complete platform to build AI agents and deploy them in secure
+and sandboxed environments, for low-latency and high-availability.</p>
 </p>
 
 ## Features

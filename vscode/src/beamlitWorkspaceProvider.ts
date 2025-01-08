@@ -33,8 +33,8 @@ export class BeamlitWorkspaceProvider {
 
   async getResourceTypes() {
     return [
-      { name: "Agent", id: "agents" },
-      { name: "Models", id: "models" },
+      { name: "Agents", id: "agents" },
+      { name: "Model APIs", id: "models" },
       { name: "Functions", id: "functions" },
       { name: "Environments", id: "environments" },
       { name: "Policies", id: "policies" },
