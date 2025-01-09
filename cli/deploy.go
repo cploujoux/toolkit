@@ -261,6 +261,6 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&module, "module", "m", "agent.main", "Module to serve, can be an agent or a function")
-	cmd.Flags().StringVarP(&directory, "directory", "d", ".", "Directory to deploy, defaults to current directory")
+	cmd.Flags().StringVarP(&directory, "directory", "d", "src", "Directory to deploy, defaults to current directory")
 	return cmd
 }
