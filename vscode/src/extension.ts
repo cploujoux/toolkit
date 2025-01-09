@@ -43,12 +43,22 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-async function selectResource(resourceType: string, resourceId: string) {
-  const uri = vscode.Uri.parse(
-    `beamlit://${resourceId}/${resourceId}.yaml?resourceType=${resourceType}&resourceId=${resourceId}`
-  );
-  const doc = await vscode.workspace.openTextDocument(uri);
-  await vscode.window.showTextDocument(doc);
+async function selectResource(
+  resourceType: string,
+  resourceId: string,
+  environment?: string
+) {
+  try {
+    const uri = vscode.Uri.parse(
+      `beamlit://${resourceId}/${resourceId}.yaml?resourceType=${resourceType}&resourceId=${resourceId}&environment=${environment}`
+    );
+    const doc = await vscode.workspace.openTextDocument(uri);
+    await vscode.window.showTextDocument(doc);
+  } catch (err) {
+    vscode.window.showErrorMessage(
+      `Beamlit: Failed to select resource because ${(err as Error).message}`
+    );
+  }
 }
 
 async function refresh(

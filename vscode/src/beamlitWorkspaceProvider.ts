@@ -33,12 +33,12 @@ export class BeamlitWorkspaceProvider {
 
   async getResourceTypes() {
     return [
-      { name: "Agents", id: "agents" },
-      { name: "Model APIs", id: "models" },
-      { name: "Functions", id: "functions" },
-      { name: "Environments", id: "environments" },
-      { name: "Policies", id: "policies" },
-      { name: "Integrations", id: "integrations" },
+      { name: "Agents", id: "agents", description: "Agents" },
+      { name: "Model APIs", id: "models", description: "Model APIs" },
+      { name: "Functions", id: "functions", description: "Functions" },
+      { name: "Policies", id: "policies", description: "Policies" },
+      { name: "Integrations", id: "integrations", description: "Integrations" },
+      { name: "Environments", id: "environments", description: "Environments" },
     ];
   }
 
@@ -77,7 +77,16 @@ export class BeamlitWorkspaceProvider {
     this.integrations = responseIntegrations.data ?? [];
   }
 
-  async getResources(type: string) {
+  async getResources(
+    type: string
+  ): Promise<
+    | ListAgentsResponse
+    | ListModelsResponse
+    | ListFunctionsResponse
+    | ListEnvironmentsResponse
+    | ListPoliciesResponse
+    | ListIntegrationConnectionsResponse
+  > {
     if (type === "agents") {
       return this.agents;
     } else if (type === "models") {

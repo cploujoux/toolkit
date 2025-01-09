@@ -74,6 +74,7 @@ export class BeamlitResourceVirtualFileSystemProvider
     const client = newClient();
     const resourceType = (query.resourceType as string) || "agents";
     const resourceId = (query.resourceId as string) || "";
+    const environment = (query.environment as string) || "";
     const func: Record<string, CallableFunction> = {
       agents: getAgent,
       functions: getFunction,
@@ -93,25 +94,36 @@ export class BeamlitResourceVirtualFileSystemProvider
     const status = window.setStatusBarMessage(
       `Loading ${kind[resourceType]} ${resourceId}...`
     );
-    const resource = await func[resourceType]({
-      client,
-      path: {
-        functionName: resourceId,
-        agentName: resourceId,
-        modelName: resourceId,
-        environmentName: resourceId,
-        policyName: resourceId,
-        connectionName: resourceId,
-      },
-      throwOnError: true,
-    });
-    status.dispose();
-    const yamlContent = yaml.dump({
-      apiVersion: "beamlit.com/v1",
-      kind: kind[resourceType],
-      ...resource.data,
-    });
-    return yamlContent;
+    try {
+      const query: Record<string, string> = {};
+      if (environment) {
+        query.environment = environment;
+      }
+      const resource = await func[resourceType]({
+        client,
+        path: {
+          functionName: resourceId,
+          agentName: resourceId,
+          modelName: resourceId,
+          environmentName: resourceId,
+          policyName: resourceId,
+          connectionName: resourceId,
+        },
+        query,
+        throwOnError: true,
+      });
+      status.dispose();
+      const yamlContent = yaml.dump({
+        apiVersion: "beamlit.com/v1",
+        kind: kind[resourceType],
+        ...resource.data,
+      });
+      return yamlContent;
+    } catch (err) {
+      throw new Error(
+        `Failed to load resource ${resourceId} because ${(err as Error).stack}`
+      );
+    }
   }
 
   writeFile(
