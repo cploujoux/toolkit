@@ -240,17 +240,17 @@ def generate_beamlit_deployment(directory: str):
     # Create directory if it doesn't exist
     os.makedirs(agents_dir, exist_ok=True)
     os.makedirs(functions_dir, exist_ok=True)
-    # for resource, agent in agents:
-    #     # write deployment file
-    #     agent_dir = os.path.join(agents_dir, agent.metadata.name)
-    #     os.makedirs(agent_dir, exist_ok=True)
-    #     with open(os.path.join(agent_dir, f"agent.yaml"), "w") as f:
-    #         content = get_agent_yaml(agent, functions, settings)
-    #         f.write(content)
-    #     # write dockerfile for build
-    #     with open(os.path.join(agent_dir, f"Dockerfile"), "w") as f:
-    #         content = dockerfile("agent", resource, agent)
-    #         f.write(content)
+    for resource, agent in agents:
+        # write deployment file
+        agent_dir = os.path.join(agents_dir, agent.metadata.name)
+        os.makedirs(agent_dir, exist_ok=True)
+        with open(os.path.join(agent_dir, f"agent.yaml"), "w") as f:
+            content = get_agent_yaml(agent, functions, settings)
+            f.write(content)
+        # write dockerfile for build
+        with open(os.path.join(agent_dir, f"Dockerfile"), "w") as f:
+            content = dockerfile("agent", resource, agent)
+            f.write(content)
     for resource, function in functions:
         # write deployment file
         function_dir = os.path.join(functions_dir, function.metadata.name)
