@@ -77,7 +77,6 @@ func buildBeamlitDeployment(dockerfile string, destination string) error {
 		"build",
 		"-t",
 		destination,
-		"--push",
 		"--platform",
 		"linux/amd64",
 		"-f",
@@ -104,6 +103,36 @@ func buildBeamlitDeployment(dockerfile string, destination string) error {
 		return err
 	}
 	fmt.Printf("Beamlit deployment from %s built successfully\n", dockerfile)
+	return nil
+}
+
+func pushBeamlitDeployment(destination string) error {
+	fmt.Printf("Pushing beamlit deployment to %s\n", destination)
+	cmd := exec.Command(
+		"docker",
+		"push",
+		destination,
+	)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	// Create a channel to catch interrupt signals
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt)
+
+	// Create a channel to receive command completion status
+	done := make(chan error)
+
+	// Run the command in a goroutine
+	go func() {
+		done <- cmd.Run()
+	}()
+
+	// Wait for command completion
+	if err := <-done; err != nil {
+		fmt.Printf("Error pushing beamlit deployment: %v\n", err)
+		return err
+	}
+	fmt.Printf("Beamlit deployment pushed successfully: %s\n", destination)
 	return nil
 }
 
@@ -149,6 +178,11 @@ func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, path
 		err = buildBeamlitDeployment(path, destination)
 		if err != nil {
 			return fmt.Errorf("failed to build Docker image: %w", err)
+		}
+		fmt.Printf("Pushing Docker image for %s at %s\n", name, destination)
+		err = pushBeamlitDeployment(destination)
+		if err != nil {
+			return fmt.Errorf("failed to push Docker image: %w", err)
 		}
 	}
 	if filepath.Ext(path) == ".yaml" || filepath.Ext(path) == ".yml" {
