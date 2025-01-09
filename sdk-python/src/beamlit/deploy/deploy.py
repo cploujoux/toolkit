@@ -174,15 +174,15 @@ def dockerfile(
     Returns:
         str: Dockerfile content
     """
+    settings = get_settings()
     if type == "agent":
         module = f"{resource.module.__file__.split('/')[-1].replace('.py', '')}.{resource.module.__name__}"
     else:
-        module = f"functions.{resource.module.__name__}.{resource.func.__name__}"
+        module = f"functions.{resource.module.__file__.split('/')[-1].replace('.py', '')}.{resource.module.__name__}"
     cmd = ["bl", "serve", "--port", "80", "--module", module]
     if type == "agent":
         cmd.append("--remote")
     cmd_str = ",".join([f'"{c}"' for c in cmd])
-
     return f"""
 FROM python:3.12-slim
 
@@ -201,7 +201,7 @@ RUN uv sync --no-cache
 
 COPY README.m[d] /beamlit/README.md
 COPY LICENS[E] /beamlit/LICENSE
-COPY src /beamlit/src
+COPY {settings.server.directory} /beamlit/src
 
 ENV PATH="/beamlit/.venv/bin:$PATH"
 
@@ -226,11 +226,11 @@ def generate_beamlit_deployment(directory: str):
     logger.info(f"Importing server module: {settings.server.module}")
     functions: list[tuple[Resource, Function]] = []
     agents: list[tuple[Resource, Agent]] = []
-    for resource in get_resources("agent"):
+    for resource in get_resources("agent", settings.server.directory):
         agent = get_beamlit_deployment_from_resource(resource)
         if agent:
             agents.append((resource, agent))
-    for resource in get_resources("function"):
+    for resource in get_resources("function", settings.server.directory):
         function = get_beamlit_deployment_from_resource(resource)
         if function:
             functions.append((resource, function))
@@ -240,17 +240,17 @@ def generate_beamlit_deployment(directory: str):
     # Create directory if it doesn't exist
     os.makedirs(agents_dir, exist_ok=True)
     os.makedirs(functions_dir, exist_ok=True)
-    for resource, agent in agents:
-        # write deployment file
-        agent_dir = os.path.join(agents_dir, agent.metadata.name)
-        os.makedirs(agent_dir, exist_ok=True)
-        with open(os.path.join(agent_dir, f"agent.yaml"), "w") as f:
-            content = get_agent_yaml(agent, functions, settings)
-            f.write(content)
-        # write dockerfile for build
-        with open(os.path.join(agent_dir, f"Dockerfile"), "w") as f:
-            content = dockerfile("agent", resource, agent)
-            f.write(content)
+    # for resource, agent in agents:
+    #     # write deployment file
+    #     agent_dir = os.path.join(agents_dir, agent.metadata.name)
+    #     os.makedirs(agent_dir, exist_ok=True)
+    #     with open(os.path.join(agent_dir, f"agent.yaml"), "w") as f:
+    #         content = get_agent_yaml(agent, functions, settings)
+    #         f.write(content)
+    #     # write dockerfile for build
+    #     with open(os.path.join(agent_dir, f"Dockerfile"), "w") as f:
+    #         content = dockerfile("agent", resource, agent)
+    #         f.write(content)
     for resource, function in functions:
         # write deployment file
         function_dir = os.path.join(functions_dir, function.metadata.name)

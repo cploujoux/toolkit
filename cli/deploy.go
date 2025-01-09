@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func executePythonGenerateBeamlitDeployment(tempDir string) error {
+func executePythonGenerateBeamlitDeployment(tempDir string, module string, directory string) error {
 	pythonCode := fmt.Sprintf(`
 from beamlit.deploy import generate_beamlit_deployment
 generate_beamlit_deployment("%s")
@@ -21,6 +21,8 @@ generate_beamlit_deployment("%s")
 	cmd := exec.Command("python", "-c", pythonCode)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", module))
+	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_DIRECTORY=%s", directory))
 	return cmd.Run()
 }
 
@@ -96,16 +98,13 @@ func buildBeamlitDeployment(dockerfile string, destination string) error {
 		done <- cmd.Run()
 	}()
 
-	// Wait for either command completion or interrupt
-	select {
-	case err := <-done:
-		if err != nil {
-			fmt.Printf("Error building beamlit deployment: %v\n", err)
-			return err
-		}
-		fmt.Printf("Beamlit deployment from %s built successfully\n", dockerfile)
-		return nil
+	// Wait for command completion
+	if err := <-done; err != nil {
+		fmt.Printf("Error building beamlit deployment: %v\n", err)
+		return err
 	}
+	fmt.Printf("Beamlit deployment from %s built successfully\n", dockerfile)
+	return nil
 }
 
 func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, path string, info os.FileInfo, err error) error {
@@ -157,7 +156,8 @@ func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, path
 }
 
 func (r *Operations) DeployAgentAppCmd() *cobra.Command {
-
+	var module string
+	var directory string
 	cmd := &cobra.Command{
 		Use:     "deploy",
 		Args:    cobra.ExactArgs(0),
@@ -177,7 +177,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			}
 
 			// Execute Python script using the Python interpreter
-			err = executePythonGenerateBeamlitDeployment(tempDir)
+			err = executePythonGenerateBeamlitDeployment(tempDir, module, directory)
 			if err != nil {
 				fmt.Printf("Error executing Python script: %v\n", err)
 				os.Exit(1)
@@ -220,5 +220,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			}
 		},
 	}
+	cmd.Flags().StringVarP(&module, "module", "m", "agent.main", "Module to serve, can be an agent or a function")
+	cmd.Flags().StringVarP(&directory, "directory", "d", ".", "Directory to deploy, defaults to current directory")
 	return cmd
 }
