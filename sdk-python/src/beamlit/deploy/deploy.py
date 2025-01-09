@@ -251,6 +251,10 @@ def generate_beamlit_deployment(directory: str):
         with open(os.path.join(agent_dir, f"Dockerfile"), "w") as f:
             content = dockerfile("agent", resource, agent)
             f.write(content)
+        # write destination docker
+        with open(os.path.join(agent_dir, f"destination.txt"), "w") as f:
+            content = agent.spec.runtime.image
+            f.write(content)
     for resource, function in functions:
         # write deployment file
         function_dir = os.path.join(functions_dir, function.metadata.name)
@@ -261,4 +265,8 @@ def generate_beamlit_deployment(directory: str):
         # write dockerfile for build
         with open(os.path.join(function_dir, f"Dockerfile"), "w") as f:
             content = dockerfile("function", resource, function)
+            f.write(content)
+        # write destination docker
+        with open(os.path.join(function_dir, f"destination.txt"), "w") as f:
+            content = function.spec.runtime.image
             f.write(content)

@@ -138,7 +138,13 @@ func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, path
 	// Check if file is a Dockerfile
 	if filepath.Base(path) == "Dockerfile" {
 		// Build the Docker image
-		destination := fmt.Sprintf("%s/%s/%ss/%s", r.GetRegistryURL(), workspace, resourceType, name)
+		// Read destination from destination.txt
+		destinationFile := filepath.Join(filepath.Dir(path), "destination.txt")
+		destinationBytes, err := os.ReadFile(destinationFile)
+		if err != nil {
+			return fmt.Errorf("failed to read destination file: %w", err)
+		}
+		destination := strings.TrimSpace(string(destinationBytes))
 		fmt.Printf("Building Docker image for %s at %s\n", name, destination)
 		err = buildBeamlitDeployment(path, destination)
 		if err != nil {
