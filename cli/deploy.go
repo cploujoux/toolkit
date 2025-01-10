@@ -234,18 +234,36 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			agents := []string{}
 			applyResults := []ApplyResult{}
 
-			// Walk through the temporary directory recursively
+			// Walk through the temporary directory recursively, we deploy everything except agents
 			err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
 				}
-				return r.handleDeploymentFile(tempDir, &agents, &applyResults, path, info, err)
+				if !strings.Contains(path, "agents/") {
+					return r.handleDeploymentFile(tempDir, &agents, &applyResults, path, info, err)
+				}
+				return nil
+			})
+			if err != nil {
+				fmt.Printf("Error deploying beamlit app: %v\n", err)
+				os.Exit(1)
+			}
+			// Walk through the temporary directory recursively, we deploy agents last
+			err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				if strings.Contains(path, "agents/") {
+					return r.handleDeploymentFile(tempDir, &agents, &applyResults, path, info, err)
+				}
+				return nil
 			})
 			if err != nil {
 				fmt.Printf("Error deploying beamlit app: %v\n", err)
 				os.Exit(1)
 			}
 
+			
 			env := "production"
 			if environment != "" {
 				env = environment
