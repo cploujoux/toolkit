@@ -38,7 +38,10 @@ func dockerLogin(registryURL string, apiUrl string) error {
 		password = credentials.APIKey
 	} else if credentials.AccessToken != "" {
 		provider := sdk.NewBearerTokenProvider(credentials, workspace, apiUrl)
-		provider.RefreshIfNeeded()
+		err := provider.RefreshIfNeeded()
+		if err != nil {
+			return fmt.Errorf("failed to refresh credentials: %w", err)
+		}
 		password = provider.GetCredentials().AccessToken
 	} else {
 		return fmt.Errorf("no credentials found")

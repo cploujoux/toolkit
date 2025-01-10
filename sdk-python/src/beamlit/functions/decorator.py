@@ -4,11 +4,12 @@ import json
 from collections.abc import Callable
 from logging import getLogger
 
+from langchain_core.tools import create_schema_from_function
+
 from beamlit.authentication import new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Function, FunctionKit
 from beamlit.run import RunClient
-from langchain_core.tools import create_schema_from_function
 
 logger = getLogger(__name__)
 
