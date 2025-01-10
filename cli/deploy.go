@@ -18,7 +18,11 @@ func executePythonGenerateBeamlitDeployment(tempDir string, module string, direc
 from beamlit.deploy import generate_beamlit_deployment
 generate_beamlit_deployment("%s")
 	`, tempDir)
-	cmd := exec.Command("python", "-c", pythonCode)
+	pythonCmd := "python"
+	if _, err := os.Stat(".venv"); !os.IsNotExist(err) {
+		pythonCmd = ".venv/bin/python"
+	}
+	cmd := exec.Command(pythonCmd, "-c", pythonCode)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", module))
@@ -136,7 +140,7 @@ func pushBeamlitDeployment(destination string) error {
 	return nil
 }
 
-func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, path string, info os.FileInfo, err error) error {
+func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, applyResults *[]ApplyResult, path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
@@ -187,10 +191,11 @@ func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, path
 	}
 	if filepath.Ext(path) == ".yaml" || filepath.Ext(path) == ".yml" {
 		fmt.Printf("Applying configuration for %s:%s -> file: %s\n", resourceType, name, filepath.Base(path))
-		err = r.Apply(path, false)
+		results, err := r.Apply(path, false)
 		if err != nil {
 			return fmt.Errorf("failed to apply configuration: %w", err)
 		}
+		*applyResults = append(*applyResults, results...)
 	}
 	return nil
 }
@@ -224,13 +229,14 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			}
 
 			agents := []string{}
+			applyResults := []ApplyResult{}
 
 			// Walk through the temporary directory recursively
 			err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
 				}
-				return r.handleDeploymentFile(tempDir, &agents, path, info, err)
+				return r.handleDeploymentFile(tempDir, &agents, &applyResults, path, info, err)
 			})
 			if err != nil {
 				fmt.Printf("Error deploying beamlit app: %v\n", err)
@@ -241,7 +247,21 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			if environment != "" {
 				env = environment
 			}
-			fmt.Printf("Your beamlit agents are ready:\n")
+			// Print apply summary in table format
+			if len(applyResults) > 0 {
+				fmt.Print("\nSummary:\n\n")
+				fmt.Printf("%-20s %-30s %-10s\n", "KIND", "NAME", "RESULT")
+				fmt.Printf("%-20s %-30s %-10s\n", "----", "----", "------")
+				for _, result := range applyResults {
+					fmt.Printf("%-20s %-30s %-10s\n", result.Kind, result.Name, result.Result)
+				}
+				fmt.Println()
+			}
+			if len(agents) > 1 {
+				fmt.Printf("Your beamlit agents are ready:\n")
+			} else {
+				fmt.Printf("Your beamlit agent is ready:\n")
+			}
 			for _, agent := range agents {
 				fmt.Printf(
 					"- %s at %s/%s/global-inference-network/agent/%s?environment=%s\n",
@@ -251,6 +271,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 					agent,
 					env,
 				)
+				fmt.Printf("  Run: bl run agent %s --data '{\"inputs\": \"Hello world\"}'\n\n", agent)
 			}
 		},
 	}
