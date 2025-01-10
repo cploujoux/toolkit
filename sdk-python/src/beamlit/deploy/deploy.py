@@ -23,7 +23,7 @@ from .parser import Resource, get_description, get_parameters, get_resources
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
-
+random_id = str(uuid.uuid4())[:8]
 def slugify(name: str) -> str:
     return name.lower().replace(" ", "-").replace("_", "-")
 
@@ -32,7 +32,7 @@ def get_runtime_image(type: str, name: str) -> str:
     registry_url = settings.registry_url.replace("https://", "").replace("http://", "")
     image = f"{registry_url}/{settings.workspace}/{type}s/{name}"
     # Generate a random ID to ensure unique image tags
-    image = f"{image}:{str(uuid.uuid4())[:8]}"
+    image = f"{image}:{random_id}"
     return image
 
 
