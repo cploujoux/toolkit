@@ -23,7 +23,7 @@ bl deploy
 ### Options
 
 ```
-  -d, --directory string   Directory to deploy, defaults to current directory (default ".")
+  -d, --directory string   Directory to deploy, defaults to current directory (default "src")
   -h, --help               help for deploy
   -m, --module string      Module to serve, can be an agent or a function (default "agent.main")
 ```
