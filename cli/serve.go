@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -24,8 +25,12 @@ func (r *Operations) ServeCmd() *cobra.Command {
 		Long:    "Serve a beamlit project",
 		Example: `  bl serve --remote --hotreload --port 1338`,
 		Run: func(cmd *cobra.Command, args []string) {
+			uvicornCmd := "uvicorn"
+			if _, err := os.Stat(".venv"); !os.IsNotExist(err) {
+				uvicornCmd = ".venv/bin/uvicorn"
+			}
 			uvicorn := exec.Command(
-				"uvicorn",
+				uvicornCmd,
 				"beamlit.serve.app:app",
 				"--port",
 				fmt.Sprintf("%d", port),
@@ -51,8 +56,10 @@ func (r *Operations) ServeCmd() *cobra.Command {
 			// Add all current environment variables if not already set
 			for _, envVar := range os.Environ() {
 				found := false
+				envVarName := strings.Split(envVar, "=")[0]
 				for _, existingVar := range uvicorn.Env {
-					if envVar == existingVar {
+					existingEnvVarName := strings.Split(existingVar, "=")[0]
+					if envVarName == existingEnvVarName {
 						found = true
 						break
 					}
