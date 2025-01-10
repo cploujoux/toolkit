@@ -13,6 +13,6 @@ spec:
   agentChain: []
   model: gpt-4o-mini
   runtime:
-    image: us.registry.beamlit.com/main/agents/agent-custom:9280b44d
+    image: us.registry.beamlit.com/main/agents/agent-custom:f8c0ca38
     description: |
       A chat agent using Beamlit to handle your tasks.

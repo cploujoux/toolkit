@@ -1,1 +1,1 @@
-us.registry.beamlit.com/main/functions/helloworld:109b61a4
+us.registry.beamlit.com/main/functions/helloworld:f8c0ca38

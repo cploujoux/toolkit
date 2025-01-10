@@ -16,4 +16,4 @@ spec:
       required: true
       description: Parameter query
   runtime:
-    image: us.registry.beamlit.com/main/functions/helloworld:109b61a4
+    image: us.registry.beamlit.com/main/functions/helloworld:f8c0ca38
