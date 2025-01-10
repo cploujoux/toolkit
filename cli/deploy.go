@@ -267,13 +267,13 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			}
 			for _, agent := range agents {
 				fmt.Printf(
-					"- %s at %s/%s/global-inference-network/agent/%s?environment=%s\n",
-					agent,
+					"- Url: %s/%s/global-inference-network/agent/%s?environment=%s\n",
 					r.AppURL,
 					workspace,
 					agent,
 					env,
 				)
+				fmt.Printf("  Watch status: bl get agent %s --watch\n", agent)
 				fmt.Printf("  Run: bl run agent %s --data '{\"inputs\": \"Hello world\"}'\n\n", agent)
 			}
 		},
