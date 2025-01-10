@@ -1,1 +1,1 @@
-us.registry.beamlit.com/main/agents/agent-custom
+us.registry.beamlit.com/main/agents/agent-custom:9280b44d

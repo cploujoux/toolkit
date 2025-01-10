@@ -9,10 +9,10 @@ metadata:
 spec:
   enabled: true
   policies: []
-  functions: [helloworld_2]
+  functions: [helloworld]
   agentChain: []
   model: gpt-4o-mini
   runtime:
-    image: us.registry.beamlit.com/main/agents/agent-custom
+    image: us.registry.beamlit.com/main/agents/agent-custom:9280b44d
     description: |
       A chat agent using Beamlit to handle your tasks.
