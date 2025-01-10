@@ -1,0 +1,18 @@
+
+apiVersion: beamlit.com/v1alpha1
+kind: Agent
+metadata:
+  name: agent-custom
+  displayName: agent-custom
+  environment: production
+  workspace: main
+spec:
+  enabled: true
+  policies: []
+  functions: [helloworld_2]
+  agentChain: []
+  model: gpt-4o-mini
+  runtime:
+    image: us.registry.beamlit.com/main/agents/agent-custom
+    description: |
+      A chat agent using Beamlit to handle your tasks.

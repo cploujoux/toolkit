@@ -1,0 +1,19 @@
+
+apiVersion: beamlit.com/v1alpha1
+kind: Function
+metadata:
+  name: helloworld-2
+  displayName: helloworld_2
+  environment: production
+spec:
+  enabled: true
+  policies: []
+  description: |
+    A function for saying hello to the world.
+  parameters: 
+    - name: query
+      type: string
+      required: true
+      description: Parameter query
+  runtime:
+    image: us.registry.beamlit.com/main/functions/helloworld_2

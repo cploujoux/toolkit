@@ -208,7 +208,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 
 			// Create a temporary directory for deployment files
-			tempDir := "deploy-tmp-dir"
+			tempDir := ".beamlit"
 
 			err := dockerLogin(r.GetRegistryURL(), r.BaseURL)
 			if err != nil {
@@ -251,12 +251,6 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 					agent,
 					env,
 				)
-			}
-			// Clean up temporary directory
-			err = os.RemoveAll(tempDir)
-			if err != nil {
-				fmt.Printf("Error cleaning up temporary directory: %v\n", err)
-				os.Exit(1)
 			}
 		},
 	}

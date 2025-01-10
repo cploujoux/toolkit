@@ -16,6 +16,9 @@ sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
 
+def slugify(name: str) -> str:
+    return name.lower().replace(" ", "-").replace("_", "-")
+
 def get_runtime_image(type: str, name: str) -> str:
     settings = get_settings()
     registry_url = settings.registry_url.replace("https://", "").replace("http://", "")
@@ -110,7 +113,7 @@ def get_agent_yaml(
 apiVersion: beamlit.com/v1alpha1
 kind: Agent
 metadata:
-  name: {agent.metadata.name}
+  name: {slugify(agent.metadata.name)}
   displayName: {agent.metadata.display_name or agent.metadata.name}
   environment: {settings.environment}
   workspace: {settings.workspace}
@@ -144,7 +147,7 @@ def get_function_yaml(function: Function, settings: Settings) -> str:
 apiVersion: beamlit.com/v1alpha1
 kind: Function
 metadata:
-  name: {function.metadata.name}
+  name: {slugify(function.metadata.name)}
   displayName: {function.metadata.display_name or function.metadata.name}
   environment: {settings.environment}
 spec:
