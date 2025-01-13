@@ -3,7 +3,9 @@
 import json
 from collections.abc import Callable
 from logging import getLogger
+import functools
 
+from fastapi import Request
 from langchain_core.tools import create_schema_from_function
 
 from beamlit.authentication import new_client
@@ -77,7 +79,7 @@ def function(*args, function: Function | dict = None, kit=False, **kwargs: dict)
         )
     if isinstance(function, dict):
         function = Function(**function)
-        
+
     def wrapper(func: Callable) -> Callable:
         if function and not func.__doc__ and function.spec and function.spec.description:
             func.__doc__ = function.spec.description
@@ -90,6 +92,13 @@ def function(*args, function: Function | dict = None, kit=False, **kwargs: dict)
                     parse_docstring=func.__doc__,
                 )
             return remote_func
-        return func
+        
+        @functools.wraps(func)
+        async def wrapped(*args, **kwargs):
+            if isinstance(args[0], Request):
+                body = await args[0].json()
+                args = [body.get(param) for param in func.__code__.co_varnames[:func.__code__.co_argcount]]
+            return func(*args, **kwargs)
+        return wrapped
 
     return wrapper
