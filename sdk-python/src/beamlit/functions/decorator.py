@@ -39,7 +39,7 @@ def function(*args, function: Function | dict = None, kit=False, **kwargs: dict)
 
         @functools.wraps(func)
         async def wrapped(*args, **kwargs):
-            if isinstance(args[0], Request):
+            if len(args) > 0 and isinstance(args[0], Request):
                 body = await args[0].json()
                 args = [body.get(param) for param in func.__code__.co_varnames[:func.__code__.co_argcount]]
             return func(*args, **kwargs)
