@@ -29,13 +29,23 @@ def get_remote_function(func: Callable, function: Function):
                 f"Calling remote function: NAME={name}"
                 f" PARAMS={kwargs} ENVIRONMENT={settings.environment}"
             )
+            body = {}
+            if kwargs.keys():
+                body = kwargs
+            if args:
+                # Get function parameter names
+                param_names = func.__code__.co_varnames[:func.__code__.co_argcount]
+                # Map positional arguments to their parameter names
+                for i, arg in enumerate(args):
+                    if i < len(param_names):
+                        body[param_names[i]] = arg
             response = run_client.run(
                 resource_type="function",
                 resource_name=name,
                 environment=settings.environment,
                 method="POST",
                 headers={"Content-Type": "application/json"},
-                data=json.dumps(kwargs),
+                data=json.dumps(body),
             )
             content = response.text
             if response.status_code >= 400:
