@@ -6,7 +6,6 @@ from logging import getLogger
 
 from fastapi import Request
 
-from beamlit.common.settings import get_settings
 from beamlit.models import Function, FunctionKit
 
 logger = getLogger(__name__)
@@ -24,7 +23,6 @@ def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
 
 def function(*args, function: Function | dict = None, kit=False, **kwargs: dict) -> Callable:
     """Create function tools with Beamlit and LangChain integration."""
-    settings = get_settings()
     if function is not None and not isinstance(function, dict):
         raise Exception(
             'function must be a dictionary, example: @function(function={"metadata": {"name": "my_function"}})'
