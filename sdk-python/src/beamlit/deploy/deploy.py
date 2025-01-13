@@ -16,7 +16,7 @@ from beamlit.models import (
     FunctionSpec,
     Runtime,
 )
-
+from beamlit.common import slugify
 from .format import arg_to_dict, format_agent_chain, format_parameters
 from .parser import Resource, get_description, get_parameters, get_resources
 
@@ -24,8 +24,6 @@ sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
 random_id = str(uuid.uuid4())[:8]
-def slugify(name: str) -> str:
-    return name.lower().replace(" ", "-").replace("_", "-")
 
 def get_runtime_image(type: str, name: str) -> str:
     settings = get_settings()

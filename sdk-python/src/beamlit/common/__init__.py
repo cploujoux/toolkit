@@ -3,6 +3,7 @@ from .logger import init as init_logger
 from .secrets import Secret
 from .settings import Settings, get_settings, init, init_agent
 from .utils import copy_folder
+from .slugify import slugify
 
 __all__ = [
     "Secret",
@@ -13,4 +14,5 @@ __all__ = [
     "copy_folder",
     "init_logger",
     "HTTPError",
+    "slugify"
 ]
