@@ -6,6 +6,7 @@ import uuid
 from logging import getLogger
 from typing import Literal
 
+from beamlit.common import slugify
 from beamlit.common.settings import Settings, get_settings, init
 from beamlit.models import (
     Agent,
@@ -16,7 +17,7 @@ from beamlit.models import (
     FunctionSpec,
     Runtime,
 )
-from beamlit.common import slugify
+
 from .format import arg_to_dict, format_agent_chain, format_parameters
 from .parser import Resource, get_description, get_parameters, get_resources
 

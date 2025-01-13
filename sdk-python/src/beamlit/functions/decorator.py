@@ -1,7 +1,6 @@
 """Decorators for creating function tools with Beamlit and LangChain integration."""
-
+import asyncio
 import functools
-import json
 from collections.abc import Callable
 from logging import getLogger
 
@@ -42,7 +41,7 @@ def function(*args, function: Function | dict = None, kit=False, **kwargs: dict)
             if len(args) > 0 and isinstance(args[0], Request):
                 body = await args[0].json()
                 args = [body.get(param) for param in func.__code__.co_varnames[:func.__code__.co_argcount]]
-            return func(*args, **kwargs)
+            return await func(*args, **kwargs) if asyncio.iscoroutinefunction(func) else func(*args, **kwargs)
         return wrapped
 
     return wrapper
