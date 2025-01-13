@@ -130,7 +130,7 @@ metadata:
 spec:
   enabled: true
   policies: [{", ".join(agent.spec.policies or [])}]
-  functions: [{", ".join([f"{function.metadata.name}" for (_, function) in functions])}]
+  functions: [{", ".join([f"{slugify(function.metadata.name)}" for (_, function) in functions])}]
   agentChain: {format_agent_chain(agent.spec.agent_chain)}
   model: {agent.spec.model}
   runtime:
