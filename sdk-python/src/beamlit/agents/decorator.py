@@ -155,7 +155,7 @@ def agent(
             remote_functions_empty=not remote_functions,
         )
 
-        settings.agent.functions = functions
+        
 
         if agent is not None:
             metadata = AgentMetadata(**agent.get("metadata", {}))
@@ -210,6 +210,8 @@ def agent(
             toolkit = ChainToolkit(client, agent.spec.agent_chain)
             toolkit.initialize()
             functions.extend(toolkit.get_tools())
+
+        settings.agent.functions = functions
 
         if override_agent is None and len(functions) == 0:
             raise ValueError(
