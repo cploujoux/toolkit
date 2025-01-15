@@ -6,9 +6,10 @@ import importlib
 import os
 from logging import getLogger
 
-from langchain_core.tools import Tool
+from langchain_core.tools import StructuredTool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
+from langchain_core.tools.base import create_schema_from_function
 
 from beamlit.api.models import get_model
 from beamlit.authentication import new_client
@@ -94,19 +95,21 @@ def get_functions(client, dir="src/functions", from_decorator="function", remote
                                     else:
                                         if asyncio.iscoroutinefunction(func):
                                             functions.append(
-                                                Tool(
+                                                StructuredTool(
                                                     name=func.__name__,
                                                     description=func.__doc__,
                                                     func=func,
                                                     coroutine=func,
+                                                    args_schema=create_schema_from_function(func.__name__, func)
                                                 )
                                             )
                                         else:
                                             functions.append(
-                                                Tool(
+                                                StructuredTool(
                                                     name=func.__name__,
                                                     description=func.__doc__,
                                                     func=func,
+                                                    args_schema=create_schema_from_function(func.__name__, func)
                                                 )
                                             )
                     except Exception as e:
