@@ -1,7 +1,12 @@
+import logging
 from typing import Any
 
 from fastapi import FastAPI
-from opentelemetry import metrics, trace
+from opentelemetry import _logs, metrics, trace
+from opentelemetry._logs import set_logger_provider
+from opentelemetry.exporter.otlp.proto.grpc._log_exporter import (
+    OTLPLogExporter,
+)
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import (
     OTLPMetricExporter,
 )
@@ -11,6 +16,8 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 from opentelemetry.metrics import NoOpMeterProvider
+from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 from opentelemetry.sdk.resources import Resource
@@ -23,6 +30,7 @@ from .settings import get_settings
 
 tracer: trace.Tracer | None = None
 meter: metrics.Meter | None = None
+logger: LoggerProvider | None = None
 
 
 def get_tracer() -> trace.Tracer:
@@ -35,6 +43,12 @@ def get_meter() -> metrics.Meter:
     if meter is None:
         raise Exception("Meter is not initialized")
     return meter
+
+
+def get_logger() -> LoggerProvider:
+    if logger is None:
+        raise Exception("Logger is not initialized")
+    return logger
 
 
 def get_resource_attributes() -> Dict[str, Any]:
@@ -67,12 +81,17 @@ def get_span_exporter() -> OTLPSpanExporter | None:
     return OTLPSpanExporter()
 
 
+def get_log_exporter() -> OTLPLogExporter | None:
+    settings = get_settings()
+    if not settings.enable_opentelemetry:
+        return None
+    return OTLPLogExporter()
+
+
 def instrument_app(app: FastAPI):
     global tracer
     global meter
     settings = get_settings()
-    if settings is None:
-        raise Exception("Settings are not initialized")
 
     if not settings.enable_opentelemetry:
         # Use NoOp implementations to stub tracing and metrics
@@ -111,6 +130,20 @@ def instrument_app(app: FastAPI):
         meter = meter_provider.get_meter(__name__)
     else:
         meter = metrics.get_meter(__name__)
+
+    if not isinstance(_logs.get_logger_provider(), LoggerProvider):
+        logger_provider = LoggerProvider()
+        set_logger_provider(logger_provider)
+        logger_provider.add_log_record_processor(
+            BatchLogRecordProcessor(get_log_exporter())
+        )
+        handler = LoggingHandler(
+            level=logging.NOTSET, logger_provider=logger_provider
+        )
+        logging.getLogger().addHandler(handler)
+    else:
+        logger_provider = _logs.get_logger_provider()
+
     # Only instrument the app when OpenTelemetry is enabled
     FastAPIInstrumentor.instrument_app(app)
     HTTPXClientInstrumentor().instrument()
