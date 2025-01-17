@@ -23,6 +23,7 @@ func init() {
 	}
 }
 
+
 var workspace string
 var outputFormat string
 var environment string
@@ -63,7 +64,6 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 		client = c
-
 		ctx := context.Background()
 		c.RegisterCliCommands(reg, ctx)
 		return nil
