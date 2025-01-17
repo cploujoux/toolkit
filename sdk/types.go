@@ -21,3 +21,7 @@ type Credentials struct {
 	ExpiresIn    int    `yaml:"expires_in"`
 	DeviceCode   string `yaml:"device_code"`
 }
+
+func (c Credentials) IsValid() bool {
+	return c.APIKey != "" || c.AccessToken != "" || c.RefreshToken != ""
+}
