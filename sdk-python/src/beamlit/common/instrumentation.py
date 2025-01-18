@@ -15,6 +15,9 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
 )
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
+from opentelemetry.instrumentation.system_metrics import (
+    SystemMetricsInstrumentor,
+)
 from opentelemetry.metrics import NoOpMeterProvider
 from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
 from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
@@ -26,6 +29,8 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import NoOpTracerProvider
 from typing_extensions import Dict
 
+from beamlit.authentication import get_authentication_headers
+
 from .settings import get_settings
 
 tracer: trace.Tracer | None = None
@@ -33,16 +38,13 @@ meter: metrics.Meter | None = None
 logger: LoggerProvider | None = None
 
 
-def get_tracer() -> trace.Tracer:
-    if tracer is None:
-        raise Exception("Tracer is not initialized")
-    return tracer
-
-
-def get_meter() -> metrics.Meter:
-    if meter is None:
-        raise Exception("Meter is not initialized")
-    return meter
+def auth_headers() -> Dict[str, str]:
+    settings = get_settings()
+    headers = get_authentication_headers(settings)
+    return {
+        "x-beamlit-authorization": headers.get("X-Beamlit-Authorization", ""),
+        "x-beamlit-workspace": headers.get("X-Beamlit-Workspace", ""),
+    }
 
 
 def get_logger() -> LoggerProvider:
@@ -57,8 +59,6 @@ def get_resource_attributes() -> Dict[str, Any]:
     for key in resources.attributes:
         resources_dict[key] = resources.attributes[key]
     settings = get_settings()
-    if settings is None:
-        raise Exception("Settings are not initialized")
     resources_dict["workspace"] = settings.workspace
     resources_dict["service.name"] = settings.name
     return resources_dict
@@ -66,33 +66,29 @@ def get_resource_attributes() -> Dict[str, Any]:
 
 def get_metrics_exporter() -> OTLPMetricExporter | None:
     settings = get_settings()
-    if settings is None:
-        raise Exception("Settings are not initialized")
     if not settings.enable_opentelemetry:
-        # Return None or a NoOpExporter equivalent
         return None
-    return OTLPMetricExporter()
+    return OTLPMetricExporter(headers=auth_headers())
 
 
 def get_span_exporter() -> OTLPSpanExporter | None:
     settings = get_settings()
     if not settings.enable_opentelemetry:
         return None
-    return OTLPSpanExporter()
+    return OTLPSpanExporter(headers=auth_headers())
 
 
 def get_log_exporter() -> OTLPLogExporter | None:
     settings = get_settings()
     if not settings.enable_opentelemetry:
         return None
-    return OTLPLogExporter()
+    return OTLPLogExporter(headers=auth_headers())
 
 
 def instrument_app(app: FastAPI):
     global tracer
     global meter
     settings = get_settings()
-
     if not settings.enable_opentelemetry:
         # Use NoOp implementations to stub tracing and metrics
         trace.set_tracer_provider(NoOpTracerProvider())
@@ -147,6 +143,7 @@ def instrument_app(app: FastAPI):
     # Only instrument the app when OpenTelemetry is enabled
     FastAPIInstrumentor.instrument_app(app)
     HTTPXClientInstrumentor().instrument()
+    SystemMetricsInstrumentor().instrument()
 
 
 def shutdown_instrumentation():
