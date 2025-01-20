@@ -126,14 +126,14 @@ metadata:
   displayName: {agent.metadata.display_name or agent.metadata.name}
   environment: {settings.environment}
   workspace: {settings.workspace}
+  labels:
+    x-beamlit-auto-generated: "true"
 spec:
   enabled: true
   policies: [{", ".join(agent.spec.policies or [])}]
   functions: [{", ".join([f"{slugify(function.metadata.name)}" for (_, function) in functions])}]
   agentChain: {format_agent_chain(agent.spec.agent_chain)}
   model: {agent.spec.model}
-  runtime:
-    image: {agent.spec.runtime.image}
 """
     if agent.spec.description:
         template += f"""    description: |
@@ -159,14 +159,14 @@ metadata:
   name: {slugify(function.metadata.name)}
   displayName: {function.metadata.display_name or function.metadata.name}
   environment: {settings.environment}
+  labels:
+    x-beamlit-auto-generated: "true"  
 spec:
   enabled: true
   policies: [{", ".join(function.spec.policies or [])}]
   description: |
     {function.spec.description}
   parameters: {format_parameters(function.spec.parameters)}
-  runtime:
-    image: {function.spec.runtime.image}
 """
 
 
