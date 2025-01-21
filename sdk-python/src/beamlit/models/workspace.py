@@ -24,7 +24,7 @@ class Workspace:
         display_name (Union[Unset, str]): Workspace display name
         labels (Union[Unset, WorkspaceLabels]): Workspace labels
         name (Union[Unset, str]): Workspace name
-        write_region (Union[Unset, str]): Workspace write region
+        region (Union[Unset, str]): Workspace write region
     """
 
     created_at: Union[Unset, str] = UNSET
@@ -34,7 +34,7 @@ class Workspace:
     display_name: Union[Unset, str] = UNSET
     labels: Union[Unset, "WorkspaceLabels"] = UNSET
     name: Union[Unset, str] = UNSET
-    write_region: Union[Unset, str] = UNSET
+    region: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -54,7 +54,7 @@ class Workspace:
 
         name = self.name
 
-        write_region = self.write_region
+        region = self.region
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -73,8 +73,8 @@ class Workspace:
             field_dict["labels"] = labels
         if name is not UNSET:
             field_dict["name"] = name
-        if write_region is not UNSET:
-            field_dict["writeRegion"] = write_region
+        if region is not UNSET:
+            field_dict["region"] = region
 
         return field_dict
 
@@ -104,7 +104,7 @@ class Workspace:
 
         name = d.pop("name", UNSET)
 
-        write_region = d.pop("writeRegion", UNSET)
+        region = d.pop("region", UNSET)
 
         workspace = cls(
             created_at=created_at,
@@ -114,7 +114,7 @@ class Workspace:
             display_name=display_name,
             labels=labels,
             name=name,
-            write_region=write_region,
+            region=region,
         )
 
         workspace.additional_properties = d

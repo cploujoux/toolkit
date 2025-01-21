@@ -5,40 +5,40 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="Metric")
+T = TypeVar("T", bound="CoreEvent")
 
 
 @_attrs_define
-class Metric:
-    """Metric
+class CoreEvent:
+    """Core event
 
     Attributes:
-        rate (Union[Unset, str]): Metric value
-        request_total (Union[Unset, str]): Metric value
-        timestamp (Union[Unset, str]): Metric timestamp
+        message (Union[Unset, str]): Event message
+        time (Union[Unset, str]): Event time
+        type_ (Union[Unset, str]): Event type
     """
 
-    rate: Union[Unset, str] = UNSET
-    request_total: Union[Unset, str] = UNSET
-    timestamp: Union[Unset, str] = UNSET
+    message: Union[Unset, str] = UNSET
+    time: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        rate = self.rate
+        message = self.message
 
-        request_total = self.request_total
+        time = self.time
 
-        timestamp = self.timestamp
+        type_ = self.type_
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if rate is not UNSET:
-            field_dict["rate"] = rate
-        if request_total is not UNSET:
-            field_dict["requestTotal"] = request_total
-        if timestamp is not UNSET:
-            field_dict["timestamp"] = timestamp
+        if message is not UNSET:
+            field_dict["message"] = message
+        if time is not UNSET:
+            field_dict["time"] = time
+        if type_ is not UNSET:
+            field_dict["type"] = type_
 
         return field_dict
 
@@ -47,20 +47,20 @@ class Metric:
         if not src_dict:
             return None
         d = src_dict.copy()
-        rate = d.pop("rate", UNSET)
+        message = d.pop("message", UNSET)
 
-        request_total = d.pop("requestTotal", UNSET)
+        time = d.pop("time", UNSET)
 
-        timestamp = d.pop("timestamp", UNSET)
+        type_ = d.pop("type", UNSET)
 
-        metric = cls(
-            rate=rate,
-            request_total=request_total,
-            timestamp=timestamp,
+        core_event = cls(
+            message=message,
+            time=time,
+            type_=type_,
         )
 
-        metric.additional_properties = d
-        return metric
+        core_event.additional_properties = d
+        return core_event
 
     @property
     def additional_keys(self) -> list[str]:

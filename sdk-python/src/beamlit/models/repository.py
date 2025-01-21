@@ -5,40 +5,34 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="Metric")
+T = TypeVar("T", bound="Repository")
 
 
 @_attrs_define
-class Metric:
-    """Metric
+class Repository:
+    """Repository
 
     Attributes:
-        rate (Union[Unset, str]): Metric value
-        request_total (Union[Unset, str]): Metric value
-        timestamp (Union[Unset, str]): Metric timestamp
+        type_ (Union[Unset, str]): Repository type
+        url (Union[Unset, str]): Repository URL
     """
 
-    rate: Union[Unset, str] = UNSET
-    request_total: Union[Unset, str] = UNSET
-    timestamp: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
+    url: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        rate = self.rate
+        type_ = self.type_
 
-        request_total = self.request_total
-
-        timestamp = self.timestamp
+        url = self.url
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if rate is not UNSET:
-            field_dict["rate"] = rate
-        if request_total is not UNSET:
-            field_dict["requestTotal"] = request_total
-        if timestamp is not UNSET:
-            field_dict["timestamp"] = timestamp
+        if type_ is not UNSET:
+            field_dict["type"] = type_
+        if url is not UNSET:
+            field_dict["url"] = url
 
         return field_dict
 
@@ -47,20 +41,17 @@ class Metric:
         if not src_dict:
             return None
         d = src_dict.copy()
-        rate = d.pop("rate", UNSET)
+        type_ = d.pop("type", UNSET)
 
-        request_total = d.pop("requestTotal", UNSET)
+        url = d.pop("url", UNSET)
 
-        timestamp = d.pop("timestamp", UNSET)
-
-        metric = cls(
-            rate=rate,
-            request_total=request_total,
-            timestamp=timestamp,
+        repository = cls(
+            type_=type_,
+            url=url,
         )
 
-        metric.additional_properties = d
-        return metric
+        repository.additional_properties = d
+        return repository
 
     @property
     def additional_keys(self) -> list[str]:

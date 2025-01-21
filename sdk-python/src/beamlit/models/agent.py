@@ -7,6 +7,7 @@ from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.agent_spec import AgentSpec
+    from ..models.core_event import CoreEvent
     from ..models.core_status import CoreStatus
     from ..models.environment_metadata import EnvironmentMetadata
 
@@ -19,17 +20,26 @@ class Agent:
     """Agent
 
     Attributes:
+        events (Union[Unset, list['CoreEvent']]): Core events
         metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
         spec (Union[Unset, AgentSpec]): Agent specification
         status (Union[Unset, CoreStatus]): Core status
     """
 
+    events: Union[Unset, list["CoreEvent"]] = UNSET
     metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
     spec: Union[Unset, "AgentSpec"] = UNSET
     status: Union[Unset, "CoreStatus"] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        events: Union[Unset, list[dict[str, Any]]] = UNSET
+        if not isinstance(self.events, Unset):
+            events = []
+            for componentsschemas_core_events_item_data in self.events:
+                componentsschemas_core_events_item = componentsschemas_core_events_item_data.to_dict()
+                events.append(componentsschemas_core_events_item)
+
         metadata: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.metadata, Unset):
             metadata = self.metadata.to_dict()
@@ -45,6 +55,8 @@ class Agent:
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
+        if events is not UNSET:
+            field_dict["events"] = events
         if metadata is not UNSET:
             field_dict["metadata"] = metadata
         if spec is not UNSET:
@@ -57,12 +69,20 @@ class Agent:
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.agent_spec import AgentSpec
+        from ..models.core_event import CoreEvent
         from ..models.core_status import CoreStatus
         from ..models.environment_metadata import EnvironmentMetadata
 
         if not src_dict:
             return None
         d = src_dict.copy()
+        events = []
+        _events = d.pop("events", UNSET)
+        for componentsschemas_core_events_item_data in _events or []:
+            componentsschemas_core_events_item = CoreEvent.from_dict(componentsschemas_core_events_item_data)
+
+            events.append(componentsschemas_core_events_item)
+
         _metadata = d.pop("metadata", UNSET)
         metadata: Union[Unset, EnvironmentMetadata]
         if isinstance(_metadata, Unset):
@@ -85,6 +105,7 @@ class Agent:
             status = CoreStatus.from_dict(_status)
 
         agent = cls(
+            events=events,
             metadata=metadata,
             spec=spec,
             status=status,

@@ -5,9 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.get_workspace_service_accounts_response_200_item import (
-    GetWorkspaceServiceAccountsResponse200Item,
-)
+from ...models.get_workspace_service_accounts_response_200_item import GetWorkspaceServiceAccountsResponse200Item
 from ...types import Response
 
 

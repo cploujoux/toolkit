@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from ..models.flavor import Flavor
     from ..models.model_private_cluster import ModelPrivateCluster
     from ..models.pod_template_spec import PodTemplateSpec
+    from ..models.repository import Repository
     from ..models.runtime import Runtime
     from ..models.serverless_config import ServerlessConfig
 
@@ -36,6 +37,7 @@ class AgentSpec:
         description (Union[Unset, str]): Agent description
         functions (Union[Unset, list[str]]):
         model (Union[Unset, str]): Model name
+        repository (Union[Unset, Repository]): Repository
         store_id (Union[Unset, str]): Store id
     """
 
@@ -52,6 +54,7 @@ class AgentSpec:
     description: Union[Unset, str] = UNSET
     functions: Union[Unset, list[str]] = UNSET
     model: Union[Unset, str] = UNSET
+    repository: Union[Unset, "Repository"] = UNSET
     store_id: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -108,6 +111,10 @@ class AgentSpec:
 
         model = self.model
 
+        repository: Union[Unset, dict[str, Any]] = UNSET
+        if not isinstance(self.repository, Unset):
+            repository = self.repository.to_dict()
+
         store_id = self.store_id
 
         field_dict: dict[str, Any] = {}
@@ -139,6 +146,8 @@ class AgentSpec:
             field_dict["functions"] = functions
         if model is not UNSET:
             field_dict["model"] = model
+        if repository is not UNSET:
+            field_dict["repository"] = repository
         if store_id is not UNSET:
             field_dict["storeId"] = store_id
 
@@ -151,6 +160,7 @@ class AgentSpec:
         from ..models.flavor import Flavor
         from ..models.model_private_cluster import ModelPrivateCluster
         from ..models.pod_template_spec import PodTemplateSpec
+        from ..models.repository import Repository
         from ..models.runtime import Runtime
         from ..models.serverless_config import ServerlessConfig
 
@@ -218,6 +228,13 @@ class AgentSpec:
 
         model = d.pop("model", UNSET)
 
+        _repository = d.pop("repository", UNSET)
+        repository: Union[Unset, Repository]
+        if isinstance(_repository, Unset):
+            repository = UNSET
+        else:
+            repository = Repository.from_dict(_repository)
+
         store_id = d.pop("storeId", UNSET)
 
         agent_spec = cls(
@@ -234,6 +251,7 @@ class AgentSpec:
             description=description,
             functions=functions,
             model=model,
+            repository=repository,
             store_id=store_id,
         )
 

@@ -6,14 +6,8 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.latency_metric import LatencyMetric
     from ..models.metric import Metric
-    from ..models.qps import QPS
-    from ..models.resource_environment_metrics_inference_per_region import (
-        ResourceEnvironmentMetricsInferencePerRegion,
-    )
-    from ..models.resource_environment_metrics_query_per_region_per_code import (
-        ResourceEnvironmentMetricsQueryPerRegionPerCode,
-    )
 
 
 T = TypeVar("T", bound="ResourceEnvironmentMetrics")
@@ -25,23 +19,21 @@ class ResourceEnvironmentMetrics:
 
     Attributes:
         inference_global (Union[Unset, list['Metric']]): Array of metrics
-        inference_per_region (Union[Unset, ResourceEnvironmentMetricsInferencePerRegion]): Historical requests (in last
-            24 hours) per location, for the model deployment
-        query_global (Union[Unset, float]): Number of requests done on the resource for the model deployment
-        query_per_code_global (Union[Unset, QPS]): Query per second per element, can be per response status code (e.g.
-            200, 400) or per location
-        query_per_region (Union[Unset, QPS]): Query per second per element, can be per response status code (e.g. 200,
-            400) or per location
-        query_per_region_per_code (Union[Unset, ResourceEnvironmentMetricsQueryPerRegionPerCode]): Number of requests
-            done on the resource for the model deployment
+        last_n_requests (Union[Unset, list['Metric']]): Array of metrics
+        latency (Union[Unset, LatencyMetric]): Latency metrics
+        request_total (Union[Unset, Any]): Number of requests for the resource globally
+        request_total_per_code (Union[Unset, Any]): Number of requests for the resource globally per code
+        rps (Union[Unset, Any]): Number of requests per second for the resource globally
+        rps_per_code (Union[Unset, Any]): Number of requests per second for the resource globally per code
     """
 
     inference_global: Union[Unset, list["Metric"]] = UNSET
-    inference_per_region: Union[Unset, "ResourceEnvironmentMetricsInferencePerRegion"] = UNSET
-    query_global: Union[Unset, float] = UNSET
-    query_per_code_global: Union[Unset, "QPS"] = UNSET
-    query_per_region: Union[Unset, "QPS"] = UNSET
-    query_per_region_per_code: Union[Unset, "ResourceEnvironmentMetricsQueryPerRegionPerCode"] = UNSET
+    last_n_requests: Union[Unset, list["Metric"]] = UNSET
+    latency: Union[Unset, "LatencyMetric"] = UNSET
+    request_total: Union[Unset, Any] = UNSET
+    request_total_per_code: Union[Unset, Any] = UNSET
+    rps: Union[Unset, Any] = UNSET
+    rps_per_code: Union[Unset, Any] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -52,52 +44,49 @@ class ResourceEnvironmentMetrics:
                 componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 inference_global.append(componentsschemas_array_metric_item)
 
-        inference_per_region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.inference_per_region, Unset):
-            inference_per_region = self.inference_per_region.to_dict()
+        last_n_requests: Union[Unset, list[dict[str, Any]]] = UNSET
+        if not isinstance(self.last_n_requests, Unset):
+            last_n_requests = []
+            for componentsschemas_array_metric_item_data in self.last_n_requests:
+                componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
+                last_n_requests.append(componentsschemas_array_metric_item)
 
-        query_global = self.query_global
+        latency: Union[Unset, dict[str, Any]] = UNSET
+        if not isinstance(self.latency, Unset):
+            latency = self.latency.to_dict()
 
-        query_per_code_global: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_code_global, Unset):
-            query_per_code_global = self.query_per_code_global.to_dict()
+        request_total = self.request_total
 
-        query_per_region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_region, Unset):
-            query_per_region = self.query_per_region.to_dict()
+        request_total_per_code = self.request_total_per_code
 
-        query_per_region_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_region_per_code, Unset):
-            query_per_region_per_code = self.query_per_region_per_code.to_dict()
+        rps = self.rps
+
+        rps_per_code = self.rps_per_code
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if inference_global is not UNSET:
             field_dict["inferenceGlobal"] = inference_global
-        if inference_per_region is not UNSET:
-            field_dict["inferencePerRegion"] = inference_per_region
-        if query_global is not UNSET:
-            field_dict["query_global"] = query_global
-        if query_per_code_global is not UNSET:
-            field_dict["queryPerCodeGlobal"] = query_per_code_global
-        if query_per_region is not UNSET:
-            field_dict["queryPerRegion"] = query_per_region
-        if query_per_region_per_code is not UNSET:
-            field_dict["queryPerRegionPerCode"] = query_per_region_per_code
+        if last_n_requests is not UNSET:
+            field_dict["lastNRequests"] = last_n_requests
+        if latency is not UNSET:
+            field_dict["latency"] = latency
+        if request_total is not UNSET:
+            field_dict["requestTotal"] = request_total
+        if request_total_per_code is not UNSET:
+            field_dict["requestTotalPerCode"] = request_total_per_code
+        if rps is not UNSET:
+            field_dict["rps"] = rps
+        if rps_per_code is not UNSET:
+            field_dict["rpsPerCode"] = rps_per_code
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        from ..models.latency_metric import LatencyMetric
         from ..models.metric import Metric
-        from ..models.qps import QPS
-        from ..models.resource_environment_metrics_inference_per_region import (
-            ResourceEnvironmentMetricsInferencePerRegion,
-        )
-        from ..models.resource_environment_metrics_query_per_region_per_code import (
-            ResourceEnvironmentMetricsQueryPerRegionPerCode,
-        )
 
         if not src_dict:
             return None
@@ -109,45 +98,36 @@ class ResourceEnvironmentMetrics:
 
             inference_global.append(componentsschemas_array_metric_item)
 
-        _inference_per_region = d.pop("inferencePerRegion", UNSET)
-        inference_per_region: Union[Unset, ResourceEnvironmentMetricsInferencePerRegion]
-        if isinstance(_inference_per_region, Unset):
-            inference_per_region = UNSET
-        else:
-            inference_per_region = ResourceEnvironmentMetricsInferencePerRegion.from_dict(_inference_per_region)
+        last_n_requests = []
+        _last_n_requests = d.pop("lastNRequests", UNSET)
+        for componentsschemas_array_metric_item_data in _last_n_requests or []:
+            componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
 
-        query_global = d.pop("query_global", UNSET)
+            last_n_requests.append(componentsschemas_array_metric_item)
 
-        _query_per_code_global = d.pop("queryPerCodeGlobal", UNSET)
-        query_per_code_global: Union[Unset, QPS]
-        if isinstance(_query_per_code_global, Unset):
-            query_per_code_global = UNSET
+        _latency = d.pop("latency", UNSET)
+        latency: Union[Unset, LatencyMetric]
+        if isinstance(_latency, Unset):
+            latency = UNSET
         else:
-            query_per_code_global = QPS.from_dict(_query_per_code_global)
+            latency = LatencyMetric.from_dict(_latency)
 
-        _query_per_region = d.pop("queryPerRegion", UNSET)
-        query_per_region: Union[Unset, QPS]
-        if isinstance(_query_per_region, Unset):
-            query_per_region = UNSET
-        else:
-            query_per_region = QPS.from_dict(_query_per_region)
+        request_total = d.pop("requestTotal", UNSET)
 
-        _query_per_region_per_code = d.pop("queryPerRegionPerCode", UNSET)
-        query_per_region_per_code: Union[Unset, ResourceEnvironmentMetricsQueryPerRegionPerCode]
-        if isinstance(_query_per_region_per_code, Unset):
-            query_per_region_per_code = UNSET
-        else:
-            query_per_region_per_code = ResourceEnvironmentMetricsQueryPerRegionPerCode.from_dict(
-                _query_per_region_per_code
-            )
+        request_total_per_code = d.pop("requestTotalPerCode", UNSET)
+
+        rps = d.pop("rps", UNSET)
+
+        rps_per_code = d.pop("rpsPerCode", UNSET)
 
         resource_environment_metrics = cls(
             inference_global=inference_global,
-            inference_per_region=inference_per_region,
-            query_global=query_global,
-            query_per_code_global=query_per_code_global,
-            query_per_region=query_per_region,
-            query_per_region_per_code=query_per_region_per_code,
+            last_n_requests=last_n_requests,
+            latency=latency,
+            request_total=request_total,
+            request_total_per_code=request_total_per_code,
+            rps=rps,
+            rps_per_code=rps_per_code,
         )
 
         resource_environment_metrics.additional_properties = d

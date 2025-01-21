@@ -11,6 +11,7 @@ from .agent_spec import AgentSpec
 from .api_key import ApiKey
 from .configuration import Configuration
 from .continent import Continent
+from .core_event import CoreEvent
 from .core_spec import CoreSpec
 from .core_spec_configurations import CoreSpecConfigurations
 from .core_status import CoreStatus
@@ -32,9 +33,7 @@ from .function_spec import FunctionSpec
 from .get_trace_ids_response_200 import GetTraceIdsResponse200
 from .get_trace_logs_response_200 import GetTraceLogsResponse200
 from .get_trace_response_200 import GetTraceResponse200
-from .get_workspace_service_accounts_response_200_item import (
-    GetWorkspaceServiceAccountsResponse200Item,
-)
+from .get_workspace_service_accounts_response_200_item import GetWorkspaceServiceAccountsResponse200Item
 from .increase_and_rate_metric import IncreaseAndRateMetric
 from .integration_config import IntegrationConfig
 from .integration_connection import IntegrationConnection
@@ -42,7 +41,10 @@ from .integration_connection_config import IntegrationConnectionConfig
 from .integration_connection_secret import IntegrationConnectionSecret
 from .integration_connection_spec import IntegrationConnectionSpec
 from .integration_model import IntegrationModel
+from .integration_repository import IntegrationRepository
 from .invite_workspace_user_body import InviteWorkspaceUserBody
+from .last_n_requests_metric import LastNRequestsMetric
+from .latency_metric import LatencyMetric
 from .location_response import LocationResponse
 from .metadata import Metadata
 from .metadata_labels import MetadataLabels
@@ -69,6 +71,8 @@ from .private_cluster import PrivateCluster
 from .private_location import PrivateLocation
 from .provider_config import ProviderConfig
 from .qps import QPS
+from .repository import Repository
+from .request_total_metric import RequestTotalMetric
 from .resource_deployment_metrics import ResourceDeploymentMetrics
 from .resource_deployment_metrics_inference_per_second_per_region import (
     ResourceDeploymentMetricsInferencePerSecondPerRegion,
@@ -77,12 +81,6 @@ from .resource_deployment_metrics_query_per_second_per_region_per_code import (
     ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode,
 )
 from .resource_environment_metrics import ResourceEnvironmentMetrics
-from .resource_environment_metrics_inference_per_region import (
-    ResourceEnvironmentMetricsInferencePerRegion,
-)
-from .resource_environment_metrics_query_per_region_per_code import (
-    ResourceEnvironmentMetricsQueryPerRegionPerCode,
-)
 from .resource_log import ResourceLog
 from .resource_metrics import ResourceMetrics
 from .runtime import Runtime
@@ -120,6 +118,7 @@ __all__ = (
     "ApiKey",
     "Configuration",
     "Continent",
+    "CoreEvent",
     "CoreSpec",
     "CoreSpecConfigurations",
     "CoreStatus",
@@ -149,7 +148,10 @@ __all__ = (
     "IntegrationConnectionSecret",
     "IntegrationConnectionSpec",
     "IntegrationModel",
+    "IntegrationRepository",
     "InviteWorkspaceUserBody",
+    "LastNRequestsMetric",
+    "LatencyMetric",
     "LocationResponse",
     "Metadata",
     "MetadataLabels",
@@ -176,12 +178,12 @@ __all__ = (
     "PrivateLocation",
     "ProviderConfig",
     "QPS",
+    "Repository",
+    "RequestTotalMetric",
     "ResourceDeploymentMetrics",
     "ResourceDeploymentMetricsInferencePerSecondPerRegion",
     "ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode",
     "ResourceEnvironmentMetrics",
-    "ResourceEnvironmentMetricsInferencePerRegion",
-    "ResourceEnvironmentMetricsQueryPerRegionPerCode",
     "ResourceLog",
     "ResourceMetrics",
     "Runtime",
