@@ -101,6 +101,9 @@ import type {
   GetAgentsHistoryData,
   GetAgentsHistoryError,
   GetAgentsHistoryResponse,
+  GetAgentTraceIdsData,
+  GetAgentTraceIdsError,
+  GetAgentTraceIdsResponse,
   GetConfigurationError,
   GetConfigurationResponse,
   GetEnvironmentData,
@@ -118,6 +121,9 @@ import type {
   GetFunctionMetricsError,
   GetFunctionMetricsResponse,
   GetFunctionResponse,
+  GetFunctionTraceIdsData,
+  GetFunctionTraceIdsError,
+  GetFunctionTraceIdsResponse,
   GetIntegrationConnectionData,
   GetIntegrationConnectionError,
   GetIntegrationConnectionModelData,
@@ -144,6 +150,9 @@ import type {
   GetModelProviderError,
   GetModelProviderResponse,
   GetModelResponse,
+  GetModelTraceIdsData,
+  GetModelTraceIdsError,
+  GetModelTraceIdsResponse,
   GetPolicyData,
   GetPolicyError,
   GetPolicyResponse,
@@ -454,6 +463,22 @@ export const createAgentRelease = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Get agent trace IDs
+ */
+export const getAgentTraceIds = <ThrowOnError extends boolean = false>(
+  options: OptionsLegacyParser<GetAgentTraceIdsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetAgentTraceIdsResponse,
+    GetAgentTraceIdsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/agents/{agentName}/traces",
+  });
+};
+
+/**
  * List all configurations
  */
 export const getConfiguration = <ThrowOnError extends boolean = false>(
@@ -695,6 +720,22 @@ export const createFunctionRelease = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/functions/{functionName}/release",
+  });
+};
+
+/**
+ * Get function trace IDs
+ */
+export const getFunctionTraceIds = <ThrowOnError extends boolean = false>(
+  options: OptionsLegacyParser<GetFunctionTraceIdsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetFunctionTraceIdsResponse,
+    GetFunctionTraceIdsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/functions/{functionName}/traces",
   });
 };
 
@@ -1166,6 +1207,22 @@ export const releaseModel = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/models/{modelName}/release",
+  });
+};
+
+/**
+ * Get model trace IDs
+ */
+export const getModelTraceIds = <ThrowOnError extends boolean = false>(
+  options: OptionsLegacyParser<GetModelTraceIdsData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetModelTraceIdsResponse,
+    GetModelTraceIdsError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/models/{modelName}/traces",
   });
 };
 

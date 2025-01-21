@@ -20,7 +20,10 @@ sdk-python:
 	rm -rf ./tmp-sdk-python
 
 sdk-ts:
-	npx @hey-api/openapi-ts -i ./definition.yml -o sdk-ts -c @hey-api/client-fetch
+	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
+	npx @hey-api/openapi-ts@0.61.0 -i ./definition.yml -o ./tmp/sdk-ts -c @hey-api/client-fetch
+	cp -r ./tmp/sdk-ts/* ./sdk-ts/src/client
+	rm -rf ./tmp/sdk-ts
 
 build:
 	goreleaser release --snapshot --clean --skip homebrew
