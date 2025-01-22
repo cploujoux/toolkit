@@ -48,6 +48,16 @@ def format_parameters(parameters: list[StoreFunctionParameter]) -> str:
 
     return "\n".join(formatted)
 
+def format_dict(obj: dict) -> str:
+    if not obj:
+        return "null"
+    ret = ""
+    for k, v in obj.items():
+        if not v:
+            ret += f"{k}: null\n"
+        else:
+            ret += f"{k}: {v}\n"
+    return ret
 
 def format_agent_chain(agentChain: list[AgentChain]) -> str:
     """

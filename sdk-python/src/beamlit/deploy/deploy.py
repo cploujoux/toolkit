@@ -1,8 +1,10 @@
 import ast
 import json
 import os
+import shutil
 import sys
-import uuid
+from pathlib import Path
+import yaml
 from logging import getLogger
 from typing import Literal
 
@@ -15,25 +17,16 @@ from beamlit.models import (
     Flavor,
     Function,
     FunctionSpec,
-    Runtime,
+    MetadataLabels,
 )
-
-from .format import arg_to_dict, format_agent_chain, format_parameters
+from beamlit.api.agents import get_agent
+from beamlit.authentication import new_client
+from beamlit.client import AuthenticatedClient
+from .format import arg_to_dict
 from .parser import Resource, get_description, get_parameters, get_resources
 
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
-
-random_id = str(uuid.uuid4())[:8]
-
-def get_runtime_image(type: str, name: str) -> str:
-    settings = get_settings()
-    registry_url = settings.registry_url.replace("https://", "").replace("http://", "")
-    image = f"{registry_url}/{settings.workspace}/{type}s/{name}"
-    # Generate a random ID to ensure unique image tags
-    image = f"{image}:{random_id}"
-    return image
-
 
 def set_default_values(resource: Resource, deployment: Agent | Function):
     settings = get_settings()
@@ -45,10 +38,6 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
         deployment.metadata.display_name = deployment.metadata.name
     if not deployment.spec.description:
         deployment.spec.description = get_description(None, resource)
-    if not deployment.spec.runtime:
-        deployment.spec.runtime = Runtime()
-    if not deployment.spec.runtime.image:
-        deployment.spec.runtime.image = get_runtime_image(resource.type, deployment.metadata.name)
     return deployment
 
 def get_beamlit_deployment_from_resource(
@@ -105,7 +94,7 @@ def get_flavors(flavors: list[Flavor]) -> str:
     return json.dumps([flavor.to_dict() for flavor in flavors])
 
 def get_agent_yaml(
-    agent: Agent, functions: list[tuple[Resource, Function]], settings: Settings
+    agent: Agent, functions: list[tuple[Resource, Function]], settings: Settings, client: AuthenticatedClient
 ) -> str:
     """
     Generates YAML configuration for an agent deployment.
@@ -118,30 +107,24 @@ def get_agent_yaml(
     Returns:
         str: YAML configuration string
     """
+    try:
+        agent_response = get_agent.sync(agent.metadata.name, client=client)
+        agent.spec.repository = agent_response.spec.repository
+    except Exception as e:
+        pass
+    agent.spec.functions = [slugify(function.metadata.name) for (_, function) in functions]
+    agent.metadata.labels = agent.metadata.labels and MetadataLabels.from_dict(agent.metadata.labels) or MetadataLabels()
+    agent.metadata.labels["x-beamlit-auto-generated"] = "true"
+    agent_yaml = yaml.dump(agent.to_dict())
     template = f"""
 apiVersion: beamlit.com/v1alpha1
 kind: Agent
-metadata:
-  name: {slugify(agent.metadata.name)}
-  displayName: {agent.metadata.display_name or agent.metadata.name}
-  environment: {settings.environment}
-  workspace: {settings.workspace}
-  labels:
-    x-beamlit-auto-generated: "true"
-spec:
-  enabled: true
-  policies: [{", ".join(agent.spec.policies or [])}]
-  functions: [{", ".join([f"{slugify(function.metadata.name)}" for (_, function) in functions])}]
-  agentChain: {format_agent_chain(agent.spec.agent_chain)}
-  model: {agent.spec.model}
+{agent_yaml}
 """
-    if agent.spec.description:
-        template += f"""    description: |
-      {agent.spec.description}"""
     return template
 
 
-def get_function_yaml(function: Function, settings: Settings) -> str:
+def get_function_yaml(function: Function, settings: Settings, client: AuthenticatedClient) -> str:
     """
     Generates YAML configuration for a function deployment.
 
@@ -152,21 +135,13 @@ def get_function_yaml(function: Function, settings: Settings) -> str:
     Returns:
         str: YAML configuration string
     """
+    function.metadata.labels = function.metadata.labels and MetadataLabels.from_dict(function.metadata.labels) or MetadataLabels()
+    function.metadata.labels["x-beamlit-auto-generated"] = "true"
+    function_yaml = yaml.dump(function.to_dict())
     return f"""
 apiVersion: beamlit.com/v1alpha1
 kind: Function
-metadata:
-  name: {slugify(function.metadata.name)}
-  displayName: {function.metadata.display_name or function.metadata.name}
-  environment: {settings.environment}
-  labels:
-    x-beamlit-auto-generated: "true"  
-spec:
-  enabled: true
-  policies: [{", ".join(function.spec.policies or [])}]
-  description: |
-    {function.spec.description}
-  parameters: {format_parameters(function.spec.parameters)}
+{function_yaml}
 """
 
 
@@ -220,6 +195,35 @@ ENV PATH="/beamlit/.venv/bin:$PATH"
 ENTRYPOINT [{cmd_str}]
 """
 
+def clean_auto_generated(
+    directory: str,
+    type: Literal["agent", "function"],
+    deployments: list[tuple[Resource, Agent | Function]]
+):
+    """
+    Cleans up auto-generated deployments of a specific type.
+
+    Args:
+        directory (str): Base directory containing deployments
+        type (str): Type of deployment ("agent" or "function")
+        deployments (list[tuple[Resource, Agent | Function]]): List of deployment resources and configurations
+    """
+    
+    deploy_dir = Path(directory) / f"{type}s"
+    deploy_names = [d.metadata.name for (_, d) in deployments]
+
+    if deploy_dir.exists():
+        for item_dir in deploy_dir.iterdir():
+            if item_dir.is_dir() and item_dir.name not in deploy_names:
+                yaml_file = item_dir / f"{type}.yaml"
+                if yaml_file.exists():
+                    with open(yaml_file) as f:
+                        try:
+                            content = yaml.safe_load(f)
+                            if content.get("metadata", {}).get("labels", {}).get("x-beamlit-auto-generated") == "true":
+                                shutil.rmtree(item_dir)
+                        except yaml.YAMLError:
+                            continue
 
 def generate_beamlit_deployment(directory: str):
     """
@@ -234,6 +238,7 @@ def generate_beamlit_deployment(directory: str):
         - Directory structure for agents and functions
     """
     settings = init()
+    client = new_client()
     logger = getLogger(__name__)
     logger.info(f"Importing server module: {settings.server.module}")
     functions: list[tuple[Resource, Function]] = []
@@ -257,28 +262,23 @@ def generate_beamlit_deployment(directory: str):
         agent_dir = os.path.join(agents_dir, agent.metadata.name)
         os.makedirs(agent_dir, exist_ok=True)
         with open(os.path.join(agent_dir, "agent.yaml"), "w") as f:
-            content = get_agent_yaml(agent, functions, settings)
+            content = get_agent_yaml(agent, functions, settings, client)
             f.write(content)
         # write dockerfile for build
         with open(os.path.join(agent_dir, "Dockerfile"), "w") as f:
             content = dockerfile("agent", resource, agent)
-            f.write(content)
-        # write destination docker
-        with open(os.path.join(agent_dir, "destination.txt"), "w") as f:
-            content = agent.spec.runtime.image
             f.write(content)
     for resource, function in functions:
         # write deployment file
         function_dir = os.path.join(functions_dir, function.metadata.name)
         os.makedirs(function_dir, exist_ok=True)
         with open(os.path.join(function_dir, "function.yaml"), "w") as f:
-            content = get_function_yaml(function, settings)
+            content = get_function_yaml(function, settings, client)
             f.write(content)
         # write dockerfile for build
         with open(os.path.join(function_dir, "Dockerfile"), "w") as f:
             content = dockerfile("function", resource, function)
             f.write(content)
-        # write destination docker
-        with open(os.path.join(function_dir, "destination.txt"), "w") as f:
-            content = function.spec.runtime.image
-            f.write(content)
+
+    clean_auto_generated(directory, "agent", agents)
+    clean_auto_generated(directory, "function", functions)
