@@ -1,5 +1,6 @@
 # Import necessary modules
 import functools
+import inspect
 from logging import getLogger
 
 from langgraph.checkpoint.memory import MemorySaver
@@ -34,15 +35,27 @@ def agent(
         settings = init()
 
         def wrapper(func):
+            agent_kwargs = any(
+                param.name == "agent"
+                for param in inspect.signature(func).parameters.values()
+            )
+            model_kwargs = any(
+                param.name == "model"
+                for param in inspect.signature(func).parameters.values()
+            )
+            functions_kwargs = any(
+                param.name == "functions"
+                for param in inspect.signature(func).parameters.values()
+            )
             @functools.wraps(func)
             def wrapped(*args, **kwargs):
-                return func(
-                    settings.agent.agent,
-                    settings.agent.chat_model,
-                    settings.agent.functions,
-                    *args,
-                    **kwargs,
-                )
+                if agent_kwargs:
+                    kwargs["agent"] = settings.agent.agent
+                if model_kwargs:
+                    kwargs["model"] = settings.agent.chat_model
+                if functions_kwargs:
+                    kwargs["functions"] = settings.agent.functions
+                return func(*args, **kwargs)
 
             return wrapped
 
@@ -85,7 +98,7 @@ def agent(
             remote_functions_empty=not remote_functions,
         )
         settings.agent.functions = functions
-        
+
         if override_agent is None and len(functions) == 0:
             raise ValueError(
                 "You must define at least one function, you can define this function in directory "

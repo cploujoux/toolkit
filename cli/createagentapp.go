@@ -314,9 +314,9 @@ func promptTemplateConfig(agentAppOptions *CreateAgentAppOptions) {
 				OptionsFunc(func() []huh.Option[string] {
 					models, err := retrieveModels()
 					if err != nil {
-						return []huh.Option[string]{}
+						return []huh.Option[string]{huh.NewOption("None", "")}
 					}
-					options := []huh.Option[string]{}
+					options := []huh.Option[string]{huh.NewOption("None", "")}
 					for _, model := range models {
 						options = append(options, huh.NewOption(*model.Metadata.Name, *model.Metadata.Name))
 					}
