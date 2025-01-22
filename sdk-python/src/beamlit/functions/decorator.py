@@ -30,6 +30,7 @@ def get_functions(
     chain:Union[list[AgentChain], None]=None,
     remote_functions_empty:bool=True,
     from_decorator:str="function",
+    warning:bool=True,
 ):
     from beamlit.agents.chain import ChainToolkit
 
@@ -45,7 +46,7 @@ def get_functions(
 
     # Walk through all Python files in functions directory and subdirectories
     if not os.path.exists(dir):
-        if remote_functions_empty:
+        if remote_functions_empty and warning:
             logger.warn(f"Functions directory {dir} not found")
         return []
     for root, _, files in os.walk(dir):

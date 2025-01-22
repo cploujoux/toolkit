@@ -96,21 +96,19 @@ def agent(
             remote_functions=remote_functions,
             chain=agent.spec.agent_chain,
             remote_functions_empty=not remote_functions,
+            warning=chat_model is not None,
         )
         settings.agent.functions = functions
 
-        if override_agent is None and len(functions) == 0:
-            raise ValueError(
-                "You must define at least one function, you can define this function in directory "
-                f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
-                "from beamlit.functions import function\n\n"
-                "@function()\n"
-                "def hello_world(query: str):\n"
-                "    return 'Hello, world!'\n"
-            )
-
         if override_agent is None and chat_model is not None:
             memory = MemorySaver()
+            if len(functions) == 0:
+                raise ValueError("You can define this function in directory "
+                    f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
+                    "from beamlit.functions import function\n\n"
+                    "@function()\n"
+                    "def hello_world(query: str):\n"
+                    "    return 'Hello, world!'\n")
             _agent = create_react_agent(chat_model, functions, checkpointer=memory)
             settings.agent.agent = _agent
         else:
