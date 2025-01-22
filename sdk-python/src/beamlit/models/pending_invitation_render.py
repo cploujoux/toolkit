@@ -41,17 +41,17 @@ class PendingInvitationRender:
         invited_at = self.invited_at
 
         invited_by: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.invited_by, Unset):
+        if self.invited_by and not isinstance(self.invited_by, Unset):
             invited_by = self.invited_by.to_dict()
 
         role = self.role
 
         workspace: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.workspace, Unset):
+        if self.workspace and not isinstance(self.workspace, Unset):
             workspace = self.workspace.to_dict()
 
         workspace_details: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.workspace_details, Unset):
+        if self.workspace_details and not isinstance(self.workspace_details, Unset):
             workspace_details = self.workspace_details.to_dict()
 
         field_dict: dict[str, Any] = {}

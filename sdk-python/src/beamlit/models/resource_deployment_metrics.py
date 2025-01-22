@@ -55,21 +55,23 @@ class ResourceDeploymentMetrics:
                 inference_per_second_global.append(componentsschemas_array_metric_item)
 
         inference_per_second_per_region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.inference_per_second_per_region, Unset):
+        if self.inference_per_second_per_region and not isinstance(self.inference_per_second_per_region, Unset):
             inference_per_second_per_region = self.inference_per_second_per_region.to_dict()
 
         query_per_second_global = self.query_per_second_global
 
         query_per_second_per_code_global: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_second_per_code_global, Unset):
+        if self.query_per_second_per_code_global and not isinstance(self.query_per_second_per_code_global, Unset):
             query_per_second_per_code_global = self.query_per_second_per_code_global.to_dict()
 
         query_per_second_per_region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_second_per_region, Unset):
+        if self.query_per_second_per_region and not isinstance(self.query_per_second_per_region, Unset):
             query_per_second_per_region = self.query_per_second_per_region.to_dict()
 
         query_per_second_per_region_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_second_per_region_per_code, Unset):
+        if self.query_per_second_per_region_per_code and not isinstance(
+            self.query_per_second_per_region_per_code, Unset
+        ):
             query_per_second_per_region_per_code = self.query_per_second_per_region_per_code.to_dict()
 
         field_dict: dict[str, Any] = {}

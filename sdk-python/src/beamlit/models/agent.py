@@ -41,15 +41,15 @@ class Agent:
                 events.append(componentsschemas_core_events_item)
 
         metadata: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.metadata, Unset):
+        if self.metadata and not isinstance(self.metadata, Unset):
             metadata = self.metadata.to_dict()
 
         spec: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.spec, Unset):
+        if self.spec and not isinstance(self.spec, Unset):
             spec = self.spec.to_dict()
 
         status: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.status, Unset):
+        if self.status and not isinstance(self.status, Unset):
             status = self.status.to_dict()
 
         field_dict: dict[str, Any] = {}

@@ -28,11 +28,11 @@ class IntegrationConnection:
 
     def to_dict(self) -> dict[str, Any]:
         metadata: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.metadata, Unset):
+        if self.metadata and not isinstance(self.metadata, Unset):
             metadata = self.metadata.to_dict()
 
         spec: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.spec, Unset):
+        if self.spec and not isinstance(self.spec, Unset):
             spec = self.spec.to_dict()
 
         field_dict: dict[str, Any] = {}

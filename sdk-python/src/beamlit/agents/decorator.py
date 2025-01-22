@@ -109,7 +109,7 @@ def agent(
                     )
                     models = ", ".join([model.metadata.name for model in models.parsed])
                     models_select = f"You can select one from the your models: {models}"
-                except Exception as e:
+                except Exception:
                     pass
                     
                 raise ValueError(f"You must provide a model.\n"

@@ -51,7 +51,7 @@ class EnvironmentMetadata:
         display_name = self.display_name
 
         labels: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.labels, Unset):
+        if self.labels and not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
 
         name = self.name

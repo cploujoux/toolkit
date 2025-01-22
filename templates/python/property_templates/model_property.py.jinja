@@ -17,7 +17,7 @@
 {{ destination }} = {{ transformed }}
 {%- else %}
 {{ destination }}{% if declare_type %}: {{ type_string }}{% endif %} = UNSET
-if not isinstance({{ source }}, Unset):
+if {{source}} and not isinstance({{ source }}, Unset):
     {{ destination }} = {{ transformed }}
 {%- endif %}
 {% endmacro %}

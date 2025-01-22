@@ -78,7 +78,7 @@ class StoreFunction:
                 kit.append(kit_item)
 
         labels: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.labels, Unset):
+        if self.labels and not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
 
         name = self.name

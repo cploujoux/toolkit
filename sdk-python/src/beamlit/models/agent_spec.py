@@ -60,7 +60,7 @@ class AgentSpec:
 
     def to_dict(self) -> dict[str, Any]:
         configurations: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.configurations, Unset):
+        if self.configurations and not isinstance(self.configurations, Unset):
             configurations = self.configurations.to_dict()
 
         enabled = self.enabled
@@ -77,7 +77,7 @@ class AgentSpec:
             integration_connections = self.integration_connections
 
         pod_template: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.pod_template, Unset):
+        if self.pod_template and not isinstance(self.pod_template, Unset):
             pod_template = self.pod_template.to_dict()
 
         policies: Union[Unset, list[str]] = UNSET
@@ -85,15 +85,15 @@ class AgentSpec:
             policies = self.policies
 
         private_clusters: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.private_clusters, Unset):
+        if self.private_clusters and not isinstance(self.private_clusters, Unset):
             private_clusters = self.private_clusters.to_dict()
 
         runtime: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.runtime, Unset):
+        if self.runtime and not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
         serverless_config: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.serverless_config, Unset):
+        if self.serverless_config and not isinstance(self.serverless_config, Unset):
             serverless_config = self.serverless_config.to_dict()
 
         agent_chain: Union[Unset, list[dict[str, Any]]] = UNSET
@@ -112,7 +112,7 @@ class AgentSpec:
         model = self.model
 
         repository: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.repository, Unset):
+        if self.repository and not isinstance(self.repository, Unset):
             repository = self.repository.to_dict()
 
         store_id = self.store_id

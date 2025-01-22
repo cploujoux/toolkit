@@ -3,10 +3,10 @@ from typing import Tuple, Union
 
 from langchain_core.language_models import BaseChatModel
 
+from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
-from beamlit.api.models import get_model
 
 logger = getLogger(__name__)
 
@@ -50,7 +50,7 @@ def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> Tuple[B
     if agent_model is None:
         try:
             agent_model = get_model.sync(name, client=client, environment=settings.environment)
-        except Exception as e:
+        except Exception:
             logger.warning(f"Model {name} not found, defaulting to gpt-4o-mini")
 
     environment = (agent_model and agent_model.metadata and agent_model.metadata.environment) or settings.environment

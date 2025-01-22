@@ -36,7 +36,7 @@ class ResourceMetrics:
                 inference_global.append(componentsschemas_array_metric_item)
 
         query_per_region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.query_per_region, Unset):
+        if self.query_per_region and not isinstance(self.query_per_region, Unset):
             query_per_region = self.query_per_region.to_dict()
 
         field_dict: dict[str, Any] = {}

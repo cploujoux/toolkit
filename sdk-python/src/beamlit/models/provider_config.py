@@ -35,7 +35,7 @@ class ProviderConfig:
             presigned_url = self.presigned_url
 
         runtime: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.runtime, Unset):
+        if self.runtime and not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
         field_dict: dict[str, Any] = {}

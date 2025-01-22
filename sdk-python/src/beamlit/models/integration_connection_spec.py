@@ -30,13 +30,13 @@ class IntegrationConnectionSpec:
 
     def to_dict(self) -> dict[str, Any]:
         config: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.config, Unset):
+        if self.config and not isinstance(self.config, Unset):
             config = self.config.to_dict()
 
         integration = self.integration
 
         secret: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.secret, Unset):
+        if self.secret and not isinstance(self.secret, Unset):
             secret = self.secret.to_dict()
 
         field_dict: dict[str, Any] = {}

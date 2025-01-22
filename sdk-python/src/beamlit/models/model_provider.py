@@ -56,13 +56,13 @@ class ModelProvider:
         comment = self.comment
 
         config: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.config, Unset):
+        if self.config and not isinstance(self.config, Unset):
             config = self.config.to_dict()
 
         display_name = self.display_name
 
         labels: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.labels, Unset):
+        if self.labels and not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
 
         name = self.name

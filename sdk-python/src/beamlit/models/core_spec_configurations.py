@@ -26,7 +26,7 @@ class CoreSpecConfigurations:
 
     def to_dict(self) -> dict[str, Any]:
         key: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.key, Unset):
+        if self.key and not isinstance(self.key, Unset):
             key = self.key.to_dict()
 
         field_dict: dict[str, Any] = {}

@@ -26,7 +26,7 @@ class ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode:
 
     def to_dict(self) -> dict[str, Any]:
         region: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.region, Unset):
+        if self.region and not isinstance(self.region, Unset):
             region = self.region.to_dict()
 
         field_dict: dict[str, Any] = {}

@@ -52,7 +52,7 @@ class ResourceEnvironmentMetrics:
                 last_n_requests.append(componentsschemas_array_metric_item)
 
         latency: Union[Unset, dict[str, Any]] = UNSET
-        if not isinstance(self.latency, Unset):
+        if self.latency and not isinstance(self.latency, Unset):
             latency = self.latency.to_dict()
 
         request_total = self.request_total
