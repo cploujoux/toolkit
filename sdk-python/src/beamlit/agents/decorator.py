@@ -100,7 +100,20 @@ def agent(
         )
         settings.agent.functions = functions
 
-        if override_agent is None and chat_model is not None:
+        if override_agent is None:
+            if chat_model is None:
+                raise ValueError(f"You must provide a model, to create one got to "
+                    f"{settings.app_url}/{settings.workspace}/global-inference-network/models/create\n"
+                    "After creating a model, add it to your agent spec\n"
+                    "agent={\n"
+                    "    \"metadata\": {\n"
+                    f"        \"name\": \"{agent.metadata.name}\",\n"
+                    "    },\n"
+                    "    \"spec\": {\n"
+                    "        \"model\": \"MODEL_NAME\",\n"
+                    f"        \"description\": \"{agent.spec.description}\",\n"
+                    "    },\n"
+                    "}")
             memory = MemorySaver()
             if len(functions) == 0:
                 raise ValueError("You can define this function in directory "

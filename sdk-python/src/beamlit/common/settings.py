@@ -57,6 +57,7 @@ class Settings(BaseSettings):
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")
     base_url: str = Field(default="https://api.beamlit.com/v0")
+    app_url: str = Field(default="https://app.beamlit.com")
     run_url: str = Field(default="https://run.beamlit.com")
     mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.com")
     registry_url: str = Field(default="https://us.registry.beamlit.com")
@@ -73,7 +74,8 @@ class Settings(BaseSettings):
             self.run_url = os.getenv('BL_RUN_URL') or "https://run.beamlit.dev"
             self.mcp_hub_url = os.getenv('BL_MCP_HUB_URL') or "https://mcp-hub-server.beamlit.workers.dev"
             self.registry_url = os.getenv('BL_REGISTRY_URL') or "https://eu.registry.beamlit.dev"
-
+            self.app_url = os.getenv('BL_APP_URL') or "https://app.beamlit.dev"
+            
     @classmethod
     def settings_customise_sources(
         cls,
