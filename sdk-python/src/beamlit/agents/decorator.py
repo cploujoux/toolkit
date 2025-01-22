@@ -6,7 +6,7 @@ from logging import getLogger
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
-from beamlit.api.models import get_model
+from beamlit.api.models import get_model, list_models
 from beamlit.authentication import new_client
 from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
@@ -102,9 +102,20 @@ def agent(
 
         if override_agent is None:
             if chat_model is None:
-                raise ValueError(f"You must provide a model, to create one got to "
-                    f"{settings.app_url}/{settings.workspace}/global-inference-network/models/create\n"
-                    "After creating a model, add it to your agent spec\n"
+                models_select = ""
+                try:
+                    models = list_models.sync_detailed(
+                        environment=settings.environment, client=client
+                    )
+                    models = ", ".join([model.metadata.name for model in models.parsed])
+                    models_select = f"You can select one from the your models: {models}"
+                except Exception as e:
+                    pass
+                    
+                raise ValueError(f"You must provide a model.\n"
+                    f"{models_select}\n"
+                    f"You can create one at {settings.app_url}/{settings.workspace}/global-inference-network/models/create\n"
+                    "Add it to your agent spec\n"
                     "agent={\n"
                     "    \"metadata\": {\n"
                     f"        \"name\": \"{agent.metadata.name}\",\n"
