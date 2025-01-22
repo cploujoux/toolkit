@@ -23,10 +23,10 @@ from beamlit.models import AgentChain, Function, FunctionKit
 logger = getLogger(__name__)
 
 def get_functions(
-    client:Union[AuthenticatedClient, None]=None,
-    dir:Union[str, None]=None,
     mcp_hub:Union[list[str], None]=None,
     remote_functions:Union[list[str], None]=None,
+    client:Union[AuthenticatedClient, None]=None,
+    dir:Union[str, None]=None,
     chain:Union[list[AgentChain], None]=None,
     remote_functions_empty:bool=True,
     from_decorator:str="function",
