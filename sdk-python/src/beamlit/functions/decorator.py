@@ -12,7 +12,6 @@ from fastapi import Request
 from langchain_core.tools import StructuredTool
 from langchain_core.tools.base import create_schema_from_function
 
-from beamlit.agents.chain import ChainToolkit
 from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
@@ -32,6 +31,8 @@ def get_functions(
     remote_functions_empty:bool=True,
     from_decorator:str="function",
 ):
+    from beamlit.agents.chain import ChainToolkit
+
     settings = get_settings()
     if client is None:
         client = new_client()
@@ -116,7 +117,7 @@ def get_functions(
                                                 )
                                             )
                                         else:
-                                            
+
                                             functions.append(
                                                 StructuredTool(
                                                     name=func.__name__,

@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import Tuple
+from typing import Tuple, Union
 
 from langchain_core.language_models import BaseChatModel
 
@@ -42,11 +42,11 @@ def get_cohere_chat_model(**kwargs):
 
     return ChatCohere(**kwargs)
 
-def get_chat_model(name: str, agent_model: Model) -> Tuple[BaseChatModel, str, str]:
+def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
     settings = get_settings()
     client = new_client()
 
-    environment = (agent_model.metadata and agent_model.metadata.environment) or settings.environment
+    environment = (agent_model and agent_model.metadata and agent_model.metadata.environment) or settings.environment
     headers = get_authentication_headers(settings)
     headers["X-Beamlit-Environment"] = environment
 
@@ -87,7 +87,8 @@ def get_chat_model(name: str, agent_model: Model) -> Tuple[BaseChatModel, str, s
     }
 
     provider = (
-        agent_model.spec
+        agent_model
+        and agent_model.spec
         and agent_model.spec.runtime
         and agent_model.spec.runtime.type_
     )
@@ -96,7 +97,8 @@ def get_chat_model(name: str, agent_model: Model) -> Tuple[BaseChatModel, str, s
         provider = "openai"
 
     model = (
-        agent_model.spec
+        agent_model
+        and agent_model.spec
         and agent_model.spec.runtime
         and agent_model.spec.runtime.model
     )
