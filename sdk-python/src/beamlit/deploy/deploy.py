@@ -3,11 +3,15 @@ import json
 import os
 import shutil
 import sys
-from pathlib import Path
-import yaml
 from logging import getLogger
+from pathlib import Path
 from typing import Literal
 
+import yaml
+
+from beamlit.api.agents import get_agent
+from beamlit.authentication import new_client
+from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
 from beamlit.common.settings import Settings, get_settings, init
 from beamlit.models import (
@@ -19,9 +23,7 @@ from beamlit.models import (
     FunctionSpec,
     MetadataLabels,
 )
-from beamlit.api.agents import get_agent
-from beamlit.authentication import new_client
-from beamlit.client import AuthenticatedClient
+
 from .format import arg_to_dict
 from .parser import Resource, get_description, get_parameters, get_resources
 
@@ -110,7 +112,7 @@ def get_agent_yaml(
     try:
         agent_response = get_agent.sync(agent.metadata.name, client=client)
         agent.spec.repository = agent_response.spec.repository
-    except Exception as e:
+    except Exception:
         pass
     agent.spec.functions = [slugify(function.metadata.name) for (_, function) in functions]
     agent.metadata.labels = agent.metadata.labels and MetadataLabels.from_dict(agent.metadata.labels) or MetadataLabels()

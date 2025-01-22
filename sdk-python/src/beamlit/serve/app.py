@@ -16,8 +16,8 @@ from beamlit.common import HTTPError, get_settings, init
 from beamlit.common.instrumentation import (
     get_resource_attributes,
     get_span_exporter,
-    shutdown_instrumentation,
     instrument_app,
+    shutdown_instrumentation,
 )
 
 from .middlewares import AccessLogMiddleware, AddProcessTimeHeader

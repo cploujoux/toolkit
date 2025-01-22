@@ -1,120 +1,18 @@
 # Import necessary modules
-import ast
-import asyncio
 import functools
-import importlib
-import os
 from logging import getLogger
 
-from langchain_core.tools import StructuredTool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
-from langchain_core.tools.base import create_schema_from_function
 
 from beamlit.api.models import get_model
 from beamlit.authentication import new_client
-from beamlit.common import slugify
-from beamlit.common.settings import get_settings, init
+from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
-from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
-from beamlit.functions.remote.remote import RemoteToolkit
+from beamlit.functions import get_functions
 from beamlit.models import Agent, AgentMetadata, AgentSpec
 
-from .chain import ChainToolkit
 from .chat import get_chat_model
-
-
-def get_functions(client, dir="src/functions", from_decorator="function", remote_functions_empty=True):
-    functions = []
-    logger = getLogger(__name__)
-    settings = get_settings()
-
-    # Walk through all Python files in functions directory and subdirectories
-    if not os.path.exists(dir):
-        if remote_functions_empty:
-            logger.warn(f"Functions directory {dir} not found")
-        return []
-    for root, _, files in os.walk(dir):
-        for file in files:
-            if file.endswith(".py"):
-                file_path = os.path.join(root, file)
-                # Read and compile the file content
-                with open(file_path) as f:
-                    try:
-                        file_content = f.read()
-                        # Parse the file content to find decorated functions
-                        tree = ast.parse(file_content)
-
-                        # Look for function definitions with decorators
-                        for node in ast.walk(tree):
-                            if (
-                                not isinstance(node, ast.FunctionDef)
-                                and not isinstance(node, ast.AsyncFunctionDef)
-                            ) or len(node.decorator_list) == 0:
-                                continue
-                            decorator = node.decorator_list[0]
-
-                            decorator_name = ""
-                            if isinstance(decorator, ast.Call):
-                                decorator_name = decorator.func.id
-                            if isinstance(decorator, ast.Name):
-                                decorator_name = decorator.id
-
-                            if decorator_name == from_decorator:
-                                # Get the function name and decorator name
-                                func_name = node.name
-
-                                # Import the module to get the actual function
-                                spec = importlib.util.spec_from_file_location(func_name, file_path)
-                                module = importlib.util.module_from_spec(spec)
-                                spec.loader.exec_module(module)
-                                # Check if kit=True in the decorator arguments
-                                is_kit = False
-                                if isinstance(decorator, ast.Call):
-                                    for keyword in decorator.keywords:
-                                        if keyword.arg == "kit" and isinstance(
-                                            keyword.value, ast.Constant
-                                        ):
-                                            is_kit = keyword.value.value
-                                if is_kit and not settings.remote:
-                                    kit_functions = get_functions(
-                                        client,
-                                        dir=os.path.join(root),
-                                        from_decorator="kit",
-                                        remote_functions_empty=remote_functions_empty,
-                                    )
-                                    functions.extend(kit_functions)
-
-                                # Get the decorated function
-                                if not is_kit and hasattr(module, func_name):
-                                    func = getattr(module, func_name)
-                                    if settings.remote:
-                                        toolkit = RemoteToolkit(client, slugify(func.__name__))
-                                        toolkit.initialize()
-                                        functions.extend(toolkit.get_tools())
-                                    else:
-                                        if asyncio.iscoroutinefunction(func):
-                                            functions.append(
-                                                StructuredTool(
-                                                    name=func.__name__,
-                                                    description=func.__doc__,
-                                                    func=func,
-                                                    coroutine=func,
-                                                    args_schema=create_schema_from_function(func.__name__, func)
-                                                )
-                                            )
-                                        else:
-                                            functions.append(
-                                                StructuredTool(
-                                                    name=func.__name__,
-                                                    description=func.__doc__,
-                                                    func=func,
-                                                    args_schema=create_schema_from_function(func.__name__, func)
-                                                )
-                                            )
-                    except Exception as e:
-                        logger.warning(f"Error processing {file_path}: {e!s}")
-    return functions
 
 
 def agent(
@@ -148,15 +46,6 @@ def agent(
 
             return wrapped
 
-        # Initialize functions array to store decorated functions
-        functions = get_functions(
-            client,
-            dir=settings.agent.functions_directory,
-            remote_functions_empty=not remote_functions,
-        )
-
-        
-
         if agent is not None:
             metadata = AgentMetadata(**agent.get("metadata", {}))
             spec = AgentSpec(**agent.get("spec", {}))
@@ -187,32 +76,16 @@ def agent(
                     settings.agent.chat_model = chat_model
                     logger.info(f"Chat model configured, using: {provider}:{model}")
 
-        if mcp_hub:
-            for server in mcp_hub:
-                try:
-                    mcp_client = MCPClient(client, server)
-                    toolkit = MCPToolkit(client=mcp_client)
-                    toolkit.initialize()
-                    functions.extend(toolkit.get_tools())
-                except Exception as e:
-                    logger.warn(f"Failed to initialize MCP server {server}: {e!s}")
-
-        if remote_functions:
-            for function in remote_functions:
-                try:
-                    toolkit = RemoteToolkit(client, function)
-                    toolkit.initialize()
-                    functions.extend(toolkit.get_tools())
-                except Exception as e:
-                    logger.warn(f"Failed to initialize remote function {function}: {e!s}")
-
-        if agent.spec.agent_chain:
-            toolkit = ChainToolkit(client, agent.spec.agent_chain)
-            toolkit.initialize()
-            functions.extend(toolkit.get_tools())
-
+        functions = get_functions(
+            client=client,
+            dir=settings.agent.functions_directory,
+            mcp_hub=mcp_hub,
+            remote_functions=remote_functions,
+            chain=agent.spec.agent_chain,
+            remote_functions_empty=not remote_functions,
+        )
         settings.agent.functions = functions
-
+        
         if override_agent is None and len(functions) == 0:
             raise ValueError(
                 "You must define at least one function, you can define this function in directory "
@@ -225,8 +98,8 @@ def agent(
 
         if override_agent is None and chat_model is not None:
             memory = MemorySaver()
-            agent = create_react_agent(chat_model, functions, checkpointer=memory)
-            settings.agent.agent = agent
+            _agent = create_react_agent(chat_model, functions, checkpointer=memory)
+            settings.agent.agent = _agent
         else:
             settings.agent.agent = override_agent
         return wrapper

@@ -15,6 +15,7 @@ from beamlit.agents import agent
             "model": "gpt-4o-mini",
         },
     },
+    remote_functions=["math"],
 )
 async def main(
     agent, chat_model, tools, body, headers=None, query_params=None, **_

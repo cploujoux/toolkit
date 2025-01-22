@@ -1,8 +1,6 @@
-from beamlit.api.models import get_model, list_models
-from beamlit.authentication import get_authentication_headers, new_client
+from beamlit.api.models import list_models
+from beamlit.authentication import new_client
 from beamlit.common.settings import init
-from beamlit.models import Model
-from beamlit.run import RunClient
 from beamlit.deploy import generate_beamlit_deployment
 
 settings = init()

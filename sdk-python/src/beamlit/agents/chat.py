@@ -1,4 +1,7 @@
 from logging import getLogger
+from typing import Tuple
+
+from langchain_core.language_models import BaseChatModel
 
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
@@ -39,7 +42,7 @@ def get_cohere_chat_model(**kwargs):
 
     return ChatCohere(**kwargs)
 
-def get_chat_model(name: str, agent_model: Model):
+def get_chat_model(name: str, agent_model: Model) -> Tuple[BaseChatModel, str, str]:
     settings = get_settings()
     client = new_client()
 
