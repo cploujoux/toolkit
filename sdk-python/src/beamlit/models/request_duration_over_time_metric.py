@@ -5,38 +5,50 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="Metric")
+T = TypeVar("T", bound="RequestDurationOverTimeMetric")
 
 
 @_attrs_define
-class Metric:
-    """Metric
+class RequestDurationOverTimeMetric:
+    """Request duration over time metric
 
     Attributes:
-        rate (Union[Unset, int]): Metric value
-        request_total (Union[Unset, int]): Metric value
-        timestamp (Union[Unset, str]): Metric timestamp
+        average (Union[Unset, float]): Average request duration
+        p50 (Union[Unset, float]): P50 request duration
+        p90 (Union[Unset, float]): P90 request duration
+        p99 (Union[Unset, float]): P99 request duration
+        timestamp (Union[Unset, str]): Timestamp
     """
 
-    rate: Union[Unset, int] = UNSET
-    request_total: Union[Unset, int] = UNSET
+    average: Union[Unset, float] = UNSET
+    p50: Union[Unset, float] = UNSET
+    p90: Union[Unset, float] = UNSET
+    p99: Union[Unset, float] = UNSET
     timestamp: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        rate = self.rate
+        average = self.average
 
-        request_total = self.request_total
+        p50 = self.p50
+
+        p90 = self.p90
+
+        p99 = self.p99
 
         timestamp = self.timestamp
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if rate is not UNSET:
-            field_dict["rate"] = rate
-        if request_total is not UNSET:
-            field_dict["requestTotal"] = request_total
+        if average is not UNSET:
+            field_dict["average"] = average
+        if p50 is not UNSET:
+            field_dict["p50"] = p50
+        if p90 is not UNSET:
+            field_dict["p90"] = p90
+        if p99 is not UNSET:
+            field_dict["p99"] = p99
         if timestamp is not UNSET:
             field_dict["timestamp"] = timestamp
 
@@ -47,20 +59,26 @@ class Metric:
         if not src_dict:
             return None
         d = src_dict.copy()
-        rate = d.pop("rate", UNSET)
+        average = d.pop("average", UNSET)
 
-        request_total = d.pop("requestTotal", UNSET)
+        p50 = d.pop("p50", UNSET)
+
+        p90 = d.pop("p90", UNSET)
+
+        p99 = d.pop("p99", UNSET)
 
         timestamp = d.pop("timestamp", UNSET)
 
-        metric = cls(
-            rate=rate,
-            request_total=request_total,
+        request_duration_over_time_metric = cls(
+            average=average,
+            p50=p50,
+            p90=p90,
+            p99=p99,
             timestamp=timestamp,
         )
 
-        metric.additional_properties = d
-        return metric
+        request_duration_over_time_metric.additional_properties = d
+        return request_duration_over_time_metric
 
     @property
     def additional_keys(self) -> list[str]:

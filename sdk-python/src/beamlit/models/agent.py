@@ -8,7 +8,6 @@ from ..types import UNSET, Unset
 if TYPE_CHECKING:
     from ..models.agent_spec import AgentSpec
     from ..models.core_event import CoreEvent
-    from ..models.core_status import CoreStatus
     from ..models.environment_metadata import EnvironmentMetadata
 
 
@@ -23,13 +22,13 @@ class Agent:
         events (Union[Unset, list['CoreEvent']]): Core events
         metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
         spec (Union[Unset, AgentSpec]): Agent specification
-        status (Union[Unset, CoreStatus]): Core status
+        status (Union[Unset, str]): Agent status
     """
 
     events: Union[Unset, list["CoreEvent"]] = UNSET
     metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
     spec: Union[Unset, "AgentSpec"] = UNSET
-    status: Union[Unset, "CoreStatus"] = UNSET
+    status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -48,9 +47,7 @@ class Agent:
         if self.spec and not isinstance(self.spec, Unset):
             spec = self.spec.to_dict()
 
-        status: Union[Unset, dict[str, Any]] = UNSET
-        if self.status and not isinstance(self.status, Unset):
-            status = self.status.to_dict()
+        status = self.status
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -70,7 +67,6 @@ class Agent:
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.agent_spec import AgentSpec
         from ..models.core_event import CoreEvent
-        from ..models.core_status import CoreStatus
         from ..models.environment_metadata import EnvironmentMetadata
 
         if not src_dict:
@@ -97,12 +93,7 @@ class Agent:
         else:
             spec = AgentSpec.from_dict(_spec)
 
-        _status = d.pop("status", UNSET)
-        status: Union[Unset, CoreStatus]
-        if isinstance(_status, Unset):
-            status = UNSET
-        else:
-            status = CoreStatus.from_dict(_status)
+        status = d.pop("status", UNSET)
 
         agent = cls(
             events=events,

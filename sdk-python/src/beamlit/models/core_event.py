@@ -14,17 +14,21 @@ class CoreEvent:
 
     Attributes:
         message (Union[Unset, str]): Event message
+        status (Union[Unset, str]): Event status
         time (Union[Unset, str]): Event time
         type_ (Union[Unset, str]): Event type
     """
 
     message: Union[Unset, str] = UNSET
+    status: Union[Unset, str] = UNSET
     time: Union[Unset, str] = UNSET
     type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         message = self.message
+
+        status = self.status
 
         time = self.time
 
@@ -35,6 +39,8 @@ class CoreEvent:
         field_dict.update({})
         if message is not UNSET:
             field_dict["message"] = message
+        if status is not UNSET:
+            field_dict["status"] = status
         if time is not UNSET:
             field_dict["time"] = time
         if type_ is not UNSET:
@@ -49,12 +55,15 @@ class CoreEvent:
         d = src_dict.copy()
         message = d.pop("message", UNSET)
 
+        status = d.pop("status", UNSET)
+
         time = d.pop("time", UNSET)
 
         type_ = d.pop("type", UNSET)
 
         core_event = cls(
             message=message,
+            status=status,
             time=time,
             type_=type_,
         )

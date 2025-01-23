@@ -5,40 +5,46 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="Metric")
+T = TypeVar("T", bound="TokenRateMetric")
 
 
 @_attrs_define
-class Metric:
-    """Metric
+class TokenRateMetric:
+    """Token rate metric
 
     Attributes:
-        rate (Union[Unset, int]): Metric value
-        request_total (Union[Unset, int]): Metric value
-        timestamp (Union[Unset, str]): Metric timestamp
+        model (Union[Unset, str]): Model ID
+        timestamp (Union[Unset, str]): Timestamp
+        token_total (Union[Unset, float]): Total tokens
+        trend (Union[Unset, float]): Trend
     """
 
-    rate: Union[Unset, int] = UNSET
-    request_total: Union[Unset, int] = UNSET
+    model: Union[Unset, str] = UNSET
     timestamp: Union[Unset, str] = UNSET
+    token_total: Union[Unset, float] = UNSET
+    trend: Union[Unset, float] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        rate = self.rate
-
-        request_total = self.request_total
+        model = self.model
 
         timestamp = self.timestamp
+
+        token_total = self.token_total
+
+        trend = self.trend
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if rate is not UNSET:
-            field_dict["rate"] = rate
-        if request_total is not UNSET:
-            field_dict["requestTotal"] = request_total
+        if model is not UNSET:
+            field_dict["model"] = model
         if timestamp is not UNSET:
             field_dict["timestamp"] = timestamp
+        if token_total is not UNSET:
+            field_dict["tokenTotal"] = token_total
+        if trend is not UNSET:
+            field_dict["trend"] = trend
 
         return field_dict
 
@@ -47,20 +53,23 @@ class Metric:
         if not src_dict:
             return None
         d = src_dict.copy()
-        rate = d.pop("rate", UNSET)
-
-        request_total = d.pop("requestTotal", UNSET)
+        model = d.pop("model", UNSET)
 
         timestamp = d.pop("timestamp", UNSET)
 
-        metric = cls(
-            rate=rate,
-            request_total=request_total,
+        token_total = d.pop("tokenTotal", UNSET)
+
+        trend = d.pop("trend", UNSET)
+
+        token_rate_metric = cls(
+            model=model,
             timestamp=timestamp,
+            token_total=token_total,
+            trend=trend,
         )
 
-        metric.additional_properties = d
-        return metric
+        token_rate_metric.additional_properties = d
+        return token_rate_metric
 
     @property
     def additional_keys(self) -> list[str]:
