@@ -1,7 +1,7 @@
 import base64
 import json
-import time
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Generator, Optional
 
 import requests
@@ -55,10 +55,12 @@ class ClientCredentials(Auth):
         except Exception as e:
             return Exception(f"Failed to decode/parse JWT claims: {str(e)}")
 
-        exp_time = time.gmtime(claims["exp"])
+        exp_time = datetime.fromtimestamp(claims["exp"])
+        current_time = datetime.now()
         # Refresh if token expires in less than 10 minutes
-        if time.time() + (10 * 60) > time.mktime(exp_time):
+        if current_time + timedelta(minutes=10) > exp_time:
             return self.do_refresh()
+
 
         return None
 
