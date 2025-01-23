@@ -33,6 +33,7 @@ dependencies = [
     "opentelemetry-instrumentation-fastapi>=0.49b2",
     "opentelemetry-instrumentation-httpx>=0.49b2",
     "opentelemetry-instrumentation-system-metrics>=0.50b0",
+    "pyjwt>=2.10.1",
 ]
 [dependency-groups]
 dev = [
