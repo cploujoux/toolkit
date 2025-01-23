@@ -35,7 +35,7 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
     deployment.metadata.workspace = settings.workspace
     deployment.metadata.environment = settings.environment
     if not deployment.metadata.name:
-        deployment.metadata.name = resource.name
+        deployment.metadata.name = slugify(resource.name)
     if not deployment.metadata.display_name:
         deployment.metadata.display_name = deployment.metadata.name
     if not deployment.spec.description:
@@ -117,7 +117,6 @@ def get_agent_yaml(
     agent.spec.functions = [slugify(function.metadata.name) for (_, function) in functions]
     agent.metadata.labels = agent.metadata.labels and MetadataLabels.from_dict(agent.metadata.labels) or MetadataLabels()
     agent.metadata.labels["x-beamlit-auto-generated"] = "true"
-    agent.metadata.name = slugify(agent.metadata.name)
     agent_yaml = yaml.dump(agent.to_dict())
     template = f"""
 apiVersion: beamlit.com/v1alpha1
@@ -140,7 +139,6 @@ def get_function_yaml(function: Function, settings: Settings, client: Authentica
     """
     function.metadata.labels = function.metadata.labels and MetadataLabels.from_dict(function.metadata.labels) or MetadataLabels()
     function.metadata.labels["x-beamlit-auto-generated"] = "true"
-    function.metadata.name = slugify(function.metadata.name)
     function_yaml = yaml.dump(function.to_dict())
     return f"""
 apiVersion: beamlit.com/v1alpha1
