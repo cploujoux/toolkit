@@ -3,12 +3,12 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="CoreStatus")
+T = TypeVar("T", bound="AgentRender")
 
 
 @_attrs_define
-class CoreStatus:
-    """Core status"""
+class AgentRender:
+    """AgentRender"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -23,10 +23,10 @@ class CoreStatus:
         if not src_dict:
             return None
         d = src_dict.copy()
-        core_status = cls()
+        agent_render = cls()
 
-        core_status.additional_properties = d
-        return core_status
+        agent_render.additional_properties = d
+        return agent_render
 
     @property
     def additional_keys(self) -> list[str]:
