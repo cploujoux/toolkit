@@ -22,11 +22,13 @@ class Agent:
         events (Union[Unset, list['CoreEvent']]): Core events
         metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
         spec (Union[Unset, AgentSpec]): Agent specification
+        status (Union[Unset, str]): Agent status
     """
 
     events: Union[Unset, list["CoreEvent"]] = UNSET
     metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
     spec: Union[Unset, "AgentSpec"] = UNSET
+    status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -45,6 +47,8 @@ class Agent:
         if self.spec and not isinstance(self.spec, Unset):
             spec = self.spec.to_dict()
 
+        status = self.status
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -54,6 +58,8 @@ class Agent:
             field_dict["metadata"] = metadata
         if spec is not UNSET:
             field_dict["spec"] = spec
+        if status is not UNSET:
+            field_dict["status"] = status
 
         return field_dict
 
@@ -87,10 +93,13 @@ class Agent:
         else:
             spec = AgentSpec.from_dict(_spec)
 
+        status = d.pop("status", UNSET)
+
         agent = cls(
             events=events,
             metadata=metadata,
             spec=spec,
+            status=status,
         )
 
         agent.additional_properties = d

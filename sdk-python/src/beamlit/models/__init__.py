@@ -7,7 +7,6 @@ from .agent_history import AgentHistory
 from .agent_history_event import AgentHistoryEvent
 from .agent_metadata import AgentMetadata
 from .agent_release import AgentRelease
-from .agent_render import AgentRender
 from .agent_spec import AgentSpec
 from .api_key import ApiKey
 from .configuration import Configuration
@@ -29,7 +28,6 @@ from .function import Function
 from .function_kit import FunctionKit
 from .function_metadata import FunctionMetadata
 from .function_release import FunctionRelease
-from .function_render import FunctionRender
 from .function_spec import FunctionSpec
 from .get_trace_ids_response_200 import GetTraceIdsResponse200
 from .get_trace_logs_response_200 import GetTraceLogsResponse200
@@ -61,7 +59,6 @@ from .model_metadata import ModelMetadata
 from .model_private_cluster import ModelPrivateCluster
 from .model_provider import ModelProvider
 from .model_release import ModelRelease
-from .model_render import ModelRender
 from .model_spec import ModelSpec
 from .owner_fields import OwnerFields
 from .pending_invitation import PendingInvitation
@@ -135,7 +132,6 @@ __all__ = (
     "AgentHistoryEvent",
     "AgentMetadata",
     "AgentRelease",
-    "AgentRender",
     "AgentSpec",
     "ApiKey",
     "Configuration",
@@ -157,7 +153,6 @@ __all__ = (
     "FunctionKit",
     "FunctionMetadata",
     "FunctionRelease",
-    "FunctionRender",
     "FunctionSpec",
     "GetTraceIdsResponse200",
     "GetTraceLogsResponse200",
@@ -189,7 +184,6 @@ __all__ = (
     "ModelPrivateCluster",
     "ModelProvider",
     "ModelRelease",
-    "ModelRender",
     "ModelSpec",
     "OwnerFields",
     "PendingInvitation",

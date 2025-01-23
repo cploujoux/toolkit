@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.model_render import ModelRender
+from ...models.model import Model
 from ...types import UNSET, Response, Unset
 
 
@@ -29,9 +29,9 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[ModelRender]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Model]:
     if response.status_code == 200:
-        response_200 = ModelRender.from_dict(response.json())
+        response_200 = Model.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +40,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[ModelRender]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Model]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -54,7 +54,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Response[ModelRender]:
+) -> Response[Model]:
     """Get model
 
      Returns a model by name.
@@ -68,7 +68,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ModelRender]
+        Response[Model]
     """
 
     kwargs = _get_kwargs(
@@ -88,7 +88,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Optional[ModelRender]:
+) -> Optional[Model]:
     """Get model
 
      Returns a model by name.
@@ -102,7 +102,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ModelRender
+        Model
     """
 
     return sync_detailed(
@@ -117,7 +117,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Response[ModelRender]:
+) -> Response[Model]:
     """Get model
 
      Returns a model by name.
@@ -131,7 +131,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ModelRender]
+        Response[Model]
     """
 
     kwargs = _get_kwargs(
@@ -149,7 +149,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Optional[ModelRender]:
+) -> Optional[Model]:
     """Get model
 
      Returns a model by name.
@@ -163,7 +163,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ModelRender
+        Model
     """
 
     return (

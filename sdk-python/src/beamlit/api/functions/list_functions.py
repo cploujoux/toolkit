@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.function_render import FunctionRender
+from ...models.function import Function
 from ...types import UNSET, Response, Unset
 
 
@@ -30,12 +30,12 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[list["FunctionRender"]]:
+) -> Optional[list["Function"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
         for response_200_item_data in _response_200:
-            response_200_item = FunctionRender.from_dict(response_200_item_data)
+            response_200_item = Function.from_dict(response_200_item_data)
 
             response_200.append(response_200_item)
 
@@ -48,7 +48,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[list["FunctionRender"]]:
+) -> Response[list["Function"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -61,7 +61,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Response[list["FunctionRender"]]:
+) -> Response[list["Function"]]:
     """List all functions
 
     Args:
@@ -72,7 +72,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['FunctionRender']]
+        Response[list['Function']]
     """
 
     kwargs = _get_kwargs(
@@ -90,7 +90,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Optional[list["FunctionRender"]]:
+) -> Optional[list["Function"]]:
     """List all functions
 
     Args:
@@ -101,7 +101,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['FunctionRender']
+        list['Function']
     """
 
     return sync_detailed(
@@ -114,7 +114,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Response[list["FunctionRender"]]:
+) -> Response[list["Function"]]:
     """List all functions
 
     Args:
@@ -125,7 +125,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['FunctionRender']]
+        Response[list['Function']]
     """
 
     kwargs = _get_kwargs(
@@ -141,7 +141,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Optional[list["FunctionRender"]]:
+) -> Optional[list["Function"]]:
     """List all functions
 
     Args:
@@ -152,7 +152,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['FunctionRender']
+        list['Function']
     """
 
     return (

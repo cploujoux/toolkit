@@ -41,6 +41,10 @@ export type Agent = {
     events?: CoreEvents;
     metadata?: EnvironmentMetadata;
     spec?: AgentSpec;
+    /**
+     * Agent status
+     */
+    status?: string;
 };
 
 /**
@@ -172,13 +176,6 @@ export type AgentRelease = {
      * Destination environment to which the agent is released
      */
     to?: string;
-};
-
-/**
- * AgentRender
- */
-export type AgentRender = {
-    [key: string]: unknown;
 };
 
 /**
@@ -397,6 +394,10 @@ export type Function = {
     events?: CoreEvents;
     metadata?: EnvironmentMetadata;
     spec?: FunctionSpec;
+    /**
+     * Function status
+     */
+    status?: string;
 };
 
 /**
@@ -439,13 +440,6 @@ export type FunctionRelease = {
      * Destination environment to which the function is released
      */
     to?: string;
-};
-
-/**
- * FunctionRender
- */
-export type FunctionRender = {
-    [key: string]: unknown;
 };
 
 export type FunctionsList = Array<(string)>;
@@ -807,6 +801,10 @@ export type Model = {
     events?: CoreEvents;
     metadata?: EnvironmentMetadata;
     spec?: ModelSpec;
+    /**
+     * Model status
+     */
+    status?: string;
 };
 
 /**
@@ -885,13 +883,6 @@ export type ModelRelease = {
      * Destination environment to which the model is released
      */
     to?: string;
-};
-
-/**
- * ModelRender
- */
-export type ModelRender = {
-    [key: string]: unknown;
 };
 
 /**
@@ -1824,7 +1815,7 @@ export type ListAgentsData = {
     };
 };
 
-export type ListAgentsResponse = (Array<AgentRender>);
+export type ListAgentsResponse = (Array<Agent>);
 
 export type ListAgentsError = unknown;
 
@@ -1832,7 +1823,7 @@ export type CreateAgentData = {
     body: Agent;
 };
 
-export type CreateAgentResponse = (AgentRender);
+export type CreateAgentResponse = (Agent);
 
 export type CreateAgentError = unknown;
 
@@ -1851,7 +1842,7 @@ export type DeleteAgentData = {
     };
 };
 
-export type DeleteAgentResponse = (AgentRender);
+export type DeleteAgentResponse = (Agent);
 
 export type DeleteAgentError = unknown;
 
@@ -1870,7 +1861,7 @@ export type GetAgentData = {
     };
 };
 
-export type GetAgentResponse = (AgentRender);
+export type GetAgentResponse = (Agent);
 
 export type GetAgentError = unknown;
 
@@ -1884,7 +1875,7 @@ export type UpdateAgentData = {
     };
 };
 
-export type UpdateAgentResponse = (AgentRender);
+export type UpdateAgentResponse = (Agent);
 
 export type UpdateAgentError = unknown;
 
@@ -2095,7 +2086,7 @@ export type ListFunctionsData = {
     };
 };
 
-export type ListFunctionsResponse = (Array<FunctionRender>);
+export type ListFunctionsResponse = (Array<Function>);
 
 export type ListFunctionsError = unknown;
 
@@ -2103,7 +2094,7 @@ export type CreateFunctionData = {
     body: Function;
 };
 
-export type CreateFunctionResponse = (FunctionRender);
+export type CreateFunctionResponse = (Function);
 
 export type CreateFunctionError = unknown;
 
@@ -2122,7 +2113,7 @@ export type DeleteFunctionData = {
     };
 };
 
-export type DeleteFunctionResponse = (FunctionRender);
+export type DeleteFunctionResponse = (Function);
 
 export type DeleteFunctionError = unknown;
 
@@ -2141,7 +2132,7 @@ export type GetFunctionData = {
     };
 };
 
-export type GetFunctionResponse = (FunctionRender);
+export type GetFunctionResponse = (Function);
 
 export type GetFunctionError = unknown;
 
@@ -2155,7 +2146,7 @@ export type UpdateFunctionData = {
     };
 };
 
-export type UpdateFunctionResponse = (FunctionRender);
+export type UpdateFunctionResponse = (Function);
 
 export type UpdateFunctionError = unknown;
 
@@ -2434,7 +2425,7 @@ export type ListModelsData = {
     };
 };
 
-export type ListModelsResponse = (Array<ModelRender>);
+export type ListModelsResponse = (Array<Model>);
 
 export type ListModelsError = unknown;
 
@@ -2442,7 +2433,7 @@ export type CreateModelData = {
     body: Model;
 };
 
-export type CreateModelResponse = (ModelRender);
+export type CreateModelResponse = (Model);
 
 export type CreateModelError = unknown;
 
@@ -2461,7 +2452,7 @@ export type DeleteModelData = {
     };
 };
 
-export type DeleteModelResponse = (ModelRender);
+export type DeleteModelResponse = (Model);
 
 export type DeleteModelError = unknown;
 
@@ -2480,7 +2471,7 @@ export type GetModelData = {
     };
 };
 
-export type GetModelResponse = (ModelRender);
+export type GetModelResponse = (Model);
 
 export type GetModelError = unknown;
 
@@ -2494,7 +2485,7 @@ export type UpdateModelData = {
     };
 };
 
-export type UpdateModelResponse = (ModelRender);
+export type UpdateModelResponse = (Model);
 
 export type UpdateModelError = unknown;
 

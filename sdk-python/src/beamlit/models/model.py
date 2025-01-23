@@ -22,11 +22,13 @@ class Model:
         events (Union[Unset, list['CoreEvent']]): Core events
         metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
         spec (Union[Unset, ModelSpec]): Model specification
+        status (Union[Unset, str]): Model status
     """
 
     events: Union[Unset, list["CoreEvent"]] = UNSET
     metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
     spec: Union[Unset, "ModelSpec"] = UNSET
+    status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -45,6 +47,8 @@ class Model:
         if self.spec and not isinstance(self.spec, Unset):
             spec = self.spec.to_dict()
 
+        status = self.status
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -54,6 +58,8 @@ class Model:
             field_dict["metadata"] = metadata
         if spec is not UNSET:
             field_dict["spec"] = spec
+        if status is not UNSET:
+            field_dict["status"] = status
 
         return field_dict
 
@@ -87,10 +93,13 @@ class Model:
         else:
             spec = ModelSpec.from_dict(_spec)
 
+        status = d.pop("status", UNSET)
+
         model = cls(
             events=events,
             metadata=metadata,
             spec=spec,
+            status=status,
         )
 
         model.additional_properties = d

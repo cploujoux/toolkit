@@ -22,11 +22,13 @@ class Function:
         events (Union[Unset, list['CoreEvent']]): Core events
         metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
         spec (Union[Unset, FunctionSpec]): Function specification
+        status (Union[Unset, str]): Function status
     """
 
     events: Union[Unset, list["CoreEvent"]] = UNSET
     metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
     spec: Union[Unset, "FunctionSpec"] = UNSET
+    status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -45,6 +47,8 @@ class Function:
         if self.spec and not isinstance(self.spec, Unset):
             spec = self.spec.to_dict()
 
+        status = self.status
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -54,6 +58,8 @@ class Function:
             field_dict["metadata"] = metadata
         if spec is not UNSET:
             field_dict["spec"] = spec
+        if status is not UNSET:
+            field_dict["status"] = status
 
         return field_dict
 
@@ -87,10 +93,13 @@ class Function:
         else:
             spec = FunctionSpec.from_dict(_spec)
 
+        status = d.pop("status", UNSET)
+
         function = cls(
             events=events,
             metadata=metadata,
             spec=spec,
+            status=status,
         )
 
         function.additional_properties = d

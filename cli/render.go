@@ -68,7 +68,6 @@ func printTable(resource Resource, slices []interface{}) {
 			updatedAt := retrieveKey(itemMap, "updatedAt")
 			if updatedAt != "-" {
 				// Parse and format the date
-				// Parse and format the date
 				if parsedTime, err := time.Parse(time.RFC3339, updatedAt); err == nil {
 					updatedAt = parsedTime.Format("2006-01-02 15:04:05")
 				}

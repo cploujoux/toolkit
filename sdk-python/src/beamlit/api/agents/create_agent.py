@@ -6,7 +6,6 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.agent import Agent
-from ...models.agent_render import AgentRender
 from ...types import Response
 
 
@@ -30,9 +29,9 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[AgentRender]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Agent]:
     if response.status_code == 200:
-        response_200 = AgentRender.from_dict(response.json())
+        response_200 = Agent.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -41,7 +40,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[AgentRender]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Agent]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -54,7 +53,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     body: Agent,
-) -> Response[AgentRender]:
+) -> Response[Agent]:
     """Create agent by name
 
     Args:
@@ -65,7 +64,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AgentRender]
+        Response[Agent]
     """
 
     kwargs = _get_kwargs(
@@ -83,7 +82,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     body: Agent,
-) -> Optional[AgentRender]:
+) -> Optional[Agent]:
     """Create agent by name
 
     Args:
@@ -94,7 +93,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AgentRender
+        Agent
     """
 
     return sync_detailed(
@@ -107,7 +106,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     body: Agent,
-) -> Response[AgentRender]:
+) -> Response[Agent]:
     """Create agent by name
 
     Args:
@@ -118,7 +117,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AgentRender]
+        Response[Agent]
     """
 
     kwargs = _get_kwargs(
@@ -134,7 +133,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     body: Agent,
-) -> Optional[AgentRender]:
+) -> Optional[Agent]:
     """Create agent by name
 
     Args:
@@ -145,7 +144,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AgentRender
+        Agent
     """
 
     return (
