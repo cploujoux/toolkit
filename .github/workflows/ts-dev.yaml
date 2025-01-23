@@ -16,7 +16,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-        name: Install PNPM
+        name: Install pnpm
         with:
           fetch-tags: true
           fetch-depth: 0
@@ -35,9 +35,7 @@ jobs:
           patch=$((patch + 1))
           VERSION="${major}.${minor}.${patch}"
           echo "Current version: $VERSION"
-
-          sed -i -E "s/^version = .*/version = \"${VERSION}.pre-${{ github.run_number }}\"/" sdk-python/pyproject.toml
-      - name: Publish to PyPi
+          pnpm version $VERSION-alpha.${{ github.run_number }}
+      - name: Publish to NPM
         run: |
-          uv build sdk-python
-          uv publish -v --trusted-publishing automatic sdk-python/dist/*
+          pnpm publish --access public --no-git-checks
