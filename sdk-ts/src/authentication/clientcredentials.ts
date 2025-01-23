@@ -67,12 +67,13 @@ export class ClientCredentials {
     }
 
     try {
-      const claims = JSON.parse(
-        Buffer.from(parts[1], "base64").toString("utf-8")
-      );
-      const expTime = claims.exp * 1000; // Convert to milliseconds
+      const claimsBytes = Buffer.from(parts[1], "base64url");
+      const claims = JSON.parse(claimsBytes.toString());
+      const expTime = new Date(claims.exp * 1000);
+      const currentTime = new Date();
+            
       // Refresh if token expires in less than 10 minutes
-      if (Date.now() + 10 * 60 * 1000 > expTime) {
+      if (currentTime.getTime() + 10 * 60 * 1000 > expTime.getTime()) {
         return await this.doRefresh();
       }
     } catch (e) {

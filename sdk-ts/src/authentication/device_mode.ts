@@ -67,11 +67,13 @@ export class BearerToken {
     }
 
     try {
-      const claims_bytes = Buffer.from(parts[1], "base64url");
-      const claims = JSON.parse(claims_bytes.toString());
-
+      const claimsBytes = Buffer.from(parts[1], "base64url");
+      const claims = JSON.parse(claimsBytes.toString());
+      const expTime = new Date(claims.exp * 1000);
+      const currentTime = new Date();
+      
       // Refresh if token expires in less than 10 minutes
-      if (Date.now() / 1000 + 10 * 60 > claims.exp) {
+      if (currentTime.getTime() + 10 * 60 * 1000 > expTime.getTime()) {
         return await this.doRefresh();
       }
     } catch (e) {

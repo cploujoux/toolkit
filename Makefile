@@ -18,7 +18,8 @@ sdk-python:
 		--config=./config/openapi-python-client.yml
 	cp -r ./tmp-sdk-python/beamlit/* ./sdk-python/src/beamlit/
 	rm -rf ./tmp-sdk-python
-
+	cd sdk-python && uv run ruff check --fix
+	
 sdk-ts:
 	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
 	npx @hey-api/openapi-ts@0.61.0 -i ./definition.yml -o ./tmp/sdk-ts -c @hey-api/client-fetch
