@@ -1,0 +1,43 @@
+name: Python SDK dev
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "sdk-ts/**"
+
+jobs:
+  npm-publish:
+    name: Upload to NPM
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      # For PyPI's trusted publishing.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        name: Install PNPM
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Set version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          VERSION="${VERSION#v}"
+          # Split version into parts and increment minor version
+          IFS='.' read -r major minor patch <<< "$VERSION"
+          patch=$((patch + 1))
+          VERSION="${major}.${minor}.${patch}"
+          echo "Current version: $VERSION"
+
+          sed -i -E "s/^version = .*/version = \"${VERSION}.pre-${{ github.run_number }}\"/" sdk-python/pyproject.toml
+      - name: Publish to PyPi
+        run: |
+          uv build sdk-python
+          uv publish -v --trusted-publishing automatic sdk-python/dist/*
