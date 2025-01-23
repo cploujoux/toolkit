@@ -13,7 +13,9 @@ if TYPE_CHECKING:
     from ..models.resource_environment_metrics_request_total_per_code import (
         ResourceEnvironmentMetricsRequestTotalPerCode,
     )
-    from ..models.resource_environment_metrics_rps_per_code import ResourceEnvironmentMetricsRpsPerCode
+    from ..models.resource_environment_metrics_rps_per_code import (
+        ResourceEnvironmentMetricsRpsPerCode,
+    )
     from ..models.token_rate_metrics import TokenRateMetrics
     from ..models.token_total_metric import TokenTotalMetric
 
@@ -138,7 +140,9 @@ class ResourceEnvironmentMetrics:
         from ..models.resource_environment_metrics_request_total_per_code import (
             ResourceEnvironmentMetricsRequestTotalPerCode,
         )
-        from ..models.resource_environment_metrics_rps_per_code import ResourceEnvironmentMetricsRpsPerCode
+        from ..models.resource_environment_metrics_rps_per_code import (
+            ResourceEnvironmentMetricsRpsPerCode,
+        )
         from ..models.token_rate_metrics import TokenRateMetrics
         from ..models.token_total_metric import TokenTotalMetric
 

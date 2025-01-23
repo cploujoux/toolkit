@@ -6,7 +6,9 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.request_total_metric_request_total_per_code import RequestTotalMetricRequestTotalPerCode
+    from ..models.request_total_metric_request_total_per_code import (
+        RequestTotalMetricRequestTotalPerCode,
+    )
     from ..models.request_total_metric_rps_per_code import RequestTotalMetricRpsPerCode
 
 
@@ -60,7 +62,9 @@ class RequestTotalMetric:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
-        from ..models.request_total_metric_request_total_per_code import RequestTotalMetricRequestTotalPerCode
+        from ..models.request_total_metric_request_total_per_code import (
+            RequestTotalMetricRequestTotalPerCode,
+        )
         from ..models.request_total_metric_rps_per_code import RequestTotalMetricRpsPerCode
 
         if not src_dict:

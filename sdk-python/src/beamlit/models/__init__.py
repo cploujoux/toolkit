@@ -32,7 +32,9 @@ from .function_spec import FunctionSpec
 from .get_trace_ids_response_200 import GetTraceIdsResponse200
 from .get_trace_logs_response_200 import GetTraceLogsResponse200
 from .get_trace_response_200 import GetTraceResponse200
-from .get_workspace_service_accounts_response_200_item import GetWorkspaceServiceAccountsResponse200Item
+from .get_workspace_service_accounts_response_200_item import (
+    GetWorkspaceServiceAccountsResponse200Item,
+)
 from .histogram_bucket import HistogramBucket
 from .histogram_stats import HistogramStats
 from .increase_and_rate_metric import IncreaseAndRateMetric
@@ -79,7 +81,9 @@ from .repository import Repository
 from .request_duration_over_time_metric import RequestDurationOverTimeMetric
 from .request_duration_over_time_metrics import RequestDurationOverTimeMetrics
 from .request_total_by_origin_metric import RequestTotalByOriginMetric
-from .request_total_by_origin_metric_request_total_by_origin import RequestTotalByOriginMetricRequestTotalByOrigin
+from .request_total_by_origin_metric_request_total_by_origin import (
+    RequestTotalByOriginMetricRequestTotalByOrigin,
+)
 from .request_total_by_origin_metric_request_total_by_origin_and_code import (
     RequestTotalByOriginMetricRequestTotalByOriginAndCode,
 )
@@ -94,7 +98,9 @@ from .resource_deployment_metrics_query_per_second_per_region_per_code import (
     ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode,
 )
 from .resource_environment_metrics import ResourceEnvironmentMetrics
-from .resource_environment_metrics_request_total_per_code import ResourceEnvironmentMetricsRequestTotalPerCode
+from .resource_environment_metrics_request_total_per_code import (
+    ResourceEnvironmentMetricsRequestTotalPerCode,
+)
 from .resource_environment_metrics_rps_per_code import ResourceEnvironmentMetricsRpsPerCode
 from .resource_log import ResourceLog
 from .resource_metrics import ResourceMetrics
