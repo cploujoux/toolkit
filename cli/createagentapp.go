@@ -128,7 +128,7 @@ func getTheme() *huh.Theme {
 func retrieveModels() ([]sdk.Model, error) {
 	var modelDeployments []sdk.Model
 	ctx := context.Background()
-	res, err := client.ListModels(ctx, &sdk.ListModelsParams{})
+	res, err := client.ListModels(ctx, &sdk.ListModelsParams{Environment: &environment})
 	if err != nil {
 		return nil, err
 	}
@@ -145,22 +145,6 @@ func retrieveModels() ([]sdk.Model, error) {
 	}
 
 	for _, model := range models {
-		environment := "production"
-		res, err := client.GetModel(ctx, *model.Metadata.Name, &sdk.GetModelParams{
-			Environment: &environment,
-		})
-		if err != nil {
-			return nil, err
-		}
-		body, err := io.ReadAll(res.Body)
-		if err != nil {
-			return nil, err
-		}
-		var model sdk.Model
-		err = json.Unmarshal(body, &model)
-		if err != nil {
-			return nil, err
-		}
 		if model.Spec.Runtime != nil {
 			runtimeType := *model.Spec.Runtime.Type
 			supportedRuntimes := []string{"openai", "anthropic", "mistral", "cohere", "xai", "vertex", "bedrock"}
@@ -307,35 +291,40 @@ func promptTemplateConfig(agentAppOptions *CreateAgentAppOptions) {
 			fields = append(fields, input)
 		} else if variable.Type == "model" {
 			values[variable.Name] = &value
-			input := huh.NewSelect[string]().
-				Title(title).
-				Description(variable.Description).
-				Height(5).
-				OptionsFunc(func() []huh.Option[string] {
-					models, err := retrieveModels()
-					if err != nil {
-						return []huh.Option[string]{huh.NewOption("None", "")}
-					}
+			models, err := retrieveModels()
+			if err == nil {
+				if len(models) == 0 {
+					value = "None"
+				} else if len(models) == 1 {
+					value = *models[0].Metadata.Name
+				} else {
 					options := []huh.Option[string]{}
 					for _, model := range models {
 						options = append(options, huh.NewOption(*model.Metadata.Name, *model.Metadata.Name))
 					}
 					options = append(options, huh.NewOption("None", ""))
-					return options
-				}, &agentAppOptions).
-				Value(&value)
-			fields = append(fields, input)
+					input := huh.NewSelect[string]().
+						Title(title).
+						Description(variable.Description).
+						Height(5).
+						Options(options...).
+						Value(&value)
+					fields = append(fields, input)
+				}
+			}
 		}
 	}
 
-	formTemplates := huh.NewForm(
-		huh.NewGroup(fields...),
-	)
-	formTemplates.WithTheme(getTheme())
-	err = formTemplates.Run()
-	if err != nil {
-		fmt.Println("Cancel create beamlit agent app")
-		os.Exit(0)
+	if len(fields) > 0 {
+		formTemplates := huh.NewForm(
+			huh.NewGroup(fields...),
+		)
+		formTemplates.WithTheme(getTheme())
+		err = formTemplates.Run()
+		if err != nil {
+			fmt.Println("Cancel create beamlit agent app")
+			os.Exit(0)
+		}
 	}
 	agentAppOptions.TemplateOptions = values
 	for _, array_value := range array_values {
