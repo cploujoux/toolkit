@@ -48,87 +48,87 @@ def get_functions(
     if not os.path.exists(dir):
         if remote_functions_empty and warning:
             logger.warn(f"Functions directory {dir} not found")
-        return []
-    for root, _, files in os.walk(dir):
-        for file in files:
-            if file.endswith(".py"):
-                file_path = os.path.join(root, file)
-                # Read and compile the file content
-                with open(file_path) as f:
-                    try:
-                        file_content = f.read()
-                        # Parse the file content to find decorated functions
-                        tree = ast.parse(file_content)
+    if os.path.exists(dir):
+        for root, _, files in os.walk(dir):
+            for file in files:
+                if file.endswith(".py"):
+                    file_path = os.path.join(root, file)
+                    # Read and compile the file content
+                    with open(file_path) as f:
+                        try:
+                            file_content = f.read()
+                            # Parse the file content to find decorated functions
+                            tree = ast.parse(file_content)
 
-                        # Look for function definitions with decorators
-                        for node in ast.walk(tree):
-                            if (
-                                not isinstance(node, ast.FunctionDef)
-                                and not isinstance(node, ast.AsyncFunctionDef)
-                            ) or len(node.decorator_list) == 0:
-                                continue
-                            decorator = node.decorator_list[0]
+                            # Look for function definitions with decorators
+                            for node in ast.walk(tree):
+                                if (
+                                    not isinstance(node, ast.FunctionDef)
+                                    and not isinstance(node, ast.AsyncFunctionDef)
+                                ) or len(node.decorator_list) == 0:
+                                    continue
+                                decorator = node.decorator_list[0]
 
-                            decorator_name = ""
-                            if isinstance(decorator, ast.Call):
-                                decorator_name = decorator.func.id
-                            if isinstance(decorator, ast.Name):
-                                decorator_name = decorator.id
-                            if decorator_name == from_decorator:
-                                # Get the function name and decorator name
-                                func_name = node.name
-
-                                # Import the module to get the actual function
-                                spec = importlib.util.spec_from_file_location(func_name, file_path)
-                                module = importlib.util.module_from_spec(spec)
-                                spec.loader.exec_module(module)
-                                # Check if kit=True in the decorator arguments
-                                is_kit = False
+                                decorator_name = ""
                                 if isinstance(decorator, ast.Call):
-                                    for keyword in decorator.keywords:
-                                        if keyword.arg == "kit" and isinstance(
-                                            keyword.value, ast.Constant
-                                        ):
-                                            is_kit = keyword.value.value
-                                if is_kit and not settings.remote:
-                                    kit_functions = get_functions(
-                                        client=client,
-                                        dir=os.path.join(root),
-                                        remote_functions_empty=remote_functions_empty,
-                                        from_decorator="kit",
-                                    )
-                                    functions.extend(kit_functions)
+                                    decorator_name = decorator.func.id
+                                if isinstance(decorator, ast.Name):
+                                    decorator_name = decorator.id
+                                if decorator_name == from_decorator:
+                                    # Get the function name and decorator name
+                                    func_name = node.name
 
-                                # Get the decorated function
-                                if not is_kit and hasattr(module, func_name):
-                                    func = getattr(module, func_name)
-                                    if settings.remote:
-                                        toolkit = RemoteToolkit(client, slugify(func.__name__))
-                                        toolkit.initialize()
-                                        functions.extend(toolkit.get_tools())
-                                    else:
-                                        if asyncio.iscoroutinefunction(func):
-                                            functions.append(
-                                                StructuredTool(
-                                                    name=func.__name__,
-                                                    description=func.__doc__,
-                                                    func=func,
-                                                    coroutine=func,
-                                                    args_schema=create_schema_from_function(func.__name__, func)
-                                                )
-                                            )
+                                    # Import the module to get the actual function
+                                    spec = importlib.util.spec_from_file_location(func_name, file_path)
+                                    module = importlib.util.module_from_spec(spec)
+                                    spec.loader.exec_module(module)
+                                    # Check if kit=True in the decorator arguments
+                                    is_kit = False
+                                    if isinstance(decorator, ast.Call):
+                                        for keyword in decorator.keywords:
+                                            if keyword.arg == "kit" and isinstance(
+                                                keyword.value, ast.Constant
+                                            ):
+                                                is_kit = keyword.value.value
+                                    if is_kit and not settings.remote:
+                                        kit_functions = get_functions(
+                                            client=client,
+                                            dir=os.path.join(root),
+                                            remote_functions_empty=remote_functions_empty,
+                                            from_decorator="kit",
+                                        )
+                                        functions.extend(kit_functions)
+
+                                    # Get the decorated function
+                                    if not is_kit and hasattr(module, func_name):
+                                        func = getattr(module, func_name)
+                                        if settings.remote:
+                                            toolkit = RemoteToolkit(client, slugify(func.__name__))
+                                            toolkit.initialize()
+                                            functions.extend(toolkit.get_tools())
                                         else:
-
-                                            functions.append(
-                                                StructuredTool(
-                                                    name=func.__name__,
-                                                    description=func.__doc__,
-                                                    func=func,
-                                                    args_schema=create_schema_from_function(func.__name__, func)
+                                            if asyncio.iscoroutinefunction(func):
+                                                functions.append(
+                                                    StructuredTool(
+                                                        name=func.__name__,
+                                                        description=func.__doc__,
+                                                        func=func,
+                                                        coroutine=func,
+                                                        args_schema=create_schema_from_function(func.__name__, func)
+                                                    )
                                                 )
-                                            )
-                    except Exception as e:
-                        logger.warning(f"Error processing {file_path}: {e!s}")
+                                            else:
+
+                                                functions.append(
+                                                    StructuredTool(
+                                                        name=func.__name__,
+                                                        description=func.__doc__,
+                                                        func=func,
+                                                        args_schema=create_schema_from_function(func.__name__, func)
+                                                    )
+                                                )
+                        except Exception as e:
+                            logger.warning(f"Error processing {file_path}: {e!s}")
 
     if mcp_hub:
         for server in mcp_hub:
