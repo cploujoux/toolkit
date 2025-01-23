@@ -5,40 +5,40 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="Metric")
+T = TypeVar("T", bound="HistogramBucket")
 
 
 @_attrs_define
-class Metric:
-    """Metric
+class HistogramBucket:
+    """Histogram bucket
 
     Attributes:
-        rate (Union[Unset, int]): Metric value
-        request_total (Union[Unset, int]): Metric value
-        timestamp (Union[Unset, str]): Metric timestamp
+        count (Union[Unset, int]): Count
+        end (Union[Unset, float]): End
+        start (Union[Unset, float]): Start
     """
 
-    rate: Union[Unset, int] = UNSET
-    request_total: Union[Unset, int] = UNSET
-    timestamp: Union[Unset, str] = UNSET
+    count: Union[Unset, int] = UNSET
+    end: Union[Unset, float] = UNSET
+    start: Union[Unset, float] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        rate = self.rate
+        count = self.count
 
-        request_total = self.request_total
+        end = self.end
 
-        timestamp = self.timestamp
+        start = self.start
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if rate is not UNSET:
-            field_dict["rate"] = rate
-        if request_total is not UNSET:
-            field_dict["requestTotal"] = request_total
-        if timestamp is not UNSET:
-            field_dict["timestamp"] = timestamp
+        if count is not UNSET:
+            field_dict["count"] = count
+        if end is not UNSET:
+            field_dict["end"] = end
+        if start is not UNSET:
+            field_dict["start"] = start
 
         return field_dict
 
@@ -47,20 +47,20 @@ class Metric:
         if not src_dict:
             return None
         d = src_dict.copy()
-        rate = d.pop("rate", UNSET)
+        count = d.pop("count", UNSET)
 
-        request_total = d.pop("requestTotal", UNSET)
+        end = d.pop("end", UNSET)
 
-        timestamp = d.pop("timestamp", UNSET)
+        start = d.pop("start", UNSET)
 
-        metric = cls(
-            rate=rate,
-            request_total=request_total,
-            timestamp=timestamp,
+        histogram_bucket = cls(
+            count=count,
+            end=end,
+            start=start,
         )
 
-        metric.additional_properties = d
-        return metric
+        histogram_bucket.additional_properties = d
+        return histogram_bucket
 
     @property
     def additional_keys(self) -> list[str]:

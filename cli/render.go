@@ -34,9 +34,6 @@ func retrieveKey(itemMap map[string]interface{}, key string) string {
 	if value, ok := itemMap["metadata"].(map[string]interface{})[key]; ok {
 		return value.(string)
 	}
-	if value, ok := itemMap["status"].(map[string]interface{})[key]; ok {
-		return value.(string)
-	}
 	return "-"
 }
 
@@ -78,7 +75,7 @@ func printTable(resource Resource, slices []interface{}) {
 			}
 
 			if resource.WithStatus {
-				status := retrieveKey(itemMap, "deploymentStatus")
+				status := retrieveKey(itemMap, "status")
 				fmt.Printf("%-15s %-24s %-20s %-20s %-20s\n", workspace, name, createdAt, updatedAt, status)
 			} else {
 				fmt.Printf("%-15s %-24s %-20s %-20s\n", workspace, name, createdAt, updatedAt)
@@ -96,7 +93,7 @@ func printJson(resource Resource, slices []interface{}) {
 				Kind:       resource.Kind,
 				Metadata:   sliceMap["metadata"],
 				Spec:       sliceMap["spec"],
-				Status:     sliceMap["status"],
+				Status:     sliceMap["status"].(string),
 			})
 		}
 	}
@@ -118,7 +115,7 @@ func printYaml(resource Resource, slices []interface{}, pretty bool) {
 				Kind:       resource.Kind,
 				Metadata:   sliceMap["metadata"],
 				Spec:       sliceMap["spec"],
-				Status:     sliceMap["status"],
+				Status:     sliceMap["status"].(string),
 			})
 		}
 	}

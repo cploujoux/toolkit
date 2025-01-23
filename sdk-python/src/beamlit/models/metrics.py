@@ -1,9 +1,15 @@
-from typing import Any, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.metrics_models import MetricsModels
+    from ..models.metrics_request_total_per_code import MetricsRequestTotalPerCode
+    from ..models.metrics_rps_per_code import MetricsRpsPerCode
+
 
 T = TypeVar("T", bound="Metrics")
 
@@ -15,22 +21,24 @@ class Metrics:
     Attributes:
         agents (Union[Unset, Any]): Metrics for agents
         functions (Union[Unset, Any]): Metrics for functions
-        inference_global (Union[Unset, Any]): Historical requests for all resources globally
-        models (Union[Unset, Any]): Metrics for models
-        request_total (Union[Unset, Any]): Number of requests for all resources globally
-        request_total_per_code (Union[Unset, Any]): Number of requests for all resources globally per code
-        rps (Union[Unset, Any]): Number of requests per second for all resources globally
-        rps_per_code (Union[Unset, Any]): Number of requests per second for all resources globally per code
+        inference_global (Union[Unset, list[Any]]): Historical requests for all resources globally
+        models (Union[Unset, MetricsModels]): Metrics for models
+        request_total (Union[Unset, float]): Number of requests for all resources globally
+        request_total_per_code (Union[Unset, MetricsRequestTotalPerCode]): Number of requests for all resources globally
+            per code
+        rps (Union[Unset, float]): Number of requests per second for all resources globally
+        rps_per_code (Union[Unset, MetricsRpsPerCode]): Number of requests per second for all resources globally per
+            code
     """
 
     agents: Union[Unset, Any] = UNSET
     functions: Union[Unset, Any] = UNSET
-    inference_global: Union[Unset, Any] = UNSET
-    models: Union[Unset, Any] = UNSET
-    request_total: Union[Unset, Any] = UNSET
-    request_total_per_code: Union[Unset, Any] = UNSET
-    rps: Union[Unset, Any] = UNSET
-    rps_per_code: Union[Unset, Any] = UNSET
+    inference_global: Union[Unset, list[Any]] = UNSET
+    models: Union[Unset, "MetricsModels"] = UNSET
+    request_total: Union[Unset, float] = UNSET
+    request_total_per_code: Union[Unset, "MetricsRequestTotalPerCode"] = UNSET
+    rps: Union[Unset, float] = UNSET
+    rps_per_code: Union[Unset, "MetricsRpsPerCode"] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,17 +46,25 @@ class Metrics:
 
         functions = self.functions
 
-        inference_global = self.inference_global
+        inference_global: Union[Unset, list[Any]] = UNSET
+        if not isinstance(self.inference_global, Unset):
+            inference_global = self.inference_global
 
-        models = self.models
+        models: Union[Unset, dict[str, Any]] = UNSET
+        if self.models and not isinstance(self.models, Unset):
+            models = self.models.to_dict()
 
         request_total = self.request_total
 
-        request_total_per_code = self.request_total_per_code
+        request_total_per_code: Union[Unset, dict[str, Any]] = UNSET
+        if self.request_total_per_code and not isinstance(self.request_total_per_code, Unset):
+            request_total_per_code = self.request_total_per_code.to_dict()
 
         rps = self.rps
 
-        rps_per_code = self.rps_per_code
+        rps_per_code: Union[Unset, dict[str, Any]] = UNSET
+        if self.rps_per_code and not isinstance(self.rps_per_code, Unset):
+            rps_per_code = self.rps_per_code.to_dict()
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -74,6 +90,10 @@ class Metrics:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        from ..models.metrics_models import MetricsModels
+        from ..models.metrics_request_total_per_code import MetricsRequestTotalPerCode
+        from ..models.metrics_rps_per_code import MetricsRpsPerCode
+
         if not src_dict:
             return None
         d = src_dict.copy()
@@ -81,17 +101,32 @@ class Metrics:
 
         functions = d.pop("functions", UNSET)
 
-        inference_global = d.pop("inferenceGlobal", UNSET)
+        inference_global = cast(list[Any], d.pop("inferenceGlobal", UNSET))
 
-        models = d.pop("models", UNSET)
+        _models = d.pop("models", UNSET)
+        models: Union[Unset, MetricsModels]
+        if isinstance(_models, Unset):
+            models = UNSET
+        else:
+            models = MetricsModels.from_dict(_models)
 
         request_total = d.pop("requestTotal", UNSET)
 
-        request_total_per_code = d.pop("requestTotalPerCode", UNSET)
+        _request_total_per_code = d.pop("requestTotalPerCode", UNSET)
+        request_total_per_code: Union[Unset, MetricsRequestTotalPerCode]
+        if isinstance(_request_total_per_code, Unset):
+            request_total_per_code = UNSET
+        else:
+            request_total_per_code = MetricsRequestTotalPerCode.from_dict(_request_total_per_code)
 
         rps = d.pop("rps", UNSET)
 
-        rps_per_code = d.pop("rpsPerCode", UNSET)
+        _rps_per_code = d.pop("rpsPerCode", UNSET)
+        rps_per_code: Union[Unset, MetricsRpsPerCode]
+        if isinstance(_rps_per_code, Unset):
+            rps_per_code = UNSET
+        else:
+            rps_per_code = MetricsRpsPerCode.from_dict(_rps_per_code)
 
         metrics = cls(
             agents=agents,

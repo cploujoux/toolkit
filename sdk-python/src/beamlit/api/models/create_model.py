@@ -6,6 +6,7 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.model import Model
+from ...models.model_render import ModelRender
 from ...types import Response
 
 
@@ -29,9 +30,9 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Model]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[ModelRender]:
     if response.status_code == 200:
-        response_200 = Model.from_dict(response.json())
+        response_200 = ModelRender.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +41,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Model]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[ModelRender]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -53,7 +54,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     body: Model,
-) -> Response[Model]:
+) -> Response[ModelRender]:
     """Create model
 
      Creates a model.
@@ -67,7 +68,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Model]
+        Response[ModelRender]
     """
 
     kwargs = _get_kwargs(
@@ -85,7 +86,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     body: Model,
-) -> Optional[Model]:
+) -> Optional[ModelRender]:
     """Create model
 
      Creates a model.
@@ -99,7 +100,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Model
+        ModelRender
     """
 
     return sync_detailed(
@@ -112,7 +113,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     body: Model,
-) -> Response[Model]:
+) -> Response[ModelRender]:
     """Create model
 
      Creates a model.
@@ -126,7 +127,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Model]
+        Response[ModelRender]
     """
 
     kwargs = _get_kwargs(
@@ -142,7 +143,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     body: Model,
-) -> Optional[Model]:
+) -> Optional[ModelRender]:
     """Create model
 
      Creates a model.
@@ -156,7 +157,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Model
+        ModelRender
     """
 
     return (

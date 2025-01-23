@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.agent import Agent
+from ...models.agent_render import AgentRender
 from ...types import UNSET, Response, Unset
 
 
@@ -28,12 +28,14 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[list["Agent"]]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[list["AgentRender"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
         for response_200_item_data in _response_200:
-            response_200_item = Agent.from_dict(response_200_item_data)
+            response_200_item = AgentRender.from_dict(response_200_item_data)
 
             response_200.append(response_200_item)
 
@@ -44,7 +46,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[list["Agent"]]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[list["AgentRender"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -57,7 +61,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Response[list["Agent"]]:
+) -> Response[list["AgentRender"]]:
     """List all agents
 
     Args:
@@ -68,7 +72,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['Agent']]
+        Response[list['AgentRender']]
     """
 
     kwargs = _get_kwargs(
@@ -86,7 +90,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Optional[list["Agent"]]:
+) -> Optional[list["AgentRender"]]:
     """List all agents
 
     Args:
@@ -97,7 +101,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['Agent']
+        list['AgentRender']
     """
 
     return sync_detailed(
@@ -110,7 +114,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Response[list["Agent"]]:
+) -> Response[list["AgentRender"]]:
     """List all agents
 
     Args:
@@ -121,7 +125,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['Agent']]
+        Response[list['AgentRender']]
     """
 
     kwargs = _get_kwargs(
@@ -137,7 +141,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
-) -> Optional[list["Agent"]]:
+) -> Optional[list["AgentRender"]]:
     """List all agents
 
     Args:
@@ -148,7 +152,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['Agent']
+        list['AgentRender']
     """
 
     return (
