@@ -560,45 +560,6 @@ type ModelPrivateCluster struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// ModelProvider defines model for ModelProvider.
-type ModelProvider struct {
-	// Comment Model provider description
-	Comment *string `json:"comment,omitempty"`
-
-	// Config Model provider config
-	Config *ProviderConfig `json:"config,omitempty"`
-
-	// CreatedAt The date and time when the resource was created
-	CreatedAt *string `json:"createdAt,omitempty"`
-
-	// CreatedBy The user or service account who created the resource
-	CreatedBy *string `json:"createdBy,omitempty"`
-
-	// DisplayName Model provider display name
-	DisplayName *string `json:"displayName,omitempty"`
-
-	// Labels Labels
-	Labels *MetadataLabels `json:"labels,omitempty"`
-
-	// Name Model provider name
-	Name *string `json:"name,omitempty"`
-
-	// Type Model provider type
-	Type *string `json:"type,omitempty"`
-
-	// UpdatedAt The date and time when the resource was updated
-	UpdatedAt *string `json:"updatedAt,omitempty"`
-
-	// UpdatedBy The user or service account who updated the resource
-	UpdatedBy *string `json:"updatedBy,omitempty"`
-
-	// Workspace Workspace name
-	Workspace *string `json:"workspace,omitempty"`
-}
-
-// ModelProviderName Model provider name
-type ModelProviderName = string
-
 // ModelRelease Model release, used to deploy a model from one environment to another
 type ModelRelease struct {
 	// From Origin environment from which the model is released
@@ -622,9 +583,6 @@ type ModelSpec struct {
 	// Flavors Types of hardware available for deployments
 	Flavors                *Flavors                    `json:"flavors,omitempty"`
 	IntegrationConnections *IntegrationConnectionsList `json:"integrationConnections,omitempty"`
-
-	// ModelProvider Model provider name
-	ModelProvider *ModelProviderName `json:"modelProvider,omitempty"`
 
 	// PodTemplate Pod template specification
 	PodTemplate *PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -832,23 +790,14 @@ type PrivateCluster struct {
 	Workspace *string `json:"workspace,omitempty"`
 }
 
-// ProviderConfig Model provider config
-type ProviderConfig struct {
-	// Filename The file name to use for the model
-	Filename *string `json:"filename,omitempty"`
-
-	// PresignedUrl The presigned URLs to upload the model to
-	PresignedUrl *[]interface{} `json:"presigned_url,omitempty"`
-
-	// Runtime Set of configurations for a deployment
-	Runtime *Runtime `json:"runtime,omitempty"`
-}
-
 // QPS Query per second per element, can be per response status code (e.g. 200, 400) or per location
 type QPS struct {
 	// RegionCode QPS for location
 	RegionCode *float32 `json:"region_code,omitempty"`
 }
+
+// Quotas Workspace quotas
+type Quotas = interface{}
 
 // Repository Repository
 type Repository struct {
@@ -1117,6 +1066,9 @@ type Workspace struct {
 	// Name Workspace name
 	Name *string `json:"name,omitempty"`
 
+	// Quotasomitempty Workspace quotas
+	Quotasomitempty *Quotas `json:"quotas,omitempty,omitempty"`
+
 	// Region Workspace write region
 	Region *string `json:"region,omitempty"`
 
@@ -1126,6 +1078,9 @@ type Workspace struct {
 	// UpdatedBy The user or service account who updated the resource
 	UpdatedBy *string `json:"updatedBy,omitempty"`
 }
+
+// WorkspaceQuotas Workspace quotas
+type WorkspaceQuotas = interface{}
 
 // WorkspaceUser Workspace user
 type WorkspaceUser struct {
@@ -1321,12 +1276,6 @@ type CreateIntegrationConnectionJSONRequestBody = IntegrationConnection
 
 // UpdateIntegrationConnectionJSONRequestBody defines body for UpdateIntegrationConnection for application/json ContentType.
 type UpdateIntegrationConnectionJSONRequestBody = IntegrationConnection
-
-// CreateModelProviderJSONRequestBody defines body for CreateModelProvider for application/json ContentType.
-type CreateModelProviderJSONRequestBody = ModelProvider
-
-// UpdateModelProviderJSONRequestBody defines body for UpdateModelProvider for application/json ContentType.
-type UpdateModelProviderJSONRequestBody = ModelProvider
 
 // CreateModelJSONRequestBody defines body for CreateModel for application/json ContentType.
 type CreateModelJSONRequestBody = Model
@@ -1597,25 +1546,6 @@ type ClientInterface interface {
 	// GetMetrics request
 	GetMetrics(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListModelProviders request
-	ListModelProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateModelProviderWithBody request with any body
-	CreateModelProviderWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	CreateModelProvider(ctx context.Context, body CreateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteModelProvider request
-	DeleteModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetModelProvider request
-	GetModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// UpdateModelProviderWithBody request with any body
-	UpdateModelProviderWithBody(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	UpdateModelProvider(ctx context.Context, modelProviderName string, body UpdateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListModels request
 	ListModels(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1781,6 +1711,9 @@ type ClientInterface interface {
 
 	// LeaveWorkspace request
 	LeaveWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkspaceQuotasRequest request
+	WorkspaceQuotasRequest(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // RegisterCliCommands registers CLI commands for the client
@@ -1914,21 +1847,6 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for GetMetrics
 	reg.CliCommand(ctx, "GetMetrics", c.GetMetrics)
-
-	// Register CLI commands for ListModelProviders
-	reg.CliCommand(ctx, "ListModelProviders", c.ListModelProviders)
-
-	// Register CLI commands for CreateModelProvider
-	reg.CliCommand(ctx, "CreateModelProvider", c.CreateModelProvider)
-
-	// Register CLI commands for DeleteModelProvider
-	reg.CliCommand(ctx, "DeleteModelProvider", c.DeleteModelProvider)
-
-	// Register CLI commands for GetModelProvider
-	reg.CliCommand(ctx, "GetModelProvider", c.GetModelProvider)
-
-	// Register CLI commands for UpdateModelProvider
-	reg.CliCommand(ctx, "UpdateModelProvider", c.UpdateModelProvider)
 
 	// Register CLI commands for ListModels
 	reg.CliCommand(ctx, "ListModels", c.ListModels)
@@ -2073,6 +1991,9 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for LeaveWorkspace
 	reg.CliCommand(ctx, "LeaveWorkspace", c.LeaveWorkspace)
+
+	// Register CLI commands for WorkspaceQuotasRequest
+	reg.CliCommand(ctx, "WorkspaceQuotasRequest", c.WorkspaceQuotasRequest)
 
 }
 
@@ -2690,90 +2611,6 @@ func (c *Client) ListLocations(ctx context.Context, reqEditors ...RequestEditorF
 
 func (c *Client) GetMetrics(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetMetricsRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListModelProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListModelProvidersRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateModelProviderWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateModelProviderRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateModelProvider(ctx context.Context, body CreateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateModelProviderRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteModelProviderRequest(c.Server, modelProviderName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetModelProvider(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelProviderRequest(c.Server, modelProviderName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateModelProviderWithBody(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateModelProviderRequestWithBody(c.Server, modelProviderName, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateModelProvider(ctx context.Context, modelProviderName string, body UpdateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateModelProviderRequest(c.Server, modelProviderName, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3482,6 +3319,18 @@ func (c *Client) AcceptWorkspaceInvitation(ctx context.Context, workspaceName st
 
 func (c *Client) LeaveWorkspace(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLeaveWorkspaceRequest(c.Server, workspaceName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkspaceQuotasRequest(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkspaceQuotasRequestRequest(c.Server, workspaceName)
 	if err != nil {
 		return nil, err
 	}
@@ -5230,188 +5079,6 @@ func NewGetMetricsRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewListModelProvidersRequest generates requests for ListModelProviders
-func NewListModelProvidersRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/model_providers")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateModelProviderRequest calls the generic CreateModelProvider builder with application/json body
-func NewCreateModelProviderRequest(server string, body CreateModelProviderJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateModelProviderRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewCreateModelProviderRequestWithBody generates requests for CreateModelProvider with any type of body
-func NewCreateModelProviderRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/model_providers")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDeleteModelProviderRequest generates requests for DeleteModelProvider
-func NewDeleteModelProviderRequest(server string, modelProviderName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelProviderName", runtime.ParamLocationPath, modelProviderName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/model_providers/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetModelProviderRequest generates requests for GetModelProvider
-func NewGetModelProviderRequest(server string, modelProviderName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelProviderName", runtime.ParamLocationPath, modelProviderName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/model_providers/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateModelProviderRequest calls the generic UpdateModelProvider builder with application/json body
-func NewUpdateModelProviderRequest(server string, modelProviderName string, body UpdateModelProviderJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateModelProviderRequestWithBody(server, modelProviderName, "application/json", bodyReader)
-}
-
-// NewUpdateModelProviderRequestWithBody generates requests for UpdateModelProvider with any type of body
-func NewUpdateModelProviderRequestWithBody(server string, modelProviderName string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelProviderName", runtime.ParamLocationPath, modelProviderName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/model_providers/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -7332,6 +6999,40 @@ func NewLeaveWorkspaceRequest(server string, workspaceName string) (*http.Reques
 	return req, nil
 }
 
+// NewWorkspaceQuotasRequestRequest generates requests for WorkspaceQuotasRequest
+func NewWorkspaceQuotasRequestRequest(server string, workspaceName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "workspaceName", runtime.ParamLocationPath, workspaceName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/workspaces/%s/quotas", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -7522,25 +7223,6 @@ type ClientWithResponsesInterface interface {
 	// GetMetricsWithResponse request
 	GetMetricsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMetricsResponse, error)
 
-	// ListModelProvidersWithResponse request
-	ListModelProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelProvidersResponse, error)
-
-	// CreateModelProviderWithBodyWithResponse request with any body
-	CreateModelProviderWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelProviderResponse, error)
-
-	CreateModelProviderWithResponse(ctx context.Context, body CreateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelProviderResponse, error)
-
-	// DeleteModelProviderWithResponse request
-	DeleteModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*DeleteModelProviderResponse, error)
-
-	// GetModelProviderWithResponse request
-	GetModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error)
-
-	// UpdateModelProviderWithBodyWithResponse request with any body
-	UpdateModelProviderWithBodyWithResponse(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateModelProviderResponse, error)
-
-	UpdateModelProviderWithResponse(ctx context.Context, modelProviderName string, body UpdateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelProviderResponse, error)
-
 	// ListModelsWithResponse request
 	ListModelsWithResponse(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
 
@@ -7706,6 +7388,9 @@ type ClientWithResponsesInterface interface {
 
 	// LeaveWorkspaceWithResponse request
 	LeaveWorkspaceWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*LeaveWorkspaceResponse, error)
+
+	// WorkspaceQuotasRequestWithResponse request
+	WorkspaceQuotasRequestWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*WorkspaceQuotasRequestResponse, error)
 }
 
 type ListAgentsResponse struct {
@@ -8643,116 +8328,6 @@ func (r GetMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListModelProvidersResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ModelProvider
-}
-
-// Status returns HTTPResponse.Status
-func (r ListModelProvidersResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListModelProvidersResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateModelProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ModelProvider
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateModelProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateModelProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteModelProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ModelProvider
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteModelProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteModelProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetModelProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ModelProvider
-}
-
-// Status returns HTTPResponse.Status
-func (r GetModelProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetModelProviderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type UpdateModelProviderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ModelProvider
-}
-
-// Status returns HTTPResponse.Status
-func (r UpdateModelProviderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r UpdateModelProviderResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -9874,6 +9449,28 @@ func (r LeaveWorkspaceResponse) StatusCode() int {
 	return 0
 }
 
+type WorkspaceQuotasRequestResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WorkspaceQuotas
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkspaceQuotasRequestResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkspaceQuotasRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 // ListAgentsWithResponse request returning *ListAgentsResponse
 func (c *ClientWithResponses) ListAgentsWithResponse(ctx context.Context, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error) {
 	rsp, err := c.ListAgents(ctx, params, reqEditors...)
@@ -10331,67 +9928,6 @@ func (c *ClientWithResponses) GetMetricsWithResponse(ctx context.Context, reqEdi
 		return nil, err
 	}
 	return ParseGetMetricsResponse(rsp)
-}
-
-// ListModelProvidersWithResponse request returning *ListModelProvidersResponse
-func (c *ClientWithResponses) ListModelProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelProvidersResponse, error) {
-	rsp, err := c.ListModelProviders(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListModelProvidersResponse(rsp)
-}
-
-// CreateModelProviderWithBodyWithResponse request with arbitrary body returning *CreateModelProviderResponse
-func (c *ClientWithResponses) CreateModelProviderWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelProviderResponse, error) {
-	rsp, err := c.CreateModelProviderWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateModelProviderResponse(rsp)
-}
-
-func (c *ClientWithResponses) CreateModelProviderWithResponse(ctx context.Context, body CreateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelProviderResponse, error) {
-	rsp, err := c.CreateModelProvider(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateModelProviderResponse(rsp)
-}
-
-// DeleteModelProviderWithResponse request returning *DeleteModelProviderResponse
-func (c *ClientWithResponses) DeleteModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*DeleteModelProviderResponse, error) {
-	rsp, err := c.DeleteModelProvider(ctx, modelProviderName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteModelProviderResponse(rsp)
-}
-
-// GetModelProviderWithResponse request returning *GetModelProviderResponse
-func (c *ClientWithResponses) GetModelProviderWithResponse(ctx context.Context, modelProviderName string, reqEditors ...RequestEditorFn) (*GetModelProviderResponse, error) {
-	rsp, err := c.GetModelProvider(ctx, modelProviderName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetModelProviderResponse(rsp)
-}
-
-// UpdateModelProviderWithBodyWithResponse request with arbitrary body returning *UpdateModelProviderResponse
-func (c *ClientWithResponses) UpdateModelProviderWithBodyWithResponse(ctx context.Context, modelProviderName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateModelProviderResponse, error) {
-	rsp, err := c.UpdateModelProviderWithBody(ctx, modelProviderName, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateModelProviderResponse(rsp)
-}
-
-func (c *ClientWithResponses) UpdateModelProviderWithResponse(ctx context.Context, modelProviderName string, body UpdateModelProviderJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelProviderResponse, error) {
-	rsp, err := c.UpdateModelProvider(ctx, modelProviderName, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateModelProviderResponse(rsp)
 }
 
 // ListModelsWithResponse request returning *ListModelsResponse
@@ -10912,6 +10448,15 @@ func (c *ClientWithResponses) LeaveWorkspaceWithResponse(ctx context.Context, wo
 		return nil, err
 	}
 	return ParseLeaveWorkspaceResponse(rsp)
+}
+
+// WorkspaceQuotasRequestWithResponse request returning *WorkspaceQuotasRequestResponse
+func (c *ClientWithResponses) WorkspaceQuotasRequestWithResponse(ctx context.Context, workspaceName string, reqEditors ...RequestEditorFn) (*WorkspaceQuotasRequestResponse, error) {
+	rsp, err := c.WorkspaceQuotasRequest(ctx, workspaceName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkspaceQuotasRequestResponse(rsp)
 }
 
 // ParseListAgentsResponse parses an HTTP response from a ListAgentsWithResponse call
@@ -11972,136 +11517,6 @@ func ParseGetMetricsResponse(rsp *http.Response) (*GetMetricsResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Metrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListModelProvidersResponse parses an HTTP response from a ListModelProvidersWithResponse call
-func ParseListModelProvidersResponse(rsp *http.Response) (*ListModelProvidersResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListModelProvidersResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ModelProvider
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateModelProviderResponse parses an HTTP response from a CreateModelProviderWithResponse call
-func ParseCreateModelProviderResponse(rsp *http.Response) (*CreateModelProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateModelProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ModelProvider
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteModelProviderResponse parses an HTTP response from a DeleteModelProviderWithResponse call
-func ParseDeleteModelProviderResponse(rsp *http.Response) (*DeleteModelProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteModelProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ModelProvider
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetModelProviderResponse parses an HTTP response from a GetModelProviderWithResponse call
-func ParseGetModelProviderResponse(rsp *http.Response) (*GetModelProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetModelProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ModelProvider
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseUpdateModelProviderResponse parses an HTTP response from a UpdateModelProviderWithResponse call
-func ParseUpdateModelProviderResponse(rsp *http.Response) (*UpdateModelProviderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &UpdateModelProviderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ModelProvider
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -13383,153 +12798,176 @@ func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, e
 	return response, nil
 }
 
+// ParseWorkspaceQuotasRequestResponse parses an HTTP response from a WorkspaceQuotasRequestWithResponse call
+func ParseWorkspaceQuotasRequestResponse(rsp *http.Response) (*WorkspaceQuotasRequestResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkspaceQuotasRequestResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WorkspaceQuotas
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"BMVq4oKaPfz+8L8BAAD//zs5fwS9GwEA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
