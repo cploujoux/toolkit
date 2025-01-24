@@ -50,13 +50,6 @@ var resources = []*Resource{
 		WithStatus:       true,
 	},
 	{
-		Kind:     "ModelProvider",
-		Short:    "mlp",
-		Plural:   "modelproviders",
-		Singular: "modelprovider",
-		SpecType: reflect.TypeOf(sdk.ModelProvider{}),
-	},
-	{
 		Kind:             "Function",
 		Short:            "fn",
 		Plural:           "functions",
