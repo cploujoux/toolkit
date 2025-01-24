@@ -6,7 +6,7 @@ import {
   loadCredentials,
   loadCredentialsFromSettings,
 } from "./credentials";
-import { BearerToken } from "./device_mode";
+import { BearerToken } from "./deviceMode";
 import { Credentials } from "./types";
 
 interface RunClientWithCredentials {
@@ -64,7 +64,10 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
 
   if (config.credentials.apiKey) {
     provider = new ApiKeyAuth(config.credentials, config.workspace);
-  } else if (config.credentials.access_token || config.credentials.refresh_token) {
+  } else if (
+    config.credentials.access_token ||
+    config.credentials.refresh_token
+  ) {
     provider = new BearerToken(
       config.credentials,
       config.workspace,
@@ -95,7 +98,7 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
 
 export async function getAuthenticationHeaders(
   settings: any
-): Promise<Record<string, string> | null> {
+): Promise<Record<string, string>> {
   const context = currentContext();
   let credentials: Credentials;
 
@@ -131,7 +134,7 @@ export async function getAuthenticationHeaders(
   }
 
   if (!provider) {
-    return null;
+    return {};
   }
 
   return await provider.getHeaders();

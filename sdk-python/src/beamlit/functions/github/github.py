@@ -18,4 +18,3 @@ def github(name: str, *args):
         msg = f"Invalid mode: {name}"
         raise ValueError(msg)
     return modes[name](*args)
-    return modes[name](*args)
