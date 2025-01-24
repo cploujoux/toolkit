@@ -313,15 +313,15 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 				env = environment
 			}
 			// Print apply summary in table format
-			if len(applyResults) > 0 {
-				fmt.Print("\nSummary:\n\n")
-				fmt.Printf("%-20s %-30s %-10s\n", "KIND", "NAME", "RESULT")
-				fmt.Printf("%-20s %-30s %-10s\n", "----", "----", "------")
-				for _, result := range applyResults {
-					fmt.Printf("%-20s %-30s %-10s\n", result.Kind, result.Name, result.Result.Status)
-				}
-				fmt.Println()
-			}
+			// if len(applyResults) > 0 {
+			// 	fmt.Print("\nSummary:\n\n")
+			// 	fmt.Printf("%-20s %-30s %-10s\n", "KIND", "NAME", "RESULT")
+			// 	fmt.Printf("%-20s %-30s %-10s\n", "----", "----", "------")
+			// 	for _, result := range applyResults {
+			// 		fmt.Printf("%-20s %-30s %-10s\n", result.Kind, result.Name, result.Result.Status)
+			// 	}
+			// }
+			fmt.Println()
 			if len(agents) > 1 {
 				fmt.Printf("Your beamlit agents are ready:\n")
 			} else {
