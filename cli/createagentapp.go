@@ -216,8 +216,8 @@ func retrieveTemplates() ([]string, map[string][]string, error) {
 	return languages, templates, nil
 }
 
-func retrieveTemplateConfig(template string) (*TemplateConfig, error) {
-	url := fmt.Sprintf("https://api.github.com/repos/beamlit/templates/contents/agents/%s/template.yaml", template)
+func retrieveTemplateConfig(language string, template string) (*TemplateConfig, error) {
+	url := fmt.Sprintf("https://api.github.com/repos/beamlit/templates/contents/agents/%s/%s/template.yaml", language, template)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -252,7 +252,7 @@ func retrieveTemplateConfig(template string) (*TemplateConfig, error) {
 }
 
 func promptTemplateConfig(agentAppOptions *CreateAgentAppOptions) {
-	templateConfig, err := retrieveTemplateConfig(agentAppOptions.Template)
+	templateConfig, err := retrieveTemplateConfig(agentAppOptions.Language, agentAppOptions.Template)
 	if err != nil {
 		fmt.Println("Could not retrieve template configuration")
 		os.Exit(0)
@@ -425,6 +425,30 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 	return agentAppOptions
 }
 
+func installPythonDependencies(directory string) error {
+	uvSyncCmd := exec.Command("uv", "sync", "--refresh")
+	uvSyncCmd.Dir = directory
+
+	// Capture both stdout and stderr
+	output, err := uvSyncCmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("failed to run uv sync: %w\nOutput: %s", err, string(output))
+	}
+	return nil
+}
+
+func installTypescriptDependencies(directory string) error {
+	npmInstallCmd := exec.Command("npm", "install")
+	npmInstallCmd.Dir = directory
+
+	// Capture both stdout and stderr
+	output, err := npmInstallCmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("failed to run npm install: %w\nOutput: %s", err, string(output))
+	}
+	return nil
+}
+
 // createAgentApp handles the actual creation of the agent app based on the provided options.
 // It performs the following steps:
 // 1. Creates the project directory
@@ -542,11 +566,17 @@ func createAgentApp(opts CreateAgentAppOptions) error {
 	if err := os.RemoveAll(cloneDir); err != nil {
 		return fmt.Errorf("failed to remove templates directory: %w", err)
 	}
-	// Run uv sync to install dependencies
-	uvSyncCmd := exec.Command("uv", "sync", "--refresh")
-	uvSyncCmd.Dir = opts.Directory
-	if err := uvSyncCmd.Run(); err != nil {
-		return fmt.Errorf("failed to run uv sync: %w", err)
+
+	// Install dependencies based on language
+	switch opts.Language {
+	case "python":
+		if err := installPythonDependencies(opts.Directory); err != nil {
+			return err
+		}
+	case "typescript":
+		if err := installTypescriptDependencies(opts.Directory); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -591,6 +621,21 @@ func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 			if err != nil {
 				fmt.Println("Error creating agent app", err)
 				os.RemoveAll(opts.Directory)
+				return
+			}
+			res, err := client.ListModels(context.Background(), &sdk.ListModelsParams{Environment: &environment})
+			if err != nil {
+				return
+			}
+
+			body, err := io.ReadAll(res.Body)
+			if err != nil {
+				return
+			}
+
+			var models []sdk.Model
+			err = json.Unmarshal(body, &models)
+			if err != nil {
 				return
 			}
 			fmt.Printf(`Your beamlit agent app has been created. Start working on it:
