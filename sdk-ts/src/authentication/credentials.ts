@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import * as yaml from "js-yaml";
 import { homedir } from "os";
 import { join } from "path";
+import { logger } from "../common/logger.js";
 import { Settings } from "../common/settings.js";
 import {
   Config,
@@ -126,7 +127,7 @@ export function loadCredentialsFromSettings(settings: Settings): Credentials {
 export function createHomeDirIfMissing(): void {
   const homeDir = homedir();
   if (!homeDir) {
-    console.error("Error getting home directory");
+    logger.error("Error getting home directory");
     return;
   }
 
@@ -134,14 +135,14 @@ export function createHomeDirIfMissing(): void {
   const credentialsFile = join(credentialsDir, "credentials.json");
 
   if (existsSync(credentialsFile)) {
-    console.warn(
+    logger.warn(
       "You are already logged in. Enter a new API key to overwrite it."
     );
   } else {
     try {
       mkdirSync(credentialsDir, { recursive: true, mode: 0o700 });
     } catch (e) {
-      console.error(`Error creating credentials directory: ${e}`);
+      logger.error(`Error creating credentials directory: ${e}`);
     }
   }
 }
@@ -152,7 +153,7 @@ export function saveCredentials(
 ): void {
   createHomeDirIfMissing();
   if (!credentials.access_token && !credentials.apiKey) {
-    console.info("No credentials to save, error");
+    logger.info("No credentials to save, error");
     return;
   }
 
