@@ -78,7 +78,7 @@ export async function getChatModel(
   const headers = await getAuthenticationHeaders(settings);
   headers["X-Beamlit-Environment"] = environment;
 
-  const jwt = headers["X-Beamlit-Authorization"]?.replace("Bearer ", "") || "";
+  const jwt = headers["X-Beamlit-Authorization"]?.replace("Bearer ", "") || headers["X-Beamlit-Api-Key"] || "";
   const params = { environment };
 
   const chatClasses = {

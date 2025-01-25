@@ -101,14 +101,13 @@ func startUvicornServer(port int, host string, hotreload bool, module string, re
 }
 
 func startTypescriptServer(port int, host string, hotreload bool, module string, remote bool) *exec.Cmd {
-
 	ts := exec.Command(
 		"npx",
 		"tsx",
 		"--tsconfig",
 		"./tsconfig.json",
 	)
-	if !hotreload {
+	if hotreload {
 		ts.Args = append(ts.Args, "--watch")
 	}
 	ts.Args = append(ts.Args, "node_modules/@beamlit/sdk/src/serve/index.ts")
@@ -118,15 +117,17 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 
 	// Set environment variables
 	ts.Env = getServerEnvironment(port, host, module, remote)
+	// Check if src directory exists and is a directory
+	srcInfo, err := os.Stat("src")
 	if module == "" {
-		if _, err := os.Stat("src"); !os.IsNotExist(err) {
+		if err == nil && srcInfo.IsDir() {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", "src.agent.agent"))
 		} else {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", "agent.agent"))
 		}
 	}
 	if os.Getenv("BL_AGENT_FUNCTIONS_DIRECTORY") == "" {
-		if _, err := os.Stat("src/functions"); !os.IsNotExist(err) {
+		if  err == nil && srcInfo.IsDir() {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_AGENT_FUNCTIONS_DIRECTORY=%s", "src/functions"))
 		} else {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_AGENT_FUNCTIONS_DIRECTORY=%s", "functions"))
@@ -140,7 +141,7 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 	}
 	ts.Env = append(ts.Env, fmt.Sprintf("NODE_PATH=%s", nodePath))
 
-	err := ts.Start()
+	err = ts.Start()
 	if err != nil {
 		fmt.Printf("Error starting tsx server: %v\n", err)
 		os.Exit(1)

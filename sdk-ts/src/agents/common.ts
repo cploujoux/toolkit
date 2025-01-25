@@ -28,7 +28,7 @@ export const retrieveWrapperAgent = async (
         console.error(error);
         
         if (warning) {
-          logger.warn(`Error importing function from ${fullPath}: ${error}`);
+          logger.warn(`Error importing agent from ${fullPath}: ${error}`);
         }
       }
     }

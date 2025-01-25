@@ -90,29 +90,9 @@ function getProvider(config: RunClientWithCredentials) {
 }
 
 export function newClientWithCredentials(config: RunClientWithCredentials) {
-  let provider: ApiKeyAuth | BearerToken | ClientCredentials | PublicAuth;
   const settings = getSettings();
+  const provider = getProvider(config);
 
-  if (config.credentials.apiKey) {
-    provider = new ApiKeyAuth(config.credentials, config.workspace);
-  } else if (
-    config.credentials.access_token ||
-    config.credentials.refresh_token
-  ) {
-    provider = new BearerToken(
-      config.credentials,
-      config.workspace,
-      settings.baseUrl
-    );
-  } else if (config.credentials.client_credentials) {
-    provider = new ClientCredentials(
-      config.credentials,
-      config.workspace,
-      settings.baseUrl
-    );
-  } else {
-    provider = new PublicAuth();
-  }
   return createClient(
     createConfig({
       baseUrl: settings.baseUrl,
