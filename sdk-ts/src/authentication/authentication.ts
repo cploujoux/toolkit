@@ -1,13 +1,14 @@
 import { createClient, createConfig } from "@hey-api/client-fetch";
-import { ApiKeyAuth } from "./apikey";
-import { ClientCredentials } from "./clientcredentials";
+import { ApiKeyAuth } from "./apikey.js";
+import { ClientCredentials } from "./clientcredentials.js";
 import {
   currentContext,
   loadCredentials,
   loadCredentialsFromSettings,
-} from "./credentials";
-import { BearerToken } from "./deviceMode";
-import { Credentials } from "./types";
+} from "./credentials.js";
+import { BearerToken } from "./deviceMode.js";
+import { Credentials } from "./types.js";
+import { getSettings } from "../common/settings.js";
 
 interface RunClientWithCredentials {
   credentials: Credentials;
@@ -45,22 +46,20 @@ export function newClient() {
       workspace: context.workspace,
     };
   } else {
-    throw new Error(
-      "No workspace found, use `bl login [WORKSPACE]` to set one"
-    );
-    // TODO: implement settings like in python sdk
-    // const settings = getSettings();
-    // const credentials = loadCredentialsFromSettings(settings);
-    // clientConfig = {
-    //   credentials,
-    //   workspace: settings.workspace,
-    // };
+    const settings = getSettings();
+    const credentials = loadCredentialsFromSettings(settings);
+    clientConfig = {
+      credentials,
+      workspace: settings.workspace,
+    };
   }
-  return newClientWithCredentials(clientConfig);
+  const client = newClientWithCredentials(clientConfig);
+  return client;
 }
 
 export function newClientWithCredentials(config: RunClientWithCredentials) {
   let provider: ApiKeyAuth | BearerToken | ClientCredentials | PublicAuth;
+  const settings = getSettings();
 
   if (config.credentials.apiKey) {
     provider = new ApiKeyAuth(config.credentials, config.workspace);
@@ -71,24 +70,24 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
     provider = new BearerToken(
       config.credentials,
       config.workspace,
-      config.apiUrl || "https://api.beamlit.com/v0"
+      settings.baseUrl
     );
   } else if (config.credentials.client_credentials) {
     provider = new ClientCredentials(
       config.credentials,
       config.workspace,
-      config.apiUrl || "https://api.beamlit.com/v0"
+      settings.baseUrl
     );
   } else {
     provider = new PublicAuth();
   }
   return createClient(
     createConfig({
-      baseUrl: config.apiUrl || "https://api.beamlit.com/v0",
+      baseUrl: settings.baseUrl,
       fetch: async (req) => {
         const headers = await provider.getHeaders();
         Object.entries(headers).forEach(([key, value]) => {
-          req.headers.set(key, value);
+          req.headers.set(key, value as string);
         });
         return fetch(req);
       },

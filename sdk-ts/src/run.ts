@@ -1,6 +1,6 @@
 import { Client } from "@hey-api/client-fetch";
-import { HTTPError } from "./common/error";
-import { getSettings } from "./common/settings";
+import { HTTPError } from "./common/error.js";
+import { getSettings } from "./common/settings.js";
 
 export class RunClient {
   constructor(public client: Client) {}

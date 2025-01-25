@@ -1,8 +1,9 @@
 import { StructuredTool, tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { Agent, AgentChain, listAgents } from "../client";
-import { getSettings } from "../common/settings";
-import { RunClient } from "../run";
+import { listAgents } from "../client/sdk.gen.js";
+import { Agent, AgentChain } from "../client/types.gen.js";
+import { getSettings } from "../common/settings.js";
+import { RunClient } from "../run.js";
 
 export function getChainTool(
   client: RunClient,
@@ -60,7 +61,7 @@ export class ChainToolkit {
       }
       for (const chain of chainEnabled) {
         const agent = agents.data.find(
-          (agent) => agent.metadata?.name === chain.name
+          (agent: Agent) => agent.metadata?.name === chain.name
         );
         if (agent && agent.spec) {
           agent.spec.description = chain.description || agent.spec.description;

@@ -1,12 +1,20 @@
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { CompiledGraph, MemorySaver } from "@langchain/langgraph";
 import { FastifyRequest } from "fastify";
-import { newClient } from "../authentication";
-import { Agent, getModel, listModels } from "../client";
-import { getSettings } from "../common";
+import { newClient } from "../authentication/authentication.js";
+import { getModel, listModels } from "../client/sdk.gen.js";
+import { Agent } from "../client/types.gen.js";
+import { getSettings } from "../common/settings.js";
+import { getFunctions } from "../functions/common.js";
+import { getChatModel } from "./chat.js";
+import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import { StructuredTool } from "@langchain/core/tools";
+import { logger } from "../common/logger.js";
 
-export type CallbackFunctionVariadic = (...args: any[]) => any;
+export type CallbackFunctionAgentVariadic = (...args: any[]) => any;
 
 export type WrapAgentType = (
-  func: CallbackFunctionVariadic,
+  func: CallbackFunctionAgentVariadic,
   options?: AgentOptions
 ) => Promise<AgentBase>;
 
@@ -24,11 +32,12 @@ export type AgentOptions = {
 };
 
 export const wrapAgent: WrapAgentType = async (
-  func: CallbackFunctionVariadic,
+  func: CallbackFunctionAgentVariadic,
   options: AgentOptions | null = null
 ): Promise<AgentBase> => {
   const settings = getSettings();
   const client = newClient();
+
   const { agent, overrideAgent, overrideModel, remoteFunctions, mcpHub } =
     options ?? {};
 
@@ -60,13 +69,20 @@ export const wrapAgent: WrapAgentType = async (
       }
     }
   }
+  const functions = await getFunctions({
+    client,
+    dir: settings.agent.functionsDirectory,
+    mcpHub,
+    remoteFunctions,
+    chain: agent?.spec?.agentChain,
+    warning: settings.agent.model !== null,
+  });
+  settings.agent.functions = functions; 
+  logger.info("functions");
+  logger.info(settings.agent.functions);
   if (!settings.agent.agent) {
-    if (
-      !settings.agent.model &&
-      agent?.metadata?.name &&
-      agent?.spec?.description
-    ) {
-      const { data: models } = await listModels({
+    if (!settings.agent.model) {
+      const { response, data: models } = await listModels({
         client,
         query: { environment: settings.environment },
         throwOnError: false,
@@ -79,19 +95,40 @@ export const wrapAgent: WrapAgentType = async (
             settings.workspace
           }/global-inference-network/models/create`
         );
+      } else {
+        throw new Error(
+          `Cannot initialize agent. No models found. Response: ${response.status}`
+        );
       }
     }
+    
+    const [chatModel, _, __] = await getChatModel(settings.agent.model.metadata.name, settings.agent.model);
+    settings.agent.chatModel = chatModel;
+    settings.agent.agent = createReactAgent({
+      llm: chatModel,
+      tools: settings.agent.functions ?? [],
+      checkpointSaver: new MemorySaver(),
+    });
+  }
+
+  if (functions.length === 0 && !overrideAgent) {
+    throw new Error(`
+      You can define this function in directory ${settings.agent.functionsDirectory}. Here is a sample function you can use:\n\n
+      import { wrapFunction } from '@beamlit/sdk/functions'\n\n
+      wrapFunction(() => return 'Hello, world!', { name: 'hello_world', description: 'This is a sample function' })
+      `);
   }
   return {
     async run(request: FastifyRequest): Promise<any> {
+      const args = {
+        agent: settings.agent.agent as CompiledGraph<any, any, any, any, any, any>,
+        model: settings.agent.model as BaseChatModel,
+        functions: settings.agent.functions as StructuredTool[],
+      };
       if (func.constructor.name === "AsyncFunction") {
-        return await func(request, null);
+        return await func(request, args);
       }
-      return func(request, {
-        agent: settings.agent.agent,
-        model: settings.agent.model,
-        functions: settings.agent.functions,
-      });
+      return func(request, args);
     },
     agent: options?.agent ?? null,
   };

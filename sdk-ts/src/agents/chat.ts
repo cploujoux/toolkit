@@ -1,11 +1,10 @@
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { getAuthenticationHeaders, newClient } from "../authentication";
-import { getModel, Model } from "../client";
-
+import { getAuthenticationHeaders, newClient } from "../authentication/authentication.js";
+import { getModel } from "../client/sdk.gen.js";
 import { ChatOpenAI } from "@langchain/openai";
-import { logger } from "../common/logger";
-import { getSettings } from "../common/settings";
-
+import { logger } from "../common/logger.js";
+import { getSettings } from "../common/settings.js";
+import { Model } from "../client/types.gen.js";
 function getBaseUrl(name: string): string {
   const settings = getSettings();
   return `${settings.runUrl}/${settings.workspace}/models/${name}/v1`;
@@ -136,6 +135,7 @@ export async function getChatModel(
     provider = "openai";
   }
 
+  logger.info({ baseURL: getBaseUrl(name), defaultHeaders: headers, defaultQuery: params });
   const chatOpenAI = new ChatOpenAI(
     { apiKey: "fake_api_key", temperature: 0, model },
     { baseURL: getBaseUrl(name), defaultHeaders: headers, defaultQuery: params }

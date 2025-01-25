@@ -7,11 +7,11 @@ import {
 } from "fastify";
 import { IncomingMessage } from "http";
 import { v4 as uuidv4 } from "uuid";
-import { HTTPError } from "../common/error";
-import { shutdownInstrumentation } from "../common/instrumentation";
-import { logger } from "../common/logger";
-import { getSettings, init } from "../common/settings";
-import { importModule } from "./module";
+import { HTTPError } from "../common/error.js";
+import { shutdownInstrumentation } from "../common/instrumentation.js";
+import { logger } from "../common/logger.js";
+import { importModule } from "../common/module.js";
+import { getSettings, init } from "../common/settings.js";
 
 interface CustomIncomingMessage extends IncomingMessage {
   timeStart: [number, number];
@@ -23,12 +23,16 @@ export async function createApp(
   const app = fastify({
     logger: true,
   });
-
   const asyncLocalStorage = new AsyncLocalStorage<string>();
 
   const settings = init();
   logger.info(`Importing server module: ${settings.server.module}`);
   const func = funcDefault || importModule();
+  if (!func) {
+    throw new Error(
+      `Failed to import server module from ${settings.server.module}`
+    );
+  }
   logger.info(
     `Running server with environment ${settings.environment} on ${settings.server.host}:${settings.server.port}`
   );
@@ -79,7 +83,6 @@ export async function createApp(
   app.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       let response;
-      
       if (func instanceof Promise) {
         const fn = await func;
         response = await fn.run(request);

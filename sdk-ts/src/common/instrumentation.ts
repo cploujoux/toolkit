@@ -16,8 +16,8 @@ import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { FastifyInstance } from "fastify";
-import { getAuthenticationHeaders } from "../authentication/authentication";
-import { getSettings } from "./settings";
+import { getAuthenticationHeaders } from "../authentication/authentication.js";
+import { getSettings } from "./settings.js";
 
 let tracerProvider: NodeTracerProvider | null = null;
 let meterProvider: MeterProvider | null = null;

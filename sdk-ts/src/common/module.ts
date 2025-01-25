@@ -1,9 +1,8 @@
-import { getSettings } from "../common";
-import { logger } from "../common/logger";
+import { getSettings } from "./settings.js";
 
-export function importModule(): any {
+export function importModule(module: string | null = null): any {
   const settings = getSettings();
-  const module = settings.server.module.replace(".", "/");
+  module = module || settings.server.module.replace(".", "/");
   const toRequire =
     process.cwd() + "/" + module.split("/").slice(0, -1).join("/");
   const main_module = require(toRequire);

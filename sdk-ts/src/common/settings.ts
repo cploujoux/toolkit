@@ -2,8 +2,13 @@ import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
 import { z } from "zod";
+import { currentContext } from "../authentication/credentials.js";
 
-let SETTINGS: Settings | null = null;
+declare global {
+  var SETTINGS: Settings | null;
+}
+global.SETTINGS = null;
+
 
 const SettingsAgent = z.object({
   agent: z.any().nullable().default(null),
@@ -26,7 +31,7 @@ const SettingsAuthentication = z.object({
 type SettingsAuthenticationType = z.infer<typeof SettingsAuthentication>;
 
 const SettingsServer = z.object({
-  module: z.string().default("main.main"),
+  module: z.string().default("index.agent"),
   port: z.number().default(80),
   host: z.string().default("0.0.0.0"),
   directory: z.string().default("src"),
@@ -74,10 +79,10 @@ const Settings = z.object({
 type Settings = z.infer<typeof Settings>;
 
 function getSettings(): Settings {
-  if (!SETTINGS) {
-    throw new Error("Settings not initialized");
+  if (!global.SETTINGS) {
+    global.SETTINGS = init();
   }
-  return SETTINGS;
+  return global.SETTINGS;
 }
 
 function parseEnv(value: string) {
@@ -86,7 +91,11 @@ function parseEnv(value: string) {
   } else if (value.toLowerCase() === "false") {
     return false as any;
   } else {
-    return value as any;
+    const numberValue = Number(value);
+    if (!isNaN(numberValue)) {
+      return numberValue;
+    }
+    return value;
   }
 }
 
@@ -124,8 +133,7 @@ function init(options: Partial<Settings> = {}): Settings {
       "utf8"
     );
     yamlData = yaml.parse(yamlFile);
-  } catch (error) {
-  }
+  } catch (error) {}
 
   // Process environment variables
   const envData: Partial<Settings> = {};
@@ -178,9 +186,11 @@ function init(options: Partial<Settings> = {}): Settings {
       process.env.BL_REGISTRY_URL || "https://eu.registry.beamlit.dev";
     envData.appUrl = process.env.BL_APP_URL || "https://app.beamlit.dev";
   }
-  
+  const context = currentContext();
+
   // Merge configurations with precedence: options > env > yaml
-  SETTINGS = Settings.parse({
+  global.SETTINGS = Settings.parse({
+    workspace: context.workspace,
     ...yamlData,
     ...envData,
     ...options,
@@ -201,7 +211,7 @@ function init(options: Partial<Settings> = {}): Settings {
     },
   });
 
-  return SETTINGS;
+  return global.SETTINGS;
 }
 
 export {

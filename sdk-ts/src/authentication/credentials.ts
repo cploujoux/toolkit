@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import * as yaml from "js-yaml";
 import { homedir } from "os";
 import { join } from "path";
-import { Config, ContextConfig, Credentials, WorkspaceConfig } from "./types";
+import { Config, ContextConfig, Credentials, WorkspaceConfig } from "./types.js";
 
 function loadConfig(): Config {
   const config: Config = {
@@ -73,7 +73,7 @@ function saveConfig(config: Config): void {
   );
 }
 
-export function listWorkspaces(): string[] {
+export function listContextWorkspaces(): string[] {
   const config = loadConfig();
   return config.workspaces.map((workspace) => workspace.name);
 }
