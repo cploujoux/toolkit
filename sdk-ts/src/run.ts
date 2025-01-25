@@ -1,4 +1,5 @@
 import { Client } from "@hey-api/client-fetch";
+import { getAuthenticationHeaders } from "./authentication/authentication.js";
 import { HTTPError } from "./common/error.js";
 import { getSettings } from "./common/settings.js";
 
@@ -28,8 +29,11 @@ export class RunClient {
     } = {}
   ) {
     const settings = getSettings();
-    const headers = options.headers || {};
+    let headers = options.headers || {};
     const params = options.params || {};
+
+    const authHeaders = await getAuthenticationHeaders(settings);
+    headers = { ...headers, ...authHeaders };
 
     // Build the path
     let path;
@@ -39,29 +43,18 @@ export class RunClient {
       path = `${settings.workspace}/${resourceType}s/${resourceName}`;
     }
 
-    const url = new URL(path, settings.runUrl).toString();
-
-    const requestOptions: Record<string, any> = {
-      headers,
-      params: { environment, ...params },
-    };
-
-    if (options.data) {
-      requestOptions.data = options.data;
-    }
-    if (options.json) {
-      requestOptions.json = options.json;
-    }
-
-    const { response } = await this.client.request({
+    const { response, data } = await this.client.request({
+      baseUrl: settings.runUrl,
+      url: path,
       method,
-      url,
-      ...requestOptions,
+      body: options.json || options.data,
+      query: { environment, ...params },
+      headers,
     });
+    
     if (response.status >= 400) {
-      const error = await response.text();
-      throw new HTTPError(response.status, error);
+      throw new HTTPError(response.status, JSON.stringify(data));
     }
-    return response;
+    return data;
   }
 }

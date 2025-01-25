@@ -77,9 +77,7 @@ export const wrapAgent: WrapAgentType = async (
     chain: agent?.spec?.agentChain,
     warning: settings.agent.model !== null,
   });
-  settings.agent.functions = functions; 
-  logger.info("functions");
-  logger.info(settings.agent.functions);
+  settings.agent.functions = functions;
   if (!settings.agent.agent) {
     if (!settings.agent.model) {
       const { response, data: models } = await listModels({

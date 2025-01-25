@@ -35,16 +35,6 @@ export const wrapFunction: WrapFunctionType = async (
   options: FunctionOptions | null = null
 ): Promise<FunctionBase> => {
   const settings = getSettings();
-  const params = func
-    .toString()
-    .replace(/[/][/].*$/gm, "") // Remove single-line comments
-    .replace(/[/][*][^/*]*[*][/]/g, "") // Remove multi-line comments
-    .match(/\(([^)]*)\)/)?.[1] // Extract parameters
-    .split(",")
-    .filter(Boolean)
-    .map((param) => {
-      return param.trim();
-    });
 
   const description =
     options?.function?.spec?.description ?? options?.description ?? "";
@@ -74,7 +64,7 @@ export const wrapFunction: WrapFunctionType = async (
       client,
       functionBeamlit.metadata?.name || ""
     );
-    toolkit.initialize();
+    await toolkit.initialize();
     toolBeamlit = toolkit.getTools();
   } else {
     toolBeamlit = [

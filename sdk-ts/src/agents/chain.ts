@@ -21,7 +21,7 @@ export function getChainTool(
         "POST",
         { json: args }
       );
-      return result.text;
+      return result;
     },
     {
       name,

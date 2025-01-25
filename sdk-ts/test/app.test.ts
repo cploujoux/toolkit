@@ -40,7 +40,6 @@ describe("App", () => {
       method: "POST",
       url: "/",
     });
-    console.log(response.body);
     expect(response.statusCode).toBe(200);
     expect(response.body).toBe("test");
     fs.unlinkSync(mainFile);

@@ -6,8 +6,8 @@ import z from "zod";
 import { ChainToolkit } from "../agents/chain.js";
 import { newClient } from "../authentication/authentication.js";
 import { AgentChain, StoreFunctionParameter } from "../client/types.gen.js";
-import { getSettings } from "../common/settings.js";
 import { logger } from "../common/logger.js";
+import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 import { FunctionBase } from "./base.js";
 import { MCPClient, MCPToolkit } from "./mcp.js";
@@ -80,7 +80,6 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
             for (const exportedItem of Object.values(module)) {
               const functionBase = (await exportedItem) as FunctionBase;
               if (functionBase?.tools) {
-                logger.info(functionBase.tools);
                 functions.push(...functionBase.tools);
               }
             }
@@ -99,24 +98,28 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   }
 
   if (remoteFunctions) {
-    remoteFunctions.forEach((name) => {
-      const toolkit = new RemoteToolkit(client, name);
-      toolkit.initialize();
-      functions.push(...toolkit.getTools());
-    });
+    await Promise.all(
+      remoteFunctions.map(async (name) => {
+        const toolkit = new RemoteToolkit(client, name);
+        await toolkit.initialize();
+        functions.push(...toolkit.getTools());
+      })
+    );
   }
   if (mcpHub) {
-    mcpHub.forEach((serverName) => {
-      const mcpClient = new MCPClient(client, serverName);
-      const toolkit = new MCPToolkit(mcpClient);
-      toolkit.initialize();
-      functions.push(...toolkit.getTools());
-    });
+    await Promise.all(
+      mcpHub.map(async (serverName) => {
+        const mcpClient = new MCPClient(client, serverName);
+        const toolkit = new MCPToolkit(mcpClient);
+        await toolkit.initialize();
+        functions.push(...toolkit.getTools());
+      })
+    );
   }
   if (chain) {
     const runClient = new RunClient(client);
     const toolkit = new ChainToolkit(runClient, chain);
-    toolkit.initialize();
+    await toolkit.initialize();
     functions.push(...toolkit.getTools());
   }
   return functions;

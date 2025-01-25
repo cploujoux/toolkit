@@ -58,10 +58,11 @@ export class MCPClient {
   }
 
   async callTool(toolName: string, ...args: any[]): Promise<any> {
-    const url = `${this.settings.mcpHubUrl}/${this.serverName}/tools/call`;
+    const url = `${this.serverName}/tools/call`;
     const { data } = await this.client.request(
       {
         method: "POST",
+        baseUrl: this.settings.mcpHubUrl,
         url,
         headers: this.headers,
         body: { name: toolName, arguments: args },
