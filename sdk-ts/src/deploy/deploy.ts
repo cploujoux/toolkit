@@ -42,8 +42,10 @@ COPY package.json /beamlit/package.json
 COPY package-lock.json /beamlit/package-lock.json
 RUN npm i
 
-COPY README.md /beamlit/README.md
-COPY LICENSE /beamlit/LICENSE
+# Copy source code and utils files
+COPY README.m[d] /beamlit/README.md
+COPY LICENS[E] /beamlit/LICENSE
+COPY tsconfig.jso[n] /beamlit/tsconfig.json
 COPY ${settings.server.directory} /beamlit/src
 
 ENTRYPOINT [${cmdStr}]
