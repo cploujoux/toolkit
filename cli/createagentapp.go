@@ -38,6 +38,7 @@ type CreateAgentAppOptions struct {
 	Directory          string             // Target directory for the new agent app
 	ProjectName        string             // Name of the project
 	ProjectDescription string             // Description of the project
+	Language           string             // Language to use for the project
 	Template           string             // Template to use for the project
 	Author             string             // Author of the project
 	TemplateOptions    map[string]*string // Options for the template
@@ -159,37 +160,60 @@ func retrieveModels() ([]sdk.Model, error) {
 // retrieveTemplates retrieves the list of available templates from the templates repository.
 // It fetches the repository's tree structure and extracts the paths of all directories.
 // Returns a list of template names or an error if the retrieval fails.
-func retrieveTemplates() ([]string, error) {
+func retrieveTemplates() ([]string, map[string][]string, error) {
+	var scriptErr error
+	languages := []string{}
+	templates := map[string][]string{}
+	spinnerErr := spinner.New().
+		Title("Retrieving templates...").
+		Action(func() {
+			url := "https://api.github.com/repos/beamlit/templates/git/trees/main?recursive=1"
 
-	url := "https://api.github.com/repos/beamlit/templates/git/trees/main?recursive=1"
+			req, err := http.NewRequest("GET", url, nil)
+			if err != nil {
+				scriptErr = err
+				return
+			}
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
+			res, err := http.DefaultClient.Do(req)
+			if err != nil {
+				scriptErr = err
+				return
+			}
 
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
+			defer res.Body.Close()
+			body, err := io.ReadAll(res.Body)
+			if err != nil {
+				scriptErr = err
+				return
+			}
+			var treeResponse GithubTreeResponse
+			err = json.Unmarshal(body, &treeResponse)
+			if err != nil {
+				scriptErr = err
+				return
+			}
+			for _, tree := range treeResponse.Tree {
+				if strings.HasPrefix(tree.Path, "agents/") && len(strings.Split(tree.Path, "/")) == 3 {
+					language := strings.Split(tree.Path, "/")[1]
+					if !slices.Contains(languages, language) {
+						languages = append(languages, language)
+					}
+					if _, ok := templates[language]; !ok {
+						templates[language] = []string{}
+					}
+					templates[language] = append(templates[language], strings.Split(tree.Path, "/")[2])
+				}
+			}
+		}).
+		Run()
+	if spinnerErr != nil {
+		return nil, nil, spinnerErr
 	}
-
-	defer res.Body.Close()
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
+	if scriptErr != nil {
+		return nil, nil, scriptErr
 	}
-	var treeResponse GithubTreeResponse
-	err = json.Unmarshal(body, &treeResponse)
-	if err != nil {
-		return nil, err
-	}
-	templates := []string{}
-	for _, tree := range treeResponse.Tree {
-		if strings.HasPrefix(tree.Path, "agents/") && len(strings.Split(tree.Path, "/")) == 2 {
-			templates = append(templates, strings.Split(tree.Path, "/")[1])
-		}
-	}
-	return templates, nil
+	return languages, templates, nil
 }
 
 func retrieveTemplateConfig(template string) (*TemplateConfig, error) {
@@ -351,6 +375,15 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 	} else {
 		agentAppOptions.Author = "beamlit"
 	}
+	languages, templates, err := retrieveTemplates()
+	if err != nil {
+		fmt.Println("Could not retrieve templates")
+		os.Exit(0)
+	}
+	languagesOptions := []huh.Option[string]{}
+	for _, language := range languages {
+		languagesOptions = append(languagesOptions, huh.NewOption(language, language))
+	}
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
@@ -358,12 +391,18 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 				Description("Name of your agent app").
 				Value(&agentAppOptions.ProjectName),
 			huh.NewSelect[string]().
+				Title("Language").
+				Description("Language to use for your agent app").
+				Height(5).
+				Options(languagesOptions...).
+				Value(&agentAppOptions.Language),
+			huh.NewSelect[string]().
 				Title("Template").
 				Description("Template to use for your agent app").
 				Height(5).
 				OptionsFunc(func() []huh.Option[string] {
-					templates, err := retrieveTemplates()
-					if err != nil {
+					templates := templates[agentAppOptions.Language]
+					if len(templates) == 0 {
 						return []huh.Option[string]{}
 					}
 					options := []huh.Option[string]{}
@@ -444,7 +483,7 @@ func createAgentApp(opts CreateAgentAppOptions) error {
 			}
 		}
 	}
-	templateDir := filepath.Join(cloneDir, "agents", opts.Template)
+	templateDir := filepath.Join(cloneDir, "agents", opts.Language, opts.Template)
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
