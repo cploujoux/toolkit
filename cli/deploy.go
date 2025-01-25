@@ -37,6 +37,7 @@ generate_beamlit_deployment("%s", "%s")
 	cmd.Stderr = os.Stderr
 	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", module))
 	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_DIRECTORY=%s", directory))
+	cmd.Env = append(cmd.Env, "BL_DEPLOY=true")
 	if os.Getenv("BL_ENV") != "" {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
 	}

@@ -51,6 +51,36 @@ export type GetFunctionsOptions = {
   warning?: boolean;
 };
 
+export const retrieveWrapperFunction = async (dir: string, warning: boolean) => {
+  const functions: FunctionBase[] = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      functions.push(...await retrieveWrapperFunction(fullPath, warning));
+    } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".js")) {
+      try {
+        const module = require(`${process.cwd()}/${fullPath}`);
+        for (const exportedItem of Object.values(module)) {
+          const functionBase = (await exportedItem) as FunctionBase;
+          if (functionBase?.tools) {
+            functions.push(functionBase);
+          }
+        }
+      } catch (error) {
+        if (warning) {
+          logger.warn(
+            `Error importing function from ${fullPath}: ${error}`
+          );
+        }
+      }
+    }
+  } 
+  return functions;
+}
+
 export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   const settings = getSettings();
   let { client, dir, warning } = options;
@@ -65,36 +95,10 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
 
   if (dir && fs.existsSync(dir)) {
     logger.info(`Importing functions from ${dir}`);
-    // Walk through all TypeScript files in functions directory and subdirectories
-    const walkDir = async (dir: string) => {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-
-        if (entry.isDirectory()) {
-          walkDir(fullPath);
-        } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".js")) {
-          try {
-            const module = require(`${process.cwd()}/${fullPath}`);
-            for (const exportedItem of Object.values(module)) {
-              const functionBase = (await exportedItem) as FunctionBase;
-              if (functionBase?.tools) {
-                functions.push(...functionBase.tools);
-              }
-            }
-          } catch (error) {
-            if (warning) {
-              logger.warn(
-                `Error importing function from ${fullPath}: ${error}`
-              );
-            }
-          }
-        }
-      }
-    };
-
-    await walkDir(dir);
+    const functionsBeamlit = await retrieveWrapperFunction(dir, warning ?? false);
+    functionsBeamlit.forEach(func => {
+      functions.push(...func.tools);
+    });
   }
 
   if (remoteFunctions) {

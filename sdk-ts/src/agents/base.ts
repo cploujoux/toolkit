@@ -9,7 +9,6 @@ import { getFunctions } from "../functions/common.js";
 import { getChatModel } from "./chat.js";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { StructuredTool } from "@langchain/core/tools";
-import { logger } from "../common/logger.js";
 
 export type CallbackFunctionAgentVariadic = (...args: any[]) => any;
 
@@ -36,8 +35,16 @@ export const wrapAgent: WrapAgentType = async (
   options: AgentOptions | null = null
 ): Promise<AgentBase> => {
   const settings = getSettings();
-  const client = newClient();
+  if (settings.deploy) {
+    return {
+      async run(request: FastifyRequest): Promise<any> {
+        return await func(request);
+      },
+      agent: options?.agent ?? null,
+    };
+  }
 
+  const client = newClient();
   const { agent, overrideAgent, overrideModel, remoteFunctions, mcpHub } =
     options ?? {};
 

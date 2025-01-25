@@ -74,6 +74,7 @@ const Settings = z.object({
     jwt: null,
     clientCredentials: null,
   }),
+  deploy: z.boolean().default(false),
 });
 
 type Settings = z.infer<typeof Settings>;
