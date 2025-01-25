@@ -71,7 +71,7 @@ export class ClientCredentials {
       const claims = JSON.parse(claimsBytes.toString());
       const expTime = new Date(claims.exp * 1000);
       const currentTime = new Date();
-            
+
       // Refresh if token expires in less than 10 minutes
       if (currentTime.getTime() + 10 * 60 * 1000 > expTime.getTime()) {
         return await this.doRefresh();

@@ -1,8 +1,8 @@
+import { Client } from "@hey-api/client-fetch";
 import { StructuredTool, tool } from "@langchain/core/tools";
 import { ListToolsResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { getSettings, Settings } from "../common/settings.js";
-import { Client } from "@hey-api/client-fetch";
 
 type MCPProperty = {
   type: string;
@@ -35,7 +35,7 @@ export class MCPClient {
   private serverName: string;
   private headers: Record<string, string>;
   private settings: Settings;
-  
+
   constructor(client: Client, serverName: string) {
     this.settings = getSettings();
     this.client = client;
@@ -47,27 +47,23 @@ export class MCPClient {
 
   async listTools(): Promise<ListToolsResult> {
     const url = `${this.settings.mcpHubUrl}/${this.serverName}/tools/list`;
-    const { data } = await this.client.request(
-      {
-        method: "GET",
-        url,
-        headers: this.headers,
-      }
-    );
+    const { data } = await this.client.request({
+      method: "GET",
+      url,
+      headers: this.headers,
+    });
     return data as ListToolsResult;
   }
 
   async callTool(toolName: string, ...args: any[]): Promise<any> {
     const url = `${this.serverName}/tools/call`;
-    const { data } = await this.client.request(
-      {
-        method: "POST",
-        baseUrl: this.settings.mcpHubUrl,
-        url,
-        headers: this.headers,
-        body: { name: toolName, arguments: args },
-      }
-    );
+    const { data } = await this.client.request({
+      method: "POST",
+      baseUrl: this.settings.mcpHubUrl,
+      url,
+      headers: this.headers,
+      body: { name: toolName, arguments: args },
+    });
     return data;
   }
 }

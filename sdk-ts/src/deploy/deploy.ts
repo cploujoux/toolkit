@@ -6,11 +6,11 @@ import { AgentBase } from "../agents/base";
 import { retrieveWrapperAgent } from "../agents/common";
 import { newClient } from "../authentication";
 import { Agent, Function, getAgent } from "../client";
+import { logger } from "../common";
 import { init, Settings } from "../common/settings";
 import { slugify } from "../common/slugify";
 import { FunctionBase } from "../functions/base";
 import { retrieveWrapperFunction } from "../functions/common";
-import { logger } from "../common";
 
 const generateDockerfile = (
   settings: Settings,
@@ -55,6 +55,7 @@ COPY README.m[d] /beamlit/README.md
 COPY LICENS[E] /beamlit/LICENSE
 COPY tsconfig.jso[n] /beamlit/tsconfig.json
 COPY ${settings.server.directory} /beamlit/src
+COPY index.t[s] /beamlit/index.ts
 
 ENTRYPOINT [${cmdStr}]
 `;

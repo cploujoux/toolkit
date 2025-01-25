@@ -7,9 +7,9 @@ import {
 } from "../client/types.gen.js";
 import { getSettings } from "../common/settings.js";
 import { slugify } from "../common/slugify.js";
+import { newClient } from "../index.js";
 import { parametersToZodSchema } from "./common.js";
 import { RemoteToolkit } from "./remote.js";
-import { newClient } from "../index.js";
 
 export type CallbackFunctionVariadic = (...args: any[]) => any;
 
@@ -36,7 +36,7 @@ export const wrapFunction: WrapFunctionType = async (
 ): Promise<FunctionBase> => {
   const settings = getSettings();
   const client = newClient();
-  
+
   const description =
     options?.function?.spec?.description ?? options?.description ?? "";
 
