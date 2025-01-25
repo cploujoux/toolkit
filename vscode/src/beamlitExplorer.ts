@@ -7,7 +7,7 @@ import {
   ListIntegrationConnectionsResponse,
   ListModelsResponse,
   ListPoliciesResponse,
-} from "@beamlit/sdk/src/client/types.gen";
+} from "@beamlit/sdk";
 import path from "path";
 import * as vscode from "vscode";
 import { BeamlitWorkspaceProvider } from "./beamlitWorkspaceProvider";

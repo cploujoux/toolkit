@@ -1,4 +1,3 @@
-import { newClient } from "@beamlit/sdk/src/authentication/authentication";
 import {
   listAgents,
   ListAgentsResponse,
@@ -12,7 +11,8 @@ import {
   ListModelsResponse,
   listPolicies,
   ListPoliciesResponse,
-} from "@beamlit/sdk/src/client";
+  newClient
+} from "@beamlit/sdk";
 
 export class BeamlitWorkspaceProvider {
   private functions: ListFunctionsResponse;

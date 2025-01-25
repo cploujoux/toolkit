@@ -5,8 +5,8 @@ import {
   getIntegrationConnection,
   getModel,
   getPolicy,
+  newClient
 } from "@beamlit/sdk";
-import { newClient } from "@beamlit/sdk/src/authentication/authentication";
 import * as yaml from "js-yaml";
 import * as querystring from "querystring";
 import {

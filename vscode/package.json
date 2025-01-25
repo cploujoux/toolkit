@@ -87,7 +87,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@beamlit/sdk": "^0.0.5",
+    "@beamlit/sdk": "^0.0.34-alpha.4",
     "js-yaml": "^4.1.0"
   }
 }
