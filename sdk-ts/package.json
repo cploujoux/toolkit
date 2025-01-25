@@ -2,20 +2,36 @@
   "name": "@beamlit/sdk",
   "version": "0.0.6",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "tsc index.ts && node index.js",
+    "start": "tsc --lib es2022 --module es2022 --target es2022 index.ts && node index.js",
     "poststart": "rm -f src/**/*.js src/*.js *.js",
     "test": "jest"
   },
+  "main": "dist/index.js",
   "keywords": [],
   "author": "cploujoux",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/beamlit/toolkit/sdk-ts"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default-esm",
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "extensionsToTreatAsEsm": [".ts"],
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": "tsconfig.json"
+        }
+      ]
+    },
+    "testEnvironment": "node"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
@@ -29,7 +45,29 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "^0.5.7",
+    "@langchain/community": "^0.3.26",
+    "@langchain/core": "^0.3.33",
+    "@langchain/langgraph": "^0.2.41",
+    "@langchain/openai": "^0.3.17",
+    "@modelcontextprotocol/sdk": "^1.4.1",
+    "@opentelemetry/exporter-logs-otlp-grpc": "^0.57.1",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.57.1",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.57.1",
+    "@opentelemetry/instrumentation-fastify": "^0.44.1",
+    "@opentelemetry/instrumentation-http": "^0.57.1",
+    "@opentelemetry/resources": "^1.30.1",
+    "@opentelemetry/sdk-logs": "^0.57.1",
+    "@opentelemetry/sdk-metrics": "^1.30.1",
+    "@opentelemetry/sdk-trace-base": "^1.30.1",
+    "@opentelemetry/sdk-trace-node": "^1.30.1",
+    "@opentelemetry/semantic-conventions": "^1.28.0",
     "axios": "^1.7.9",
-    "js-yaml": "^4.1.0"
+    "fastify": "^5.2.1",
+    "js-yaml": "^4.1.0",
+    "jwt-decode": "^4.0.0",
+    "pino": "^9.6.0",
+    "uuid": "^11.0.5",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.1"
   }
 }

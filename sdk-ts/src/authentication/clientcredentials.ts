@@ -1,5 +1,5 @@
-import { saveCredentials } from "./credentials";
-import { Credentials } from "./types";
+import { saveCredentials } from "./credentials.js";
+import { Credentials } from "./types.js";
 
 interface DeviceLoginFinalizeResponse {
   access_token: string;

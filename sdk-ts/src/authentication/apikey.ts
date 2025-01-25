@@ -1,4 +1,4 @@
-import { Credentials } from "./types";
+import { Credentials } from "./types.js";
 
 export class ApiKeyAuth {
   private credentials: Credentials;
