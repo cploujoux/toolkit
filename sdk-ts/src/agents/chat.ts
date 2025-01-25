@@ -135,7 +135,6 @@ export async function getChatModel(
     provider = "openai";
   }
 
-  logger.info({ baseURL: getBaseUrl(name), defaultHeaders: headers, defaultQuery: params });
   const chatOpenAI = new ChatOpenAI(
     { apiKey: "fake_api_key", temperature: 0, model },
     { baseURL: getBaseUrl(name), defaultHeaders: headers, defaultQuery: params }

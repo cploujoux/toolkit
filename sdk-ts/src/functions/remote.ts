@@ -24,7 +24,6 @@ export function getRemoteTool(
           "POST",
           { json: args }
         );
-        
         return data;
       } catch (e) {
         throw e;
