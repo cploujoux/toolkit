@@ -15,7 +15,7 @@ import (
 )
 
 type ResourceOperationResult struct {
-	Status string
+	Status    string
 	UploadURL string
 }
 
@@ -129,7 +129,7 @@ func (resource Resource) handleResourceOperation(name string, resourceObject int
 		}
 		if opts != nil {
 			values = append(values, reflect.ValueOf(opts))
-		}		
+		}
 		results = fn.Call(values)
 	case "post":
 		values := []reflect.Value{
@@ -209,7 +209,7 @@ func (resource Resource) PutFn(resourceName string, name string, resourceObject 
 func (resource Resource) PostFn(resourceName string, name string, resourceObject interface{}, upload bool) ResourceOperationResult {
 	failedResponse := ResourceOperationResult{
 		Status: "failed",
-	}	
+	}
 	formattedError := fmt.Sprintf("Resource %s:%s error: ", resourceName, name)
 	response, err := resource.handleResourceOperation(name, resourceObject, "post", upload)
 	if err != nil {
@@ -242,7 +242,7 @@ func (resource Resource) PostFn(resourceName string, name string, resourceObject
 	}
 	if uploadUrl := response.Header.Get("X-Beamlit-Upload-Url"); uploadUrl != "" {
 		result.UploadURL = uploadUrl
-	}	
+	}
 	fmt.Printf("Resource %s:%s created\n", resourceName, name)
 	return result
 }
