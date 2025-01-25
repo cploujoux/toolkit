@@ -140,7 +140,6 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 	}
 	ts.Env = append(ts.Env, fmt.Sprintf("NODE_PATH=%s", nodePath))
 
-	fmt.Println(ts.Env)
 	err := ts.Start()
 	if err != nil {
 		fmt.Printf("Error starting tsx server: %v\n", err)

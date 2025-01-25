@@ -8,7 +8,7 @@ import {
 } from "./credentials.js";
 import { BearerToken } from "./deviceMode.js";
 import { Credentials } from "./types.js";
-import { getSettings } from "../common/settings.js";
+import { getSettings, Settings } from "../common/settings.js";
 
 interface RunClientWithCredentials {
   credentials: Credentials;
@@ -35,7 +35,7 @@ export function newClientFromSettings(settings: any) {
   return newClientWithCredentials(clientConfig);
 }
 
-export function newClient() {
+function getClientConfig() {
   const context = currentContext();
   let clientConfig: RunClientWithCredentials;
 
@@ -52,9 +52,41 @@ export function newClient() {
       credentials,
       workspace: settings.workspace,
     };
-  }
+  }  
+  return clientConfig;
+}
+
+export function newClient() {
+  const clientConfig = getClientConfig();
   const client = newClientWithCredentials(clientConfig);
   return client;
+}
+
+function getProvider(config: RunClientWithCredentials) {
+  let provider: ApiKeyAuth | BearerToken | ClientCredentials | PublicAuth;
+  const settings = getSettings();
+
+  if (config.credentials.apiKey) {
+    provider = new ApiKeyAuth(config.credentials, config.workspace);
+  } else if (
+    config.credentials.access_token ||
+    config.credentials.refresh_token
+  ) {
+    provider = new BearerToken(
+      config.credentials,
+      config.workspace,
+      settings.baseUrl
+    );
+  } else if (config.credentials.client_credentials) {
+    provider = new ClientCredentials(
+      config.credentials,
+      config.workspace,
+      settings.baseUrl
+    );
+  } else {
+    provider = new PublicAuth();
+  }
+  return provider;
 }
 
 export function newClientWithCredentials(config: RunClientWithCredentials) {
@@ -96,45 +128,9 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
 }
 
 export async function getAuthenticationHeaders(
-  settings: any
+  settings: Settings
 ): Promise<Record<string, string>> {
-  const context = currentContext();
-  let credentials: Credentials;
-
-  if (context.workspace) {
-    credentials = loadCredentials(context.workspace);
-  } else {
-    throw new Error(
-      "No workspace found, use `bl login [WORKSPACE]` to set one"
-    );
-  }
-
-  const config: RunClientWithCredentials = {
-    credentials,
-    workspace: settings.workspace,
-  };
-
-  let provider: ApiKeyAuth | BearerToken | ClientCredentials | null = null;
-
-  if (config.credentials.apiKey) {
-    provider = new ApiKeyAuth(config.credentials, config.workspace);
-  } else if (config.credentials.access_token) {
-    provider = new BearerToken(
-      config.credentials,
-      config.workspace,
-      config.apiUrl || "https://api.beamlit.com/v0"
-    );
-  } else if (config.credentials.client_credentials) {
-    provider = new ClientCredentials(
-      config.credentials,
-      config.workspace,
-      config.apiUrl || "https://api.beamlit.com/v0"
-    );
-  }
-
-  if (!provider) {
-    return {};
-  }
-
+  const clientConfig = getClientConfig();
+  const provider = getProvider(clientConfig);
   return await provider.getHeaders();
 }

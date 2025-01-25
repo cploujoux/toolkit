@@ -3,6 +3,7 @@ import * as yaml from "js-yaml";
 import { homedir } from "os";
 import { join } from "path";
 import { Config, ContextConfig, Credentials, WorkspaceConfig } from "./types.js";
+import { Settings } from "../common/settings.js";
 
 function loadConfig(): Config {
   const config: Config = {
@@ -109,14 +110,11 @@ export function loadCredentials(workspaceName: string): Credentials {
   };
 }
 
-export function loadCredentialsFromSettings(settings: any): Credentials {
+export function loadCredentialsFromSettings(settings: Settings): Credentials {
   return {
     apiKey: settings.authentication?.apiKey || "",
-    access_token: "",
-    refresh_token: "",
-    expires_in: 0,
-    device_code: "",
-    client_credentials: "",
+    access_token: settings.authentication?.jwt || "",
+    client_credentials: settings.authentication?.clientCredentials || "",
   };
 }
 
