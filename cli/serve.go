@@ -58,7 +58,7 @@ func (r *Operations) ServeCmd() *cobra.Command {
 
 	cmd.Flags().IntVarP(&port, "port", "p", 1338, "Bind socket to this host")
 	cmd.Flags().StringVarP(&host, "host", "H", "0.0.0.0", "Bind socket to this port. If 0, an available port will be picked")
-	cmd.Flags().StringVarP(&module, "module", "m", "agent.main", "Module to serve, can be an agent or a function")
+	cmd.Flags().StringVarP(&module, "module", "m", "", "Module to serve, can be an agent or a function")
 	cmd.Flags().BoolVarP(&hotreload, "hotreload", "", false, "Watch for changes in the project")
 	cmd.Flags().BoolVarP(&remote, "remote", "r", false, "Serve the project remotely. It will use functions deployed on beamlit cloud")
 	return cmd
@@ -86,6 +86,9 @@ func startUvicornServer(port int, host string, hotreload bool, module string, re
 	uvicorn.Stderr = os.Stderr
 
 	// Set environment variables
+	if module == "" {
+		module = "agent.main"
+	}
 	uvicorn.Env = getServerEnvironment(port, host, module, remote)
 
 	err := uvicorn.Start()
@@ -115,7 +118,7 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 
 	// Set environment variables
 	ts.Env = getServerEnvironment(port, host, module, remote)
-	if os.Getenv("BL_SERVER_MODULE") == "" {
+	if module == "" {
 		if _, err := os.Stat("src"); !os.IsNotExist(err) {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", "src.agent.agent"))
 		} else {
@@ -137,6 +140,7 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 	}
 	ts.Env = append(ts.Env, fmt.Sprintf("NODE_PATH=%s", nodePath))
 
+	fmt.Println(ts.Env)
 	err := ts.Start()
 	if err != nil {
 		fmt.Printf("Error starting tsx server: %v\n", err)

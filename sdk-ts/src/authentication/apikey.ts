@@ -12,6 +12,7 @@ export class ApiKeyAuth {
   async getHeaders(): Promise<Record<string, string>> {
     return {
       "X-Beamlit-Api-Key": this.credentials.apiKey || "",
+      "X-Beamlit-Authorization": `Bearer ${this.credentials.apiKey || ""}`,
       "X-Beamlit-Workspace": this.workspaceName,
     };
   }
