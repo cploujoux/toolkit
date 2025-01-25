@@ -23,11 +23,11 @@ func executeInstallDependencies() error {
 	return cmd.Run()
 }
 
-func executePythonGenerateBeamlitDeployment(tempDir string, module string, directory string, name string) error {
+func executePythonGenerateBeamlitDeployment(deployDir string, module string, directory string, name string) error {
 	pythonCode := fmt.Sprintf(`
 from beamlit.deploy import generate_beamlit_deployment
 generate_beamlit_deployment("%s", "%s")
-	`, tempDir, name)
+	`, deployDir, name)
 	pythonCmd := "python"
 	if _, err := os.Stat(".venv"); !os.IsNotExist(err) {
 		pythonCmd = ".venv/bin/python"
@@ -41,6 +41,40 @@ generate_beamlit_deployment("%s", "%s")
 	if os.Getenv("BL_ENV") != "" {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
 	}
+	return cmd.Run()
+}
+
+func executeTypescriptGenerateBeamlitDeployment(deployDir string, module string, directory string, name string) error {
+	tsCode := fmt.Sprintf(`
+import { generateBeamlitDeployment } from "@beamlit/sdk";
+
+generateBeamlitDeployment("%s", "%s");
+	`, deployDir, name)
+
+	// Create temporary file in deployDir
+	tmpFile, err := os.CreateTemp("./", "beamlit-*.ts")
+	if err != nil {
+		return fmt.Errorf("failed to create temporary file in %s: %w", deployDir, err)
+	}
+	defer os.Remove(tmpFile.Name()) // Clean up temp file when done
+
+	// Write TypeScript code to temp file
+	if _, err := tmpFile.WriteString(tsCode); err != nil {
+		return fmt.Errorf("failed to write to temporary file: %w", err)
+	}
+	tmpFile.Close()
+
+	cmd := exec.Command("npx", "tsx", tmpFile.Name())
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_MODULE=%s", module))
+	cmd.Env = append(cmd.Env, fmt.Sprintf("BL_SERVER_DIRECTORY=%s", directory))
+	cmd.Env = append(cmd.Env, "BL_DEPLOY=true")
+	if os.Getenv("BL_ENV") != "" {
+		cmd.Env = append(cmd.Env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
+	}
+	// Copy environment from computer
+	cmd.Env = append(cmd.Env, os.Environ()...)
 	return cmd.Run()
 }
 
@@ -178,7 +212,7 @@ func handleUpload(resourceType string, name string, path string, uploadUrl strin
 	return nil
 }
 
-func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, applyResults *[]ApplyResult, path string, info os.FileInfo, err error) error {
+func (r *Operations) handleDeploymentFile(deployDir string, agents *[]string, applyResults *[]ApplyResult, path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
@@ -194,8 +228,8 @@ func (r *Operations) handleDeploymentFile(tempDir string, agents *[]string, appl
 	if isFunction {
 		resourceType = "function"
 	}
-	// Get relative path from tempDir
-	relPath, err := filepath.Rel(tempDir, path)
+	// Get relative path from deployDir
+	relPath, err := filepath.Rel(deployDir, path)
 	if err != nil {
 		return fmt.Errorf("failed to get relative path: %w", err)
 	}
@@ -232,6 +266,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 	var directory string
 	var dependencies bool
 	var name string
+	var dryRun bool
 	cmd := &cobra.Command{
 		Use:     "deploy",
 		Args:    cobra.ExactArgs(0),
@@ -242,7 +277,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 
 			// Create a temporary directory for deployment files
-			tempDir := ".beamlit"
+			deployDir := ".beamlit"
 
 			if dependencies {
 				err := executeInstallDependencies()
@@ -251,18 +286,35 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 					os.Exit(1)
 				}
 			}
-			// Execute Python script using the Python interpreter
-			err := executePythonGenerateBeamlitDeployment(tempDir, module, directory, name)
-			if err != nil {
-				fmt.Printf("Error executing Python script: %v\n", err)
+			language := moduleLanguage()
+			switch language {
+			case "python":
+				err := executePythonGenerateBeamlitDeployment(deployDir, module, directory, name)
+				if err != nil {
+					fmt.Printf("Error executing Python script: %v\n", err)
+					os.Exit(1)
+				}
+			case "typescript":
+				err := executeTypescriptGenerateBeamlitDeployment(deployDir, module, directory, name)
+				if err != nil {
+					fmt.Printf("Error executing Typescript script: %v\n", err)
+					os.Exit(1)
+				}
+			default:
+				fmt.Println("Error: Neither pyproject.toml nor package.json found in current directory")
 				os.Exit(1)
+			}
+
+			if dryRun {
+				fmt.Println("Dry run complete, check folder: ", deployDir)
+				return
 			}
 
 			agents := []string{}
 			applyResults := []ApplyResult{}
 			// Walk through the temporary directory recursively and collect files
 			var filesToProcess []string
-			err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
+			err := filepath.Walk(deployDir, func(path string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
 				}
@@ -288,7 +340,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 						return
 					}
 
-					err = r.handleDeploymentFile(tempDir, &agents, &applyResults, p, info, nil)
+					err = r.handleDeploymentFile(deployDir, &agents, &applyResults, p, info, nil)
 					if err != nil {
 						errChan <- err
 						return
@@ -347,5 +399,6 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&directory, "directory", "d", "src", "Directory to deploy, defaults to current directory")
 	cmd.Flags().BoolVarP(&dependencies, "dependencies", "D", false, "Install dependencies")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "Optional name for the deployment")
+	cmd.Flags().BoolVarP(&dryRun, "dryrun", "", false, "Dry run the deployment")
 	return cmd
 }

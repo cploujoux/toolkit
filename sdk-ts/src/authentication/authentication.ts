@@ -1,4 +1,5 @@
 import { createClient, createConfig } from "@hey-api/client-fetch";
+import { getSettings } from "../common/settings.js";
 import { ApiKeyAuth } from "./apikey.js";
 import { ClientCredentials } from "./clientcredentials.js";
 import {
@@ -8,7 +9,6 @@ import {
 } from "./credentials.js";
 import { BearerToken } from "./deviceMode.js";
 import { Credentials } from "./types.js";
-import { getSettings, Settings } from "../common/settings.js";
 
 interface RunClientWithCredentials {
   credentials: Credentials;
@@ -22,7 +22,7 @@ class PublicAuth {
     return {};
   }
 
-  intercept(req: Request): void {}
+  intercept(): void {}
 }
 
 export function newClientFromSettings(settings: any) {
@@ -52,7 +52,7 @@ function getClientConfig() {
       credentials,
       workspace: settings.workspace,
     };
-  }  
+  }
   return clientConfig;
 }
 
@@ -107,9 +107,9 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
   );
 }
 
-export async function getAuthenticationHeaders(
-  settings: Settings
-): Promise<Record<string, string>> {
+export async function getAuthenticationHeaders(): Promise<
+  Record<string, string>
+> {
   const clientConfig = getClientConfig();
   const provider = getProvider(clientConfig);
   return await provider.getHeaders();

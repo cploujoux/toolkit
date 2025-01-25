@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "@jest/globals";
+import fs from "fs";
+import path from "path";
 import { createApp } from "../src/serve/app";
 
 describe("App", () => {
@@ -29,12 +31,12 @@ describe("App", () => {
   });
 
   it("should create app  from main.ts return test in body", async () => {
-    const fs = require('fs');
-    const path = require('path');
-    
-    process.env.BL_SERVER_MODULE = "main.agent"
-    const mainFile = path.join(__dirname, '../main.ts');
-    fs.writeFileSync(mainFile, 'export default function main() { return "test"; }');
+    process.env.BL_SERVER_MODULE = "main.agent";
+    const mainFile = path.join(__dirname, "../main.ts");
+    fs.writeFileSync(
+      mainFile,
+      'export default function main() { return "test"; }'
+    );
     const app = await createApp();
     const response = await app.inject({
       method: "POST",
@@ -46,19 +48,20 @@ describe("App", () => {
   });
 
   it("should create app  from an agent", async () => {
-    const fs = require('fs');
-    const path = require('path');
-    process.env.BL_SERVER_MODULE = "main.agent"
-    const mainFile = path.join(__dirname, '../main.ts');
-    fs.writeFileSync(mainFile, `
+    process.env.BL_SERVER_MODULE = "main.agent";
+    const mainFile = path.join(__dirname, "../main.ts");
+    fs.writeFileSync(
+      mainFile,
+      `
 import { wrapAgent } from "./src/agents";
 export default wrapAgent(async () => { return "test"; }, {overrideAgent: true});
-    `);
+    `
+    );
     const app = await createApp();
     const response = await app.inject({
       method: "POST",
       url: "/",
-    });    
+    });
     expect(response.statusCode).toBe(200);
     expect(response.body).toBe("test");
     delete process.env.BL_SERVER_MODULE;

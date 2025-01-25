@@ -15,7 +15,6 @@ import {
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import { FastifyInstance } from "fastify";
 import { getAuthenticationHeaders } from "../authentication/authentication.js";
 import { getSettings } from "./settings.js";
 
@@ -27,8 +26,7 @@ let loggerProvider: LoggerProvider | null = null;
  * Retrieve authentication headers.
  */
 async function authHeaders(): Promise<Record<string, string>> {
-  const settings = getSettings();
-  const headers = await getAuthenticationHeaders(settings);
+  const headers = await getAuthenticationHeaders();
   return {
     "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
     "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
@@ -101,7 +99,7 @@ async function getLogExporter(): Promise<OTLPLogExporter | null> {
  * Instrument the Fastify application with OpenTelemetry.
  * @param app Fastify instance
  */
-export async function instrumentApp(app: FastifyInstance) {
+export async function instrumentApp() {
   const settings = getSettings();
   if (!settings.enableOpentelemetry) {
     return;

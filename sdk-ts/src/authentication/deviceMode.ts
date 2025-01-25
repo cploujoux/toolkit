@@ -1,27 +1,6 @@
 import { saveCredentials } from "./credentials.js";
 import { Credentials } from "./types.js";
 
-interface DeviceLogin {
-  client_id: string;
-  scope: string;
-}
-
-interface DeviceLoginResponse {
-  client_id: string;
-  device_code: string;
-  user_code: string;
-  expires_in: number;
-  interval: number;
-  verification_uri: string;
-  verification_uri_complete: string;
-}
-
-interface DeviceLoginFinalizeRequest {
-  grant_type: string;
-  client_id: string;
-  device_code: string;
-}
-
 interface DeviceLoginFinalizeResponse {
   access_token: string;
   expires_in: number;
@@ -71,12 +50,12 @@ export class BearerToken {
       const claims = JSON.parse(claimsBytes.toString());
       const expTime = new Date(claims.exp * 1000);
       const currentTime = new Date();
-      
+
       // Refresh if token expires in less than 10 minutes
       if (currentTime.getTime() + 10 * 60 * 1000 > expTime.getTime()) {
         return await this.doRefresh();
       }
-    } catch (e) {
+    } catch {
       return await this.doRefresh();
     }
     return null;

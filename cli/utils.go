@@ -138,3 +138,13 @@ func retrieveListParams(typeParams reflect.Type, options map[string]string) refl
 	}
 	return paramsValue
 }
+
+func moduleLanguage() string {
+	if _, err := os.Stat("pyproject.toml"); !os.IsNotExist(err) {
+		return "python"
+	} else if _, err := os.Stat("package.json"); !os.IsNotExist(err) {
+		return "typescript"
+	}
+	return ""
+
+}

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "@jest/globals";
-import { Settings, SettingsAuthentication, init } from "../src/common/settings";
+import { Settings, init } from "../src/common/settings";
 
 describe("Settings", () => {
   let settings: Settings;
@@ -26,7 +26,7 @@ describe("Settings", () => {
   it("should update nested settings from env", () => {
     process.env.BL_AUTHENTICATION_API_KEY = "test-api-key";
     process.env.BL_AGENT_FUNCTIONS_DIRECTORY = "test-agent-api-key";
-    process.env.BL_SERVER_MODULE = "test-server-api-key";  
+    process.env.BL_SERVER_MODULE = "test-server-api-key";
     const checkSettings = init();
     expect(checkSettings.authentication.apiKey).toBe("test-api-key");
     expect(checkSettings.agent.functionsDirectory).toBe("test-agent-api-key");
@@ -54,7 +54,9 @@ describe("Settings", () => {
     const checkSettings = init();
     expect(checkSettings.baseUrl).toBe("https://api.beamlit.dev/v0");
     expect(checkSettings.runUrl).toBe("https://run.beamlit.dev");
-    expect(checkSettings.mcpHubUrl).toBe("https://mcp-hub-server.beamlit.workers.dev");
+    expect(checkSettings.mcpHubUrl).toBe(
+      "https://mcp-hub-server.beamlit.workers.dev"
+    );
     expect(checkSettings.registryUrl).toBe("https://eu.registry.beamlit.dev");
     expect(checkSettings.appUrl).toBe("https://app.beamlit.dev");
     delete process.env.BL_ENV;

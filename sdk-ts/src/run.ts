@@ -32,7 +32,7 @@ export class RunClient {
     let headers = options.headers || {};
     const params = options.params || {};
 
-    const authHeaders = await getAuthenticationHeaders(settings);
+    const authHeaders = await getAuthenticationHeaders();
     headers = { ...headers, ...authHeaders };
 
     // Build the path
@@ -51,7 +51,7 @@ export class RunClient {
       query: { environment, ...params },
       headers,
     });
-    
+
     if (response.status >= 400) {
       throw new HTTPError(response.status, JSON.stringify(data));
     }

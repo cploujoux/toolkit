@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from "@jest/globals";
 import { init } from "../src/common";
 import { wrapFunction } from "../src/functions/base";
-import { z } from "zod";
 
 describe("Functions", () => {
   beforeEach(() => {
@@ -12,8 +11,18 @@ describe("Functions", () => {
       return a + b;
     };
     const parameters = [
-      { name: "a", description: "description different", required: true, type: "number" },
-      { name: "b", description: "description different", required: true, type: "number" },
+      {
+        name: "a",
+        description: "description different",
+        required: true,
+        type: "number",
+      },
+      {
+        name: "b",
+        description: "description different",
+        required: true,
+        type: "number",
+      },
     ];
     const wrapped = await wrapFunction(func, {
       description: "Add two numbers",
@@ -23,7 +32,7 @@ describe("Functions", () => {
     expect(wrapped.function?.spec?.parameters).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ description: "description different" }),
-        expect.objectContaining({ description: "description different" })
+        expect.objectContaining({ description: "description different" }),
       ])
     );
   });

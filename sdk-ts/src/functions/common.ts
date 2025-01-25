@@ -65,7 +65,7 @@ export const retrieveWrapperFunction = async (
     } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".js")) {
       try {
         const modulePath = `${path.resolve(fullPath)}`;
-        const module = require(modulePath);
+        const module = require(modulePath); // eslint-disable-line
         for (const exportedItem of Object.values(module)) {
           const functionBase = (await exportedItem) as FunctionBase;
           if (functionBase?.tools) {
@@ -84,7 +84,8 @@ export const retrieveWrapperFunction = async (
 
 export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   const settings = getSettings();
-  let { client, dir, warning } = options;
+  let { client, dir } = options;
+  const { warning } = options;
   const { mcpHub, remoteFunctions, chain } = options;
   if (!client) {
     client = newClient();

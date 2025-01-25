@@ -5,10 +5,9 @@ import { z } from "zod";
 import { currentContext } from "../authentication/credentials.js";
 
 declare global {
-  var SETTINGS: Settings | null;
+  var SETTINGS: Settings | null; // eslint-disable-line
 }
 global.SETTINGS = null;
-
 
 const SettingsAgent = z.object({
   agent: z.any().nullable().default(null),
@@ -134,7 +133,9 @@ function init(options: Partial<Settings> = {}): Settings {
       "utf8"
     );
     yamlData = yaml.parse(yamlFile);
-  } catch (error) {}
+  } catch {
+    // Do nothing it is not a problem
+  }
 
   // Process environment variables
   const envData: Partial<Settings> = {};

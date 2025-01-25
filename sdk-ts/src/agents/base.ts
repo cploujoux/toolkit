@@ -1,5 +1,7 @@
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import { StructuredTool } from "@langchain/core/tools";
 import { CompiledGraph, MemorySaver } from "@langchain/langgraph";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { FastifyRequest } from "fastify";
 import { newClient } from "../authentication/authentication.js";
 import { getModel, listModels } from "../client/sdk.gen.js";
@@ -7,8 +9,6 @@ import { Agent } from "../client/types.gen.js";
 import { getSettings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
 import { getChatModel } from "./chat.js";
-import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { StructuredTool } from "@langchain/core/tools";
 
 export type CallbackFunctionAgentVariadic = (...args: any[]) => any;
 
@@ -106,8 +106,11 @@ export const wrapAgent: WrapAgentType = async (
         );
       }
     }
-    
-    const [chatModel, _, __] = await getChatModel(settings.agent.model.metadata.name, settings.agent.model);
+
+    const [chatModel] = await getChatModel(
+      settings.agent.model.metadata.name,
+      settings.agent.model
+    );
     settings.agent.chatModel = chatModel;
     settings.agent.agent = createReactAgent({
       llm: chatModel,
@@ -126,7 +129,14 @@ export const wrapAgent: WrapAgentType = async (
   return {
     async run(request: FastifyRequest): Promise<any> {
       const args = {
-        agent: settings.agent.agent as CompiledGraph<any, any, any, any, any, any>,
+        agent: settings.agent.agent as CompiledGraph<
+          any,
+          any,
+          any,
+          any,
+          any,
+          any
+        >,
         model: settings.agent.model as BaseChatModel,
         functions: settings.agent.functions as StructuredTool[],
       };

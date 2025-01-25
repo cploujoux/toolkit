@@ -2,8 +2,13 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import * as yaml from "js-yaml";
 import { homedir } from "os";
 import { join } from "path";
-import { Config, ContextConfig, Credentials, WorkspaceConfig } from "./types.js";
 import { Settings } from "../common/settings.js";
+import {
+  Config,
+  ContextConfig,
+  Credentials,
+  WorkspaceConfig,
+} from "./types.js";
 
 function loadConfig(): Config {
   const config: Config = {
@@ -38,7 +43,7 @@ function loadConfig(): Config {
             config.context = data.context;
           }
         }
-      } catch (e) {
+      } catch {
         // Invalid YAML, use empty config
       }
     }

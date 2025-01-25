@@ -27,11 +27,13 @@ func (r *Operations) ServeCmd() *cobra.Command {
 			var activeProc *exec.Cmd
 
 			// Check for pyproject.toml or package.json
-			if _, err := os.Stat("pyproject.toml"); !os.IsNotExist(err) {
+			language := moduleLanguage()
+			switch language {
+			case "python":
 				activeProc = startUvicornServer(port, host, hotreload, module, remote)
-			} else if _, err := os.Stat("package.json"); !os.IsNotExist(err) {
+			case "typescript":
 				activeProc = startTypescriptServer(port, host, hotreload, module, remote)
-			} else {
+			default:
 				fmt.Println("Error: Neither pyproject.toml nor package.json found in current directory")
 				os.Exit(1)
 			}
@@ -101,16 +103,10 @@ func startUvicornServer(port int, host string, hotreload bool, module string, re
 }
 
 func startTypescriptServer(port int, host string, hotreload bool, module string, remote bool) *exec.Cmd {
-	ts := exec.Command(
-		"npx",
-		"tsx",
-		"--tsconfig",
-		"./tsconfig.json",
-	)
+	ts := exec.Command("npm", "run", "start")
 	if hotreload {
-		ts.Args = append(ts.Args, "--watch")
+		ts = exec.Command("npm", "run", "dev")
 	}
-	ts.Args = append(ts.Args, "node_modules/@beamlit/sdk/src/serve/index.ts")
 
 	ts.Stdout = os.Stdout
 	ts.Stderr = os.Stderr
@@ -127,7 +123,7 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 		}
 	}
 	if os.Getenv("BL_AGENT_FUNCTIONS_DIRECTORY") == "" {
-		if  err == nil && srcInfo.IsDir() {
+		if err == nil && srcInfo.IsDir() {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_AGENT_FUNCTIONS_DIRECTORY=%s", "src/functions"))
 		} else {
 			ts.Env = append(ts.Env, fmt.Sprintf("BL_AGENT_FUNCTIONS_DIRECTORY=%s", "functions"))

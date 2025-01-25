@@ -1,10 +1,13 @@
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { getAuthenticationHeaders, newClient } from "../authentication/authentication.js";
-import { getModel } from "../client/sdk.gen.js";
 import { ChatOpenAI } from "@langchain/openai";
+import {
+  getAuthenticationHeaders,
+  newClient,
+} from "../authentication/authentication.js";
+import { getModel } from "../client/sdk.gen.js";
+import { Model } from "../client/types.gen.js";
 import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
-import { Model } from "../client/types.gen.js";
 function getBaseUrl(name: string): string {
   const settings = getSettings();
   return `${settings.runUrl}/${settings.workspace}/models/${name}/v1`;
@@ -69,16 +72,19 @@ export async function getChatModel(
         },
       });
       agentModel = data;
-    } catch (e) {
+    } catch {
       logger.warn(`Model ${name} not found, defaulting to gpt-4o-mini`);
     }
   }
 
   const environment = agentModel?.metadata?.environment || settings.environment;
-  const headers = await getAuthenticationHeaders(settings);
+  const headers = await getAuthenticationHeaders();
   headers["X-Beamlit-Environment"] = environment;
 
-  const jwt = headers["X-Beamlit-Authorization"]?.replace("Bearer ", "") || headers["X-Beamlit-Api-Key"] || "";
+  const jwt =
+    headers["X-Beamlit-Authorization"]?.replace("Bearer ", "") ||
+    headers["X-Beamlit-Api-Key"] ||
+    "";
   const params = { environment };
 
   const chatClasses = {
