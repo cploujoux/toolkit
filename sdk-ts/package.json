@@ -1,6 +1,6 @@
 {
   "name": "@beamlit/sdk",
-  "version": "0.0.6",
+  "version": "0.0.33",
   "description": "",
   "scripts": {
     "build": "tsc",
