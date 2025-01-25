@@ -51,18 +51,21 @@ export type GetFunctionsOptions = {
   warning?: boolean;
 };
 
-export const retrieveWrapperFunction = async (dir: string, warning: boolean) => {
+export const retrieveWrapperFunction = async (
+  dir: string,
+  warning: boolean
+) => {
   const functions: FunctionBase[] = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
-
     if (entry.isDirectory()) {
-      functions.push(...await retrieveWrapperFunction(fullPath, warning));
+      functions.push(...(await retrieveWrapperFunction(fullPath, warning)));
     } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".js")) {
       try {
-        const module = require(`${process.cwd()}/${fullPath}`);
+        const modulePath = `${path.resolve(fullPath)}`;
+        const module = require(modulePath);
         for (const exportedItem of Object.values(module)) {
           const functionBase = (await exportedItem) as FunctionBase;
           if (functionBase?.tools) {
@@ -71,15 +74,13 @@ export const retrieveWrapperFunction = async (dir: string, warning: boolean) => 
         }
       } catch (error) {
         if (warning) {
-          logger.warn(
-            `Error importing function from ${fullPath}: ${error}`
-          );
+          logger.warn(`Error importing function from ${fullPath}: ${error}`);
         }
       }
     }
-  } 
+  }
   return functions;
-}
+};
 
 export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   const settings = getSettings();
@@ -95,8 +96,11 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
 
   if (dir && fs.existsSync(dir)) {
     logger.info(`Importing functions from ${dir}`);
-    const functionsBeamlit = await retrieveWrapperFunction(dir, warning ?? false);
-    functionsBeamlit.forEach(func => {
+    const functionsBeamlit = await retrieveWrapperFunction(
+      dir,
+      warning ?? false
+    );
+    functionsBeamlit.forEach((func) => {
       functions.push(...func.tools);
     });
   }

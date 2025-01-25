@@ -1,6 +1,5 @@
 import { StructuredTool, tool } from "@langchain/core/tools";
 import { FastifyRequest } from "fastify";
-import { client } from "../client/sdk.gen.js";
 import {
   Function,
   FunctionSpec,
@@ -10,6 +9,7 @@ import { getSettings } from "../common/settings.js";
 import { slugify } from "../common/slugify.js";
 import { parametersToZodSchema } from "./common.js";
 import { RemoteToolkit } from "./remote.js";
+import { newClient } from "../index.js";
 
 export type CallbackFunctionVariadic = (...args: any[]) => any;
 
@@ -35,7 +35,8 @@ export const wrapFunction: WrapFunctionType = async (
   options: FunctionOptions | null = null
 ): Promise<FunctionBase> => {
   const settings = getSettings();
-
+  const client = newClient();
+  
   const description =
     options?.function?.spec?.description ?? options?.description ?? "";
 
