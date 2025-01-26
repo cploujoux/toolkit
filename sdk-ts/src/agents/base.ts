@@ -93,8 +93,12 @@ export const wrapAgent: WrapAgentType = async (
         throwOnError: false,
       });
       if (models?.length) {
+        let modelError = "";
+        if (agent?.spec?.model) {
+          modelError = `Model ${agent.spec.model} not found.\n`;
+        }
         throw new Error(
-          `You must provide a model.\n${models?.join(
+          `${modelError}You must provide a model.\n${models?.join(
             ", "
           )}\nYou can create one at ${settings.appUrl}/${
             settings.workspace
