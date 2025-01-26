@@ -24,6 +24,9 @@ func executeInstallDependencies() error {
 }
 
 func executePythonGenerateBeamlitDeployment(deployDir string, module string, directory string, name string) error {
+	if module == "" {
+		module = "agent.main"
+	}
 	pythonCode := fmt.Sprintf(`
 from beamlit.deploy import generate_beamlit_deployment
 generate_beamlit_deployment("%s", "%s")
@@ -45,6 +48,10 @@ generate_beamlit_deployment("%s", "%s")
 }
 
 func executeTypescriptGenerateBeamlitDeployment(deployDir string, module string, directory string, name string) error {
+	if module == "" {
+		module = "agent.agent"
+	}
+
 	tsCode := fmt.Sprintf(`
 import { generateBeamlitDeployment } from "@beamlit/sdk";
 
@@ -395,7 +402,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 
 		},
 	}
-	cmd.Flags().StringVarP(&module, "module", "m", "agent.main", "Module to serve, can be an agent or a function")
+	cmd.Flags().StringVarP(&module, "module", "m", "", "Module to serve, can be an agent or a function")
 	cmd.Flags().StringVarP(&directory, "directory", "d", "src", "Directory to deploy, defaults to current directory")
 	cmd.Flags().BoolVarP(&dependencies, "dependencies", "D", false, "Install dependencies")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "Optional name for the deployment")
