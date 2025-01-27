@@ -61,7 +61,7 @@ var rootCmd = &cobra.Command{
 				Credentials: credentials,
 				Workspace:   workspace,
 				Headers: map[string]string{
-					"User-Agent": fmt.Sprintf("beamlit/%s (%s/%s) beamlit/%s", version, os, arch, commit[:7]),
+					"User-Agent": fmt.Sprintf("beamlit/v%s (%s/%s) beamlit/%s", version, os, arch, commit[:7]),
 				},
 			},
 		)
