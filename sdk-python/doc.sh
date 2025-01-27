@@ -1,0 +1,1 @@
+beamlit-docs src/beamlit -o docs --force --skip-errors
