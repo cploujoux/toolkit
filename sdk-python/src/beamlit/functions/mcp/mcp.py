@@ -1,3 +1,8 @@
+"""
+This module provides functionalities to interact with MCP (Multi-Client Platform) servers.
+It includes classes for managing MCP clients, creating dynamic schemas, and integrating MCP tools into Beamlit.
+"""
+
 import asyncio
 import urllib.parse
 import warnings
@@ -7,15 +12,24 @@ import pydantic
 import pydantic_core
 import requests
 import typing_extensions as t
-from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
-from mcp import ListToolsResult
-
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
+from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
+from mcp import ListToolsResult
 
 settings = get_settings()
 
 def create_dynamic_schema(name: str, schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
+    """
+    Creates a dynamic Pydantic schema based on the provided schema dictionary.
+
+    Args:
+        name (str): The name of the schema.
+        schema (dict[str, Any]): The schema definition dictionary.
+
+    Returns:
+        type[pydantic.BaseModel]: The dynamically created Pydantic model.
+    """
     field_definitions = {}
     for k, v in schema["properties"].items():
         field_type = str
@@ -44,6 +58,15 @@ def create_dynamic_schema(name: str, schema: dict[str, t.Any]) -> type[pydantic.
 
 
 class MCPClient:
+    """
+    Client for interacting with an MCP server.
+
+    Attributes:
+        client (AuthenticatedClient): The authenticated HTTP client.
+        server_name (str): The name of the MCP server.
+        headers (dict): Headers to include in HTTP requests.
+    """
+
     def __init__(self, client: AuthenticatedClient, server_name: str):
         self.client = client
         self.server_name = server_name
@@ -70,7 +93,11 @@ class MCPClient:
 
 class MCPTool(BaseTool):
     """
-    MCP server tool
+    Tool for interacting with MCP server-hosted tools.
+
+    Attributes:
+        client (MCPClient): The MCP client instance.
+        handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
     """
 
     client: MCPClient
@@ -101,7 +128,11 @@ class MCPTool(BaseTool):
 
 class MCPToolkit(BaseToolkit):
     """
-    MCP server toolkit
+    Toolkit for managing MCP server tools.
+
+    Attributes:
+        client (MCPClient): The MCP client instance.
+        _tools (ListToolsResult | None): Cached list of tools from the MCP server.
     """
 
     client: MCPClient

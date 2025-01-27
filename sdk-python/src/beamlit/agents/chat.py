@@ -1,49 +1,122 @@
 from logging import getLogger
 from typing import Tuple, Union
 
-from langchain_core.language_models import BaseChatModel
-
 from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
+from langchain_core.language_models import BaseChatModel
 
 logger = getLogger(__name__)
 
 
-def get_base_url(name: str):
+def get_base_url(name: str) -> str:
+    """
+    Constructs the base URL for a given model name based on the current settings.
+
+    Parameters:
+        name (str): The name of the model.
+
+    Returns:
+        str: The constructed base URL.
+    """
     settings = get_settings()
     return f"{settings.run_url}/{settings.workspace}/models/{name}/v1"
 
 
-def get_mistral_chat_model(**kwargs):
+def get_mistral_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns a MistralAI chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatMistralAI` model.
+
+    Returns:
+        ChatMistralAI: An instance of the MistralAI chat model.
+    """
     from langchain_mistralai.chat_models import ChatMistralAI  # type: ignore
 
     return ChatMistralAI(**kwargs)
 
 
-def get_openai_chat_model(**kwargs):
+def get_openai_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns an OpenAI chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatOpenAI` model.
+
+    Returns:
+        ChatOpenAI: An instance of the OpenAI chat model.
+    """
     from langchain_openai import ChatOpenAI  # type: ignore
 
     return ChatOpenAI(**kwargs)
 
 
-def get_anthropic_chat_model(**kwargs):
+def get_anthropic_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns an Anthropic chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatAnthropic` model.
+
+    Returns:
+        ChatAnthropic: An instance of the Anthropic chat model.
+    """
     from langchain_anthropic import ChatAnthropic  # type: ignore
 
     return ChatAnthropic(**kwargs)
 
-def get_xai_chat_model(**kwargs):
+
+def get_xai_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns an XAI chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatXAI` model.
+
+    Returns:
+        ChatXAI: An instance of the XAI chat model.
+    """
     from langchain_xai import ChatXAI  # type: ignore
 
     return ChatXAI(**kwargs)
 
-def get_cohere_chat_model(**kwargs):
+
+def get_cohere_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns a Cohere chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatCohere` model.
+
+    Returns:
+        ChatCohere: An instance of the Cohere chat model.
+    """
     from langchain_cohere import ChatCohere  # type: ignore
 
     return ChatCohere(**kwargs)
 
-def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
+
+def get_chat_model(
+    name: str, agent_model: Union[Model, None] = None
+) -> Tuple[BaseChatModel, str, str]:
+    """
+    Retrieves and configures a chat model based on the provided model name and optional agent model.
+    Supports multiple providers such as OpenAI, Anthropic, Mistral, XAI, and Cohere.
+
+    Parameters:
+        name (str): The name of the chat model.
+        agent_model (Union[Model, None], optional): An optional `Model` instance representing the agent's model.
+
+    Returns:
+        Tuple[BaseChatModel, str, str]: A tuple containing the initialized chat model instance,
+                                        the provider name, and the model name.
+
+    Raises:
+        ValueError: If the specified provider or model is not found or supported.
+    """
     settings = get_settings()
     client = new_client()
 
@@ -53,7 +126,10 @@ def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> Tuple[B
         except Exception:
             logger.warning(f"Model {name} not found, defaulting to gpt-4o-mini")
 
-    environment = (agent_model and agent_model.metadata and agent_model.metadata.environment) or settings.environment
+    environment = (
+        (agent_model and agent_model.metadata and agent_model.metadata.environment)
+        or settings.environment
+    )
     headers = get_authentication_headers(settings)
     headers["X-Beamlit-Environment"] = environment
 

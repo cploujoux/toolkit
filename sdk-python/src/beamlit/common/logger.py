@@ -1,7 +1,18 @@
+"""
+This module provides a custom colored formatter for logging and an initialization function
+to set up logging configurations for Beamlit applications.
+"""
+
 import logging
 
 
 class ColoredFormatter(logging.Formatter):
+    """
+    A custom logging formatter that adds ANSI color codes to log levels for enhanced readability.
+
+    Attributes:
+        COLORS (dict): A mapping of log level names to their corresponding ANSI color codes.
+    """
     COLORS = {
         "DEBUG": "\033[1;36m",  # Cyan
         "INFO": "\033[1;32m",  # Green
@@ -11,6 +22,15 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
+        """
+        Formats the log record by adding color codes based on the log level.
+
+        Parameters:
+            record (LogRecord): The log record to format.
+
+        Returns:
+            str: The formatted log message with appropriate color codes.
+        """
         n_spaces = len("CRITICAL") - len(record.levelname)
         tab = " " * n_spaces
         color = self.COLORS.get(record.levelname, "\033[0m")
@@ -19,6 +39,15 @@ class ColoredFormatter(logging.Formatter):
 
 
 def init(log_level: str):
+    """
+    Initializes the logging configuration for Beamlit.
+
+    This function clears existing handlers for specific loggers, sets up a colored formatter,
+    and configures the root logger with the specified log level.
+
+    Parameters:
+        log_level (str): The logging level to set (e.g., "DEBUG", "INFO").
+    """
     logging.getLogger("uvicorn.access").handlers.clear()
     logging.getLogger("uvicorn.access").propagate = False
     logging.getLogger("uvicorn.error").handlers.clear()

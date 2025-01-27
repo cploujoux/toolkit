@@ -1,3 +1,9 @@
+"""
+This module provides classes for handling device-based authentication,
+including device login processes and bearer token management. It facilitates token refreshing
+and authentication flows using device codes and bearer tokens.
+"""
+
 import base64
 import json
 from dataclasses import dataclass
@@ -9,12 +15,31 @@ from httpx import Auth, Request, Response, post
 
 @dataclass
 class DeviceLogin:
+    """
+    A dataclass representing a device login request.
+
+    Attributes:
+        client_id (str): The client ID for the device.
+        scope (str): The scope of the authentication.
+    """
     client_id: str
     scope: str
 
 
 @dataclass
 class DeviceLoginResponse:
+    """
+    A dataclass representing the response from a device login request.
+
+    Attributes:
+        client_id (str): The client ID associated with the device login.
+        device_code (str): The device code for authentication.
+        user_code (str): The user code for completing authentication.
+        expires_in (int): Time in seconds until the device code expires.
+        interval (int): Polling interval in seconds.
+        verification_uri (str): URI for user to verify device login.
+        verification_uri_complete (str): Complete URI including the user code for verification.
+    """
     client_id: str
     device_code: str
     user_code: str
@@ -26,6 +51,14 @@ class DeviceLoginResponse:
 
 @dataclass
 class DeviceLoginFinalizeRequest:
+    """
+    A dataclass representing a device login finalize request.
+
+    Attributes:
+        grant_type (str): The type of grant being requested.
+        client_id (str): The client ID for finalizing the device login.
+        device_code (str): The device code to finalize login.
+    """
     grant_type: str
     client_id: str
     device_code: str
@@ -40,12 +73,33 @@ class DeviceLoginFinalizeResponse:
 
 
 class BearerToken(Auth):
+    """
+    A provider that authenticates requests using a Bearer token.
+    """
+
     def __init__(self, credentials, workspace_name: str, base_url: str):
+        """
+        Initializes the BearerToken provider with the given credentials, workspace name, and base URL.
+
+        Parameters:
+            credentials: Credentials containing the Bearer token and refresh token.
+            workspace_name (str): The name of the workspace.
+            base_url (str): The base URL for authentication.
+        """
         self.credentials = credentials
         self.workspace_name = workspace_name
         self.base_url = base_url
 
     def get_headers(self) -> Dict[str, str]:
+        """
+        Retrieves the authentication headers containing the Bearer token and workspace information.
+
+        Returns:
+            Dict[str, str]: A dictionary of headers with Bearer token and workspace.
+
+        Raises:
+            Exception: If token refresh fails.
+        """
         err = self.refresh_if_needed()
         if err:
             raise err
@@ -55,6 +109,12 @@ class BearerToken(Auth):
         }
 
     def refresh_if_needed(self) -> Optional[Exception]:
+        """
+        Checks if the Bearer token needs to be refreshed and performs the refresh if necessary.
+
+        Returns:
+            Optional[Exception]: An exception if refreshing fails, otherwise None.
+        """
         # Need to refresh token if expires in less than 10 minutes
         parts = self.credentials.access_token.split(".")
         if len(parts) != 3:
@@ -74,6 +134,18 @@ class BearerToken(Auth):
         return None
 
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
+        """
+        Processes the authentication flow by ensuring the Bearer token is valid and adding necessary headers.
+
+        Parameters:
+            request (Request): The HTTP request to authenticate.
+
+        Yields:
+            Request: The authenticated request.
+
+        Raises:
+            Exception: If token refresh fails.
+        """
         err = self.refresh_if_needed()
         if err:
             return err
@@ -83,6 +155,12 @@ class BearerToken(Auth):
         yield request
 
     def do_refresh(self) -> Optional[Exception]:
+        """
+        Performs the token refresh using the refresh token.
+
+        Returns:
+            Optional[Exception]: An exception if refreshing fails, otherwise None.
+        """
         if not self.credentials.refresh_token:
             return Exception("No refresh token to refresh")
 

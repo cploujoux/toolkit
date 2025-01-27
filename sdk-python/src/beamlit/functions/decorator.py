@@ -1,4 +1,8 @@
-"""Decorators for creating function tools with Beamlit and LangChain integration."""
+"""
+This module provides decorators for creating function tools with Beamlit and LangChain integration.
+It includes decorators to generate tools, manage toolkits, and handle remote interactions.
+"""
+
 import ast
 import asyncio
 import functools
@@ -8,10 +12,6 @@ from collections.abc import Callable
 from logging import getLogger
 from typing import Union
 
-from fastapi import Request
-from langchain_core.tools import StructuredTool
-from langchain_core.tools.base import create_schema_from_function
-
 from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
@@ -19,6 +19,9 @@ from beamlit.common.settings import get_settings
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.functions.remote.remote import RemoteToolkit
 from beamlit.models import AgentChain, Function, FunctionKit
+from fastapi import Request
+from langchain_core.tools import StructuredTool
+from langchain_core.tools.base import create_schema_from_function
 
 logger = getLogger(__name__)
 
@@ -32,6 +35,22 @@ def get_functions(
     from_decorator:str="function",
     warning:bool=True,
 ):
+    """
+    Retrieves a list of function tools for Beamlit, including local, MCP server, and remote functions.
+
+    Args:
+        mcp_hub (Union[list[str], None]): List of MCP server URLs to fetch tools from.
+        remote_functions (Union[list[str], None]): List of remote function URLs to fetch tools from.
+        client (Union[AuthenticatedClient, None]): Authenticated client for making API requests.
+        dir (Union[str, None]): Directory path to scan for local function definitions.
+        chain (Union[list[AgentChain], None]): List of agent chains to integrate with function tools.
+        remote_functions_empty (bool): Whether to warn if remote functions are missing.
+        from_decorator (str): Name of the decorator to look for in function definitions.
+        warning (bool): Whether to show warnings during processing.
+
+    Returns:
+        list[BaseTool]: A list of configured tools for use in Beamlit.
+    """
     from beamlit.agents.chain import ChainToolkit
 
     settings = get_settings()
@@ -159,7 +178,16 @@ def get_functions(
 
 
 def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
-    """Create function tools with Beamlit and LangChain integration."""
+    """
+    Decorator to create function tools with Beamlit and LangChain integration.
+
+    Args:
+        bl_kit (FunctionKit | None): Optional FunctionKit to associate with the function.
+        **kwargs (dict): Additional keyword arguments for function configuration.
+
+    Returns:
+        Callable: The decorated function.
+    """
 
     def wrapper(func: Callable) -> Callable:
         if bl_kit and not func.__doc__ and bl_kit.description:
@@ -170,7 +198,17 @@ def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
 
 
 def function(*args, function: Function | dict = None, kit=False, **kwargs: dict) -> Callable:
-    """Create function tools with Beamlit and LangChain integration."""
+    """
+    Decorator to create function tools with Beamlit and LangChain integration.
+
+    Args:
+        function (Function | dict): Function metadata or a dictionary representing it.
+        kit (bool): Whether to associate a function kit.
+        **kwargs (dict): Additional keyword arguments for function configuration.
+
+    Returns:
+        Callable: The decorated function.
+    """
     if function is not None and not isinstance(function, dict):
         raise Exception(
             'function must be a dictionary, example: @function(function={"metadata": {"name": "my_function"}})'

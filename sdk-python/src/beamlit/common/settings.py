@@ -1,23 +1,36 @@
+"""
+This module defines the configuration management system for Beamlit applications using Pydantic.
+It includes dataclasses for various configuration aspects, such as agents, authentication, and server settings.
+The module provides functions to initialize settings, load configurations from YAML files, and customize settings sources.
+"""
+
 import os
 from typing import Tuple, Type, Union
 
+from beamlit.common.logger import init as init_logger
+from beamlit.models import Agent, Function, Model
 from langchain_core.language_models.chat_models import BaseChatModel
 from langgraph.graph.graph import CompiledGraph
 from pydantic import Field
-from pydantic_settings import (
-    BaseSettings,
-    PydanticBaseSettingsSource,
-    SettingsConfigDict,
-    YamlConfigSettingsSource,
-)
-
-from beamlit.common.logger import init as init_logger
-from beamlit.models import Agent, Function, Model
+from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
+                               SettingsConfigDict, YamlConfigSettingsSource)
 
 global SETTINGS
 SETTINGS = None
 
 class SettingsAgent(BaseSettings):
+    """
+    Configuration settings for agents within Beamlit.
+
+    Attributes:
+        agent (Union[None, CompiledGraph]): The compiled agent graph.
+        chain (Union[None, list[Agent]]): A list of agent chains.
+        model (Union[None, Model]): The model configuration.
+        functions (Union[None, list[Function]]): A list of functions available to agents.
+        functions_directory (str): The directory path where agent functions are located.
+        chat_model (Union[None, BaseChatModel]): The chat model used by agents.
+        module (str): The module path to the main application.
+    """
     agent: Union[None, CompiledGraph] = None
     chain: Union[None, list[Agent]] = None
     model: Union[None, Model] = None
@@ -28,6 +41,12 @@ class SettingsAgent(BaseSettings):
 
 
 class SettingsAuthenticationClient(BaseSettings):
+    """
+    Configuration settings for authentication clients.
+
+    Attributes:
+        credentials (Union[None, str]): Client credentials for authentication.
+    """
     credentials: Union[None, str] = None
 
 
@@ -75,7 +94,7 @@ class Settings(BaseSettings):
             self.mcp_hub_url = os.getenv('BL_MCP_HUB_URL') or "https://mcp-hub-server.beamlit.workers.dev"
             self.registry_url = os.getenv('BL_REGISTRY_URL') or "https://eu.registry.beamlit.dev"
             self.app_url = os.getenv('BL_APP_URL') or "https://app.beamlit.dev"
-            
+
     @classmethod
     def settings_customise_sources(
         cls,
@@ -94,10 +113,24 @@ class Settings(BaseSettings):
         )
 
 def get_settings() -> Settings:
+    """
+    Retrieves the current settings instance.
+
+    Returns:
+        Settings: The current settings configuration.
+    """
     return SETTINGS
 
 def init() -> Settings:
-    """Parse the beamlit.yaml file to get configurations."""
+    """
+    Initializes the settings by parsing the `beamlit.yaml` file and setting up logging.
+
+    This function reads workspace and environment configurations from the current context,
+    initializes the global SETTINGS variable, and configures the logger based on the log level.
+
+    Returns:
+        Settings: The initialized settings configuration.
+    """
     from beamlit.authentication.credentials import current_context
 
     global SETTINGS

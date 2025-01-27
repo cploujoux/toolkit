@@ -1,22 +1,24 @@
+"""
+This module provides utilities for setting up and managing OpenTelemetry instrumentation within Beamlit.
+It includes classes and functions for configuring tracers, meters, loggers, and integrating with FastAPI applications.
+"""
+
 import importlib
 import logging
 from typing import Any, Optional, Type
 
+from beamlit.authentication import get_authentication_headers
 from fastapi import FastAPI
 from opentelemetry import _logs, metrics, trace
 from opentelemetry._logs import set_logger_provider
-from opentelemetry.exporter.otlp.proto.http._log_exporter import (
-    OTLPLogExporter,
-)
-from opentelemetry.exporter.otlp.proto.http.metric_exporter import (
-    OTLPMetricExporter,
-)
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
-    OTLPSpanExporter,
-)
-from opentelemetry.instrumentation.fastapi import (  # type: ignore
-    FastAPIInstrumentor,
-)
+from opentelemetry.exporter.otlp.proto.http._log_exporter import \
+    OTLPLogExporter
+from opentelemetry.exporter.otlp.proto.http.metric_exporter import \
+    OTLPMetricExporter
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import \
+    OTLPSpanExporter
+from opentelemetry.instrumentation.fastapi import \
+    FastAPIInstrumentor  # type: ignore
 from opentelemetry.metrics import NoOpMeterProvider
 from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
 from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
@@ -28,8 +30,6 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import NoOpTracerProvider
 from typing_extensions import Dict
 
-from beamlit.authentication import get_authentication_headers
-
 from .settings import get_settings
 
 tracer: trace.Tracer | None = None
@@ -40,6 +40,12 @@ log = logging.getLogger(__name__)
 
 
 def auth_headers() -> Dict[str, str]:
+    """
+    Retrieves authentication headers based on the current settings.
+
+    Returns:
+        Dict[str, str]: A dictionary containing authentication headers.
+    """
     settings = get_settings()
     headers = get_authentication_headers(settings)
     return {
@@ -49,6 +55,15 @@ def auth_headers() -> Dict[str, str]:
 
 
 def get_logger() -> LoggerProvider:
+    """
+    Retrieves the current logger provider.
+
+    Returns:
+        LoggerProvider: The active logger provider.
+
+    Raises:
+        Exception: If the logger has not been initialized.
+    """
     if logger is None:
         raise Exception("Logger is not initialized")
     return logger
@@ -202,6 +217,15 @@ def _is_package_installed(package_name: str) -> bool:
 
 
 def instrument_app(app: FastAPI):
+    """
+    Instruments the given FastAPI application with OpenTelemetry.
+
+    This includes setting up tracer and meter providers, configuring exporters, and instrumenting
+    various modules based on available packages.
+
+    Parameters:
+        app (FastAPI): The FastAPI application to instrument.
+    """
     global tracer
     global meter
     settings = get_settings()
@@ -281,6 +305,11 @@ def instrument_app(app: FastAPI):
 
 
 def shutdown_instrumentation():
+    """
+    Shuts down the OpenTelemetry instrumentation providers gracefully.
+
+    This ensures that all spans and metrics are properly exported before the application exits.
+    """
     if tracer is not None:
         trace_provider = trace.get_tracer_provider()
         if isinstance(trace_provider, TracerProvider):
