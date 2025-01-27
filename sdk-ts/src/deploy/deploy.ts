@@ -57,6 +57,11 @@ COPY tsconfig.jso[n] /beamlit/tsconfig.json
 COPY ${settings.server.directory} /beamlit/src
 COPY index.t[s] /beamlit/index.ts
 
+RUN npm run build
+RUN cp -r dist/* /beamlit
+
+ENV COMMAND="node index.js"
+
 ENTRYPOINT [${cmdStr}]
 `;
 };

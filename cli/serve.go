@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -83,6 +84,14 @@ func startUvicornServer(port int, host string, hotreload bool, module string, re
 	if hotreload {
 		uvicorn.Args = append(uvicorn.Args, "--reload")
 	}
+	if os.Getenv("COMMAND") != "" {
+		command := strings.Split(os.Getenv("COMMAND"), " ")
+		if len(command) > 1 {
+			uvicorn = exec.Command(command[0], command[1:]...)
+		} else {
+			uvicorn = exec.Command(command[0])
+		}
+	}
 
 	uvicorn.Stdout = os.Stdout
 	uvicorn.Stderr = os.Stderr
@@ -107,7 +116,14 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 	if hotreload {
 		ts = exec.Command("npm", "run", "dev")
 	}
-
+	if os.Getenv("COMMAND") != "" {
+		command := strings.Split(os.Getenv("COMMAND"), " ")
+		if len(command) > 1 {
+			ts = exec.Command(command[0], command[1:]...)
+		} else {
+			ts = exec.Command(command[0])
+		}
+	}
 	ts.Stdout = os.Stdout
 	ts.Stderr = os.Stderr
 

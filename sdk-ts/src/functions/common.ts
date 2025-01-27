@@ -57,7 +57,7 @@ export const retrieveWrapperFunction = async (
 ) => {
   const functions: FunctionBase[] = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-
+  const modules: string[] = [];
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -65,7 +65,12 @@ export const retrieveWrapperFunction = async (
     } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".js")) {
       try {
         const modulePath = `${path.resolve(fullPath)}`;
-        const module = require(modulePath); // eslint-disable-line
+        const moduleName = modulePath.replace(".ts", "").replace(".js", "");
+        if (modules.includes(moduleName)) {
+          continue;
+        }
+        modules.push(moduleName);
+        const module = require(moduleName); // eslint-disable-line
         for (const exportedItem of Object.values(module)) {
           const functionBase = (await exportedItem) as FunctionBase;
           if (functionBase?.tools) {
