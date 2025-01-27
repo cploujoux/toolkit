@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"os/user"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"text/template"
@@ -407,7 +408,8 @@ func promptCreateAgentApp(directory string) CreateAgentAppOptions {
 					}
 					options := []huh.Option[string]{}
 					for _, template := range templates {
-						options = append(options, huh.NewOption(template, template))
+						key := regexp.MustCompile(`^\d+-`).ReplaceAllString(template, "")
+						options = append(options, huh.NewOption(key, template))
 					}
 					return options
 				}, &agentAppOptions).
