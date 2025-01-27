@@ -1410,7 +1410,10 @@ type ClientInterface interface {
 		method string,
 		path string,
 		headers map[string]string,
+		params []string,
 		body string,
+		debug bool,
+		local bool,
 		reqEditors ...RequestEditorFn,
 	) (*http.Response, error)
 
