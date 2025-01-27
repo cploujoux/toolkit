@@ -1,3 +1,9 @@
+"""Package: middlewares
+
+This package contains custom middleware classes for the Beamlit server,
+including access logging and process time header addition.
+"""
+
 from .accesslog import AccessLogMiddleware
 from .processtime import AddProcessTimeHeader
 

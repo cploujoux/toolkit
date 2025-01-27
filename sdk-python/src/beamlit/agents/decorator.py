@@ -1,3 +1,8 @@
+"""Module: decorator
+
+Defines decorators for agent functionalities.
+"""
+
 # Import necessary modules
 import functools
 import inspect
