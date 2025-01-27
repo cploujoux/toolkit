@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/beamlit/toolkit/sdk"
 	"github.com/spf13/cobra"
@@ -51,12 +52,17 @@ var rootCmd = &cobra.Command{
 			fmt.Printf("Please run `bl login %s` to fix it credentials.\n", workspace)
 		}
 		var err error
+		os := runtime.GOOS
+		arch := runtime.GOARCH
 		c, err := sdk.NewClientWithCredentials(
 			sdk.RunClientWithCredentials{
 				ApiURL:      BASE_URL,
 				RunURL:      RUN_URL,
 				Credentials: credentials,
 				Workspace:   workspace,
+				Headers: map[string]string{
+					"User-Agent": fmt.Sprintf("beamlit/%s (%s/%s) beamlit/%s", version, os, arch, commit[:7]),
+				},
 			},
 		)
 		if err != nil {
