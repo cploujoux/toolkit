@@ -390,7 +390,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			}
 			for _, agent := range agents {
 				fmt.Printf(
-					"- Url: %s/%s/global-inference-network/agent/%s?environment=%s\n",
+					"- Url: %s/%s/global-agentic-network/agent/%s?environment=%s\n",
 					r.AppURL,
 					workspace,
 					agent,
