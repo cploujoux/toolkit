@@ -58,6 +58,7 @@
     "@hey-api/client-fetch": "^0.5.7",
     "@langchain/community": "^0.3.26",
     "@langchain/core": "^0.3.33",
+    "@langchain/deepseek": "^0.0.1",
     "@langchain/langgraph": "^0.2.41",
     "@langchain/openai": "^0.3.17",
     "@modelcontextprotocol/sdk": "^1.4.1",

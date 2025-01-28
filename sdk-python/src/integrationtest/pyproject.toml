@@ -5,5 +5,8 @@ description = ""
 
 requires-python = ">=3.12"
 dependencies = [
-    "beamlit>=0.0.29rc21",
+    "beamlit",
 ]
+
+[tool.uv.sources]
+beamlit = { path = "../../" }

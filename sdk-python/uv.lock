@@ -139,6 +139,7 @@ dependencies = [
     { name = "httpx" },
     { name = "langchain-community" },
     { name = "langchain-core" },
+    { name = "langchain-deepseek-official" },
     { name = "langchain-openai" },
     { name = "langgraph" },
     { name = "mcp" },
@@ -174,7 +175,7 @@ dependencies = [
     { name = "requests" },
 ]
 
-[package.dev-dependencies]
+[package.dependency-groups]
 dev = [
     { name = "ruff" },
 ]
@@ -187,7 +188,8 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.20.0,<0.28.0" },
     { name = "langchain-community", specifier = ">=0.3.3,<0.4.0" },
     { name = "langchain-core", specifier = ">=0.3.13,<0.4.0" },
-    { name = "langchain-openai", specifier = ">=0.2.4,<0.3.0" },
+    { name = "langchain-deepseek-official", specifier = ">=0.1.0" },
+    { name = "langchain-openai", specifier = ">=0.3.0,<0.4.0" },
     { name = "langgraph", specifier = ">=0.2.40,<0.3.0" },
     { name = "mcp", specifier = ">=1.1.2" },
     { name = "opentelemetry-api", specifier = ">=1.28.2" },
@@ -222,7 +224,7 @@ requires-dist = [
     { name = "requests", specifier = ">=2.32.3,<2.33.0" },
 ]
 
-[package.metadata.requires-dev]
+[package.metadata.dependency-groups]
 dev = [{ name = "ruff", specifier = ">=0.8.2" }]
 
 [[package]]
@@ -712,7 +714,7 @@ wheels = [
 
 [[package]]
 name = "langchain-core"
-version = "0.3.29"
+version = "0.3.32"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jsonpatch" },
@@ -723,23 +725,36 @@ dependencies = [
     { name = "tenacity" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ed/05/8fc844c2f79a2c30845de2db948de1cf7c17b94f419f7ae7b616d628a54f/langchain_core-0.3.29.tar.gz", hash = "sha256:773d6aeeb612e7ce3d996c0be403433d8c6a91e77bbb7a7461c13e15cfbe5b06", size = 330785 }
+sdist = { url = "https://files.pythonhosted.org/packages/37/96/5ac1277e4e7bb0e134ae3c91a970556458fa6a54bd9c4a2ac9d13b098697/langchain_core-0.3.32.tar.gz", hash = "sha256:4eb85d8428585e67a1766e29c6aa2f246c6329d97cb486e8d6f564ab0bd94a4f", size = 331235 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/95/4f/fe1de63f6fc1ac7af3ba4ae12d420af1a19f7893b5fcb72856b9fc67f650/langchain_core-0.3.29-py3-none-any.whl", hash = "sha256:817db1474871611a81105594a3e4d11704949661008e455a10e38ca9ff601a1a", size = 411593 },
+    { url = "https://files.pythonhosted.org/packages/3f/bb/f4a7a98ae965acacd75dcbc85a714589a20e910906691b3ebc03089e6962/langchain_core-0.3.32-py3-none-any.whl", hash = "sha256:c050bd1e6dd556ae49073d338aca9dca08b7b55f4778ddce881a12224bc82a7e", size = 412416 },
+]
+
+[[package]]
+name = "langchain-deepseek-official"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "langchain-openai" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b9/c1/cbbb912139acd89725b991b54866f250e11f58e78ae14589a67a8c7b432a/langchain_deepseek_official-0.1.0.tar.gz", hash = "sha256:d2b95dbba22fce979a24d9682e8c90e5b01ce4070ddd153532f9fecb00dd6125", size = 4637 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/01/60/7ac1df787fdc4335987f4b24ddfb39d89ef1f818718390b5600b38e4b50f/langchain_deepseek_official-0.1.0-py3-none-any.whl", hash = "sha256:bf8736cb5e566530da52d266ad991f81872a2afde15495eec9b1e51ac5be4895", size = 5329 },
 ]
 
 [[package]]
 name = "langchain-openai"
-version = "0.2.14"
+version = "0.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "openai" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e5/fd/8256eba9a159f95a13c5bf7f1f49683de93b3876585b768e6be5dc3a5765/langchain_openai-0.2.14.tar.gz", hash = "sha256:7a514f309e356b182a337c0ed36ab3fbe34d9834a235a3b85cb7f91ae775d978", size = 43647 }
+sdist = { url = "https://files.pythonhosted.org/packages/2e/b6/711dc59041ca3a93461ccc176f90f6ab321cc41b24b70031a68928d3086f/langchain_openai-0.3.2.tar.gz", hash = "sha256:c2c80ac0208eb7cefdef96f6353b00fa217979ffe83f0a21cc8666001df828c1", size = 48415 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ed/54/63c8264d7dbc3bf31ba61bf97740fdd76386b2d4f9a58f58afd3961ce7d7/langchain_openai-0.2.14-py3-none-any.whl", hash = "sha256:d232496662f79ece9a11caf7d798ba863e559c771bc366814f7688e0fe664fe8", size = 50876 },
+    { url = "https://files.pythonhosted.org/packages/00/9f/00b39a6b782e6a05b3536fc82d2a3cd50402ad273c6c742b180538abcc63/langchain_openai-0.3.2-py3-none-any.whl", hash = "sha256:8674183805e26d3ae3f78cc44f79fe0b2066f61e2de0e7e18be3b86f0d3b2759", size = 54447 },
 ]
 
 [[package]]

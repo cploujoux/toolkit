@@ -1,12 +1,11 @@
 from logging import getLogger
 from typing import Tuple, Union
 
-from langchain_core.language_models import BaseChatModel
-
 from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
+from langchain_core.language_models import BaseChatModel
 
 logger = getLogger(__name__)
 
@@ -43,7 +42,16 @@ def get_cohere_chat_model(**kwargs):
 
     return ChatCohere(**kwargs)
 
-def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
+def get_deepseek_chat_model(**kwargs):
+    from langchain_deepseek import ChatDeepSeek  # type: ignore
+
+    return ChatDeepSeek(**kwargs)
+
+def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
+    [chat_model, _, __] = get_chat_model_full(name, agent_model)
+    return chat_model
+
+def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
     settings = get_settings()
     client = new_client()
 
@@ -89,6 +97,12 @@ def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> Tuple[B
             "func": get_cohere_chat_model,
             "kwargs": {
                 "cohere_api_key": jwt,
+            },
+        },
+        "deepseek": {
+            "func": get_deepseek_chat_model,
+            "kwargs": {
+                "api_key": jwt,
             },
         },
     }

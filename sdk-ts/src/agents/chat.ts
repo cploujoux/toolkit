@@ -1,4 +1,5 @@
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import { ChatOpenAI } from "@langchain/openai";
 import {
   getAuthenticationHeaders,
   newClient,
@@ -17,6 +18,18 @@ async function getOpenAIChatModel() {
   try {
     const { ChatOpenAI } = require("@langchain/openai");
     return ChatOpenAI;
+  } catch (e) {
+    logger.warn(
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+    );
+    throw e;
+  }
+}
+
+async function getDeepSeekChatModel() {
+  try {
+    const { ChatDeepSeek } = require("@langchain/deepseek");
+    return ChatDeepSeek;
   } catch (e) {
     logger.warn(
       "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
@@ -130,15 +143,18 @@ export async function getChatModel(
   let chat: BaseChatModel;
   switch (provider) {
     case "openai":
-      const chatClassOpenAI = await getOpenAIChatModel();
-      const chatOpenAI = new chatClassOpenAI(
-        { apiKey: "fake_api_key", temperature: 0, model, streamUsage: false },
-        {
+      // const chatClassOpenAI = await getOpenAIChatModel();
+      const chatClassOpenAI = ChatOpenAI;
+      const chatOpenAI = new chatClassOpenAI({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
           defaultQuery: params,
-        }
-      );
+        },
+      });
       return { chat: chatOpenAI, provider, model };
     case "anthropic":
       const chatClassAnthropic = await getAnthropicChatModel();
@@ -199,6 +215,20 @@ export async function getChatModel(
         );
         throw e;
       }
+      break;
+    case "deepseek":
+      const chatClassDeepSeek = await getDeepSeekChatModel();
+      const chatDeepSeek = new chatClassDeepSeek({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
+          baseURL: getBaseUrl(name),
+          defaultHeaders: headers,
+          defaultQuery: params,
+        },
+      });
+      chat = chatDeepSeek;
       break;
     default:
       logger.warn(

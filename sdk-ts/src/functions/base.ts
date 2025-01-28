@@ -26,6 +26,7 @@ export type FunctionBase = {
 
 export type FunctionOptions = {
   function?: Function;
+  name?: string;
   description?: string;
   parameters?: StoreFunctionParameter[];
 };
@@ -48,11 +49,14 @@ export const wrapFunction: WrapFunctionType = async (
     parameters,
     ...(options?.function?.spec ? { ...options.function.spec } : {}),
   };
+  const name = slugify(
+    options?.name || options?.function?.metadata?.name || ""
+  );
   const functionBeamlit: Function = {
     metadata: {
-      name: options?.function?.metadata?.name ?? slugify(func.name),
+      name: name || slugify(func.name),
       displayName:
-        options?.function?.metadata?.displayName ?? slugify(func.name),
+        options?.function?.metadata?.displayName || name || slugify(func.name),
       environment: settings.environment,
     },
     spec: functionSpec,
