@@ -111,13 +111,13 @@ export const wrapAgent: WrapAgentType = async (
       }
     }
 
-    const [chatModel] = await getChatModel(
+    const { chat } = await getChatModel(
       settings.agent.model.metadata.name,
       settings.agent.model
     );
-    settings.agent.chatModel = chatModel;
+    settings.agent.chatModel = chat;
     settings.agent.agent = createReactAgent({
-      llm: chatModel,
+      llm: chat,
       tools: settings.agent.functions ?? [],
       checkpointSaver: new MemorySaver(),
     });

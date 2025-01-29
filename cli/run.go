@@ -16,8 +16,10 @@ func (r *Operations) RunCmd() *cobra.Command {
 	var data string
 	var path string
 	var method string
+	var params []string
+	var debug bool
+	var local bool
 	var headerFlags []string
-	var showHeaders bool
 	var uploadFilePath string
 
 	cmd := &cobra.Command{
@@ -68,7 +70,10 @@ bl run function my-function --data '{"query": "4+2"}'`,
 				method,
 				path,
 				headers,
+				params,
 				data,
+				debug,
+				local,
 			)
 			if err != nil {
 				fmt.Printf("Error making request: %v\n", err)
@@ -87,13 +92,14 @@ bl run function my-function --data '{"query": "4+2"}'`,
 				fmt.Printf("Response Status: %s\n", res.Status)
 			}
 
-			if showHeaders {
+			if debug {
 				fmt.Printf("Response Headers:\n")
 				for key, values := range res.Header {
 					for _, value := range values {
 						fmt.Printf("  %s: %s\n", key, value)
 					}
 				}
+				fmt.Println()
 			}
 
 			// Try to pretty print JSON response
@@ -110,8 +116,10 @@ bl run function my-function --data '{"query": "4+2"}'`,
 	cmd.Flags().StringVar(&data, "data", "", "JSON body data for the inference request")
 	cmd.Flags().StringVar(&path, "path", "", "path for the inference request")
 	cmd.Flags().StringVar(&method, "method", "POST", "HTTP method for the inference request")
+	cmd.Flags().StringSliceVar(&params, "params", []string{}, "Query params sent to the inference request")
 	cmd.Flags().StringVar(&uploadFilePath, "upload-file", "", "This transfers the specified local file to the remote URL")
 	cmd.Flags().StringArrayVar(&headerFlags, "header", []string{}, "Request headers in 'Key: Value' format. Can be specified multiple times")
-	cmd.Flags().BoolVar(&showHeaders, "show-headers", false, "Show response headers in output")
+	cmd.Flags().BoolVar(&debug, "debug", false, "Debug mode")
+	cmd.Flags().BoolVar(&local, "local", false, "Run locally")
 	return cmd
 }

@@ -18,13 +18,14 @@ from beamlit.models import Agent, AgentMetadata, AgentSpec
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
-from .chat import get_chat_model
+from .chat import get_chat_model_full
 
 
 def agent(
     agent: Agent | dict = None,
     override_model=None,
     override_agent=None,
+    override_functions=None,
     mcp_hub=None,
     remote_functions=None,
 ) -> Callable:
@@ -116,19 +117,23 @@ def agent(
                     raise e
 
                 if settings.agent.model:
-                    chat_model, provider, model = get_chat_model(agent.spec.model, settings.agent.model)
+                    chat_model, provider, model = get_chat_model_full(agent.spec.model, settings.agent.model)
                     settings.agent.chat_model = chat_model
                     logger.info(f"Chat model configured, using: {provider}:{model}")
 
-        functions = get_functions(
-            client=client,
-            dir=settings.agent.functions_directory,
-            mcp_hub=mcp_hub,
-            remote_functions=remote_functions,
-            chain=agent.spec.agent_chain,
+        if override_functions is not None:
+            functions = override_functions
+        else:
+            functions = get_functions(
+                client=client,
+                dir=settings.agent.functions_directory,
+                mcp_hub=mcp_hub,
+                remote_functions=remote_functions,
+                chain=agent.spec.agent_chain,
             remote_functions_empty=not remote_functions,
             warning=chat_model is not None,
         )
+
         settings.agent.functions = functions
 
         if override_agent is None:

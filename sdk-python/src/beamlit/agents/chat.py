@@ -98,25 +98,16 @@ def get_cohere_chat_model(**kwargs) -> BaseChatModel:
 
     return ChatCohere(**kwargs)
 
+def get_deepseek_chat_model(**kwargs):
+    from langchain_deepseek import ChatDeepSeek  # type: ignore
 
-def get_chat_model(
-    name: str, agent_model: Union[Model, None] = None
-) -> Tuple[BaseChatModel, str, str]:
-    """
-    Retrieves and configures a chat model based on the provided model name and optional agent model.
-    Supports multiple providers such as OpenAI, Anthropic, Mistral, XAI, and Cohere.
+    return ChatDeepSeek(**kwargs)
 
-    Parameters:
-        name (str): The name of the chat model.
-        agent_model (Union[Model, None], optional): An optional `Model` instance representing the agent's model.
+def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
+    [chat_model, _, __] = get_chat_model_full(name, agent_model)
+    return chat_model
 
-    Returns:
-        Tuple[BaseChatModel, str, str]: A tuple containing the initialized chat model instance,
-                                        the provider name, and the model name.
-
-    Raises:
-        ValueError: If the specified provider or model is not found or supported.
-    """
+def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
     settings = get_settings()
     client = new_client()
 
@@ -145,7 +136,10 @@ def get_chat_model(
         },
         "anthropic": {
             "func": get_anthropic_chat_model,
-            "kwargs": {},
+            "kwargs": {
+                "base_url": get_base_url(name).replace("/v1", ""),
+            },
+            "remove_kwargs": ["default_query"]
         },
         "mistral": {
             "func": get_mistral_chat_model,
@@ -165,6 +159,13 @@ def get_chat_model(
             "func": get_cohere_chat_model,
             "kwargs": {
                 "cohere_api_key": jwt,
+                "base_url": get_base_url(name).replace("/v1", ""),
+            },
+        },
+        "deepseek": {
+            "func": get_deepseek_chat_model,
+            "kwargs": {
+                "api_key": jwt,
             },
         },
     }

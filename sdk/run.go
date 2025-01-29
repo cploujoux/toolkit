@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 func (c *Client) Run(
@@ -18,7 +19,10 @@ func (c *Client) Run(
 	method string,
 	path string,
 	headers map[string]string,
+	params []string,
 	body string,
+	debug bool,
+	local bool,
 	reqEditors ...RequestEditorFn,
 ) (*http.Response, error) {
 	var bodyReader io.Reader
@@ -26,7 +30,7 @@ func (c *Client) Run(
 		bodyReader = bytes.NewReader([]byte(body))
 	}
 
-	req, err := NewRunRequest(c.RunServer, method, path, headers, workspaceName, environment, resourceType, resourceName, bodyReader)
+	req, err := NewRunRequest(c.RunServer, method, path, headers, params, local, debug, workspaceName, environment, resourceType, resourceName, bodyReader)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +38,6 @@ func (c *Client) Run(
 	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
 		return nil, err
 	}
-
 	return c.Client.Do(req)
 }
 
@@ -43,6 +46,9 @@ func NewRunRequest(
 	method string,
 	path string,
 	headers map[string]string,
+	params []string,
+	local bool,
+	debug bool,
 	workspaceName string,
 	environment string,
 	resourceType string,
@@ -50,18 +56,28 @@ func NewRunRequest(
 	body io.Reader,
 ) (*http.Request, error) {
 	var err error
-
-	runURL, err := url.Parse(RunServer)
+	var runURL *url.URL
+	if local {
+		runURL, err = url.Parse("http://localhost:1338")
+	} else {
+		runURL, err = url.Parse(RunServer)
+	}
 	if err != nil {
 		return nil, err
 	}
-	if path != "" {
+	if local {
+		path = ""
+	} else if path != "" {
 		path = fmt.Sprintf("%s/%ss/%s/%s", workspaceName, resourceType, resourceName, path)
 	} else {
 		path = fmt.Sprintf("%s/%ss/%s", workspaceName, resourceType, resourceName)
 	}
 
-	queryURL, err := runURL.Parse(path + "?environment=" + environment)
+	if debug {
+		params = append(params, "debug=true")
+	}
+
+	queryURL, err := runURL.Parse(path + "?environment=" + environment + "&" + strings.Join(params, "&"))
 	if err != nil {
 		return nil, err
 	}
