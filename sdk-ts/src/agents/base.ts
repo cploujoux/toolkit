@@ -27,7 +27,6 @@ export type AgentOptions = {
   overrideAgent?: any;
   overrideModel?: any;
   remoteFunctions?: string[];
-  mcpHub?: string[];
 };
 
 export const wrapAgent: WrapAgentType = async (
@@ -45,7 +44,7 @@ export const wrapAgent: WrapAgentType = async (
   }
 
   const client = newClient();
-  const { agent, overrideAgent, overrideModel, remoteFunctions, mcpHub } =
+  const { agent, overrideAgent, overrideModel, remoteFunctions } =
     options ?? {};
 
   if (overrideModel) {
@@ -79,7 +78,6 @@ export const wrapAgent: WrapAgentType = async (
   const functions = await getFunctions({
     client,
     dir: settings.agent.functionsDirectory,
-    mcpHub,
     remoteFunctions,
     chain: agent?.spec?.agentChain,
     warning: settings.agent.model !== null,

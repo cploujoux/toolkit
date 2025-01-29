@@ -32,38 +32,41 @@ export function getMCPTool(
 
 export class MCPClient {
   private client: Client;
-  private serverName: string;
-  private headers: Record<string, string>;
+  private url: string;
   private settings: Settings;
 
-  constructor(client: Client, serverName: string) {
+  constructor(client: Client, url: string) {
     this.settings = getSettings();
     this.client = client;
-    this.serverName = serverName;
-    this.headers = {
-      "Api-Key": "1234567890",
-    };
+    this.url = url;
   }
 
   async listTools(): Promise<ListToolsResult> {
-    const url = `${this.settings.mcpHubUrl}/${this.serverName}/tools/list`;
-    const { data } = await this.client.request({
+    const { response, data } = await this.client.request({
       method: "GET",
-      url,
-      headers: this.headers,
+      url: "tools/list",
+      baseUrl: this.url,
     });
+    if (response.status >= 400) {
+      throw new Error(
+        `Failed to list tools for ${this.url} cause ${response.status}`
+      );
+    }
     return data as ListToolsResult;
   }
 
   async callTool(toolName: string, ...args: any[]): Promise<any> {
-    const url = `${this.serverName}/tools/call`;
-    const { data } = await this.client.request({
+    const { response, data } = await this.client.request({
       method: "POST",
-      baseUrl: this.settings.mcpHubUrl,
-      url,
-      headers: this.headers,
+      url: "tools/call",
+      baseUrl: this.url,
       body: { name: toolName, arguments: args },
     });
+    if (response.status >= 400) {
+      throw new Error(
+        `Failed to call tool ${toolName} for ${this.url} cause ${response.status}`
+      );
+    }
     return data;
   }
 }
@@ -88,7 +91,7 @@ export class MCPToolkit {
     }
   }
 
-  getTools(): StructuredTool[] {
+  async getTools(): Promise<StructuredTool[]> {
     if (!this._tools) {
       throw new Error("Must initialize the toolkit first");
     }
