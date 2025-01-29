@@ -16,14 +16,12 @@ from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
 from beamlit.common.settings import get_settings
-from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.functions.remote.remote import RemoteToolkit
 from beamlit.models import AgentChain, Function, FunctionKit
 
 logger = getLogger(__name__)
 
 def get_functions(
-    mcp_hub:Union[list[str], None]=None,
     remote_functions:Union[list[str], None]=None,
     client:Union[AuthenticatedClient, None]=None,
     dir:Union[str, None]=None,
@@ -129,16 +127,6 @@ def get_functions(
                                                 )
                         except Exception as e:
                             logger.warning(f"Error processing {file_path}: {e!s}")
-
-    if mcp_hub:
-        for server in mcp_hub:
-            try:
-                mcp_client = MCPClient(client, server)
-                toolkit = MCPToolkit(client=mcp_client)
-                toolkit.initialize()
-                functions.extend(toolkit.get_tools())
-            except Exception as e:
-                logger.warn(f"Failed to initialize MCP server {server}: {e!s}")
 
     if remote_functions:
         for function in remote_functions:

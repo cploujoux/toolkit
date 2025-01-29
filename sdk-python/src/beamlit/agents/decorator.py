@@ -3,14 +3,15 @@ import functools
 import inspect
 from logging import getLogger
 
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.prebuilt import create_react_agent
+
 from beamlit.api.models import get_model, list_models
 from beamlit.authentication import new_client
 from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
 from beamlit.models import Agent, AgentMetadata, AgentSpec
-from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
 
 from .chat import get_chat_model_full
 
@@ -20,7 +21,6 @@ def agent(
     override_model=None,
     override_agent=None,
     override_functions=None,
-    mcp_hub=None,
     remote_functions=None,
 ):
     logger = getLogger(__name__)
@@ -95,7 +95,6 @@ def agent(
             functions = get_functions(
                 client=client,
                 dir=settings.agent.functions_directory,
-                mcp_hub=mcp_hub,
                 remote_functions=remote_functions,
                 chain=agent.spec.agent_chain,
             remote_functions_empty=not remote_functions,

@@ -10,6 +10,7 @@ from langchain_core.tools.base import BaseTool, ToolException
 from beamlit.api.functions import get_function
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
+from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
 
@@ -79,11 +80,9 @@ class RemoteToolkit:
     """
     Remote toolkit
     """
-
     client: AuthenticatedClient
     function: str
     _function: Function | None = None
-
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
@@ -93,8 +92,16 @@ class RemoteToolkit:
 
     @t.override
     def get_tools(self) -> list[BaseTool]:
+        settings = get_settings()
         if self._function is None:
             raise RuntimeError("Must initialize the toolkit first")
+
+        if self._function.spec.integration_connections:
+            url = f"{settings.run_url}/{settings.workspace}/functions/{self._function.metadata.name}"
+            mcp_client = MCPClient(self.client, url)
+            mcp_toolkit = MCPToolkit(client=mcp_client)
+            mcp_toolkit.initialize()
+            return mcp_toolkit.get_tools()
 
         if self._function.spec.kit:
             return [

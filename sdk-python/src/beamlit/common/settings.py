@@ -4,12 +4,8 @@ from typing import Tuple, Type, Union
 from langchain_core.language_models.chat_models import BaseChatModel
 from langgraph.graph.graph import CompiledGraph
 from pydantic import Field
-from pydantic_settings import (
-    BaseSettings,
-    PydanticBaseSettingsSource,
-    SettingsConfigDict,
-    YamlConfigSettingsSource,
-)
+from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
+                               SettingsConfigDict, YamlConfigSettingsSource)
 
 from beamlit.common.logger import init as init_logger
 from beamlit.models import Agent, Function, Model
@@ -59,7 +55,6 @@ class Settings(BaseSettings):
     base_url: str = Field(default="https://api.beamlit.com/v0")
     app_url: str = Field(default="https://app.beamlit.com")
     run_url: str = Field(default="https://run.beamlit.com")
-    mcp_hub_url: str = Field(default="https://mcp-hub-server.beamlit.workers.com")
     registry_url: str = Field(default="https://us.registry.beamlit.com")
     log_level: str = Field(default="INFO")
     enable_opentelemetry: bool = Field(default=False)
@@ -72,10 +67,9 @@ class Settings(BaseSettings):
         if os.getenv('BL_ENV') == 'dev':
             self.base_url = os.getenv('BL_BASE_URL') or "https://api.beamlit.dev/v0"
             self.run_url = os.getenv('BL_RUN_URL') or "https://run.beamlit.dev"
-            self.mcp_hub_url = os.getenv('BL_MCP_HUB_URL') or "https://mcp-hub-server.beamlit.workers.dev"
             self.registry_url = os.getenv('BL_REGISTRY_URL') or "https://eu.registry.beamlit.dev"
             self.app_url = os.getenv('BL_APP_URL') or "https://app.beamlit.dev"
-            
+
     @classmethod
     def settings_customise_sources(
         cls,

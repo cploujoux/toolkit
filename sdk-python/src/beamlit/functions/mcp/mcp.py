@@ -44,26 +44,22 @@ def create_dynamic_schema(name: str, schema: dict[str, t.Any]) -> type[pydantic.
 
 
 class MCPClient:
-    def __init__(self, client: AuthenticatedClient, server_name: str):
+    def __init__(self, client: AuthenticatedClient, url: str):
         self.client = client
-        self.server_name = server_name
-        self.headers = {"Api-Key": "1234567890"}
+        self.url = url
 
     def list_tools(self) -> requests.Response:
         client = self.client.get_httpx_client()
-        url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/list")
-        response = client.request("GET", url, headers=self.headers)
+        response = client.request("GET", f"{self.url}/tools/list")
         response.raise_for_status()
         return response
 
     def call_tool(self, tool_name: str, arguments: dict[str, Any] = None) -> requests.Response:
         client = self.client.get_httpx_client()
-        url = urllib.parse.urljoin(settings.mcp_hub_url, f"{self.server_name}/tools/call")
         response = client.request(
             "POST",
-            url,
+            f"{self.url}/tools/call",
             json={"name": tool_name, "arguments": arguments},
-            headers=self.headers,
         )
         response.raise_for_status()
         return response
