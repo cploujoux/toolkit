@@ -1,6 +1,9 @@
 import { Client } from "@hey-api/client-fetch";
 import { StructuredTool, tool } from "@langchain/core/tools";
-import { ListToolsResult } from "@modelcontextprotocol/sdk/types.js";
+import {
+  CallToolResultSchema,
+  ListToolsResult,
+} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { getSettings, Settings } from "../common/settings.js";
 
@@ -20,7 +23,7 @@ export function getMCPTool(
   return tool(
     async (...args: any[]) => {
       const result = await client.callTool(name, args);
-      return result.text;
+      return JSON.stringify(result.content);
     },
     {
       name,
@@ -67,7 +70,11 @@ export class MCPClient {
         `Failed to call tool ${toolName} for ${this.url} cause ${response.status}`
       );
     }
-    return data;
+    const mcpResponse = CallToolResultSchema.parse(data);
+    if (mcpResponse.isError) {
+      throw new Error(JSON.stringify(mcpResponse.content));
+    }
+    return mcpResponse;
   }
 }
 
