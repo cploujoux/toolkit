@@ -104,10 +104,35 @@ def get_deepseek_chat_model(**kwargs):
     return ChatDeepSeek(**kwargs)
 
 def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
+    """
+    Gets a chat model instance for the specified model name.
+
+    Parameters:
+        name (str): The name of the model to retrieve.
+        agent_model (Union[Model, None], optional): A pre-fetched model instance.
+            If None, the model will be fetched from the API. Defaults to None.
+
+    Returns:
+        BaseChatModel: An instance of the appropriate chat model.
+    """
     [chat_model, _, __] = get_chat_model_full(name, agent_model)
     return chat_model
 
 def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
+    """
+    Gets a chat model instance along with provider and model information.
+
+    Parameters:
+        name (str): The name of the model to retrieve.
+        agent_model (Union[Model, None], optional): A pre-fetched model instance.
+            If None, the model will be fetched from the API. Defaults to None.
+
+    Returns:
+        Tuple[BaseChatModel, str, str]: A tuple containing:
+            - The chat model instance
+            - The provider name (e.g., 'openai', 'anthropic', etc.)
+            - The specific model name (e.g., 'gpt-4o-mini')
+    """
     settings = get_settings()
     client = new_client()
 
