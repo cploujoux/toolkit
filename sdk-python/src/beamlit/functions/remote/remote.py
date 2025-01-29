@@ -5,6 +5,8 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
+from langchain_core.tools.base import BaseTool, ToolException
+
 from beamlit.api.functions import get_function, list_functions
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
@@ -12,7 +14,6 @@ from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
-from langchain_core.tools.base import BaseTool, ToolException
 
 
 def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:

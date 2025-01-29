@@ -1,5 +1,4 @@
 import asyncio
-import urllib.parse
 import warnings
 from typing import Any, Callable
 

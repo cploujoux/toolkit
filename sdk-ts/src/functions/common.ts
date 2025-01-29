@@ -112,9 +112,13 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   if (remoteFunctions) {
     await Promise.all(
       remoteFunctions.map(async (name) => {
-        const toolkit = new RemoteToolkit(client, name);
-        await toolkit.initialize();
-        functions.push(...(await toolkit.getTools()));
+        try {
+          const toolkit = new RemoteToolkit(client, name);
+          await toolkit.initialize();
+          functions.push(...(await toolkit.getTools()));
+        } catch (error) {
+          logger.warn(`Failed to initialize remote function ${name}: ${error}`);
+        }
       })
     );
   }

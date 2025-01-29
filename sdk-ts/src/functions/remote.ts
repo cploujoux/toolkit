@@ -68,9 +68,7 @@ export class RemoteToolkit {
         const names =
           listData?.map((f: Function) => f.metadata?.name || "") || [];
         throw new Error(
-          `Failed to get function ${this.functionName} cause ${
-            response.status
-          }. Available functions: ${names.join(", ")}`
+          `error ${response.status}. Available functions: ${names.join(", ")}`
         );
       }
       this._function = data || null;
