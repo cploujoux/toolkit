@@ -1,7 +1,7 @@
 import { Client } from "@hey-api/client-fetch";
 import { StructuredTool, tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { getFunction } from "../client/sdk.gen.js";
+import { getFunction, listFunctions } from "../client/sdk.gen.js";
 import { Function } from "../client/types.gen.js";
 import { getSettings, Settings } from "../common/settings.js";
 import { RunClient } from "../run.js";
@@ -56,10 +56,23 @@ export class RemoteToolkit {
    */
   async initialize(): Promise<void> {
     if (!this._function) {
-      const { data } = await getFunction({
+      const { response, data } = await getFunction({
         client: this.client,
         path: { functionName: this.functionName },
       });
+      if (response.status >= 400) {
+        const { data: listData } = await listFunctions({
+          client: this.client,
+          query: { environment: this.settings.environment },
+        });
+        const names =
+          listData?.map((f: Function) => f.metadata?.name || "") || [];
+        throw new Error(
+          `Failed to get function ${this.functionName} cause ${
+            response.status
+          }. Available functions: ${names.join(", ")}`
+        );
+      }
       this._function = data || null;
     }
   }

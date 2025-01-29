@@ -5,14 +5,14 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
-from langchain_core.tools.base import BaseTool, ToolException
-
-from beamlit.api.functions import get_function
+from beamlit.api.functions import get_function, list_functions
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
+from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
+from langchain_core.tools.base import BaseTool, ToolException
 
 
 def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
@@ -88,7 +88,22 @@ class RemoteToolkit:
     def initialize(self) -> None:
         """Initialize the session and retrieve tools list"""
         if self._function is None:
-            self._function = get_function.sync_detailed(self.function, client=self.client).parsed
+            try:
+                response = get_function.sync_detailed(self.function, client=self.client)
+                self._function = response.parsed
+            except UnexpectedStatus as e:
+                settings = get_settings()
+                functions = list_functions.sync_detailed(
+                    client=self.client,
+                    environment=settings.environment,
+                ).parsed
+                names = [
+                    f.metadata.name
+                    for f in functions
+                ]
+                raise RuntimeError(
+                    f"error: {e.status_code}. Available functions: {', '.join(names)}"
+                )
 
     @t.override
     def get_tools(self) -> list[BaseTool]:
