@@ -77,7 +77,10 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
         },
         "anthropic": {
             "func": get_anthropic_chat_model,
-            "kwargs": {},
+            "kwargs": {
+                "base_url": get_base_url(name).replace("/v1", ""),
+            },
+            "remove_kwargs": ["default_query"]
         },
         "mistral": {
             "func": get_mistral_chat_model,
@@ -97,6 +100,7 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
             "func": get_cohere_chat_model,
             "kwargs": {
                 "cohere_api_key": jwt,
+                "base_url": get_base_url(name).replace("/v1", ""),
             },
         },
         "deepseek": {
