@@ -54,6 +54,10 @@ var rootCmd = &cobra.Command{
 		var err error
 		os := runtime.GOOS
 		arch := runtime.GOARCH
+		commitShort := "unknown"
+		if commit != "" && len(commit) > 7 {
+			commitShort = commit[:7]
+		}
 		c, err := sdk.NewClientWithCredentials(
 			sdk.RunClientWithCredentials{
 				ApiURL:      BASE_URL,
@@ -61,7 +65,7 @@ var rootCmd = &cobra.Command{
 				Credentials: credentials,
 				Workspace:   workspace,
 				Headers: map[string]string{
-					"User-Agent": fmt.Sprintf("beamlit/v%s (%s/%s) beamlit/%s", version, os, arch, commit[:7]),
+					"User-Agent": fmt.Sprintf("beamlit/v%s (%s/%s) beamlit/%s", version, os, arch, commitShort),
 				},
 			},
 		)
