@@ -22,7 +22,7 @@ export function getMCPTool(
 ) {
   return tool(
     async (...args: any[]) => {
-      const result = await client.callTool(name, args);
+      const result = await client.callTool(name, ...args);
       return JSON.stringify(result.content);
     },
     {
@@ -63,7 +63,7 @@ export class MCPClient {
       method: "POST",
       url: "tools/call",
       baseUrl: this.url,
-      body: { name: toolName, arguments: args },
+      body: { name: toolName, arguments: args[0] },
     });
     if (response.status >= 400) {
       throw new Error(
