@@ -8,7 +8,7 @@ import { getModel, listModels } from "../client/sdk.gen.js";
 import { Agent } from "../client/types.gen.js";
 import { getSettings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
-import { getChatModel } from "./chat.js";
+import { getChatModelFull } from "./chat.js";
 
 export type CallbackFunctionAgentVariadic = (...args: any[]) => any;
 
@@ -109,7 +109,7 @@ export const wrapAgent: WrapAgentType = async (
       }
     }
 
-    const { chat } = await getChatModel(
+    const { chat } = await getChatModelFull(
       settings.agent.model.metadata.name,
       settings.agent.model
     );

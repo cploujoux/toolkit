@@ -89,7 +89,12 @@ async function getCohereModel() {
   }
 }
 
-export async function getChatModel(
+export async function getChatModel(name: string, agentModel?: Model) {
+  const { chat } = await getChatModelFull(name, agentModel);
+  return chat;
+}
+
+export async function getChatModelFull(
   name: string,
   agentModel?: Model
 ): Promise<{ chat: BaseChatModel; provider: string; model: string }> {
