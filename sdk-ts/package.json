@@ -3,18 +3,42 @@
   "version": "0.0.34",
   "description": "",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "start": "tsc --lib es2022 --module es2022 --target es2022 index.ts && node index.js",
-    "poststart": "rm -f src/**/*.js src/*.js *.js",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p tsconfig.prod.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "prepack": "npm run build:esm && npm run build:cjs",
+    "lint": "eslint src/",
     "test": "jest",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "start": "npm run server",
+    "server": "tsx watch --clear-screen=false src/cli.ts server",
+    "client": "tsx src/cli.ts client"
   },
-  "main": "dist/index.js",
-  "keywords": [],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "beamlit",
+    "agent",
+    "mcp"
+  ],
   "author": "cploujoux",
   "license": "Apache-2.0",
+  "exports": {
+    "./*": {
+      "import": "./dist/esm/*",
+      "require": "./dist/cjs/*"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/esm/*"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/beamlit/toolkit/sdk-ts"
@@ -49,8 +73,10 @@
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",
+    "express": "^4.19.2",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
+    "tsx": "^4.16.5",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.21.0"
   },

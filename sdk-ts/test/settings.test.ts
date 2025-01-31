@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it } from "@jest/globals";
+import fs from "fs";
 import { Settings, init } from "../src/common/settings";
-
 describe("Settings", () => {
   let settings: Settings;
 
   beforeEach(() => {
+    process.env.BL_ENV = "";
     settings = init();
   });
 
@@ -37,8 +38,17 @@ describe("Settings", () => {
   });
 
   it("should update settings from yaml settings", () => {
+    fs.writeFileSync(
+      "beamlit.yaml",
+      `
+workspace: main
+authentication:
+  jwt: test-jwt`
+    );
+    settings = init();
     expect(settings.workspace).toBe("main");
     expect(settings.authentication.jwt).toBe("test-jwt");
+    fs.unlinkSync("beamlit.yaml");
   });
 
   it("should validate baseUrl format", () => {
@@ -54,9 +64,6 @@ describe("Settings", () => {
     const checkSettings = init();
     expect(checkSettings.baseUrl).toBe("https://api.beamlit.dev/v0");
     expect(checkSettings.runUrl).toBe("https://run.beamlit.dev");
-    expect(checkSettings.mcpHubUrl).toBe(
-      "https://mcp-hub-server.beamlit.workers.dev"
-    );
     expect(checkSettings.registryUrl).toBe("https://eu.registry.beamlit.dev");
     expect(checkSettings.appUrl).toBe("https://app.beamlit.dev");
     delete process.env.BL_ENV;

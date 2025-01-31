@@ -29,6 +29,8 @@ async def main(
     responses = []
 
     async for chunk in agent.astream(agent_body, config=agent_config):
+        if "agent" in chunk and "messages" in chunk["agent"]:
+            print(chunk["agent"]["messages"][-1].content)
         responses.append(chunk)
     content = responses[-1]
     return content["agent"]["messages"][-1].content
@@ -36,7 +38,7 @@ async def main(
 
 if __name__ == "__main__":
     async def check():
-        input = "What is the weather in Paris ?"
+        input = "Generate a dog picture, a golden retriever because they are the best"
         response = await main(input)
         print(response)
 
