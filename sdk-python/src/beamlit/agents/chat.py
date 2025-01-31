@@ -48,6 +48,20 @@ def get_deepseek_chat_model(**kwargs):
 
     return ChatDeepSeek(**kwargs)
 
+def get_azure_ai_inference_chat_model(**kwargs):
+    from langchain_openai import ChatOpenAI  # type: ignore
+
+    return ChatOpenAI(
+        **kwargs
+    )  # It uses a compatible endpoint, so we can use the ChatOpenAI interface
+
+def get_azure_marketplace_chat_model(**kwargs):
+    from langchain_openai import OpenAI  # type: ignore
+      
+    return OpenAI(
+        **kwargs
+    )  # It seems to use a compatible endpoint, so we can use the classic OpenAI interface
+
 def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
     [chat_model, _, __] = get_chat_model_full(name, agent_model)
     return chat_model
@@ -109,6 +123,16 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
             "kwargs": {
                 "api_key": jwt,
             },
+        },
+        "azure-ai-inference": {
+            "func": get_azure_ai_inference_chat_model,
+            "kwargs": {
+                "base_url": get_base_url(name).replace("/v1", ""),
+            },
+        },
+        "azure-marketplace": {
+            "func": get_azure_marketplace_chat_model,
+            "kwargs": {},
         },
     }
 
