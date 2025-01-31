@@ -27,11 +27,24 @@ export async function createApp(
 
   const settings = init();
   logger.info(`Importing server module: ${settings.server.module}`);
-  const func = funcDefault || importModule();
+  let func = funcDefault || importModule();
   if (!func) {
     throw new Error(
       `Failed to import server module from ${settings.server.module}`
     );
+  }
+  // Check if function accepts request as first parameter
+  const funcParams = func
+    .toString()
+    .match(/\((.*?)\)/)?.[1]
+    .split(",")
+    .map((p: string) => p.trim());
+  if (!funcParams || funcParams[0] === "") {
+    if (func.constructor.name === "AsyncFunction") {
+      func = await func();
+    } else if (typeof func === "function") {
+      func = func();
+    }
   }
   logger.info(
     `Running server with environment ${settings.environment} on ${settings.server.host}:${settings.server.port}`

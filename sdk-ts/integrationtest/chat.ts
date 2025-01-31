@@ -27,12 +27,12 @@ const main = async () => {
     }
   );
 
-  // const { chat } = await getChatModel("xai-grok-beta");
-  // const { chat } = await getChatModel("ministral-3b-2410");
-  const { chat } = await getChatModel("gpt-4o-mini");
-  // const { chat } = await getChatModel("cohere-command-r-plus");
-  // const { chat } = await getChatModel("claude-3-5-sonnet");
-  // const { chat } = await getChatModel("deepseek-chat");
+  // const chat = await getChatModel("xai-grok-beta");
+  // const chat = await getChatModel("ministral-3b-2410");
+  const chat = await getChatModel("gpt-4o-mini");
+  // const chat = await getChatModel("cohere-command-r-plus");
+  // const chat = await getChatModel("claude-3-5-sonnet");
+  // const chat = await getChatModel("deepseek-chat");
   const agent = createReactAgent({
     llm: chat,
     tools: getWeather.tools,
