@@ -22,7 +22,7 @@ async function getOpenAIChatModel() {
     return ChatOpenAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
     );
     throw e;
   }
@@ -34,7 +34,7 @@ async function getDeepSeekChatModel() {
     return ChatDeepSeek;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
     );
     throw e;
   }
@@ -46,7 +46,7 @@ async function getMistralChatModel() {
     return ChatMistralAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/mistralai. Please install it with: npm install @langchain/mistralai"
+      "Could not import @langchain/mistralai. Please install it with: npm install @langchain/mistralai",
     );
     throw e;
   }
@@ -58,7 +58,7 @@ async function getAnthropicChatModel() {
     return ChatAnthropic;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/anthropic. Please install it with: npm install @langchain/anthropic"
+      "Could not import @langchain/anthropic. Please install it with: npm install @langchain/anthropic",
     );
     throw e;
   }
@@ -71,7 +71,7 @@ async function getXAIChatModel() {
     return ChatXAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
     );
     throw e;
   }
@@ -83,7 +83,31 @@ async function getCohereModel() {
     return ChatCohere;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+    );
+    throw e;
+  }
+}
+
+async function getAzurAIInferenceModel() {
+  try {
+    const { ChatOpenAI } = require("@langchain/openai");
+    return ChatOpenAI;
+  } catch (e) {
+    logger.warn(
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+    );
+    throw e;
+  }
+}
+
+async function getAzureMarketplaceModel() {
+  try {
+    const { OpenAI } = require("@langchain/openai");
+    return OpenAI;
+  } catch (e) {
+    logger.warn(
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
     );
     throw e;
   }
@@ -96,7 +120,7 @@ export async function getChatModel(name: string, agentModel?: Model) {
 
 export async function getChatModelFull(
   name: string,
-  agentModel?: Model
+  agentModel?: Model,
 ): Promise<{ chat: BaseChatModel; provider: string; model: string }> {
   const settings = getSettings();
   const client = newClient();
@@ -139,10 +163,19 @@ export async function getChatModelFull(
     model = "gpt-4o-mini";
   }
 
-  const chatClasses = ["openai", "anthropic", "mistral", "xai", "cohere"];
+  const chatClasses = [
+    "openai",
+    "anthropic",
+    "mistral",
+    "xai",
+    "cohere",
+    "deepseek",
+    "azure-ai-inference",
+    "azure-marketplace",
+  ];
   if (!chatClasses.includes(provider)) {
     logger.warn(
-      `Provider ${provider} not currently supported, defaulting to OpenAI`
+      `Provider ${provider} not currently supported, defaulting to OpenAI`,
     );
     provider = "openai";
   }
@@ -198,7 +231,7 @@ export async function getChatModelFull(
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
           defaultQuery: params,
-        }
+        },
       );
       chat = chatXAI;
       break;
@@ -218,7 +251,7 @@ export async function getChatModelFull(
         chat = chatCohere;
       } catch (e) {
         logger.warn(
-          "Could not import cohere-ai. Please install it with: npm install cohere-ai"
+          "Could not import cohere-ai. Please install it with: npm install cohere-ai",
         );
         throw e;
       }
@@ -237,9 +270,36 @@ export async function getChatModelFull(
       });
       chat = chatDeepSeek;
       break;
+    case "azure-ai-inference":
+      const chatClassAzureAIInference = await getAzurAIInferenceModel();
+      const chatAzureAIInference = new chatClassAzureAIInference({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
+          baseURL: getBaseUrl(name).replace("/v1", ""),
+          defaultHeaders: headers,
+          defaultQuery: params,
+        },
+      });
+      chat = chatAzureAIInference;
+      break;
+    case "azure-marketplace":
+      const chatClassAzureMarketplace = await getAzureMarketplaceModel();
+      const chatAzureMarketplace = new chatClassAzureMarketplace({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
+          defaultHeaders: headers,
+          defaultQuery: params,
+        },
+      });
+      chat = chatAzureMarketplace;
+      break;
     default:
       logger.warn(
-        `Provider ${provider} not currently supported, defaulting to OpenAI`
+        `Provider ${provider} not currently supported, defaulting to OpenAI`,
       );
       const chatDefaultClass = await getOpenAIChatModel();
       const chatDefault = new chatDefaultClass(
@@ -248,7 +308,7 @@ export async function getChatModelFull(
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
           defaultQuery: params,
-        }
+        },
       );
       chat = chatDefault;
       break;
