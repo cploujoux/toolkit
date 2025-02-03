@@ -191,7 +191,7 @@ COPY README.m[d] /beamlit/README.md
 COPY LICENS[E] /beamlit/LICENSE
 COPY {settings.server.directory} /beamlit/src
 
-RUN uv sync --no-cache
+RUN uv sync --no-cache --no-dev
 
 ENV PATH="/beamlit/.venv/bin:$PATH"
 
