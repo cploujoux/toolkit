@@ -50,6 +50,7 @@ dependencies = [
     "opentelemetry-instrumentation-watsonx>=0.35.0",
     "opentelemetry-instrumentation-weaviate>=0.35.0",
     "mcp>=1.2.1",
+    "websockets>=14.1",
 ]
 [dependency-groups]
 dev = [

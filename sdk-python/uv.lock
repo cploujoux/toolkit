@@ -171,6 +171,7 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "pyyaml" },
     { name = "requests" },
+    { name = "websockets" },
 ]
 
 [package.dependency-groups]
@@ -218,6 +219,7 @@ requires-dist = [
     { name = "python-dateutil", specifier = ">=2.8.0" },
     { name = "pyyaml", specifier = ">=6.0.2,<6.1.0" },
     { name = "requests", specifier = ">=2.32.3,<2.33.0" },
+    { name = "websockets", specifier = ">=14.1" },
 ]
 
 [package.metadata.dependency-groups]

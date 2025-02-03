@@ -113,19 +113,14 @@ async function getAzureMarketplaceModel() {
   }
 }
 
-export async function getChatModel(
-  name: string,
-  agentModel?: Model,
-  stream?: boolean
-) {
-  const { chat } = await getChatModelFull(name, agentModel, stream);
+export async function getChatModel(name: string, agentModel?: Model) {
+  const { chat } = await getChatModelFull(name, agentModel);
   return chat;
 }
 
 export async function getChatModelFull(
   name: string,
-  agentModel?: Model,
-  stream?: boolean
+  agentModel?: Model
 ): Promise<{
   chat: BaseChatModel | OpenAIVoiceReactAgent;
   provider: string;
@@ -171,22 +166,17 @@ export async function getChatModelFull(
     model = "gpt-4o-mini";
   }
 
-  if (stream) {
-    if (provider === "voice-openai") {
-      return {
-        chat: new OpenAIVoiceReactAgent({
-          url: getBaseUrl(name),
-          model,
-          headers,
-        }),
-        provider,
+  if (["openai"].includes(provider) && model.includes("realtime")) {
+    logger.info("Starting OpenAI Realtime Agent");
+    return {
+      chat: new OpenAIVoiceReactAgent({
+        url: getBaseUrl(name),
         model,
-      };
-    } else {
-      throw new Error(
-        `Stream is not supported for provider ${provider}, only voice-openai is supported`
-      );
-    }
+        headers,
+      }),
+      provider,
+      model,
+    };
   }
 
   const chatClasses = [

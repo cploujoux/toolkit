@@ -12,7 +12,7 @@ from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
 from beamlit.models import Agent, AgentSpec, EnvironmentMetadata
-
+from .voice.openai import OpenAIVoiceReactAgent
 from .chat import get_chat_model_full
 
 
@@ -128,19 +128,22 @@ def agent(
                     f"        \"description\": \"{agent.spec.description}\",\n"
                     "    },\n"
                     "}")
-            memory = MemorySaver()
-            if len(functions) == 0:
-                raise ValueError("You can define this function in directory "
-                    f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
-                    "from beamlit.functions import function\n\n"
-                    "@function()\n"
-                    "def hello_world(query: str):\n"
-                    "    return 'Hello, world!'\n")
-            try:
-                _agent = create_react_agent(chat_model, functions, checkpointer=memory)
-            except AttributeError: # special case for azure-marketplace where it uses the old OpenAI interface (no tools)
-                logger.warning("Using the old OpenAI interface for Azure Marketplace, no tools available")
-                _agent = create_react_agent(chat_model, [], checkpointer=memory)
+            if isinstance(chat_model, OpenAIVoiceReactAgent):
+                _agent = chat_model
+            else:
+                memory = MemorySaver()
+                if len(functions) == 0:
+                    raise ValueError("You can define this function in directory "
+                        f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
+                        "from beamlit.functions import function\n\n"
+                        "@function()\n"
+                        "def hello_world(query: str):\n"
+                        "    return 'Hello, world!'\n")
+                try:
+                    _agent = create_react_agent(chat_model, functions, checkpointer=memory)
+                except AttributeError: # special case for azure-marketplace where it uses the old OpenAI interface (no tools)
+                    logger.warning("Using the old OpenAI interface for Azure Marketplace, no tools available")
+                    _agent = create_react_agent(chat_model, [], checkpointer=memory)
 
             settings.agent.agent = _agent
         else:
