@@ -186,11 +186,12 @@ WORKDIR /beamlit
 # Install the application dependencies.
 COPY pyproject.toml /beamlit/pyproject.toml
 COPY uv.lock /beamlit/uv.lock
-RUN uv sync --no-cache
 
 COPY README.m[d] /beamlit/README.md
 COPY LICENS[E] /beamlit/LICENSE
 COPY {settings.server.directory} /beamlit/src
+
+RUN uv sync --no-cache
 
 ENV PATH="/beamlit/.venv/bin:$PATH"
 
@@ -210,7 +211,7 @@ def clean_auto_generated(
         type (str): Type of deployment ("agent" or "function")
         deployments (list[tuple[Resource, Agent | Function]]): List of deployment resources and configurations
     """
-    
+
     deploy_dir = Path(directory) / f"{type}s"
     deploy_names = [d.metadata.name for (_, d) in deployments]
 
