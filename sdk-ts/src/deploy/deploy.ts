@@ -215,13 +215,16 @@ export const generateBeamlitDeployment = async (directory: string) => {
   const settings = init();
   const client = newClient();
 
+  let functions: FunctionBase[] = [];
   if (!fs.existsSync(settings.agent.functionsDirectory)) {
-    throw new Error(
+    logger.warn(
       `Functions directory ${settings.agent.functionsDirectory} not found`
     );
+    functions = [];
+  } else {
+    functions = await generateFunctions(settings, directory);
   }
 
-  const functions = await generateFunctions(settings, directory);
   const functionsNames = functions.map((f) => f.function.metadata?.name || "");
   const agents = await generateAgents(
     settings,
