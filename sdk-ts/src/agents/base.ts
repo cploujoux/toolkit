@@ -4,11 +4,11 @@ import { FastifyRequest } from "fastify";
 import { newClient } from "../authentication/authentication.js";
 import { getModel, listModels } from "../client/sdk.gen.js";
 import { Agent } from "../client/types.gen.js";
+import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
 import { getChatModelFull } from "./chat.js";
 import { OpenAIVoiceReactAgent } from "./voice/openai.js";
-import { logger } from "../common/logger.js";
 
 export type CallbackFunctionAgentVariadic = (...args: any[]) => any;
 export type FunctionRun = (request: FastifyRequest) => Promise<any>;
@@ -33,7 +33,6 @@ export type AgentOptions = {
   overrideAgent?: any;
   overrideModel?: any;
   remoteFunctions?: string[];
-  stream?: boolean;
 };
 
 export const wrapAgent: WrapAgentType = async (
@@ -118,8 +117,7 @@ export const wrapAgent: WrapAgentType = async (
 
     const { chat } = await getChatModelFull(
       settings.agent.model.metadata.name,
-      settings.agent.model,
-      options?.stream
+      settings.agent.model
     );
     settings.agent.chatModel = chat;
     if (chat instanceof OpenAIVoiceReactAgent) {
@@ -140,7 +138,7 @@ export const wrapAgent: WrapAgentType = async (
       wrapFunction(() => return 'Hello, world!', { name: 'hello_world', description: 'This is a sample function' })
       `);
   }
-  if (options?.stream) {
+  if (settings.agent.agent instanceof OpenAIVoiceReactAgent) {
     return {
       run: async (ws: WebSocket, request: FastifyRequest) => {
         const args = {
@@ -151,7 +149,7 @@ export const wrapAgent: WrapAgentType = async (
         return await func(ws, request, args);
       },
       agent: options?.agent ?? null,
-      stream: options?.stream,
+      stream: true,
     };
   }
   return {
@@ -167,6 +165,5 @@ export const wrapAgent: WrapAgentType = async (
       return func(request, args);
     },
     agent: options?.agent ?? null,
-    stream: options?.stream,
   };
 };

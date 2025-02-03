@@ -24,10 +24,9 @@ export const agent = async () => {
       },
       spec: {
         description: "voiceagent",
-        model: "voice-openai",
+        model: "gpt-4o-mini-realtime-preview",
       },
     },
-    stream: true,
     remoteFunctions: ["linear"],
   });
 };
