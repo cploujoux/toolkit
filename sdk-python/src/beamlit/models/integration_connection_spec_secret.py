@@ -3,12 +3,12 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="TraceIdsResponse")
+T = TypeVar("T", bound="IntegrationConnectionSpecSecret")
 
 
 @_attrs_define
-class TraceIdsResponse:
-    """Trace IDs response"""
+class IntegrationConnectionSpecSecret:
+    """Integration secret"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -23,10 +23,10 @@ class TraceIdsResponse:
         if not src_dict:
             return None
         d = src_dict.copy()
-        trace_ids_response = cls()
+        integration_connection_spec_secret = cls()
 
-        trace_ids_response.additional_properties = d
-        return trace_ids_response
+        integration_connection_spec_secret.additional_properties = d
+        return integration_connection_spec_secret
 
     @property
     def additional_keys(self) -> list[str]:

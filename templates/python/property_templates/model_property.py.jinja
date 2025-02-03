@@ -17,8 +17,10 @@
 {{ destination }} = {{ transformed }}
 {%- else %}
 {{ destination }}{% if declare_type %}: {{ type_string }}{% endif %} = UNSET
-if {{source}} and not isinstance({{ source }}, Unset):
+if {{source}} and not isinstance({{ source }}, Unset) and not isinstance({{source}}, dict):
     {{ destination }} = {{ transformed }}
+elif {{source}} and isinstance({{source}}, dict):
+    {{destination}} = {{source}}
 {%- endif %}
 {% endmacro %}
 

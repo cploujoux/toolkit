@@ -155,16 +155,6 @@ export type AgentHistoryEvent = {
 };
 
 /**
- * Agent metadata
- */
-export type AgentMetadata = Metadata & {
-    /**
-     * Environment name
-     */
-    environment?: string;
-};
-
-/**
  * Agent release, used to deploy a agent from one environment to another
  */
 export type AgentRelease = {
@@ -316,6 +306,10 @@ export type CoreSpec = {
      */
     privateClusters?: ModelPrivateCluster;
     runtime?: Runtime;
+    /**
+     * Sandbox mode
+     */
+    sandbox?: boolean;
     serverlessConfig?: ServerlessConfig;
 };
 
@@ -507,45 +501,11 @@ export type HistogramStats = {
 };
 
 /**
- * Metrics for resources
- */
-export type IncreaseAndRateMetric = {
-    /**
-     * Historical requests for all resources globally
-     */
-    inferenceGlobal?: unknown;
-};
-
-/**
- * Integration config
- */
-export type IntegrationConfig = {
-    [key: string]: unknown;
-};
-
-/**
  * Integration Connection
  */
 export type IntegrationConnection = {
     metadata?: Metadata;
     spec?: IntegrationConnectionSpec;
-};
-
-/**
- * Integration config
- */
-export type IntegrationConnectionConfig = {
-    [key: string]: unknown;
-};
-
-/**
- * Integration secret
- */
-export type IntegrationConnectionSecret = {
-    /**
-     * The API key to use for the integration
-     */
-    apiKey?: string;
 };
 
 export type IntegrationConnectionsList = Array<(string)>;
@@ -557,15 +517,23 @@ export type IntegrationConnectionSpec = {
     /**
      * Additional configuration for the integration
      */
-    config?: IntegrationConnectionConfig;
+    config?: {
+        [key: string]: unknown;
+    };
     /**
      * Integration type
      */
     integration?: string;
     /**
+     * Sandbox mode
+     */
+    sandbox?: boolean;
+    /**
      * Integration secret
      */
-    secret?: IntegrationConnectionSecret;
+    secret?: {
+        [key: string]: unknown;
+    };
 };
 
 /**
@@ -808,16 +776,6 @@ export type Model = {
 };
 
 /**
- * Model metadata
- */
-export type ModelMetadata = Metadata & {
-    /**
-     * Environment name
-     */
-    environment?: string;
-};
-
-/**
  * Private cluster where the model deployment is deployed
  */
 export type ModelPrivateCluster = {
@@ -836,42 +794,6 @@ export type ModelPrivateCluster = {
 };
 
 /**
- * Model provider
- */
-export type ModelProvider = TimeFields & OwnerFields & {
-    /**
-     * Model provider description
-     */
-    comment?: string;
-    /**
-     * Additional configuration for the model provider
-     */
-    config?: ProviderConfig;
-    /**
-     * Model provider display name
-     */
-    displayName?: string;
-    labels?: MetadataLabels;
-    /**
-     * Model provider name
-     */
-    name?: string;
-    /**
-     * Model provider type
-     */
-    type?: string;
-    /**
-     * Workspace name
-     */
-    workspace?: string;
-};
-
-/**
- * Model provider name
- */
-export type ModelProviderName = string;
-
-/**
  * Model release, used to deploy a model from one environment to another
  */
 export type ModelRelease = {
@@ -888,12 +810,7 @@ export type ModelRelease = {
 /**
  * Model specification
  */
-export type ModelSpec = CoreSpec & {
-    /**
-     * The reference for the origin of the model
-     */
-    modelProvider?: ModelProviderName;
-};
+export type ModelSpec = CoreSpec & unknown;
 
 /**
  * Owner fields for Persistance
@@ -1016,6 +933,13 @@ export type PendingInvitationWorkspaceDetails = {
 /**
  * Pod template specification
  */
+export type PodTemplate = {
+    [key: string]: unknown;
+};
+
+/**
+ * Pod template specification
+ */
 export type PodTemplateSpec = {
     [key: string]: unknown;
 };
@@ -1050,6 +974,36 @@ export type PolicyLocation = {
 export type PolicyLocations = Array<PolicyLocation>;
 
 /**
+ * PolicyMaxTokens is a local type that wraps a slice of PolicyMaxTokens
+ */
+export type PolicyMaxTokens = {
+    /**
+     * Granularity
+     */
+    granularity?: string;
+    /**
+     * Input
+     */
+    input?: number;
+    /**
+     * Output
+     */
+    output?: number;
+    /**
+     * RatioInputOverOutput
+     */
+    ratioInputOverOutput?: number;
+    /**
+     * Step
+     */
+    step?: number;
+    /**
+     * Total
+     */
+    total?: number;
+};
+
+/**
  * PolicyResourceType is a type of resource, e.g. model, function, etc.
  */
 export type PolicyResourceType = string;
@@ -1072,9 +1026,17 @@ export type PolicySpec = {
      */
     locations?: PolicyLocations;
     /**
+     * Max token allowed by the policy. If not set, no max token is allowed.
+     */
+    maxTokens?: PolicyMaxTokens;
+    /**
      * ResourceTypes where the policy is applied. If not set, the policy is applied to all resource types.
      */
     resourceTypes?: PolicyResourceTypes;
+    /**
+     * Sandbox mode
+     */
+    sandbox?: boolean;
     /**
      * Policy type, can be location or flavor
      */
@@ -1138,29 +1100,9 @@ export type PrivateLocation = {
 };
 
 /**
- * Model provider config
+ * Workspace quotas
  */
-export type ProviderConfig = {
-    /**
-     * The file name to use for the model
-     */
-    filename?: string;
-    /**
-     * The presigned URLs to upload the model to
-     */
-    presigned_url?: Array<unknown>;
-    runtime?: Runtime;
-};
-
-/**
- * Query per second per element, can be per response status code (e.g. 200, 400) or per location
- */
-export type QPS = {
-    /**
-     * QPS for location
-     */
-    region_code?: number;
-};
+export type Quotas = unknown;
 
 /**
  * Repository
@@ -1256,40 +1198,6 @@ export type RequestTotalMetric = {
 /**
  * Metrics for a single resource deployment (eg. model deployment, function deployment)
  */
-export type ResourceDeploymentMetrics = {
-    /**
-     * Historical requests per second (RPS), for the model deployment globally
-     */
-    inference_per_second_global?: ArrayMetric;
-    /**
-     * Historical requests per second (RPS) per location, for the model deployment
-     */
-    inference_per_second_per_region?: {
-        region?: ArrayMetric;
-    };
-    /**
-     * RPS value (in last 24 hours) for the model deployment globally
-     */
-    query_per_second_global?: number;
-    /**
-     * RPS value (in last 24 hours) per response status code, for the model deployment globally
-     */
-    query_per_second_per_code_global?: QPS;
-    /**
-     * RPS value (in last 24 hours) per location, for the model deployment
-     */
-    query_per_second_per_region?: QPS;
-    /**
-     * RPS value (in last 24 hours) per response status code per location, for the model deployment
-     */
-    query_per_second_per_region_per_code?: {
-        region?: QPS;
-    };
-};
-
-/**
- * Metrics for a single resource deployment (eg. model deployment, function deployment)
- */
 export type ResourceEnvironmentMetrics = {
     /**
      * Historical requests (in last 24 hours) for the model deployment globally
@@ -1350,23 +1258,13 @@ export type ResourceLog = {
      */
     message?: string;
     /**
+     * Severity of the log
+     */
+    severity?: number;
+    /**
      * The timestamp of the log
      */
     timestamp?: string;
-};
-
-/**
- * Metrics for a single resource (eg. model, function)
- */
-export type ResourceMetrics = {
-    /**
-     * Historical requests (in last 24 hours) for the model globally
-     */
-    inferenceGlobal?: ArrayMetric;
-    /**
-     * Number of requests done on the resource
-     */
-    queryPerRegion?: QPS;
 };
 
 /**
@@ -1725,13 +1623,10 @@ export type TokenTotalMetric = {
 };
 
 /**
- * Response containing trace IDs
+ * Trace IDs response
  */
 export type TraceIdsResponse = {
-    /**
-     * List of trace IDs
-     */
-    trace_ids?: Array<(string)>;
+    [key: string]: unknown;
 };
 
 /**
@@ -1766,6 +1661,10 @@ export type Workspace = TimeFields & OwnerFields & {
      * Workspace name
      */
     name?: string;
+    /**
+     * Workspace quotas
+     */
+    'quotas,omitempty'?: Quotas;
     /**
      * Workspace write region
      */
@@ -1972,7 +1871,7 @@ export type GetAgentMetricsData = {
     };
 };
 
-export type GetAgentMetricsResponse = (ResourceMetrics);
+export type GetAgentMetricsResponse = (ResourceEnvironmentMetrics);
 
 export type GetAgentMetricsError = unknown;
 
@@ -2178,7 +2077,7 @@ export type GetFunctionMetricsData = {
     };
 };
 
-export type GetFunctionMetricsResponse = (ResourceMetrics);
+export type GetFunctionMetricsResponse = (ResourceEnvironmentMetrics);
 
 export type GetFunctionMetricsError = unknown;
 
@@ -2364,58 +2263,6 @@ export type GetMetricsResponse = (Metrics);
 
 export type GetMetricsError = unknown;
 
-export type ListModelProvidersResponse = (Array<ModelProvider>);
-
-export type ListModelProvidersError = unknown;
-
-export type CreateModelProviderData = {
-    body: ModelProvider;
-};
-
-export type CreateModelProviderResponse = (ModelProvider);
-
-export type CreateModelProviderError = unknown;
-
-export type DeleteModelProviderData = {
-    path: {
-        /**
-         * Name of the model provider
-         */
-        modelProviderName: string;
-    };
-};
-
-export type DeleteModelProviderResponse = (ModelProvider);
-
-export type DeleteModelProviderError = unknown;
-
-export type GetModelProviderData = {
-    path: {
-        /**
-         * Name of the model provider
-         */
-        modelProviderName: string;
-    };
-};
-
-export type GetModelProviderResponse = (ModelProvider);
-
-export type GetModelProviderError = unknown;
-
-export type UpdateModelProviderData = {
-    body: ModelProvider;
-    path: {
-        /**
-         * Name of the model provider
-         */
-        modelProviderName: string;
-    };
-};
-
-export type UpdateModelProviderResponse = (ModelProvider);
-
-export type UpdateModelProviderError = unknown;
-
 export type ListModelsData = {
     query?: {
         /**
@@ -2517,7 +2364,7 @@ export type GetModelMetricsData = {
     };
 };
 
-export type GetModelMetricsResponse = (ResourceMetrics);
+export type GetModelMetricsResponse = (ResourceEnvironmentMetrics);
 
 export type GetModelMetricsError = unknown;
 
@@ -3098,3 +2945,16 @@ export type LeaveWorkspaceData = {
 export type LeaveWorkspaceResponse = (Workspace);
 
 export type LeaveWorkspaceError = (unknown);
+
+export type WorkspaceQuotasRequestData = {
+    path: {
+        /**
+         * Name of the workspace
+         */
+        workspaceName: string;
+    };
+};
+
+export type WorkspaceQuotasRequestResponse = (Quotas);
+
+export type WorkspaceQuotasRequestError = unknown;

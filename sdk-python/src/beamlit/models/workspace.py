@@ -51,8 +51,10 @@ class Workspace:
         display_name = self.display_name
 
         labels: Union[Unset, dict[str, Any]] = UNSET
-        if self.labels and not isinstance(self.labels, Unset):
+        if self.labels and not isinstance(self.labels, Unset) and not isinstance(self.labels, dict):
             labels = self.labels.to_dict()
+        elif self.labels and isinstance(self.labels, dict):
+            labels = self.labels
 
         name = self.name
 

@@ -5,7 +5,6 @@ from .agent import Agent
 from .agent_chain import AgentChain
 from .agent_history import AgentHistory
 from .agent_history_event import AgentHistoryEvent
-from .agent_metadata import AgentMetadata
 from .agent_release import AgentRelease
 from .agent_spec import AgentSpec
 from .api_key import ApiKey
@@ -37,12 +36,10 @@ from .get_workspace_service_accounts_response_200_item import (
 )
 from .histogram_bucket import HistogramBucket
 from .histogram_stats import HistogramStats
-from .increase_and_rate_metric import IncreaseAndRateMetric
-from .integration_config import IntegrationConfig
 from .integration_connection import IntegrationConnection
-from .integration_connection_config import IntegrationConnectionConfig
-from .integration_connection_secret import IntegrationConnectionSecret
 from .integration_connection_spec import IntegrationConnectionSpec
+from .integration_connection_spec_config import IntegrationConnectionSpecConfig
+from .integration_connection_spec_secret import IntegrationConnectionSpecSecret
 from .integration_model import IntegrationModel
 from .integration_repository import IntegrationRepository
 from .invite_workspace_user_body import InviteWorkspaceUserBody
@@ -57,7 +54,6 @@ from .metrics_models import MetricsModels
 from .metrics_request_total_per_code import MetricsRequestTotalPerCode
 from .metrics_rps_per_code import MetricsRpsPerCode
 from .model import Model
-from .model_metadata import ModelMetadata
 from .model_private_cluster import ModelPrivateCluster
 from .model_release import ModelRelease
 from .model_spec import ModelSpec
@@ -68,14 +64,14 @@ from .pending_invitation_render import PendingInvitationRender
 from .pending_invitation_render_invited_by import PendingInvitationRenderInvitedBy
 from .pending_invitation_render_workspace import PendingInvitationRenderWorkspace
 from .pending_invitation_workspace_details import PendingInvitationWorkspaceDetails
+from .pod_template import PodTemplate
 from .pod_template_spec import PodTemplateSpec
 from .policy import Policy
 from .policy_location import PolicyLocation
+from .policy_max_tokens import PolicyMaxTokens
 from .policy_spec import PolicySpec
 from .private_cluster import PrivateCluster
 from .private_location import PrivateLocation
-from .provider_config import ProviderConfig
-from .qps import QPS
 from .repository import Repository
 from .request_duration_over_time_metric import RequestDurationOverTimeMetric
 from .request_duration_over_time_metrics import RequestDurationOverTimeMetrics
@@ -89,20 +85,12 @@ from .request_total_by_origin_metric_request_total_by_origin_and_code import (
 from .request_total_metric import RequestTotalMetric
 from .request_total_metric_request_total_per_code import RequestTotalMetricRequestTotalPerCode
 from .request_total_metric_rps_per_code import RequestTotalMetricRpsPerCode
-from .resource_deployment_metrics import ResourceDeploymentMetrics
-from .resource_deployment_metrics_inference_per_second_per_region import (
-    ResourceDeploymentMetricsInferencePerSecondPerRegion,
-)
-from .resource_deployment_metrics_query_per_second_per_region_per_code import (
-    ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode,
-)
 from .resource_environment_metrics import ResourceEnvironmentMetrics
 from .resource_environment_metrics_request_total_per_code import (
     ResourceEnvironmentMetricsRequestTotalPerCode,
 )
 from .resource_environment_metrics_rps_per_code import ResourceEnvironmentMetricsRpsPerCode
 from .resource_log import ResourceLog
-from .resource_metrics import ResourceMetrics
 from .runtime import Runtime
 from .runtime_readiness_probe import RuntimeReadinessProbe
 from .runtime_resources import RuntimeResources
@@ -135,7 +123,6 @@ __all__ = (
     "AgentChain",
     "AgentHistory",
     "AgentHistoryEvent",
-    "AgentMetadata",
     "AgentRelease",
     "AgentSpec",
     "ApiKey",
@@ -165,12 +152,10 @@ __all__ = (
     "GetWorkspaceServiceAccountsResponse200Item",
     "HistogramBucket",
     "HistogramStats",
-    "IncreaseAndRateMetric",
-    "IntegrationConfig",
     "IntegrationConnection",
-    "IntegrationConnectionConfig",
-    "IntegrationConnectionSecret",
     "IntegrationConnectionSpec",
+    "IntegrationConnectionSpecConfig",
+    "IntegrationConnectionSpecSecret",
     "IntegrationModel",
     "IntegrationRepository",
     "InviteWorkspaceUserBody",
@@ -185,7 +170,6 @@ __all__ = (
     "MetricsRequestTotalPerCode",
     "MetricsRpsPerCode",
     "Model",
-    "ModelMetadata",
     "ModelPrivateCluster",
     "ModelRelease",
     "ModelSpec",
@@ -196,14 +180,14 @@ __all__ = (
     "PendingInvitationRenderInvitedBy",
     "PendingInvitationRenderWorkspace",
     "PendingInvitationWorkspaceDetails",
+    "PodTemplate",
     "PodTemplateSpec",
     "Policy",
     "PolicyLocation",
+    "PolicyMaxTokens",
     "PolicySpec",
     "PrivateCluster",
     "PrivateLocation",
-    "ProviderConfig",
-    "QPS",
     "Repository",
     "RequestDurationOverTimeMetric",
     "RequestDurationOverTimeMetrics",
@@ -213,14 +197,10 @@ __all__ = (
     "RequestTotalMetric",
     "RequestTotalMetricRequestTotalPerCode",
     "RequestTotalMetricRpsPerCode",
-    "ResourceDeploymentMetrics",
-    "ResourceDeploymentMetricsInferencePerSecondPerRegion",
-    "ResourceDeploymentMetricsQueryPerSecondPerRegionPerCode",
     "ResourceEnvironmentMetrics",
     "ResourceEnvironmentMetricsRequestTotalPerCode",
     "ResourceEnvironmentMetricsRpsPerCode",
     "ResourceLog",
-    "ResourceMetrics",
     "Runtime",
     "RuntimeReadinessProbe",
     "RuntimeResources",

@@ -14,15 +14,19 @@ class ResourceLog:
 
     Attributes:
         message (Union[Unset, str]): Content of the log
+        severity (Union[Unset, int]): Severity of the log
         timestamp (Union[Unset, str]): The timestamp of the log
     """
 
     message: Union[Unset, str] = UNSET
+    severity: Union[Unset, int] = UNSET
     timestamp: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         message = self.message
+
+        severity = self.severity
 
         timestamp = self.timestamp
 
@@ -31,6 +35,8 @@ class ResourceLog:
         field_dict.update({})
         if message is not UNSET:
             field_dict["message"] = message
+        if severity is not UNSET:
+            field_dict["severity"] = severity
         if timestamp is not UNSET:
             field_dict["timestamp"] = timestamp
 
@@ -43,10 +49,13 @@ class ResourceLog:
         d = src_dict.copy()
         message = d.pop("message", UNSET)
 
+        severity = d.pop("severity", UNSET)
+
         timestamp = d.pop("timestamp", UNSET)
 
         resource_log = cls(
             message=message,
+            severity=severity,
             timestamp=timestamp,
         )
 

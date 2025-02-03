@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-case-declarations */
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { ChatOpenAI } from "@langchain/openai";
 import {
   getAuthenticationHeaders,
   newClient,
@@ -211,7 +210,7 @@ export async function getChatModelFull(
   switch (provider) {
     case "openai":
       // const chatClassOpenAI = await getOpenAIChatModel();
-      const chatClassOpenAI = ChatOpenAI;
+      const chatClassOpenAI = await getOpenAIChatModel();
       const chatOpenAI = new chatClassOpenAI({
         apiKey: "fake_api_key",
         temperature: 0,

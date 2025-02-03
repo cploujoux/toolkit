@@ -29,8 +29,10 @@ class PendingInvitationAccept:
         email = self.email
 
         workspace: Union[Unset, dict[str, Any]] = UNSET
-        if self.workspace and not isinstance(self.workspace, Unset):
+        if self.workspace and not isinstance(self.workspace, Unset) and not isinstance(self.workspace, dict):
             workspace = self.workspace.to_dict()
+        elif self.workspace and isinstance(self.workspace, dict):
+            workspace = self.workspace
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)

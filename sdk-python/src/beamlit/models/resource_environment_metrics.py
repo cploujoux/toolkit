@@ -72,36 +72,62 @@ class ResourceEnvironmentMetrics:
                 last_n_requests.append(componentsschemas_array_metric_item)
 
         latency: Union[Unset, dict[str, Any]] = UNSET
-        if self.latency and not isinstance(self.latency, Unset):
+        if self.latency and not isinstance(self.latency, Unset) and not isinstance(self.latency, dict):
             latency = self.latency.to_dict()
+        elif self.latency and isinstance(self.latency, dict):
+            latency = self.latency
 
         request_duration_over_time: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_duration_over_time and not isinstance(self.request_duration_over_time, Unset):
+        if (
+            self.request_duration_over_time
+            and not isinstance(self.request_duration_over_time, Unset)
+            and not isinstance(self.request_duration_over_time, dict)
+        ):
             request_duration_over_time = self.request_duration_over_time.to_dict()
+        elif self.request_duration_over_time and isinstance(self.request_duration_over_time, dict):
+            request_duration_over_time = self.request_duration_over_time
 
         request_total = self.request_total
 
         request_total_by_origin: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_total_by_origin and not isinstance(self.request_total_by_origin, Unset):
+        if (
+            self.request_total_by_origin
+            and not isinstance(self.request_total_by_origin, Unset)
+            and not isinstance(self.request_total_by_origin, dict)
+        ):
             request_total_by_origin = self.request_total_by_origin.to_dict()
+        elif self.request_total_by_origin and isinstance(self.request_total_by_origin, dict):
+            request_total_by_origin = self.request_total_by_origin
 
         request_total_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_total_per_code and not isinstance(self.request_total_per_code, Unset):
+        if (
+            self.request_total_per_code
+            and not isinstance(self.request_total_per_code, Unset)
+            and not isinstance(self.request_total_per_code, dict)
+        ):
             request_total_per_code = self.request_total_per_code.to_dict()
+        elif self.request_total_per_code and isinstance(self.request_total_per_code, dict):
+            request_total_per_code = self.request_total_per_code
 
         rps = self.rps
 
         rps_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.rps_per_code and not isinstance(self.rps_per_code, Unset):
+        if self.rps_per_code and not isinstance(self.rps_per_code, Unset) and not isinstance(self.rps_per_code, dict):
             rps_per_code = self.rps_per_code.to_dict()
+        elif self.rps_per_code and isinstance(self.rps_per_code, dict):
+            rps_per_code = self.rps_per_code
 
         token_rate: Union[Unset, dict[str, Any]] = UNSET
-        if self.token_rate and not isinstance(self.token_rate, Unset):
+        if self.token_rate and not isinstance(self.token_rate, Unset) and not isinstance(self.token_rate, dict):
             token_rate = self.token_rate.to_dict()
+        elif self.token_rate and isinstance(self.token_rate, dict):
+            token_rate = self.token_rate
 
         token_total: Union[Unset, dict[str, Any]] = UNSET
-        if self.token_total and not isinstance(self.token_total, Unset):
+        if self.token_total and not isinstance(self.token_total, Unset) and not isinstance(self.token_total, dict):
             token_total = self.token_total.to_dict()
+        elif self.token_total and isinstance(self.token_total, dict):
+            token_total = self.token_total
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)

@@ -6,12 +6,13 @@ import pydantic
 import pydantic_core
 import requests
 import typing_extensions as t
-from beamlit.authentication.authentication import AuthenticatedClient
-from beamlit.common.settings import get_settings
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
 from mcp.types import CallToolResult, ListToolsResult
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema as cs
+
+from beamlit.authentication.authentication import AuthenticatedClient
+from beamlit.common.settings import get_settings
 
 settings = get_settings()
 

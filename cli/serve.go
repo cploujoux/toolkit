@@ -181,18 +181,6 @@ func getServerEnvironment(port int, host string, module string, remote bool) []s
 	}
 
 	// Add all current environment variables if not already set
-	for _, envVar := range os.Environ() {
-		found := false
-		for _, existingVar := range env {
-			if envVar == existingVar {
-				found = true
-				break
-			}
-		}
-		if !found {
-			env = append(env, envVar)
-		}
-	}
-
+	env = AddClientEnv(env)
 	return env
 }

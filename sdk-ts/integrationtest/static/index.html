@@ -128,7 +128,10 @@
       async function startAudio() {
         try {
           // handle output -> speaker stuff
-          const ws = new WebSocket("ws://localhost:1338/ws");
+          const ws = new WebSocket(
+            "wss://run.beamlit.dev/main/agents/voiceagent/ws?environment=production&token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImJlYW1saXQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOlsiaHR0cHM6Ly9hcGkuYmVhbWxpdC5kZXYiLCJodHRwczovL2FwaS5iZWFtbGl0LmNvbSIsImh0dHBzOi8vcnVuLmJlYW1saXQuZGV2IiwiaHR0cHM6Ly9ydW4uYmVhbWxpdC5jb20iLCJiZWFtbGl0Il0sImVtYWlsIjoiY3Bsb3Vqb3V4QGJlYW1saXQuY29tIiwiZXhwIjoxNzM4NjA2NTYwLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiIiLCJpYXQiOjE3Mzg1OTkzNjAsImlzcyI6Imh0dHBzOi8vYXBpLmJlYW1saXQuZGV2L3YwIiwianRpIjoiSzlGUFZPUFVORFVBUktUMSIsIm5iZiI6MTczODU5OTM2MCwic2NvcGUiOiIqIiwic3ViIjoiZjVhODJiYmEtZDNjNS00MmIzLWI2ODYtNTUwNDU3MWNlODY0Iiwic3ViX3R5cGUiOiJ1c2VyIn0.jLMs2qIm5LN6vXPOqKo-BanPlXh5JBbm-Ua2l2PNgGbB4UjLg6fzlAFEBu2JRqIhRKge9jjhwQmppoixtbR5rS-0XuoqHC0qWV7rqZ0oqBtgCSvLeg2Og0-zkZRsXVBGSlI8JoVPa6qojQD26KMG66DHkMOx4uCspbfs764B8mHSn5nCbOgy6mgRSERc39O7WHDhyNIv-rEBRnKgxLTSriGVOjQp10fefJwYlhq7Oy1K4lUOyhC3F4vCEC-ANhI1gI4eN_SVDixCo3QvsewyL6ei1lY3r24XL024uDBTXCiFWjlbO5_bgvp5LzWlMtZLHeOOC_NKMWTbpTTDzeJOZrTkiHrNSQeKsQ6pqJnF05_6S94tiid6FoEvmL9--o5KPNEJaQlwePm6CsNOEzRzp6dx0ik-cobG_FCx_j1CNUscj7bCJ-p48b0C0M4J3eYeJB_zBT5qUHjExIZyk7aSr-SyyqgJB4fZzmb1ZWNsAh3xQN8mMtgThCq4C_oZnk6tyFgEyXrw_aflZ2NXIncKI_f9nZyVZ-HraWnUhC3wWovwZDeI0Z0N9DMR9FNN2ksLY8Kw8t60PDD-GIm9x6cuZ8T6Drx07PEbV2MSZ4zlH1nJxRfmXycchWXB6b9VYEN80Z-yK2D43EYi2mcKNqd8Bk8osYVDJ_JNcVVC0JJMcS0"
+          );
+          // const ws = new WebSocket("ws://localhost:1338/ws");
 
           const audioPlayer = new Player();
           audioPlayer.init(24000);

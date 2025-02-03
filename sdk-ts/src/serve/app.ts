@@ -132,7 +132,11 @@ export async function createApp(
         } else if (func.constructor.name === "AsyncFunction") {
           response = await func(request);
         } else {
-          response = func(request);
+          if (typeof func === "function") {
+            response = func(request);
+          } else {
+            response = func;
+          }
         }
 
         if (typeof response === "string") {

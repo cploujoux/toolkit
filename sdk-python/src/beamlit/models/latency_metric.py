@@ -32,20 +32,40 @@ class LatencyMetric:
 
     def to_dict(self) -> dict[str, Any]:
         global_histogram: Union[Unset, dict[str, Any]] = UNSET
-        if self.global_histogram and not isinstance(self.global_histogram, Unset):
+        if (
+            self.global_histogram
+            and not isinstance(self.global_histogram, Unset)
+            and not isinstance(self.global_histogram, dict)
+        ):
             global_histogram = self.global_histogram.to_dict()
+        elif self.global_histogram and isinstance(self.global_histogram, dict):
+            global_histogram = self.global_histogram
 
         global_stats: Union[Unset, dict[str, Any]] = UNSET
-        if self.global_stats and not isinstance(self.global_stats, Unset):
+        if self.global_stats and not isinstance(self.global_stats, Unset) and not isinstance(self.global_stats, dict):
             global_stats = self.global_stats.to_dict()
+        elif self.global_stats and isinstance(self.global_stats, dict):
+            global_stats = self.global_stats
 
         histogram_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.histogram_per_code and not isinstance(self.histogram_per_code, Unset):
+        if (
+            self.histogram_per_code
+            and not isinstance(self.histogram_per_code, Unset)
+            and not isinstance(self.histogram_per_code, dict)
+        ):
             histogram_per_code = self.histogram_per_code.to_dict()
+        elif self.histogram_per_code and isinstance(self.histogram_per_code, dict):
+            histogram_per_code = self.histogram_per_code
 
         stats_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.stats_per_code and not isinstance(self.stats_per_code, Unset):
+        if (
+            self.stats_per_code
+            and not isinstance(self.stats_per_code, Unset)
+            and not isinstance(self.stats_per_code, dict)
+        ):
             stats_per_code = self.stats_per_code.to_dict()
+        elif self.stats_per_code and isinstance(self.stats_per_code, dict):
+            stats_per_code = self.stats_per_code
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
