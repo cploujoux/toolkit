@@ -37,14 +37,17 @@ describe("App", () => {
       mainFile,
       'export default function main() { return "test"; }'
     );
-    const app = await createApp();
-    const response = await app.inject({
-      method: "POST",
-      url: "/",
-    });
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toBe("test");
-    fs.unlinkSync(mainFile);
+    try {
+      const app = await createApp();
+      const response = await app.inject({
+        method: "POST",
+        url: "/",
+      });
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe("test");
+    } finally {
+      fs.unlinkSync(mainFile);
+    }
   });
 
   it("should create app  from an agent", async () => {

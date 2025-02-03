@@ -51,8 +51,17 @@ import { wrapAgent } from "../src/agents/base";
 export const agent = wrapAgent((r) => { return; }, { agent: { metadata: { name: "agent-math" }, spec: { model: "gpt-4o-mini" } } })
     `
     );
+
+    fs.writeFileSync(
+      `${dir}/${agentsDir}/agent_custom.ts`,
+      `
+import { wrapAgent } from "../src/agents/base";
+export const agent = async () =>wrapAgent((r) => { return; }, { agent: { metadata: { name: "agent-custom" }, spec: { model: "gpt-4o-mini" } } })
+    `
+    );
     await generateBeamlitDeployment(".beamlit");
     expect(fs.existsSync(`.beamlit/agents/agent-math/agent.yaml`)).toBe(true);
+    expect(fs.existsSync(`.beamlit/agents/agent-custom/agent.yaml`)).toBe(true);
     expect(fs.existsSync(`.beamlit/functions/add/function.yaml`)).toBe(true);
     expect(fs.existsSync(`.beamlit/functions/sub/function.yaml`)).toBe(true);
   });

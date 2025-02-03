@@ -18,8 +18,20 @@ export const retrieveWrapperAgent = async (dir: string, warning: boolean) => {
       try {
         const module = await import(`${process.cwd()}/${fullPath}`);
         for (const exportedItem of Object.values(module)) {
-          const agentBase = (await exportedItem) as AgentBase;
-          agents.push(agentBase);
+          if (
+            typeof exportedItem === "function" &&
+            exportedItem.toString().includes("wrapAgent")
+          ) {
+            try {
+              const agentBase = (await exportedItem()) as AgentBase;
+              agents.push(agentBase);
+            } catch {
+              // pass
+            }
+          } else {
+            const agentBase = (await exportedItem) as AgentBase;
+            agents.push(agentBase);
+          }
         }
       } catch (error) {
         if (warning) {
