@@ -1,16 +1,11 @@
 from beamlit.agents import agent
+from logging import getLogger
 from beamlit.common import init
-
-settings = init()
-
-from typing import AsyncIterator
 from starlette.websockets import WebSocket
 
+settings = init()
+logger = getLogger(__name__)
 
-async def websocket_stream(websocket: WebSocket) -> AsyncIterator[str]:
-    while True:
-        data = await websocket.receive_text()
-        yield data
 
 @agent(
     agent={
@@ -28,5 +23,10 @@ async def websocket_stream(websocket: WebSocket) -> AsyncIterator[str]:
 async def main(
     websocket: WebSocket, agent, functions,
 ):
-    agent.bind_tools(functions)
-    await agent.aconnect(websocket_stream, websocket.send_text)
+    try:
+        agent.bind_tools(functions)
+        await agent.aconnect(websocket)
+    except Exception as e:
+        logger.error(f"Error connecting to agent: {str(e)}")
+        await websocket.send_text(str(e))
+        await websocket.close()
