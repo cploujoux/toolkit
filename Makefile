@@ -10,6 +10,7 @@ sdk:
 
 sdk-python:
 	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
+	rm -rf sdk-python/src/beamlit/api sdk-python/src/beamlit/models
 	openapi-python-client generate \
 		--path=definition.yml \
 		--output-path=./tmp-sdk-python \
@@ -19,9 +20,10 @@ sdk-python:
 	cp -r ./tmp-sdk-python/beamlit/* ./sdk-python/src/beamlit/
 	rm -rf ./tmp-sdk-python
 	cd sdk-python && uv run ruff check --fix
-	
+
 sdk-ts:
 	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
+	rm -rf sdk-ts/src/client/types.gen.ts sdk-ts/src/client/sdk.gen.ts
 	npx @hey-api/openapi-ts@0.61.0 -i ./definition.yml -o ./tmp/sdk-ts -c @hey-api/client-fetch
 	cp -r ./tmp/sdk-ts/* ./sdk-ts/src/client
 	rm -rf ./tmp/sdk-ts
