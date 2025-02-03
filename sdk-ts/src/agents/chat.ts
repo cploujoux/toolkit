@@ -10,6 +10,7 @@ import { getModel } from "../client/sdk.gen.js";
 import { Model } from "../client/types.gen.js";
 import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
+import { OpenAIVoiceReactAgent } from "./voice/openai.js";
 
 function getBaseUrl(name: string): string {
   const settings = getSettings();
@@ -22,7 +23,7 @@ async function getOpenAIChatModel() {
     return ChatOpenAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
     );
     throw e;
   }
@@ -34,7 +35,7 @@ async function getDeepSeekChatModel() {
     return ChatDeepSeek;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
     );
     throw e;
   }
@@ -46,7 +47,7 @@ async function getMistralChatModel() {
     return ChatMistralAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/mistralai. Please install it with: npm install @langchain/mistralai",
+      "Could not import @langchain/mistralai. Please install it with: npm install @langchain/mistralai"
     );
     throw e;
   }
@@ -58,7 +59,7 @@ async function getAnthropicChatModel() {
     return ChatAnthropic;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/anthropic. Please install it with: npm install @langchain/anthropic",
+      "Could not import @langchain/anthropic. Please install it with: npm install @langchain/anthropic"
     );
     throw e;
   }
@@ -71,7 +72,7 @@ async function getXAIChatModel() {
     return ChatXAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
     );
     throw e;
   }
@@ -83,7 +84,7 @@ async function getCohereModel() {
     return ChatCohere;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
     );
     throw e;
   }
@@ -95,7 +96,7 @@ async function getAzurAIInferenceModel() {
     return ChatOpenAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
     );
     throw e;
   }
@@ -107,21 +108,30 @@ async function getAzureMarketplaceModel() {
     return OpenAI;
   } catch (e) {
     logger.warn(
-      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai",
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
     );
     throw e;
   }
 }
 
-export async function getChatModel(name: string, agentModel?: Model) {
-  const { chat } = await getChatModelFull(name, agentModel);
+export async function getChatModel(
+  name: string,
+  agentModel?: Model,
+  stream?: boolean
+) {
+  const { chat } = await getChatModelFull(name, agentModel, stream);
   return chat;
 }
 
 export async function getChatModelFull(
   name: string,
   agentModel?: Model,
-): Promise<{ chat: BaseChatModel; provider: string; model: string }> {
+  stream?: boolean
+): Promise<{
+  chat: BaseChatModel | OpenAIVoiceReactAgent;
+  provider: string;
+  model: string;
+}> {
   const settings = getSettings();
   const client = newClient();
 
@@ -150,7 +160,6 @@ export async function getChatModelFull(
     headers["X-Beamlit-Api-Key"] ||
     "";
   const params = { environment };
-
   let provider = agentModel?.spec?.runtime?.type;
   if (!provider) {
     logger.warn("Provider not found in agent model, defaulting to OpenAI");
@@ -161,6 +170,24 @@ export async function getChatModelFull(
   if (!model) {
     logger.warn("Model not found in agent model, defaulting to gpt-4o-mini");
     model = "gpt-4o-mini";
+  }
+
+  if (stream) {
+    if (provider === "voice-openai") {
+      return {
+        chat: new OpenAIVoiceReactAgent({
+          url: getBaseUrl(name),
+          model,
+          headers,
+        }),
+        provider,
+        model,
+      };
+    } else {
+      throw new Error(
+        `Stream is not supported for provider ${provider}, only voice-openai is supported`
+      );
+    }
   }
 
   const chatClasses = [
@@ -175,7 +202,7 @@ export async function getChatModelFull(
   ];
   if (!chatClasses.includes(provider)) {
     logger.warn(
-      `Provider ${provider} not currently supported, defaulting to OpenAI`,
+      `Provider ${provider} not currently supported, defaulting to OpenAI`
     );
     provider = "openai";
   }
@@ -231,7 +258,7 @@ export async function getChatModelFull(
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
           defaultQuery: params,
-        },
+        }
       );
       chat = chatXAI;
       break;
@@ -251,7 +278,7 @@ export async function getChatModelFull(
         chat = chatCohere;
       } catch (e) {
         logger.warn(
-          "Could not import cohere-ai. Please install it with: npm install cohere-ai",
+          "Could not import cohere-ai. Please install it with: npm install cohere-ai"
         );
         throw e;
       }
@@ -299,7 +326,7 @@ export async function getChatModelFull(
       break;
     default:
       logger.warn(
-        `Provider ${provider} not currently supported, defaulting to OpenAI`,
+        `Provider ${provider} not currently supported, defaulting to OpenAI`
       );
       const chatDefaultClass = await getOpenAIChatModel();
       const chatDefault = new chatDefaultClass(
@@ -308,7 +335,7 @@ export async function getChatModelFull(
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
           defaultQuery: params,
-        },
+        }
       );
       chat = chatDefault;
       break;

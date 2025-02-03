@@ -50,6 +50,8 @@
     "client": "tsx src/cli.ts client"
   },
   "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "@fastify/websocket": "^11.0.2",
     "@hey-api/client-fetch": "^0.5.7",
     "@langchain/anthropic": "^0.3.12",
     "@langchain/cohere": "^0.3.2",
@@ -79,8 +81,10 @@
     "jwt-decode": "^4.0.0",
     "pino": "^9.6.0",
     "uuid": "^11.0.5",
+    "ws": "^8.18.0",
     "yaml": "^2.7.0",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zod-to-json-schema": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -89,6 +93,7 @@
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.5",
+    "@types/ws": "^8.5.14",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^9.19.0",

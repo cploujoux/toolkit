@@ -1,3 +1,4 @@
+import websocket from "@fastify/websocket";
 import { AsyncLocalStorage } from "async_hooks";
 import {
   fastify,
@@ -5,7 +6,7 @@ import {
   FastifyReply,
   FastifyRequest,
 } from "fastify";
-import { IncomingMessage } from "http";
+import { IncomingMessage, request } from "http";
 import { v4 as uuidv4 } from "uuid";
 import { HTTPError } from "../common/error.js";
 import { shutdownInstrumentation } from "../common/instrumentation.js";
@@ -23,6 +24,7 @@ export async function createApp(
   const app = fastify({
     logger: true,
   });
+
   const asyncLocalStorage = new AsyncLocalStorage<string>();
 
   const settings = init();
@@ -49,6 +51,31 @@ export async function createApp(
   logger.info(
     `Running server with environment ${settings.environment} on ${settings.server.host}:${settings.server.port}`
   );
+
+  if (func.stream) {
+    logger.info("Starting websocket server");
+    app.register(websocket);
+    app.register(async function (app: FastifyInstance) {
+      app.get("/ws", { websocket: true }, async (socket) => {
+        try {
+          if (func instanceof Promise) {
+            const fn = await func;
+            await fn.run(socket, request);
+          } else if (typeof func.run === "function") {
+            await func.run(socket, request);
+          } else if (func.constructor.name === "AsyncFunction") {
+            await func(socket, request);
+          } else {
+            func(socket, request);
+          }
+        } catch (e) {
+          logger.error(e);
+        }
+      });
+    });
+  }
+
+  // Add correlation ID middleware
   // Add correlation ID middleware
   app.addHook(
     "onRequest",
@@ -93,49 +120,51 @@ export async function createApp(
     return { status: "ok" };
   });
 
-  app.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      let response;
-      if (func instanceof Promise) {
-        const fn = await func;
-        response = await fn.run(request);
-      } else if (typeof func.run === "function") {
-        response = await func.run(request);
-      } else if (func.constructor.name === "AsyncFunction") {
-        response = await func(request);
-      } else {
-        response = func(request);
-      }
+  if (!func.stream) {
+    app.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        let response;
+        if (func instanceof Promise) {
+          const fn = await func;
+          response = await fn.run(request);
+        } else if (typeof func.run === "function") {
+          response = await func.run(request);
+        } else if (func.constructor.name === "AsyncFunction") {
+          response = await func(request);
+        } else {
+          response = func(request);
+        }
 
-      if (typeof response === "string") {
-        return reply
-          .code(200)
-          .header("Content-Type", "text/plain")
-          .send(response);
-      }
-      return reply.code(200).send(response);
-    } catch (e) {
-      if (e instanceof HTTPError) {
+        if (typeof response === "string") {
+          return reply
+            .code(200)
+            .header("Content-Type", "text/plain")
+            .send(response);
+        }
+        return reply.code(200).send(response);
+      } catch (e) {
+        if (e instanceof HTTPError) {
+          const content = {
+            error: e.message,
+            status_code: e.status_code,
+            ...(settings.environment === "development" && {
+              traceback: e.stack,
+            }),
+          };
+          logger.error(`${e.status_code} ${e.stack}`);
+          return reply.code(e.status_code).send(content);
+        }
         const content = {
-          error: e.message,
-          status_code: e.status_code,
+          error: `Internal server error, ${e}`,
           ...(settings.environment === "development" && {
-            traceback: e.stack,
+            traceback: e instanceof Error ? e.stack : String(e),
           }),
         };
-        logger.error(`${e.status_code} ${e.stack}`);
-        return reply.code(e.status_code).send(content);
+        logger.error(e instanceof Error ? e.stack : String(e));
+        return reply.code(500).send(content);
       }
-      const content = {
-        error: `Internal server error, ${e}`,
-        ...(settings.environment === "development" && {
-          traceback: e instanceof Error ? e.stack : String(e),
-        }),
-      };
-      logger.error(e instanceof Error ? e.stack : String(e));
-      return reply.code(500).send(content);
-    }
-  });
+    });
+  }
 
   app.addHook("onClose", async () => {
     await shutdownInstrumentation();
