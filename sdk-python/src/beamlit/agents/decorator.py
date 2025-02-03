@@ -11,7 +11,7 @@ from beamlit.authentication import new_client
 from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
-from beamlit.models import Agent, AgentMetadata, AgentSpec
+from beamlit.models import Agent, AgentSpec, EnvironmentMetadata
 
 from .chat import get_chat_model_full
 
@@ -60,7 +60,7 @@ def agent(
             return wrapped
 
         if agent is not None:
-            metadata = AgentMetadata(**agent.get("metadata", {}))
+            metadata = EnvironmentMetadata(**agent.get("metadata", {}))
             spec = AgentSpec(**agent.get("spec", {}))
             agent = Agent(metadata=metadata, spec=spec)
             if agent.spec.model and chat_model is None:
@@ -141,7 +141,7 @@ def agent(
             except AttributeError: # special case for azure-marketplace where it uses the old OpenAI interface (no tools)
                 logger.warning("Using the old OpenAI interface for Azure Marketplace, no tools available")
                 _agent = create_react_agent(chat_model, [], checkpointer=memory)
-              
+
             settings.agent.agent = _agent
         else:
             settings.agent.agent = override_agent

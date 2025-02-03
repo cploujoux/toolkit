@@ -5,19 +5,20 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.model_provider import ModelProvider
+from ...models.account import Account
 from ...types import Response
 
 
 def _get_kwargs(
+    account_id: str,
     *,
-    body: ModelProvider,
+    body: Account,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/model_providers",
+        "method": "put",
+        "url": f"/accounts/{account_id}",
     }
 
     _body = body.to_dict()
@@ -29,9 +30,9 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[ModelProvider]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Account]:
     if response.status_code == 200:
-        response_200 = ModelProvider.from_dict(response.json())
+        response_200 = Account.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +41,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[ModelProvider]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Account]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,26 +51,29 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
+    account_id: str,
     *,
     client: AuthenticatedClient,
-    body: ModelProvider,
-) -> Response[ModelProvider]:
-    """Create model provider
+    body: Account,
+) -> Response[Account]:
+    """Update account
 
-     Create an integration.
+     Updates an account by name.
 
     Args:
-        body (ModelProvider): Model provider
+        account_id (str):
+        body (Account): Account
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ModelProvider]
+        Response[Account]
     """
 
     kwargs = _get_kwargs(
+        account_id=account_id,
         body=body,
     )
 
@@ -81,52 +85,58 @@ def sync_detailed(
 
 
 def sync(
+    account_id: str,
     *,
     client: AuthenticatedClient,
-    body: ModelProvider,
-) -> Optional[ModelProvider]:
-    """Create model provider
+    body: Account,
+) -> Optional[Account]:
+    """Update account
 
-     Create an integration.
+     Updates an account by name.
 
     Args:
-        body (ModelProvider): Model provider
+        account_id (str):
+        body (Account): Account
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ModelProvider
+        Account
     """
 
     return sync_detailed(
+        account_id=account_id,
         client=client,
         body=body,
     ).parsed
 
 
 async def asyncio_detailed(
+    account_id: str,
     *,
     client: AuthenticatedClient,
-    body: ModelProvider,
-) -> Response[ModelProvider]:
-    """Create model provider
+    body: Account,
+) -> Response[Account]:
+    """Update account
 
-     Create an integration.
+     Updates an account by name.
 
     Args:
-        body (ModelProvider): Model provider
+        account_id (str):
+        body (Account): Account
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ModelProvider]
+        Response[Account]
     """
 
     kwargs = _get_kwargs(
+        account_id=account_id,
         body=body,
     )
 
@@ -136,27 +146,30 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    account_id: str,
     *,
     client: AuthenticatedClient,
-    body: ModelProvider,
-) -> Optional[ModelProvider]:
-    """Create model provider
+    body: Account,
+) -> Optional[Account]:
+    """Update account
 
-     Create an integration.
+     Updates an account by name.
 
     Args:
-        body (ModelProvider): Model provider
+        account_id (str):
+        body (Account): Account
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ModelProvider
+        Account
     """
 
     return (
         await asyncio_detailed(
+            account_id=account_id,
             client=client,
             body=body,
         )

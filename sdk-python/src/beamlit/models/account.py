@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -6,15 +6,16 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.account_spec_address import AccountSpecAddress
     from ..models.metadata_labels import MetadataLabels
 
 
-T = TypeVar("T", bound="ModelMetadata")
+T = TypeVar("T", bound="Account")
 
 
 @_attrs_define
-class ModelMetadata:
-    """Model metadata
+class Account:
+    """Account
 
     Attributes:
         created_at (Union[Unset, str]): The date and time when the resource was created
@@ -25,7 +26,14 @@ class ModelMetadata:
         labels (Union[Unset, MetadataLabels]): Labels
         name (Union[Unset, str]): Model name
         workspace (Union[Unset, str]): Workspace name
-        environment (Union[Unset, str]): Environment name
+        address (Union[Unset, AccountSpecAddress]): Billing address
+        admins (Union[Unset, list[Any]]): Admins
+        currency (Union[Unset, str]): Currency
+        owner (Union[Unset, str]): Owner
+        status (Union[Unset, str]): Status
+        tax_id (Union[Unset, str]): Tax ID
+        metadata (Union[Unset, Any]):
+        spec (Union[Unset, Any]):
     """
 
     created_at: Union[Unset, str] = UNSET
@@ -36,7 +44,14 @@ class ModelMetadata:
     labels: Union[Unset, "MetadataLabels"] = UNSET
     name: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
-    environment: Union[Unset, str] = UNSET
+    address: Union[Unset, "AccountSpecAddress"] = UNSET
+    admins: Union[Unset, list[Any]] = UNSET
+    currency: Union[Unset, str] = UNSET
+    owner: Union[Unset, str] = UNSET
+    status: Union[Unset, str] = UNSET
+    tax_id: Union[Unset, str] = UNSET
+    metadata: Union[Unset, Any] = UNSET
+    spec: Union[Unset, Any] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -51,14 +66,36 @@ class ModelMetadata:
         display_name = self.display_name
 
         labels: Union[Unset, dict[str, Any]] = UNSET
-        if self.labels and not isinstance(self.labels, Unset):
+        if self.labels and not isinstance(self.labels, Unset) and not isinstance(self.labels, dict):
             labels = self.labels.to_dict()
+        elif self.labels and isinstance(self.labels, dict):
+            labels = self.labels
 
         name = self.name
 
         workspace = self.workspace
 
-        environment = self.environment
+        address: Union[Unset, dict[str, Any]] = UNSET
+        if self.address and not isinstance(self.address, Unset) and not isinstance(self.address, dict):
+            address = self.address.to_dict()
+        elif self.address and isinstance(self.address, dict):
+            address = self.address
+
+        admins: Union[Unset, list[Any]] = UNSET
+        if not isinstance(self.admins, Unset):
+            admins = self.admins
+
+        currency = self.currency
+
+        owner = self.owner
+
+        status = self.status
+
+        tax_id = self.tax_id
+
+        metadata = self.metadata
+
+        spec = self.spec
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -79,13 +116,28 @@ class ModelMetadata:
             field_dict["name"] = name
         if workspace is not UNSET:
             field_dict["workspace"] = workspace
-        if environment is not UNSET:
-            field_dict["environment"] = environment
+        if address is not UNSET:
+            field_dict["address"] = address
+        if admins is not UNSET:
+            field_dict["admins"] = admins
+        if currency is not UNSET:
+            field_dict["currency"] = currency
+        if owner is not UNSET:
+            field_dict["owner"] = owner
+        if status is not UNSET:
+            field_dict["status"] = status
+        if tax_id is not UNSET:
+            field_dict["tax_id"] = tax_id
+        if metadata is not UNSET:
+            field_dict["metadata"] = metadata
+        if spec is not UNSET:
+            field_dict["spec"] = spec
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        from ..models.account_spec_address import AccountSpecAddress
         from ..models.metadata_labels import MetadataLabels
 
         if not src_dict:
@@ -112,9 +164,28 @@ class ModelMetadata:
 
         workspace = d.pop("workspace", UNSET)
 
-        environment = d.pop("environment", UNSET)
+        _address = d.pop("address", UNSET)
+        address: Union[Unset, AccountSpecAddress]
+        if isinstance(_address, Unset):
+            address = UNSET
+        else:
+            address = AccountSpecAddress.from_dict(_address)
 
-        model_metadata = cls(
+        admins = cast(list[Any], d.pop("admins", UNSET))
+
+        currency = d.pop("currency", UNSET)
+
+        owner = d.pop("owner", UNSET)
+
+        status = d.pop("status", UNSET)
+
+        tax_id = d.pop("tax_id", UNSET)
+
+        metadata = d.pop("metadata", UNSET)
+
+        spec = d.pop("spec", UNSET)
+
+        account = cls(
             created_at=created_at,
             updated_at=updated_at,
             created_by=created_by,
@@ -123,11 +194,18 @@ class ModelMetadata:
             labels=labels,
             name=name,
             workspace=workspace,
-            environment=environment,
+            address=address,
+            admins=admins,
+            currency=currency,
+            owner=owner,
+            status=status,
+            tax_id=tax_id,
+            metadata=metadata,
+            spec=spec,
         )
 
-        model_metadata.additional_properties = d
-        return model_metadata
+        account.additional_properties = d
+        return account
 
     @property
     def additional_keys(self) -> list[str]:

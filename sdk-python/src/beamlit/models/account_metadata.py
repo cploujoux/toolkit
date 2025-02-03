@@ -9,34 +9,28 @@ if TYPE_CHECKING:
     from ..models.metadata_labels import MetadataLabels
 
 
-T = TypeVar("T", bound="FunctionMetadata")
+T = TypeVar("T", bound="AccountMetadata")
 
 
 @_attrs_define
-class FunctionMetadata:
-    """Function metadata
+class AccountMetadata:
+    """AccountMetadata
 
     Attributes:
         created_at (Union[Unset, str]): The date and time when the resource was created
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_by (Union[Unset, str]): The user or service account who updated the resource
-        display_name (Union[Unset, str]): Model display name
+        id (Union[Unset, str]): Account id
         labels (Union[Unset, MetadataLabels]): Labels
-        name (Union[Unset, str]): Model name
-        workspace (Union[Unset, str]): Workspace name
-        environment (Union[Unset, str]): Environment name
     """
 
     created_at: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
     created_by: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
-    display_name: Union[Unset, str] = UNSET
+    id: Union[Unset, str] = UNSET
     labels: Union[Unset, "MetadataLabels"] = UNSET
-    name: Union[Unset, str] = UNSET
-    workspace: Union[Unset, str] = UNSET
-    environment: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -48,19 +42,13 @@ class FunctionMetadata:
 
         updated_by = self.updated_by
 
-        display_name = self.display_name
+        id = self.id
 
         labels: Union[Unset, dict[str, Any]] = UNSET
         if self.labels and not isinstance(self.labels, Unset) and not isinstance(self.labels, dict):
             labels = self.labels.to_dict()
         elif self.labels and isinstance(self.labels, dict):
             labels = self.labels
-
-        name = self.name
-
-        workspace = self.workspace
-
-        environment = self.environment
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -73,16 +61,10 @@ class FunctionMetadata:
             field_dict["createdBy"] = created_by
         if updated_by is not UNSET:
             field_dict["updatedBy"] = updated_by
-        if display_name is not UNSET:
-            field_dict["displayName"] = display_name
+        if id is not UNSET:
+            field_dict["id"] = id
         if labels is not UNSET:
             field_dict["labels"] = labels
-        if name is not UNSET:
-            field_dict["name"] = name
-        if workspace is not UNSET:
-            field_dict["workspace"] = workspace
-        if environment is not UNSET:
-            field_dict["environment"] = environment
 
         return field_dict
 
@@ -101,7 +83,7 @@ class FunctionMetadata:
 
         updated_by = d.pop("updatedBy", UNSET)
 
-        display_name = d.pop("displayName", UNSET)
+        id = d.pop("id", UNSET)
 
         _labels = d.pop("labels", UNSET)
         labels: Union[Unset, MetadataLabels]
@@ -110,26 +92,17 @@ class FunctionMetadata:
         else:
             labels = MetadataLabels.from_dict(_labels)
 
-        name = d.pop("name", UNSET)
-
-        workspace = d.pop("workspace", UNSET)
-
-        environment = d.pop("environment", UNSET)
-
-        function_metadata = cls(
+        account_metadata = cls(
             created_at=created_at,
             updated_at=updated_at,
             created_by=created_by,
             updated_by=updated_by,
-            display_name=display_name,
+            id=id,
             labels=labels,
-            name=name,
-            workspace=workspace,
-            environment=environment,
         )
 
-        function_metadata.additional_properties = d
-        return function_metadata
+        account_metadata.additional_properties = d
+        return account_metadata
 
     @property
     def additional_keys(self) -> list[str]:
