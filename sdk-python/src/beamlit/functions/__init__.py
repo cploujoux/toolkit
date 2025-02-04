@@ -1,4 +1,5 @@
-"""Functions package providing function decorators and utilities."""
+"""Functions package providing function decorators and utilities for Beamlit integration.
+It includes decorators for creating function tools and utilities for managing and retrieving functions."""
 
 from .common import get_functions
 from .decorator import function, kit

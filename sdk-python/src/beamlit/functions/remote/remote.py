@@ -1,3 +1,8 @@
+"""
+This module provides functionalities to integrate remote functions into Beamlit.
+It includes classes for creating dynamic schemas based on function parameters and managing remote toolkits.
+"""
+
 import asyncio
 import warnings
 from dataclasses import dataclass
@@ -17,6 +22,16 @@ from beamlit.run import RunClient
 
 
 def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
+    """
+    Creates a dynamic Pydantic schema based on function parameters.
+
+    Args:
+        name (str): The name of the schema.
+        parameters (list[StoreFunctionParameter]): List of parameter objects.
+
+    Returns:
+        type[pydantic.BaseModel]: The dynamically created Pydantic model.
+    """
     field_definitions = {}
     for param in parameters:
         field_type = str
@@ -39,7 +54,13 @@ def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -
 
 class RemoteTool(BaseTool):
     """
-    Remote tool
+    Tool for interacting with remote functions.
+
+    Attributes:
+        client (RunClient): The client used to execute remote function calls.
+        resource_name (str): The name of the remote resource.
+        kit (bool): Indicates whether the tool is part of a function kit.
+        handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
     """
 
     client: RunClient
@@ -79,7 +100,12 @@ class RemoteTool(BaseTool):
 @dataclass
 class RemoteToolkit:
     """
-    Remote toolkit
+    Toolkit for managing remote function tools.
+
+    Attributes:
+        client (AuthenticatedClient): The authenticated client instance.
+        function (str): The name of the remote function to integrate.
+        _function (Function | None): Cached Function object after initialization.
     """
     client: AuthenticatedClient
     function: str
@@ -87,7 +113,7 @@ class RemoteToolkit:
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
-        """Initialize the session and retrieve tools list"""
+        """Initialize the session and retrieve the remote function details."""
         if self._function is None:
             try:
                 response = get_function.sync_detailed(self.function, client=self.client)
@@ -106,7 +132,6 @@ class RemoteToolkit:
                     f"error: {e.status_code}. Available functions: {', '.join(names)}"
                 )
 
-    @t.override
     def get_tools(self) -> list[BaseTool]:
         settings = get_settings()
         if self._function is None:

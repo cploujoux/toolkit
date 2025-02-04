@@ -11,7 +11,16 @@ from beamlit.models import Function, FunctionKit
 logger = getLogger(__name__)
 
 def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
-    """Create function tools with Beamlit and LangChain integration."""
+    """
+    Decorator to create function tools with Beamlit and LangChain integration.
+
+    Args:
+        bl_kit (FunctionKit | None): Optional FunctionKit to associate with the function.
+        **kwargs (dict): Additional keyword arguments for function configuration.
+
+    Returns:
+        Callable: The decorated function.
+    """
 
     def wrapper(func: Callable) -> Callable:
         if bl_kit and not func.__doc__ and bl_kit.description:
@@ -22,7 +31,17 @@ def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
 
 
 def function(*args, function: Function | dict = None, kit=False, **kwargs: dict) -> Callable:
-    """Create function tools with Beamlit and LangChain integration."""
+    """
+    Decorator to create function tools with Beamlit and LangChain integration.
+
+    Args:
+        function (Function | dict): Function metadata or a dictionary representing it.
+        kit (bool): Whether to associate a function kit.
+        **kwargs (dict): Additional keyword arguments for function configuration.
+
+    Returns:
+        Callable: The decorated function.
+    """
     if function is not None and not isinstance(function, dict):
         raise Exception(
             'function must be a dictionary, example: @function(function={"metadata": {"name": "my_function"}})'

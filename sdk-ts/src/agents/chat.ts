@@ -11,11 +11,21 @@ import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
 import { OpenAIVoiceReactAgent } from "./voice/openai.js";
 
+/**
+ * Retrieves the base URL for a given model name based on the current settings.
+ * @param name - The name of the model.
+ * @returns The base URL as a string.
+ */
 function getBaseUrl(name: string): string {
   const settings = getSettings();
   return `${settings.runUrl}/${settings.workspace}/models/${name}/v1`;
 }
 
+/**
+ * Dynamically imports and returns the ChatOpenAI class from @langchain/openai.
+ * @returns The ChatOpenAI class.
+ * @throws If the import fails.
+ */
 async function getOpenAIChatModel() {
   try {
     const { ChatOpenAI } = require("@langchain/openai");
@@ -113,11 +123,23 @@ async function getAzureMarketplaceModel() {
   }
 }
 
+/**
+ * Retrieves the chat model and its details based on the provided name and agent model.
+ * @param name - The name of the model.
+ * @param agentModel - Optional Model object to override the default.
+ * @returns An object containing the chat model, provider, and model name.
+ */
 export async function getChatModel(name: string, agentModel?: Model) {
   const { chat } = await getChatModelFull(name, agentModel);
   return chat;
 }
 
+/**
+ * Retrieves the full chat model details, including the provider and model configuration.
+ * @param name - The name of the model.
+ * @param agentModel - Optional Model object to override the default.
+ * @returns An object containing the chat model, provider, and model name.
+ */
 export async function getChatModelFull(
   name: string,
   agentModel?: Model
@@ -237,18 +259,16 @@ export async function getChatModelFull(
       break;
     case "xai":
       const chatClassXAI = await getXAIChatModel();
-      const chatXAI = new chatClassXAI(
-        {
-          apiKey: "fake_api_key",
-          temperature: 0,
-          model,
-        },
-        {
+      const chatXAI = new chatClassXAI({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
           defaultQuery: params,
-        }
-      );
+        },
+      });
       chat = chatXAI;
       break;
     case "cohere":

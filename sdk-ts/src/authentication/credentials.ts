@@ -11,6 +11,10 @@ import {
   WorkspaceConfig,
 } from "./types.js";
 
+/**
+ * Loads the application configuration from the user's home directory.
+ * @returns The loaded configuration object.
+ */
 function loadConfig(): Config {
   const config: Config = {
     workspaces: [],
@@ -52,6 +56,10 @@ function loadConfig(): Config {
   return config;
 }
 
+/**
+ * Saves the application configuration to the user's home directory.
+ * @param config - The configuration to save.
+ */
 function saveConfig(config: Config): void {
   const homeDir = homedir();
   if (!homeDir) {
@@ -80,16 +88,29 @@ function saveConfig(config: Config): void {
   );
 }
 
+/**
+ * Lists all workspace names in the current context.
+ * @returns An array of workspace names.
+ */
 export function listContextWorkspaces(): string[] {
   const config = loadConfig();
   return config.workspaces.map((workspace) => workspace.name);
 }
 
+/**
+ * Retrieves the current context configuration.
+ * @returns The current context configuration.
+ */
 export function currentContext(): ContextConfig {
   const config = loadConfig();
   return config.context;
 }
 
+/**
+ * Sets the current workspace and environment in the context.
+ * @param workspaceName - The name of the workspace to set.
+ * @param environment - The environment to set.
+ */
 export function setCurrentWorkspace(
   workspaceName: string,
   environment: string
@@ -100,6 +121,11 @@ export function setCurrentWorkspace(
   saveConfig(config);
 }
 
+/**
+ * Loads the credentials for a specified workspace.
+ * @param workspaceName - The name of the workspace.
+ * @returns The credentials associated with the workspace.
+ */
 export function loadCredentials(workspaceName: string): Credentials {
   const config = loadConfig();
   const workspace = config.workspaces.find((ws) => ws.name === workspaceName);
@@ -116,6 +142,11 @@ export function loadCredentials(workspaceName: string): Credentials {
   };
 }
 
+/**
+ * Loads the credentials from the application settings.
+ * @param settings - The application settings.
+ * @returns The loaded credentials.
+ */
 export function loadCredentialsFromSettings(settings: Settings): Credentials {
   return {
     apiKey: settings.authentication?.apiKey || "",
@@ -124,6 +155,9 @@ export function loadCredentialsFromSettings(settings: Settings): Credentials {
   };
 }
 
+/**
+ * Ensures the home directory exists, creating it if necessary.
+ */
 export function createHomeDirIfMissing(): void {
   const homeDir = homedir();
   if (!homeDir) {
@@ -147,6 +181,11 @@ export function createHomeDirIfMissing(): void {
   }
 }
 
+/**
+ * Saves the provided credentials for a specified workspace.
+ * @param workspaceName - The name of the workspace.
+ * @param credentials - The credentials to save.
+ */
 export function saveCredentials(
   workspaceName: string,
   credentials: Credentials
@@ -175,6 +214,10 @@ export function saveCredentials(
   saveConfig(config);
 }
 
+/**
+ * Clears the credentials for a specified workspace.
+ * @param workspaceName - The name of the workspace.
+ */
 export function clearCredentials(workspaceName: string): void {
   const config = loadConfig();
   config.workspaces = config.workspaces.filter(

@@ -1,30 +1,49 @@
 import { getEnvironmentVariable } from "@langchain/core/utils/env";
-import {
-  ChatOpenAI,
-  OpenAIClient,
-  OpenAICoreRequestOptions,
-} from "@langchain/openai";
+import { ChatOpenAI } from "@langchain/openai";
 
+/**
+ * Extends the ChatOpenAI class to create a ChatXAI agent with additional configurations.
+ */
 export class ChatXAI extends ChatOpenAI {
+  /**
+   * Returns the name of the class for LangChain serialization.
+   * @returns The class name as a string.
+   */
   static lc_name() {
     return "ChatXAI";
   }
+
+  /**
+   * Specifies the type of the language model.
+   * @returns The type of the LLM as a string.
+   */
   _llmType() {
     return "xAI";
   }
+
+  /**
+   * Specifies the secrets required for serialization.
+   * @returns An object mapping secret names to their keys.
+   */
   get lc_secrets() {
     return {
       apiKey: "XAI_API_KEY",
     };
   }
-  constructor(fields: any, configuration: any) {
+
+  /**
+   * Constructs a new ChatXAI instance.
+   * @param fields - Configuration fields, including the API key.
+   * @throws If the API key is not provided.
+   */
+  constructor(fields: any) {
     const apiKey = fields?.apiKey || getEnvironmentVariable("XAI_API_KEY");
     if (!apiKey) {
       throw new Error(
         `xAI API key not found. Please set the XAI_API_KEY environment variable or provide the key into "apiKey" field.`
       );
     }
-    super(fields, configuration);
+    super(fields);
     Object.defineProperty(this, "lc_serializable", {
       enumerable: true,
       configurable: true,
@@ -38,6 +57,11 @@ export class ChatXAI extends ChatOpenAI {
       value: ["langchain", "chat_models", "xai"],
     });
   }
+
+  /**
+   * Serializes the instance to JSON, removing sensitive information.
+   * @returns The serialized JSON object.
+   */
   toJSON() {
     const result = super.toJSON();
     if (
@@ -50,54 +74,15 @@ export class ChatXAI extends ChatOpenAI {
     }
     return result;
   }
+
+  /**
+   * Retrieves parameters for LangChain based on provided options.
+   * @param options - Additional options for parameter retrieval.
+   * @returns An object containing LangChain parameters.
+   */
   getLsParams(options: any) {
     const params = super.getLsParams(options);
     params.ls_provider = "xai";
     return params;
-  }
-  /**
-   * Calls the xAI API with retry logic in case of failures.
-   * @param request The request to send to the xAI API.
-   * @param options Optional configuration for the API call.
-   * @returns The response from the xAI API.
-   */
-  async completionWithRetry(
-    request: OpenAIClient.Chat.ChatCompletionCreateParamsStreaming,
-    options?: OpenAICoreRequestOptions
-  ): Promise<AsyncIterable<OpenAIClient.Chat.Completions.ChatCompletionChunk>>;
-  async completionWithRetry(
-    request: OpenAIClient.Chat.ChatCompletionCreateParamsNonStreaming,
-    options?: OpenAICoreRequestOptions
-  ): Promise<OpenAIClient.Chat.Completions.ChatCompletion>;
-  async completionWithRetry(
-    request:
-      | OpenAIClient.Chat.ChatCompletionCreateParamsStreaming
-      | OpenAIClient.Chat.ChatCompletionCreateParamsNonStreaming,
-    options?: OpenAICoreRequestOptions
-  ): Promise<
-    | AsyncIterable<OpenAIClient.Chat.Completions.ChatCompletionChunk>
-    | OpenAIClient.Chat.Completions.ChatCompletion
-  > {
-    delete request.frequency_penalty;
-    delete request.presence_penalty;
-    delete request.logit_bias;
-    delete request.functions;
-    const newRequestMessages = request.messages.map((msg: any) => {
-      if (!msg.content) {
-        return {
-          ...msg,
-          content: "",
-        };
-      }
-      return msg;
-    });
-    const newRequest = {
-      ...request,
-      messages: newRequestMessages,
-    };
-    if (newRequest.stream === true) {
-      return super.completionWithRetry(newRequest, options);
-    }
-    return super.completionWithRetry(newRequest, options);
   }
 }

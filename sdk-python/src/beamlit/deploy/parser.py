@@ -1,3 +1,9 @@
+"""
+This module provides classes and functions for parsing deployment resources within Beamlit.
+It includes the Resource dataclass for representing deployment resources and functions to extract and process resources
+decorated within Python files.
+"""
+
 import ast
 import importlib
 import os
@@ -10,6 +16,16 @@ from beamlit.models import StoreFunctionParameter
 
 @dataclass
 class Resource:
+    """
+    A dataclass representing a deployment resource.
+
+    Attributes:
+        type (Literal["agent", "function"]): The type of deployment ("agent" or "function").
+        module (Callable): The module containing the deployment.
+        name (str): The name of the deployment.
+        decorator (ast.Call): The decorator AST node used on the deployment function.
+        func (Callable): The deployment function.
+    """
     type: Literal["agent", "function"]
     module: Callable
     name: str

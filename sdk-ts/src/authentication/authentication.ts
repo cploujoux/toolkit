@@ -17,14 +17,29 @@ interface RunClientWithCredentials {
   runUrl?: string;
 }
 
+/**
+ * Handles public authentication when no credentials are provided.
+ */
 class PublicAuth {
+  /**
+   * Retrieves the authentication headers. For public access, returns an empty record.
+   * @returns A promise resolving to an empty headers object.
+   */
   async getHeaders(): Promise<Record<string, string>> {
     return {};
   }
 
+  /**
+   * Intercepts a request without modifying it, as public access requires no headers.
+   */
   intercept(): void {}
 }
 
+/**
+ * Creates a new client based on the provided settings.
+ * @param settings - The current application settings.
+ * @returns A new client instance.
+ */
 export function newClientFromSettings(settings: any) {
   const credentials = loadCredentialsFromSettings(settings);
 
@@ -35,6 +50,10 @@ export function newClientFromSettings(settings: any) {
   return newClientWithCredentials(clientConfig);
 }
 
+/**
+ * Retrieves the client configuration based on the current context.
+ * @returns The client configuration object.
+ */
 function getClientConfig() {
   const context = currentContext();
   let clientConfig: RunClientWithCredentials;
@@ -56,12 +75,21 @@ function getClientConfig() {
   return clientConfig;
 }
 
+/**
+ * Creates a new client using the current client configuration.
+ * @returns A new client instance.
+ */
 export function newClient() {
   const clientConfig = getClientConfig();
   const client = newClientWithCredentials(clientConfig);
   return client;
 }
 
+/**
+ * Determines the appropriate authentication provider based on the client configuration.
+ * @param config - The client configuration.
+ * @returns An instance of an authentication provider.
+ */
 function getProvider(config: RunClientWithCredentials) {
   let provider: ApiKeyAuth | BearerToken | ClientCredentials | PublicAuth;
   const settings = getSettings();
@@ -89,6 +117,11 @@ function getProvider(config: RunClientWithCredentials) {
   return provider;
 }
 
+/**
+ * Creates a new client with the specified credentials.
+ * @param config - The client configuration.
+ * @returns A new client instance.
+ */
 export function newClientWithCredentials(config: RunClientWithCredentials) {
   const settings = getSettings();
   const provider = getProvider(config);
@@ -107,6 +140,10 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
   );
 }
 
+/**
+ * Retrieves the authentication headers for the current client configuration.
+ * @returns A promise resolving to a record of header key-value pairs.
+ */
 export async function getAuthenticationHeaders(): Promise<
   Record<string, string>
 > {

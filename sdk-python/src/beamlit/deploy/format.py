@@ -1,3 +1,7 @@
+"""
+This module provides utility functions to format deployment configurations into YAML-compatible strings.
+It includes functions to convert arguments, parameters, dictionaries, and agent chains into properly formatted JSON or YAML strings.
+"""
 
 import ast
 
@@ -11,6 +15,15 @@ def arg_to_list(arg: ast.List):
     return value
 
 def format_value(v):
+    """
+    Formats an AST node value into its Python equivalent.
+
+    Args:
+        v (ast.AST): The AST node to format.
+
+    Returns:
+        Any: The formatted Python value.
+    """
     if isinstance(v, ast.Constant):
         return v.value
     elif isinstance(v, ast.Dict):
@@ -19,6 +32,15 @@ def format_value(v):
         return arg_to_list(v)
 
 def arg_to_dict(arg: ast.keyword):
+    """
+    Converts an AST keyword argument to a dictionary.
+
+    Args:
+        arg (ast.keyword): The AST keyword argument.
+
+    Returns:
+        dict: The resulting dictionary.
+    """
     value = {}
     for k, v in zip(arg.keys, arg.values):
         if isinstance(k, ast.Constant):
@@ -27,13 +49,13 @@ def arg_to_dict(arg: ast.keyword):
 
 def format_parameters(parameters: list[StoreFunctionParameter]) -> str:
     """
-    Formats function parameters into YAML-compatible string.
+    Formats function parameters into a YAML-compatible string.
 
     Args:
-        parameters (list[StoreFunctionParameter]): List of parameter objects
+        parameters (list[StoreFunctionParameter]): List of parameter objects.
 
     Returns:
-        str: YAML-formatted string of parameters
+        str: YAML-formatted string of parameters.
     """
     if not parameters:
         return "[]"
@@ -49,6 +71,15 @@ def format_parameters(parameters: list[StoreFunctionParameter]) -> str:
     return "\n".join(formatted)
 
 def format_dict(obj: dict) -> str:
+    """
+    Converts a dictionary to a YAML-compatible string.
+
+    Args:
+        obj (dict): The dictionary to format.
+
+    Returns:
+        str: YAML-formatted string representation of the dictionary.
+    """
     if not obj:
         return "null"
     ret = ""
@@ -61,13 +92,13 @@ def format_dict(obj: dict) -> str:
 
 def format_agent_chain(agentChain: list[AgentChain]) -> str:
     """
-    Formats agent chain configuration into YAML-compatible string.
+    Formats agent chain configuration into a YAML-compatible string.
 
     Args:
-        agentChain (list[AgentChain]): List of agent chain configurations
+        agentChain (list[AgentChain]): List of agent chain configurations.
 
     Returns:
-        str: YAML-formatted string of agent chain
+        str: YAML-formatted string of agent chain.
     """
     if not agentChain:
         return "[]"
@@ -75,8 +106,8 @@ def format_agent_chain(agentChain: list[AgentChain]) -> str:
 
     for agent in agentChain:
         formatted.append(f"""
-      - agent: {agent.name}
-        enabled: {agent.enabled}""")
+  - agent: {agent.name}
+    enabled: {agent.enabled}""")
         if agent.description:
             formatted.append(f"        description: {agent.description}")
     return "\n".join(formatted)

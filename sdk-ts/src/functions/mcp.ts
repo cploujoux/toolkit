@@ -7,6 +7,15 @@ import {
 import { z } from "zod";
 import { getSettings, Settings } from "../common/settings.js";
 
+/**
+ * Represents a property expected by MCP tools.
+ *
+ * @typedef {Object} MCPProperty
+ * @property {string} type - The type of the property.
+ * @property {boolean} [required] - Whether the property is required.
+ * @property {string} [description] - A description of the property.
+ * @property {*} [default] - The default value of the property.
+ */
 type MCPProperty = {
   type: string;
   required?: boolean;
@@ -14,6 +23,15 @@ type MCPProperty = {
   default?: any;
 };
 
+/**
+ * Creates a StructuredTool for MCP tools based on their specifications.
+ *
+ * @param {MCPClient} client - The MCP client instance.
+ * @param {string} name - The name of the tool.
+ * @param {string} description - A description of the tool.
+ * @param {z.ZodType} schema - The Zod schema for the tool's input.
+ * @returns {StructuredTool} The structured tool instance.
+ */
 export function getMCPTool(
   client: MCPClient,
   name: string,
@@ -33,17 +51,32 @@ export function getMCPTool(
   );
 }
 
+/**
+ * Client for interacting with MCP (Model Context Protocol) services.
+ */
 export class MCPClient {
   private client: Client;
   private url: string;
   private settings: Settings;
 
+  /**
+   * Creates an instance of MCPClient.
+   *
+   * @param {Client} client - The HTTP client instance.
+   * @param {string} url - The base URL for MCP services.
+   */
   constructor(client: Client, url: string) {
     this.settings = getSettings();
     this.client = client;
     this.url = url;
   }
 
+  /**
+   * Retrieves a list of available tools from the MCP service.
+   *
+   * @returns {Promise<ListToolsResult>} The result containing the list of tools.
+   * @throws Will throw an error if the request fails.
+   */
   async listTools(): Promise<ListToolsResult> {
     const { response, data } = await this.client.request({
       method: "GET",
@@ -58,6 +91,14 @@ export class MCPClient {
     return data as ListToolsResult;
   }
 
+  /**
+   * Calls a specific tool with provided arguments.
+   *
+   * @param {string} toolName - The name of the tool to invoke.
+   * @param {...any[]} args - Arguments to pass to the tool.
+   * @returns {Promise<any>} The result from the tool invocation.
+   * @throws Will throw an error if the call fails or if the tool returns an error.
+   */
   async callTool(toolName: string, ...args: any[]): Promise<any> {
     const { response, data } = await this.client.request({
       method: "POST",
@@ -79,18 +120,25 @@ export class MCPClient {
 }
 
 /**
- * Remote toolkit for managing agent chains
+ * Toolkit for managing and interacting with MCP tools.
  */
 export class MCPToolkit {
   private client: MCPClient;
   private _tools: ListToolsResult | null = null;
 
+  /**
+   * Creates an instance of MCPToolkit.
+   *
+   * @param {MCPClient} client - The MCP client instance.
+   */
   constructor(client: MCPClient) {
     this.client = client;
   }
 
   /**
-   * Initialize the session and retrieve tools list
+   * Initializes the toolkit by retrieving the list of available tools.
+   *
+   * @returns {Promise<void>} Resolves when initialization is complete.
    */
   async initialize(): Promise<void> {
     if (!this._tools) {
@@ -98,6 +146,12 @@ export class MCPToolkit {
     }
   }
 
+  /**
+   * Retrieves the list of structured tools managed by the toolkit.
+   *
+   * @returns {Promise<StructuredTool[]>} An array of structured tools.
+   * @throws Will throw an error if the toolkit has not been initialized.
+   */
   async getTools(): Promise<StructuredTool[]> {
     if (!this._tools) {
       throw new Error("Must initialize the toolkit first");

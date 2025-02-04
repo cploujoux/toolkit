@@ -1,3 +1,9 @@
+"""
+This module provides the ClientCredentials class, which handles client credentials-based
+authentication for Beamlit. It manages token refreshing and authentication flows using
+client credentials and refresh tokens.
+"""
+
 import base64
 import json
 from dataclasses import dataclass
@@ -19,12 +25,33 @@ class DeviceLoginFinalizeResponse:
 
 
 class ClientCredentials(Auth):
+    """
+    A provider that authenticates requests using client credentials.
+    """
+
     def __init__(self, credentials, workspace_name: str, base_url: str):
+        """
+        Initializes the ClientCredentials provider with the given credentials, workspace name, and base URL.
+
+        Parameters:
+            credentials: Credentials containing access and refresh tokens.
+            workspace_name (str): The name of the workspace.
+            base_url (str): The base URL for authentication.
+        """
         self.credentials = credentials
         self.workspace_name = workspace_name
         self.base_url = base_url
 
     def get_headers(self):
+        """
+        Retrieves the authentication headers after ensuring tokens are valid.
+
+        Returns:
+            dict: A dictionary of headers with Bearer token and workspace.
+
+        Raises:
+            Exception: If token refresh fails.
+        """
         err = self.refresh_if_needed()
         if err:
             raise err
@@ -35,6 +62,12 @@ class ClientCredentials(Auth):
         }
 
     def refresh_if_needed(self) -> Optional[Exception]:
+        """
+        Checks if the access token needs to be refreshed and performs the refresh if necessary.
+
+        Returns:
+            Optional[Exception]: An exception if refreshing fails, otherwise None.
+        """
         settings = get_settings()
         if self.credentials.client_credentials and not self.credentials.refresh_token:
             headers = {"Authorization": f"Basic {self.credentials.client_credentials}", "Content-Type": "application/json"}
@@ -61,10 +94,21 @@ class ClientCredentials(Auth):
         if current_time + timedelta(minutes=10) > exp_time:
             return self.do_refresh()
 
-
         return None
 
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
+        """
+        Processes the authentication flow by ensuring tokens are valid and adding necessary headers.
+
+        Parameters:
+            request (Request): The HTTP request to authenticate.
+
+        Yields:
+            Request: The authenticated request.
+
+        Raises:
+            Exception: If token refresh fails.
+        """
         err = self.refresh_if_needed()
         if err:
             return err
@@ -74,6 +118,12 @@ class ClientCredentials(Auth):
         yield request
 
     def do_refresh(self) -> Optional[Exception]:
+        """
+        Performs the token refresh using the refresh token.
+
+        Returns:
+            Optional[Exception]: An exception if refreshing fails, otherwise None.
+        """
         if not self.credentials.refresh_token:
             return Exception("No refresh token to refresh")
 

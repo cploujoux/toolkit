@@ -1,5 +1,8 @@
 import { pino } from "pino";
 
+/**
+ * Configuration for the logger.
+ */
 export const loggerConfiguration = {
   transport: {
     target: "pino-pretty",
@@ -13,4 +16,7 @@ export const loggerConfiguration = {
   },
 };
 
+/**
+ * Logger instance for the application.
+ */
 export const logger = pino(loggerConfiguration);

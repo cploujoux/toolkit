@@ -1,7 +1,13 @@
+"""Module: decorator
+
+Defines decorators for agent functionalities.
+"""
+
 # Import necessary modules
 import functools
 import inspect
 from logging import getLogger
+from typing import Callable
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -12,8 +18,9 @@ from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
 from beamlit.models import Agent, AgentSpec, EnvironmentMetadata
-from .voice.openai import OpenAIVoiceReactAgent
+
 from .chat import get_chat_model_full
+from .voice.openai import OpenAIVoiceReactAgent
 
 
 def agent(
@@ -22,7 +29,32 @@ def agent(
     override_agent=None,
     override_functions=None,
     remote_functions=None,
-):
+) -> Callable:
+    """
+    A decorator factory that configures and wraps functions to integrate with Beamlit agents.
+    Handles model initialization, function retrieval, and agent setup.
+
+    Parameters:
+        agent (Agent | dict, optional): An `Agent` instance or a dictionary containing agent metadata and specifications.
+        override_model (Any, optional): An optional model to override the default agent model.
+        override_agent (Any, optional): An optional agent instance to override the default agent.
+        mcp_hub (Any, optional): An optional MCP hub configuration.
+        remote_functions (Any, optional): An optional list of remote functions to be integrated.
+
+    Returns:
+        Callable: A decorator that wraps the target function, injecting agent-related configurations and dependencies.
+
+    Behavior:
+        - Validates and initializes the agent configuration.
+        - Retrieves and sets up the appropriate chat model based on the agent's specifications.
+        - Retrieves functions from the specified directories or remote sources.
+        - Wraps the target function, injecting agent, model, and function dependencies as needed.
+        - Logs relevant information and handles exceptions during the setup process.
+
+    Raises:
+        ValueError: If required configurations such as the model are missing.
+        Re-raises exceptions encountered during model retrieval and agent setup.
+    """
     logger = getLogger(__name__)
     try:
         if agent is not None and not isinstance(agent, dict):
@@ -47,6 +79,7 @@ def agent(
                 param.name == "functions"
                 for param in inspect.signature(func).parameters.values()
             )
+
             @functools.wraps(func)
             def wrapped(*args, **kwargs):
                 if agent_kwargs:
@@ -111,21 +144,22 @@ def agent(
                         environment=settings.environment, client=client
                     )
                     models = ", ".join([model.metadata.name for model in models.parsed])
-                    models_select = f"You can select one from the your models: {models}"
+                    models_select = f"You can select one from your models: {models}"
                 except Exception:
                     pass
 
-                raise ValueError(f"You must provide a model.\n"
+                raise ValueError(
+                    f"You must provide a model.\n"
                     f"{models_select}\n"
                     f"You can create one at {settings.app_url}/{settings.workspace}/global-inference-network/models/create\n"
                     "Add it to your agent spec\n"
                     "agent={\n"
-                    "    \"metadata\": {\n"
-                    f"        \"name\": \"{agent.metadata.name}\",\n"
+                    '    "metadata": {\n'
+                    f'        "name": "{agent.metadata.name}",\n'
                     "    },\n"
-                    "    \"spec\": {\n"
-                    "        \"model\": \"MODEL_NAME\",\n"
-                    f"        \"description\": \"{agent.spec.description}\",\n"
+                    '    "spec": {\n'
+                    '        "model": "MODEL_NAME",\n'
+                    f'        "description": "{agent.spec.description}",\n'
                     "    },\n"
                     "}")
             if isinstance(chat_model, OpenAIVoiceReactAgent):

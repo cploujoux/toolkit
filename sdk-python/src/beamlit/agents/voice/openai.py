@@ -1,16 +1,14 @@
 import asyncio
 import json
-import websockets
-
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, AsyncIterator, Any, Callable, Coroutine
-from .utils import amerge
+from typing import Any, AsyncGenerator, AsyncIterator, Callable, Coroutine
 
-from langchain_core.tools import BaseTool
+import websockets
 from langchain_core._api import beta
-from langchain_core.utils import secret_from_env
+from langchain_core.tools import BaseTool
+from pydantic import BaseModel, Field, PrivateAttr
 
-from pydantic import BaseModel, Field, SecretStr, PrivateAttr
+from .utils import amerge
 
 EVENTS_TO_IGNORE = {
     "response.function_call_arguments.delta",

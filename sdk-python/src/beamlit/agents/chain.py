@@ -16,7 +16,7 @@ from beamlit.run import RunClient
 
 class ChainTool(BaseTool):
     """
-    Chain tool
+    A tool that allows chaining of agent actions. Extends LangChain's BaseTool.
     """
 
     client: RunClient
@@ -24,6 +24,16 @@ class ChainTool(BaseTool):
 
     @t.override
     def _run(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
+        """
+        Executes the tool synchronously.
+
+        Parameters:
+            *args (Any): Positional arguments.
+            **kwargs (Any): Keyword arguments.
+
+        Returns:
+            Any: The result of the tool execution.
+        """
         warnings.warn(
             "Invoke this tool asynchronousely using `ainvoke`. This method exists only to satisfy standard tests.",
             stacklevel=1,
@@ -32,6 +42,16 @@ class ChainTool(BaseTool):
 
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
+        """
+        Executes the tool asynchronously.
+
+        Parameters:
+            *args (Any): Positional arguments.
+            **kwargs (Any): Keyword arguments.
+
+        Returns:
+            Any: The result of the asynchronous tool execution.
+        """
         settings = get_settings()
         result = self.client.run(
             "agent",
@@ -45,17 +65,30 @@ class ChainTool(BaseTool):
     @t.override
     @property
     def tool_call_schema(self) -> type[pydantic.BaseModel]:
+        """
+        Defines the schema for tool calls based on the provided argument schema.
+
+        Returns:
+            type[pydantic.BaseModel]: The Pydantic model representing the tool call schema.
+        """
         assert self.args_schema is not None  # noqa: S101
         return self.args_schema
 
+
 class ChainInput(pydantic.BaseModel):
+    """
+    A Pydantic model representing the input structure for a chain.
+    """
+
     inputs: str
+
 
 @dataclass
 class ChainToolkit:
     """
-    Remote toolkit
+    A toolkit for managing and initializing a chain of agents.
     """
+
     client: AuthenticatedClient
     chain: list[AgentChain]
     _chain: list[Agent] | None = None
@@ -63,6 +96,12 @@ class ChainToolkit:
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
+        """
+        Initializes the toolkit by retrieving and configuring the list of agents based on the provided chains.
+
+        Raises:
+            RuntimeError: If initialization fails due to missing agents.
+        """
         """Initialize the session and retrieve tools list"""
         if self._chain is None:
             agents = list_agents.sync_detailed(
@@ -77,8 +116,16 @@ class ChainToolkit:
                     agents_chain.append(agent[0])
             self._chain = agents_chain
 
-    @t.override
     def get_tools(self) -> list[BaseTool]:
+        """
+        Retrieves a list of tools corresponding to the initialized agents.
+
+        Returns:
+            list[BaseTool]: A list of initialized `ChainTool` instances.
+
+        Raises:
+            RuntimeError: If the toolkit has not been initialized.
+        """
         if self._chain is None:
             raise RuntimeError("Must initialize the toolkit first")
 

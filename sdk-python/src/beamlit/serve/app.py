@@ -1,9 +1,15 @@
+"""Module: app
+
+This module sets up and runs the Beamlit server using FastAPI.
+It configures middleware, handles server lifespan events, and defines endpoints.
+"""
+
 import asyncio
 import importlib
+import inspect
 import os
 import sys
 import traceback
-import inspect
 from contextlib import asynccontextmanager
 from logging import getLogger
 from uuid import uuid4
@@ -13,10 +19,7 @@ from fastapi import FastAPI, Request, Response, WebSocket
 from fastapi.responses import JSONResponse
 
 from beamlit.common import HTTPError, get_settings, init
-from beamlit.common.instrumentation import (
-    instrument_app,
-    shutdown_instrumentation,
-)
+from beamlit.common.instrumentation import instrument_app, shutdown_instrumentation
 
 from .middlewares import AccessLogMiddleware, AddProcessTimeHeader
 
@@ -25,6 +28,11 @@ sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
 
 def import_module():
+    """Dynamically imports the main server module based on settings.
+
+    Returns:
+        Callable: The main function to run the server.
+    """
     settings = get_settings()
     main_module = importlib.import_module(".".join(settings.server.module.split(".")[0:-1]))
     func = getattr(main_module, settings.server.module.split(".")[-1])
@@ -46,6 +54,11 @@ if "websocket" in func_params:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Manages the lifespan events of the FastAPI application.
+
+    Args:
+        app (FastAPI): The FastAPI application instance.
+    """
     yield
     shutdown_instrumentation()
 
@@ -62,6 +75,11 @@ instrument_app(app)
 
 @app.get("/health")
 async def health():
+    """Health check endpoint.
+
+    Returns:
+        dict: A simple status message indicating the server is running.
+    """
     return {"status": "ok"}
 
 if websocket_detected:

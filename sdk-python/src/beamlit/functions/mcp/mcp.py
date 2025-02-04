@@ -1,3 +1,8 @@
+"""
+This module provides functionalities to interact with MCP (Multi-Client Platform) servers.
+It includes classes for managing MCP clients, creating dynamic schemas, and integrating MCP tools into Beamlit.
+"""
+
 import asyncio
 import warnings
 from typing import Any, Callable
@@ -87,7 +92,11 @@ class MCPClient:
 
 class MCPTool(BaseTool):
     """
-    MCP server tool
+    Tool for interacting with MCP server-hosted tools.
+
+    Attributes:
+        client (MCPClient): The MCP client instance.
+        handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
     """
 
     client: MCPClient
@@ -119,7 +128,11 @@ class MCPTool(BaseTool):
 
 class MCPToolkit(BaseToolkit):
     """
-    MCP server toolkit
+    Toolkit for managing MCP server tools.
+
+    Attributes:
+        client (MCPClient): The MCP client instance.
+        _tools (ListToolsResult | None): Cached list of tools from the MCP server.
     """
 
     client: MCPClient

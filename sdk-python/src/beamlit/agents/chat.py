@@ -7,39 +7,96 @@ from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
+
 from .voice.openai import OpenAIVoiceReactAgent
 
 logger = getLogger(__name__)
 
 
-def get_base_url(name: str):
+def get_base_url(name: str) -> str:
+    """
+    Constructs the base URL for a given model name based on the current settings.
+
+    Parameters:
+        name (str): The name of the model.
+
+    Returns:
+        str: The constructed base URL.
+    """
     settings = get_settings()
     return f"{settings.run_url}/{settings.workspace}/models/{name}/v1"
 
 
-def get_mistral_chat_model(**kwargs):
+def get_mistral_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns a MistralAI chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatMistralAI` model.
+
+    Returns:
+        ChatMistralAI: An instance of the MistralAI chat model.
+    """
     from langchain_mistralai.chat_models import ChatMistralAI  # type: ignore
 
     return ChatMistralAI(**kwargs)
 
 
-def get_openai_chat_model(**kwargs):
+def get_openai_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns an OpenAI chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatOpenAI` model.
+
+    Returns:
+        ChatOpenAI: An instance of the OpenAI chat model.
+    """
     from langchain_openai import ChatOpenAI  # type: ignore
 
     return ChatOpenAI(**kwargs)
 
 
-def get_anthropic_chat_model(**kwargs):
+def get_anthropic_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns an Anthropic chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatAnthropic` model.
+
+    Returns:
+        ChatAnthropic: An instance of the Anthropic chat model.
+    """
     from langchain_anthropic import ChatAnthropic  # type: ignore
 
     return ChatAnthropic(**kwargs)
 
-def get_xai_chat_model(**kwargs):
+
+def get_xai_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns an XAI chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatXAI` model.
+
+    Returns:
+        ChatXAI: An instance of the XAI chat model.
+    """
     from langchain_xai import ChatXAI  # type: ignore
 
     return ChatXAI(**kwargs)
 
-def get_cohere_chat_model(**kwargs):
+
+def get_cohere_chat_model(**kwargs) -> BaseChatModel:
+    """
+    Initializes and returns a Cohere chat model with the provided keyword arguments.
+
+    Parameters:
+        **kwargs: Arbitrary keyword arguments for configuring the `ChatCohere` model.
+
+    Returns:
+        ChatCohere: An instance of the Cohere chat model.
+    """
     from langchain_cohere import ChatCohere  # type: ignore
 
     return ChatCohere(**kwargs)
@@ -64,10 +121,35 @@ def get_azure_marketplace_chat_model(**kwargs):
     )  # It seems to use a compatible endpoint, so we can use the classic OpenAI interface
 
 def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
+    """
+    Gets a chat model instance for the specified model name.
+
+    Parameters:
+        name (str): The name of the model to retrieve.
+        agent_model (Union[Model, None], optional): A pre-fetched model instance.
+            If None, the model will be fetched from the API. Defaults to None.
+
+    Returns:
+        BaseChatModel: An instance of the appropriate chat model.
+    """
     [chat_model, _, __] = get_chat_model_full(name, agent_model)
     return chat_model
 
 def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tuple[BaseChatModel, str, str]:
+    """
+    Gets a chat model instance along with provider and model information.
+
+    Parameters:
+        name (str): The name of the model to retrieve.
+        agent_model (Union[Model, None], optional): A pre-fetched model instance.
+            If None, the model will be fetched from the API. Defaults to None.
+
+    Returns:
+        Tuple[BaseChatModel, str, str]: A tuple containing:
+            - The chat model instance
+            - The provider name (e.g., 'openai', 'anthropic', etc.)
+            - The specific model name (e.g., 'gpt-4o-mini')
+    """
     settings = get_settings()
     client = new_client()
 
@@ -77,7 +159,10 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
         except Exception:
             logger.warning(f"Model {name} not found, defaulting to gpt-4o-mini")
 
-    environment = (agent_model and agent_model.metadata and agent_model.metadata.environment) or settings.environment
+    environment = (
+        (agent_model and agent_model.metadata and agent_model.metadata.environment)
+        or settings.environment
+    )
     headers = get_authentication_headers(settings)
     headers["X-Beamlit-Environment"] = environment
 
