@@ -138,9 +138,12 @@ const generateAgents = async (
             `Error retrieving agent ${agentConfiguration.metadata.name}: ${error}`
           );
         }
+        const remoteFunctions = agentConfiguration.spec?.functions || [];
         const agentName = slugify(agentConfiguration.metadata.name);
         agentConfiguration.metadata.name = agentName;
-        agentConfiguration.spec!.functions = functionsNames;
+        agentConfiguration.spec!.functions = [
+          ...new Set([...functionsNames, ...remoteFunctions]),
+        ];
         agentConfiguration.metadata.labels =
           agentConfiguration.metadata.labels || {};
         agentConfiguration.metadata.labels["x-beamlit-auto-generated"] = "true";
