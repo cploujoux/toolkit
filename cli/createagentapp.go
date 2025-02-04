@@ -104,7 +104,7 @@ func retrieveModels(modelType string) ([]sdk.Model, error) {
 			modelName := *model.Spec.Runtime.Model
 			if modelType == "model" {
 				supportedRuntimes := []string{"openai", "anthropic", "mistral", "cohere", "xai", "vertex", "bedrock", "azure-ai-inference", "azure-marketplace"}
-				if slices.Contains(supportedRuntimes, runtimeType) {
+				if slices.Contains(supportedRuntimes, runtimeType) && !strings.Contains(modelName, "realtime") {
 					modelDeployments = append(modelDeployments, model)
 				}
 			} else if modelType == "realtime-model" {
