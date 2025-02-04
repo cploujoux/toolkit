@@ -79,7 +79,7 @@ type GithubContentResponse struct {
 // retrieveModels fetches and returns a list of available model deployments from the API.
 // It filters the models to only include supported runtime types (openai, anthropic, mistral, etc.).
 // Returns an error if the API calls fail or if there are parsing issues.
-func retrieveModels() ([]sdk.Model, error) {
+func retrieveModels(modelType string) ([]sdk.Model, error) {
 	var modelDeployments []sdk.Model
 	ctx := context.Background()
 	res, err := client.ListModels(ctx, &sdk.ListModelsParams{Environment: &environment})
@@ -101,9 +101,17 @@ func retrieveModels() ([]sdk.Model, error) {
 	for _, model := range models {
 		if model.Spec.Runtime != nil {
 			runtimeType := *model.Spec.Runtime.Type
-			supportedRuntimes := []string{"openai", "anthropic", "mistral", "cohere", "xai", "vertex", "bedrock"}
-			if slices.Contains(supportedRuntimes, runtimeType) {
-				modelDeployments = append(modelDeployments, model)
+			modelName := *model.Spec.Runtime.Model
+			if modelType == "model" {
+				supportedRuntimes := []string{"openai", "anthropic", "mistral", "cohere", "xai", "vertex", "bedrock", "azure-ai-inference", "azure-marketplace"}
+				if slices.Contains(supportedRuntimes, runtimeType) {
+					modelDeployments = append(modelDeployments, model)
+				}
+			} else if modelType == "realtime-model" {
+				supportedRuntimes := []string{"openai", "azure-ai-inference", "azure-marketplace"}
+				if slices.Contains(supportedRuntimes, runtimeType) && strings.Contains(modelName, "realtime") {
+					modelDeployments = append(modelDeployments, model)
+				}
 			}
 		}
 	}
@@ -266,9 +274,9 @@ func promptTemplateConfig(agentAppOptions *CreateAgentAppOptions) {
 				Options(options...).
 				Value(&array_value)
 			fields = append(fields, input)
-		} else if variable.Type == "model" {
+		} else if variable.Type == "model" || variable.Type == "realtime-model" {
 			values[variable.Name] = &value
-			models, err := retrieveModels()
+			models, err := retrieveModels(variable.Type)
 			if err == nil {
 				if len(models) == 0 {
 					value = "None"
