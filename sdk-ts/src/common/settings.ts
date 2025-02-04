@@ -9,6 +9,9 @@ declare global {
 }
 global.SETTINGS = null;
 
+/**
+ * Schema for agent settings.
+ */
 const SettingsAgent = z.object({
   agent: z.any().nullable().default(null),
   chain: z.array(z.any()).nullable().default(null),
@@ -18,26 +21,32 @@ const SettingsAgent = z.object({
   chatModel: z.any().nullable().default(null),
   module: z.string().default("main.main"),
 });
-
 type SettingsAgentType = z.infer<typeof SettingsAgent>;
 
+/**
+ * Schema for authentication settings.
+ */
 const SettingsAuthentication = z.object({
   apiKey: z.string().nullable().default(null),
   jwt: z.string().nullable().default(null),
   clientCredentials: z.string().nullable().default(null),
 });
-
 type SettingsAuthenticationType = z.infer<typeof SettingsAuthentication>;
 
+/**
+ * Schema for server settings.
+ */
 const SettingsServer = z.object({
   module: z.string().default("agent.agent"),
   port: z.number().default(80),
   host: z.string().default("0.0.0.0"),
   directory: z.string().default("src"),
 });
-
 type SettingsServerType = z.infer<typeof SettingsServer>;
 
+/**
+ * Schema for overall settings.
+ */
 const Settings = z.object({
   workspace: z.string(),
   environment: z.string().default("production"),
@@ -71,9 +80,12 @@ const Settings = z.object({
   }),
   deploy: z.boolean().default(false),
 });
-
 type Settings = z.infer<typeof Settings>;
 
+/**
+ * Retrieves the current settings, initializing if not already done.
+ * @returns The current settings object.
+ */
 function getSettings(): Settings {
   if (!global.SETTINGS) {
     global.SETTINGS = init();
@@ -81,6 +93,11 @@ function getSettings(): Settings {
   return global.SETTINGS;
 }
 
+/**
+ * Parses an environment variable value to its appropriate type.
+ * @param value - The environment variable value as a string.
+ * @returns The parsed value as boolean, number, or string.
+ */
 function parseEnv(value: string) {
   if (value.toLowerCase() === "true") {
     return true as any;
@@ -95,6 +112,14 @@ function parseEnv(value: string) {
   }
 }
 
+/**
+ * Handles nested environment variable settings.
+ * @param envData - The current environment data object.
+ * @param settingKey - The key of the setting.
+ * @param value - The value of the environment variable.
+ * @param nestedKey - The nested key within the settings.
+ * @returns The updated nested environment data.
+ */
 function handleNestedEnvironment(
   envData: Partial<Settings>,
   settingKey: string,
@@ -120,6 +145,11 @@ function handleNestedEnvironment(
   return envData[nestedKey];
 }
 
+/**
+ * Initializes the settings by merging configurations from YAML, environment variables, and options.
+ * @param options - Optional settings to override defaults.
+ * @returns The initialized settings object.
+ */
 function init(options: Partial<Settings> = {}): Settings {
   // Try to read beamlit.yaml from current directory
   let yamlData: Partial<Settings> = {};

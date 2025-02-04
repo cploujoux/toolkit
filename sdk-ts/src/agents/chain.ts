@@ -5,6 +5,14 @@ import { Agent, AgentChain } from "../client/types.gen.js";
 import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 
+/**
+ * Creates a chain tool for managing agent chains.
+ * @param client - The RunClient instance.
+ * @param name - The name of the tool.
+ * @param description - A description of the tool.
+ * @param schema - The Zod schema for the tool's input.
+ * @returns A StructuredTool instance.
+ */
 export function getChainTool(
   client: RunClient,
   name: string,
@@ -31,6 +39,9 @@ export function getChainTool(
   );
 }
 
+/**
+ * Schema for chain input.
+ */
 export const ChainInputSchema = z.object({
   inputs: z.string(),
 });
@@ -43,13 +54,19 @@ export class ChainToolkit {
   private chain: AgentChain[];
   private _chain: Agent[] | null = null;
 
+  /**
+   * Initializes the ChainToolkit with a client and a chain configuration.
+   * @param client - The RunClient instance.
+   * @param chain - An array of AgentChain configurations.
+   */
   constructor(client: RunClient, chain: AgentChain[]) {
     this.client = client;
     this.chain = chain;
   }
 
   /**
-   * Initialize the session and retrieve tools list
+   * Initializes the session and retrieves the list of tools.
+   * @returns A promise that resolves when initialization is complete.
    */
   async initialize(): Promise<void> {
     if (!this._chain) {
@@ -72,6 +89,10 @@ export class ChainToolkit {
     }
   }
 
+  /**
+   * Retrieves the list of StructuredTools based on the initialized chain.
+   * @returns An array of StructuredTool instances.
+   */
   getTools(): StructuredTool[] {
     if (!this._chain) {
       throw new Error("Must initialize the toolkit first");

@@ -13,10 +13,19 @@ import { logger } from "../common/logger.js";
 import { importModule } from "../common/module.js";
 import { getSettings, init } from "../common/settings.js";
 
+/**
+ * Custom IncomingMessage extending the standard IncomingMessage.
+ */
 interface CustomIncomingMessage extends IncomingMessage {
   timeStart: [number, number];
 }
 
+/**
+ * Creates and configures the Fastify application.
+ * @param funcDefault - Optional default function to use.
+ * @returns A promise that resolves to a FastifyInstance.
+ * @throws Will throw an error if the server module fails to import.
+ */
 export async function createApp(
   funcDefault: any = null
 ): Promise<FastifyInstance> {
@@ -49,6 +58,10 @@ export async function createApp(
     `Running server with environment ${settings.environment} on ${settings.server.host}:${settings.server.port}`
   );
 
+  /**
+   * Handles the WebSocket connection.
+   * @param socket - The WebSocket connection.
+   */
   if (func.stream) {
     logger.info("Starting websocket server");
     app.register(websocket);
@@ -72,8 +85,9 @@ export async function createApp(
     });
   }
 
-  // Add correlation ID middleware
-  // Add correlation ID middleware
+  /**
+   * Middleware to add a correlation ID to each request.
+   */
   app.addHook(
     "onRequest",
     (request: FastifyRequest, reply: FastifyReply, done: () => void) => {
@@ -86,7 +100,9 @@ export async function createApp(
     }
   );
 
-  // Add process time header middleware
+  /**
+   * Middleware to add the process time header to each response.
+   */
   app.addHook(
     "onResponse",
     (request: FastifyRequest, reply: FastifyReply, done: () => void) => {
@@ -118,10 +134,19 @@ export async function createApp(
   //   });
   // }
 
+  /**
+   * Health check endpoint.
+   * @returns An object indicating the status.
+   */
   app.get("/health", async () => {
     return { status: "ok" };
   });
 
+  /**
+   * Handles POST requests to the root endpoint.
+   * @param request - The Fastify request object.
+   * @param reply - The Fastify reply object.
+   */
   if (!func.stream) {
     app.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
       try {
@@ -172,6 +197,9 @@ export async function createApp(
     });
   }
 
+  /**
+   * Hook to execute on application close.
+   */
   app.addHook("onClose", async () => {
     // await shutdownInstrumentation();
   });
@@ -179,6 +207,11 @@ export async function createApp(
   return app;
 }
 
+/**
+ * Starts the Fastify application.
+ * @param app - The Fastify instance to run.
+ * @returns A promise that resolves when the server starts listening.
+ */
 export async function runApp(app: FastifyInstance) {
   const settings = getSettings();
   return await app.listen({

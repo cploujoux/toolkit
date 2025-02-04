@@ -19,12 +19,19 @@ const EVENTS_TO_IGNORE = [
   "response.output_item.done",
 ];
 
+/**
+ * Manages the WebSocket connection to the OpenAI API for voice interactions.
+ */
 class OpenAIWebSocketConnection {
   ws?: WebSocket;
   url: string;
   headers: Record<string, string>;
   model: string;
 
+  /**
+   * Constructs a new OpenAIWebSocketConnection instance.
+   * @param params - Configuration parameters including URL, headers, and model name.
+   */
   constructor(params: {
     url: string;
     headers: Record<string, string>;
@@ -35,6 +42,10 @@ class OpenAIWebSocketConnection {
     this.model = params.model;
   }
 
+  /**
+   * Establishes a WebSocket connection with the OpenAI API.
+   * @throws If the connection fails or times out.
+   */
   async connect() {
     const finalUrl = `${this.url}/realtime?model=${this.model}`;
     this.ws = new WebSocket(finalUrl, {
@@ -57,6 +68,11 @@ class OpenAIWebSocketConnection {
     });
   }
 
+  /**
+   * Sends an event to the OpenAI API via WebSocket.
+   * @param event - The event data to send.
+   * @throws If the WebSocket connection is not active.
+   */
   sendEvent(event: Record<string, unknown>) {
     const formattedEvent = JSON.stringify(event);
     if (this.ws === undefined) {
@@ -65,6 +81,11 @@ class OpenAIWebSocketConnection {
     this.ws?.send(formattedEvent);
   }
 
+  /**
+   * Creates an async generator to stream events from the WebSocket.
+   * @returns An async generator yielding chat completion chunks.
+   * @throws If the WebSocket connection is not active.
+   */
   async *eventStream() {
     if (!this.ws) {
       throw new Error("Socket connection is not active, call .connect() first");
@@ -74,7 +95,7 @@ class OpenAIWebSocketConnection {
 }
 
 /**
- * Can accept function calls and emits function call outputs to a stream.
+ * Executes tools based on incoming tool calls and handles their outputs.
  */
 class VoiceToolExecutor {
   protected toolsByName: Record<string, StructuredTool>;
@@ -82,10 +103,18 @@ class VoiceToolExecutor {
   protected triggerResolve: ((value: any) => void) | null = null;
   protected lock: Promise<void> | null = null;
 
+  /**
+   * Constructs a new VoiceToolExecutor instance.
+   * @param toolsByName - A mapping of tool names to StructuredTool instances.
+   */
   constructor(toolsByName: Record<string, StructuredTool>) {
     this.toolsByName = toolsByName;
   }
 
+  /**
+   * Triggers the execution of a tool function.
+   * @returns A promise that resolves when the tool is triggered.
+   */
   protected async triggerFunc(): Promise<any> {
     if (!this.triggerPromise) {
       this.triggerPromise = new Promise((resolve) => {
@@ -95,6 +124,11 @@ class VoiceToolExecutor {
     return this.triggerPromise;
   }
 
+  /**
+   * Adds a tool call to be processed.
+   * @param toolCall - The tool call data.
+   * @throws If a tool call is already in progress.
+   */
   async addToolCall(toolCall: any): Promise<void> {
     while (this.lock) {
       await this.lock;
@@ -114,6 +148,12 @@ class VoiceToolExecutor {
     this.lock = null;
   }
 
+  /**
+   * Creates a task to execute a tool call.
+   * @param toolCall - The tool call data.
+   * @returns The result of the tool call.
+   * @throws If the tool is not found or arguments are invalid.
+   */
   protected async createToolCallTask(toolCall: any): Promise<any> {
     const tool = this.toolsByName[toolCall.name];
     if (!tool) {
@@ -148,6 +188,10 @@ class VoiceToolExecutor {
     };
   }
 
+  /**
+   * An async generator that yields tool execution results.
+   * @returns An async generator yielding chat completion chunks.
+   */
   async *outputIterator(): AsyncGenerator<any, void, unknown> {
     while (true) {
       const toolCall = await this.triggerFunc();
@@ -169,6 +213,9 @@ class VoiceToolExecutor {
   }
 }
 
+/**
+ * Represents an OpenAI Voice React Agent for handling voice interactions.
+ */
 export class OpenAIVoiceReactAgent {
   protected connection: OpenAIWebSocketConnection;
 
@@ -176,6 +223,10 @@ export class OpenAIVoiceReactAgent {
 
   protected tools: StructuredTool[];
 
+  /**
+   * Constructs a new OpenAIVoiceReactAgent instance.
+   * @param params - Configuration parameters including URL, model, headers, instructions, and tools.
+   */
   constructor(params: {
     url: string;
     model: string;
@@ -192,14 +243,18 @@ export class OpenAIVoiceReactAgent {
     this.tools = params.tools ?? [];
   }
 
+  /**
+   * Binds a set of tools to the agent.
+   * @param tools - An array of StructuredTool instances.
+   */
   bindTools(tools: StructuredTool[]) {
     this.tools = tools;
   }
 
   /**
-   * Connect to the OpenAI API and send and receive messages.
-   * @param websocketOrStream
-   * @param sendOutputChunk
+   * Connects to the OpenAI API and handles sending and receiving messages.
+   * @param websocketOrStream - An async generator or WebSocket instance for input.
+   * @param sendOutputChunk - A callback function to send output chunks.
    */
   async connect(
     websocketOrStream: AsyncGenerator<string> | WebSocket,

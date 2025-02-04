@@ -1,7 +1,9 @@
 import WebSocket from "ws";
 
 /**
- * Merge multiple streams into one stream.
+ * Merges multiple async generators into a single async generator.
+ * @param streams - An object mapping stream keys to their respective async generators.
+ * @returns An async generator yielding tuples of stream key and data.
  */
 export async function* mergeStreams<T>(
   streams: Record<string, AsyncGenerator<T>>
@@ -28,6 +30,12 @@ export async function* mergeStreams<T>(
   }
 }
 
+/**
+ * Creates an async generator that yields parsed JSON messages from a WebSocket.
+ * @param ws - The WebSocket instance to listen to.
+ * @returns An async generator yielding parsed JSON objects.
+ * @throws If the WebSocket connection is not active.
+ */
 export async function* createStreamFromWebsocket(ws: WebSocket) {
   const messageQueue: string[] = [];
   let resolveMessage: ((value: string | PromiseLike<string>) => void) | null =

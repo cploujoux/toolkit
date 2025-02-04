@@ -3,9 +3,31 @@ import { getAuthenticationHeaders } from "./authentication/authentication.js";
 import { HTTPError } from "./common/error.js";
 import { getSettings } from "./common/settings.js";
 
+/**
+ * Client for executing run operations.
+ */
 export class RunClient {
+  /**
+   * Creates an instance of RunClient.
+   * @param client - The HTTP client used to make requests.
+   */
   constructor(public client: Client) {}
 
+  /**
+   * Executes a run operation against a specified resource.
+   * @param resourceType - The type of the resource (e.g., "service", "function").
+   * @param resourceName - The name of the resource to target.
+   * @param environment - The environment in which to execute the operation.
+   * @param method - The HTTP method to use for the request.
+   * @param options - Optional parameters for the request.
+   * @param options.path - Additional path to append to the resource URL.
+   * @param options.headers - Additional headers to include in the request.
+   * @param options.json - JSON body to include in the request.
+   * @param options.data - Raw data to include in the request body.
+   * @param options.params - Query parameters to include in the request URL.
+   * @returns The response data from the run operation.
+   * @throws {HTTPError} Throws an error if the response status is 400 or above.
+   */
   async run(
     resourceType: string,
     resourceName: string,

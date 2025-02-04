@@ -12,6 +12,12 @@ import { RunClient } from "../run.js";
 import { FunctionBase } from "./base.js";
 import { RemoteToolkit } from "./remote.js";
 
+/**
+ * Converts an array of `StoreFunctionParameter` objects into a Zod schema for validation.
+ *
+ * @param {StoreFunctionParameter[]} parameters - The parameters to convert.
+ * @returns {z.ZodObject<any>} A Zod object schema representing the parameters.
+ */
 export const parametersToZodSchema = (
   parameters: StoreFunctionParameter[]
 ): z.ZodObject<any> => {
@@ -41,6 +47,16 @@ export const parametersToZodSchema = (
   return z.object(shape);
 };
 
+/**
+ * Options for retrieving functions.
+ *
+ * @typedef {Object} GetFunctionsOptions
+ * @property {string[] | null} [remoteFunctions] - List of remote function names to include.
+ * @property {AgentChain[] | null} [chain] - Agent chains to include.
+ * @property {Client | null} [client] - Optional client instance.
+ * @property {string | null} [dir] - Directory to search for functions.
+ * @property {boolean} [warning] - Whether to log warnings on errors.
+ */
 export type GetFunctionsOptions = {
   remoteFunctions?: string[] | null;
   chain?: AgentChain[] | null;
@@ -49,6 +65,13 @@ export type GetFunctionsOptions = {
   warning?: boolean;
 };
 
+/**
+ * Recursively retrieves and wraps functions from the specified directory.
+ *
+ * @param {string} dir - The directory to scan for function files.
+ * @param {boolean} warning - Whether to log warnings on import errors.
+ * @returns {Promise<FunctionBase[]>} An array of wrapped `FunctionBase` objects.
+ */
 export const retrieveWrapperFunction = async (
   dir: string,
   warning: boolean
@@ -85,6 +108,12 @@ export const retrieveWrapperFunction = async (
   return functions;
 };
 
+/**
+ * Aggregates available functions based on provided options, including remote functions and agent chains.
+ *
+ * @param {GetFunctionsOptions} [options={}] - Configuration options for retrieving functions.
+ * @returns {Promise<StructuredTool[]>} An array of structured tools representing available functions.
+ */
 export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   const settings = getSettings();
   let { client, dir } = options;

@@ -8,11 +8,20 @@ interface DeviceLoginFinalizeResponse {
   token_type: string;
 }
 
+/**
+ * Handles bearer token authentication, managing access tokens for device mode.
+ */
 export class BearerToken {
   private credentials: Credentials;
   private workspace_name: string;
   private base_url: string;
 
+  /**
+   * Constructs a new BearerToken instance.
+   * @param credentials - The credentials containing access tokens.
+   * @param workspace_name - The name of the workspace.
+   * @param base_url - The base URL of the authentication server.
+   */
   constructor(
     credentials: Credentials,
     workspace_name: string,
@@ -23,6 +32,11 @@ export class BearerToken {
     this.base_url = base_url;
   }
 
+  /**
+   * Retrieves the authentication headers, refreshing tokens if necessary.
+   * @returns A promise resolving to a record of header key-value pairs.
+   * @throws If token refresh fails.
+   */
   async getHeaders(): Promise<Record<string, string>> {
     const err = await this.refreshIfNeeded();
     if (err) {
@@ -34,6 +48,11 @@ export class BearerToken {
     };
   }
 
+  /**
+   * Refreshes the access token if it's expired or about to expire.
+   * @returns A promise resolving to null.
+   * @throws If token refresh fails.
+   */
   private async refreshIfNeeded(): Promise<null> {
     // Need to refresh token if expires in less than 10 minutes
     if (!this.credentials.access_token) {
@@ -61,6 +80,11 @@ export class BearerToken {
     return null;
   }
 
+  /**
+   * Performs the token refresh by requesting new access tokens.
+   * @returns A promise resolving to null.
+   * @throws If the refresh process fails.
+   */
   private async doRefresh(): Promise<null> {
     if (!this.credentials.refresh_token) {
       throw new Error("No refresh token to refresh");

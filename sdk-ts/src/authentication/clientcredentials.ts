@@ -8,11 +8,20 @@ interface DeviceLoginFinalizeResponse {
   token_type: string;
 }
 
+/**
+ * Handles client credentials authentication, managing access and refresh tokens.
+ */
 export class ClientCredentials {
   private credentials: Credentials;
   private workspace_name: string;
   private base_url: string;
 
+  /**
+   * Constructs a new ClientCredentials instance.
+   * @param credentials - The credentials containing client credentials and tokens.
+   * @param workspace_name - The name of the workspace.
+   * @param base_url - The base URL of the authentication server.
+   */
   constructor(
     credentials: Credentials,
     workspace_name: string,
@@ -23,6 +32,11 @@ export class ClientCredentials {
     this.base_url = base_url;
   }
 
+  /**
+   * Retrieves the authentication headers, refreshing tokens if necessary.
+   * @returns A promise resolving to a record of header key-value pairs.
+   * @throws If token refresh fails.
+   */
   async getHeaders(): Promise<Record<string, string>> {
     const err = await this.refreshIfNeeded();
     if (err) {
@@ -35,6 +49,11 @@ export class ClientCredentials {
     };
   }
 
+  /**
+   * Refreshes the access token if it's expired or about to expire.
+   * @returns A promise resolving to null, or an error if refresh fails.
+   * @throws If token refresh fails.
+   */
   async refreshIfNeeded(): Promise<null> {
     if (
       this.credentials.client_credentials &&
@@ -83,6 +102,11 @@ export class ClientCredentials {
     return null;
   }
 
+  /**
+   * Intercepts a request, setting the appropriate authentication headers.
+   * @param req - The request to intercept and modify.
+   * @throws If token refresh fails.
+   */
   intercept(req: Request): void {
     const err = this.refreshIfNeeded();
     if (err) {
@@ -96,6 +120,11 @@ export class ClientCredentials {
     req.headers.set("X-Beamlit-Workspace", this.workspace_name);
   }
 
+  /**
+   * Performs the token refresh by requesting new access and refresh tokens.
+   * @returns A promise resolving to null.
+   * @throws If the refresh process fails.
+   */
   private async doRefresh(): Promise<null> {
     if (!this.credentials.refresh_token) {
       throw new Error("No refresh token to refresh");
