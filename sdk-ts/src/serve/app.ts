@@ -9,7 +9,6 @@ import {
 import { IncomingMessage, request } from "http";
 import { v4 as uuidv4 } from "uuid";
 import { HTTPError } from "../common/error.js";
-import { shutdownInstrumentation } from "../common/instrumentation.js";
 import { logger } from "../common/logger.js";
 import { importModule } from "../common/module.js";
 import { getSettings, init } from "../common/settings.js";
@@ -21,9 +20,7 @@ interface CustomIncomingMessage extends IncomingMessage {
 export async function createApp(
   funcDefault: any = null
 ): Promise<FastifyInstance> {
-  const app = fastify({
-    logger: true,
-  });
+  const app = fastify();
 
   const asyncLocalStorage = new AsyncLocalStorage<string>();
 
@@ -96,17 +93,22 @@ export async function createApp(
       const processTime = process.hrtime(
         (request.raw as CustomIncomingMessage).timeStart
       );
-      reply.header(
-        "X-Process-Time",
-        `${processTime[0]}s ${processTime[1] / 1000000}ms`
+      const processTimeString = `${(
+        processTime[0] * 1000 +
+        processTime[1] / 1000000
+      ).toFixed(2)}ms`;
+      reply.header("X-Process-Time", processTimeString);
+      const requestId = reply.getHeader("x-beamlit-request-id");
+      logger.info(
+        `${request.method} ${processTimeString} ${request.url} rid=${requestId}`
       );
       done();
     }
   );
 
-  // instrumentApp(app);
+  // instrumentApp();
 
-  // if (settings.enable_opentelemetry) {
+  // if (settings.enableOpentelemetry) {
   //   const { Traceloop } = require("@traceloop/sdk");
   //   Traceloop.init({
   //     appName: settings.name,
@@ -171,7 +173,7 @@ export async function createApp(
   }
 
   app.addHook("onClose", async () => {
-    await shutdownInstrumentation();
+    // await shutdownInstrumentation();
   });
 
   return app;

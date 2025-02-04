@@ -8,6 +8,7 @@ import {
   createApp,
   getDefaultThread,
   getFunctions,
+  logger,
   runApp,
   wrapAgent,
 } from "../src";
@@ -29,6 +30,7 @@ const handleRequest = async (request: FastifyRequest, args: AgentType) => {
   const input = body.inputs || body.input || "";
   const responses: any[] = [];
 
+  logger.info(`Received request ${input}`);
   const stream = await agent.stream(
     { messages: [new HumanMessage(input)] },
     { configurable: { thread_id } }
