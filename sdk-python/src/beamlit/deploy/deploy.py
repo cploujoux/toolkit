@@ -14,13 +14,21 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
+
 from beamlit.api.agents import get_agent
 from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
 from beamlit.common.settings import Settings, get_settings, init
-from beamlit.models import (Agent, AgentSpec, EnvironmentMetadata, Flavor,
-                            Function, FunctionSpec, MetadataLabels)
+from beamlit.models import (
+    Agent,
+    AgentSpec,
+    EnvironmentMetadata,
+    Flavor,
+    Function,
+    FunctionSpec,
+    MetadataLabels,
+)
 
 from .format import arg_to_dict
 from .parser import Resource, get_description, get_parameters, get_resources

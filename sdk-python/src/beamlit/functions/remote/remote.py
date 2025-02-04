@@ -19,7 +19,6 @@ from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
-from langchain_core.tools.base import BaseTool, ToolException
 
 
 def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:

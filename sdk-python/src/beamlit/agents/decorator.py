@@ -18,8 +18,9 @@ from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
 from beamlit.models import Agent, AgentSpec, EnvironmentMetadata
-from .voice.openai import OpenAIVoiceReactAgent
+
 from .chat import get_chat_model_full
+from .voice.openai import OpenAIVoiceReactAgent
 
 
 def agent(

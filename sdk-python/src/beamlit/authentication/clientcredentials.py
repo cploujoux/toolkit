@@ -11,8 +11,9 @@ from datetime import datetime, timedelta
 from typing import Generator, Optional
 
 import requests
-from beamlit.common.settings import get_settings
 from httpx import Auth, Request, Response, post
+
+from beamlit.common.settings import get_settings
 
 
 @dataclass

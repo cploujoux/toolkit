@@ -5,6 +5,7 @@ import urllib.parse
 from typing import Any
 
 import requests
+
 from beamlit.client import AuthenticatedClient
 from beamlit.common import HTTPError, get_settings
 

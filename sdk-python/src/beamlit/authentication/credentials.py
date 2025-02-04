@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import List
 
 import yaml
+
 from beamlit.common.settings import Settings
 
 logger = getLogger(__name__)

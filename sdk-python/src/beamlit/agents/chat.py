@@ -7,6 +7,7 @@ from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
+
 from .voice.openai import OpenAIVoiceReactAgent
 
 logger = getLogger(__name__)
