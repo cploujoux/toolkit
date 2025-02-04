@@ -44,6 +44,7 @@ generate_beamlit_deployment("%s", "%s")
 	if os.Getenv("BL_ENV") != "" {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
 	}
+	cmd.Env = AddClientEnv(cmd.Env)
 	return cmd.Run()
 }
 
@@ -81,7 +82,7 @@ generateBeamlitDeployment("%s", "%s");
 		cmd.Env = append(cmd.Env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
 	}
 	// Copy environment from computer
-	cmd.Env = append(cmd.Env, os.Environ()...)
+	cmd.Env = AddClientEnv(cmd.Env)
 	return cmd.Run()
 }
 

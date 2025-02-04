@@ -48,8 +48,14 @@ class ModelSpec:
 
     def to_dict(self) -> dict[str, Any]:
         configurations: Union[Unset, dict[str, Any]] = UNSET
-        if self.configurations and not isinstance(self.configurations, Unset):
+        if (
+            self.configurations
+            and not isinstance(self.configurations, Unset)
+            and not isinstance(self.configurations, dict)
+        ):
             configurations = self.configurations.to_dict()
+        elif self.configurations and isinstance(self.configurations, dict):
+            configurations = self.configurations
 
         enabled = self.enabled
 
@@ -65,26 +71,42 @@ class ModelSpec:
             integration_connections = self.integration_connections
 
         pod_template: Union[Unset, dict[str, Any]] = UNSET
-        if self.pod_template and not isinstance(self.pod_template, Unset):
+        if self.pod_template and not isinstance(self.pod_template, Unset) and not isinstance(self.pod_template, dict):
             pod_template = self.pod_template.to_dict()
+        elif self.pod_template and isinstance(self.pod_template, dict):
+            pod_template = self.pod_template
 
         policies: Union[Unset, list[str]] = UNSET
         if not isinstance(self.policies, Unset):
             policies = self.policies
 
         private_clusters: Union[Unset, dict[str, Any]] = UNSET
-        if self.private_clusters and not isinstance(self.private_clusters, Unset):
+        if (
+            self.private_clusters
+            and not isinstance(self.private_clusters, Unset)
+            and not isinstance(self.private_clusters, dict)
+        ):
             private_clusters = self.private_clusters.to_dict()
+        elif self.private_clusters and isinstance(self.private_clusters, dict):
+            private_clusters = self.private_clusters
 
         runtime: Union[Unset, dict[str, Any]] = UNSET
-        if self.runtime and not isinstance(self.runtime, Unset):
+        if self.runtime and not isinstance(self.runtime, Unset) and not isinstance(self.runtime, dict):
             runtime = self.runtime.to_dict()
+        elif self.runtime and isinstance(self.runtime, dict):
+            runtime = self.runtime
 
         sandbox = self.sandbox
 
         serverless_config: Union[Unset, dict[str, Any]] = UNSET
-        if self.serverless_config and not isinstance(self.serverless_config, Unset):
+        if (
+            self.serverless_config
+            and not isinstance(self.serverless_config, Unset)
+            and not isinstance(self.serverless_config, dict)
+        ):
             serverless_config = self.serverless_config.to_dict()
+        elif self.serverless_config and isinstance(self.serverless_config, dict):
+            serverless_config = self.serverless_config
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)

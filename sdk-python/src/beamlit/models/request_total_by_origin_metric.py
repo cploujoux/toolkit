@@ -33,12 +33,24 @@ class RequestTotalByOriginMetric:
 
     def to_dict(self) -> dict[str, Any]:
         request_total_by_origin: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_total_by_origin and not isinstance(self.request_total_by_origin, Unset):
+        if (
+            self.request_total_by_origin
+            and not isinstance(self.request_total_by_origin, Unset)
+            and not isinstance(self.request_total_by_origin, dict)
+        ):
             request_total_by_origin = self.request_total_by_origin.to_dict()
+        elif self.request_total_by_origin and isinstance(self.request_total_by_origin, dict):
+            request_total_by_origin = self.request_total_by_origin
 
         request_total_by_origin_and_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_total_by_origin_and_code and not isinstance(self.request_total_by_origin_and_code, Unset):
+        if (
+            self.request_total_by_origin_and_code
+            and not isinstance(self.request_total_by_origin_and_code, Unset)
+            and not isinstance(self.request_total_by_origin_and_code, dict)
+        ):
             request_total_by_origin_and_code = self.request_total_by_origin_and_code.to_dict()
+        elif self.request_total_by_origin_and_code and isinstance(self.request_total_by_origin_and_code, dict):
+            request_total_by_origin_and_code = self.request_total_by_origin_and_code
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)

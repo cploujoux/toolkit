@@ -64,12 +64,20 @@ class Runtime:
         model = self.model
 
         readiness_probe: Union[Unset, dict[str, Any]] = UNSET
-        if self.readiness_probe and not isinstance(self.readiness_probe, Unset):
+        if (
+            self.readiness_probe
+            and not isinstance(self.readiness_probe, Unset)
+            and not isinstance(self.readiness_probe, dict)
+        ):
             readiness_probe = self.readiness_probe.to_dict()
+        elif self.readiness_probe and isinstance(self.readiness_probe, dict):
+            readiness_probe = self.readiness_probe
 
         resources: Union[Unset, dict[str, Any]] = UNSET
-        if self.resources and not isinstance(self.resources, Unset):
+        if self.resources and not isinstance(self.resources, Unset) and not isinstance(self.resources, dict):
             resources = self.resources.to_dict()
+        elif self.resources and isinstance(self.resources, dict):
+            resources = self.resources
 
         serving_port = self.serving_port
 

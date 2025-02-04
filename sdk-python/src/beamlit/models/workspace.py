@@ -21,6 +21,7 @@ class Workspace:
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_by (Union[Unset, str]): The user or service account who updated the resource
+        account_id (Union[Unset, str]): Workspace account id
         display_name (Union[Unset, str]): Workspace display name
         labels (Union[Unset, WorkspaceLabels]): Workspace labels
         name (Union[Unset, str]): Workspace name
@@ -32,6 +33,7 @@ class Workspace:
     updated_at: Union[Unset, str] = UNSET
     created_by: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
+    account_id: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     labels: Union[Unset, "WorkspaceLabels"] = UNSET
     name: Union[Unset, str] = UNSET
@@ -48,11 +50,15 @@ class Workspace:
 
         updated_by = self.updated_by
 
+        account_id = self.account_id
+
         display_name = self.display_name
 
         labels: Union[Unset, dict[str, Any]] = UNSET
-        if self.labels and not isinstance(self.labels, Unset):
+        if self.labels and not isinstance(self.labels, Unset) and not isinstance(self.labels, dict):
             labels = self.labels.to_dict()
+        elif self.labels and isinstance(self.labels, dict):
+            labels = self.labels
 
         name = self.name
 
@@ -71,6 +77,8 @@ class Workspace:
             field_dict["createdBy"] = created_by
         if updated_by is not UNSET:
             field_dict["updatedBy"] = updated_by
+        if account_id is not UNSET:
+            field_dict["accountId"] = account_id
         if display_name is not UNSET:
             field_dict["displayName"] = display_name
         if labels is not UNSET:
@@ -99,6 +107,8 @@ class Workspace:
 
         updated_by = d.pop("updatedBy", UNSET)
 
+        account_id = d.pop("accountId", UNSET)
+
         display_name = d.pop("displayName", UNSET)
 
         _labels = d.pop("labels", UNSET)
@@ -119,6 +129,7 @@ class Workspace:
             updated_at=updated_at,
             created_by=created_by,
             updated_by=updated_by,
+            account_id=account_id,
             display_name=display_name,
             labels=labels,
             name=name,

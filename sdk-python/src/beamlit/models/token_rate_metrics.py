@@ -29,16 +29,30 @@ class TokenRateMetrics:
 
     def to_dict(self) -> dict[str, Any]:
         token_rate: Union[Unset, dict[str, Any]] = UNSET
-        if self.token_rate and not isinstance(self.token_rate, Unset):
+        if self.token_rate and not isinstance(self.token_rate, Unset) and not isinstance(self.token_rate, dict):
             token_rate = self.token_rate.to_dict()
+        elif self.token_rate and isinstance(self.token_rate, dict):
+            token_rate = self.token_rate
 
         token_rate_input: Union[Unset, dict[str, Any]] = UNSET
-        if self.token_rate_input and not isinstance(self.token_rate_input, Unset):
+        if (
+            self.token_rate_input
+            and not isinstance(self.token_rate_input, Unset)
+            and not isinstance(self.token_rate_input, dict)
+        ):
             token_rate_input = self.token_rate_input.to_dict()
+        elif self.token_rate_input and isinstance(self.token_rate_input, dict):
+            token_rate_input = self.token_rate_input
 
         token_rate_output: Union[Unset, dict[str, Any]] = UNSET
-        if self.token_rate_output and not isinstance(self.token_rate_output, Unset):
+        if (
+            self.token_rate_output
+            and not isinstance(self.token_rate_output, Unset)
+            and not isinstance(self.token_rate_output, dict)
+        ):
             token_rate_output = self.token_rate_output.to_dict()
+        elif self.token_rate_output and isinstance(self.token_rate_output, dict):
+            token_rate_output = self.token_rate_output
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)

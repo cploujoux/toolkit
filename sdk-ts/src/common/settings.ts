@@ -56,10 +56,6 @@ const Settings = z.object({
     .string()
     .regex(/^https?:\/\/[^\s/$.?#].[^\s]*$/, "Invalid URL format")
     .default("https://run.beamlit.com"),
-  mcpHubUrl: z
-    .string()
-    .regex(/^https?:\/\/[^\s/$.?#].[^\s]*$/, "Invalid URL format")
-    .default("https://mcp-hub-server.beamlit.workers.com"),
   registryUrl: z
     .string()
     .regex(/^https?:\/\/[^\s/$.?#].[^\s]*$/, "Invalid URL format")
@@ -181,9 +177,6 @@ function init(options: Partial<Settings> = {}): Settings {
   if (process.env.BL_ENV === "dev") {
     envData.baseUrl = process.env.BL_BASE_URL || "https://api.beamlit.dev/v0";
     envData.runUrl = process.env.BL_RUN_URL || "https://run.beamlit.dev";
-    envData.mcpHubUrl =
-      process.env.BL_MCP_HUB_URL ||
-      "https://mcp-hub-server.beamlit.workers.dev";
     envData.registryUrl =
       process.env.BL_REGISTRY_URL || "https://eu.registry.beamlit.dev";
     envData.appUrl = process.env.BL_APP_URL || "https://app.beamlit.dev";

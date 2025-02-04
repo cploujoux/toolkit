@@ -51,20 +51,30 @@ class Metrics:
             inference_global = self.inference_global
 
         models: Union[Unset, dict[str, Any]] = UNSET
-        if self.models and not isinstance(self.models, Unset):
+        if self.models and not isinstance(self.models, Unset) and not isinstance(self.models, dict):
             models = self.models.to_dict()
+        elif self.models and isinstance(self.models, dict):
+            models = self.models
 
         request_total = self.request_total
 
         request_total_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_total_per_code and not isinstance(self.request_total_per_code, Unset):
+        if (
+            self.request_total_per_code
+            and not isinstance(self.request_total_per_code, Unset)
+            and not isinstance(self.request_total_per_code, dict)
+        ):
             request_total_per_code = self.request_total_per_code.to_dict()
+        elif self.request_total_per_code and isinstance(self.request_total_per_code, dict):
+            request_total_per_code = self.request_total_per_code
 
         rps = self.rps
 
         rps_per_code: Union[Unset, dict[str, Any]] = UNSET
-        if self.rps_per_code and not isinstance(self.rps_per_code, Unset):
+        if self.rps_per_code and not isinstance(self.rps_per_code, Unset) and not isinstance(self.rps_per_code, dict):
             rps_per_code = self.rps_per_code.to_dict()
+        elif self.rps_per_code and isinstance(self.rps_per_code, dict):
+            rps_per_code = self.rps_per_code
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)

@@ -10,9 +10,13 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
-from beamlit.api.functions import get_function
+from langchain_core.tools.base import BaseTool, ToolException
+
+from beamlit.api.functions import get_function, list_functions
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
+from beamlit.errors import UnexpectedStatus
+from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
 from langchain_core.tools.base import BaseTool, ToolException
@@ -104,21 +108,42 @@ class RemoteToolkit:
         function (str): The name of the remote function to integrate.
         _function (Function | None): Cached Function object after initialization.
     """
-
     client: AuthenticatedClient
     function: str
     _function: Function | None = None
-
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
         """Initialize the session and retrieve the remote function details."""
         if self._function is None:
-            self._function = get_function.sync_detailed(self.function, client=self.client).parsed
+            try:
+                response = get_function.sync_detailed(self.function, client=self.client)
+                self._function = response.parsed
+            except UnexpectedStatus as e:
+                settings = get_settings()
+                functions = list_functions.sync_detailed(
+                    client=self.client,
+                    environment=settings.environment,
+                ).parsed
+                names = [
+                    f.metadata.name
+                    for f in functions
+                ]
+                raise RuntimeError(
+                    f"error: {e.status_code}. Available functions: {', '.join(names)}"
+                )
 
     def get_tools(self) -> list[BaseTool]:
+        settings = get_settings()
         if self._function is None:
             raise RuntimeError("Must initialize the toolkit first")
+
+        if self._function.spec.integration_connections:
+            url = f"{settings.run_url}/{settings.workspace}/functions/{self._function.metadata.name}"
+            mcp_client = MCPClient(self.client, url)
+            mcp_toolkit = MCPToolkit(client=mcp_client)
+            mcp_toolkit.initialize()
+            return mcp_toolkit.get_tools()
 
         if self._function.spec.kit:
             return [

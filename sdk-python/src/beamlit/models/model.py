@@ -40,12 +40,16 @@ class Model:
                 events.append(componentsschemas_core_events_item)
 
         metadata: Union[Unset, dict[str, Any]] = UNSET
-        if self.metadata and not isinstance(self.metadata, Unset):
+        if self.metadata and not isinstance(self.metadata, Unset) and not isinstance(self.metadata, dict):
             metadata = self.metadata.to_dict()
+        elif self.metadata and isinstance(self.metadata, dict):
+            metadata = self.metadata
 
         spec: Union[Unset, dict[str, Any]] = UNSET
-        if self.spec and not isinstance(self.spec, Unset):
+        if self.spec and not isinstance(self.spec, Unset) and not isinstance(self.spec, dict):
             spec = self.spec.to_dict()
+        elif self.spec and isinstance(self.spec, dict):
+            spec = self.spec
 
         status = self.status
 

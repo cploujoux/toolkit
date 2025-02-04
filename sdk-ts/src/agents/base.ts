@@ -1,16 +1,21 @@
-import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { StructuredTool } from "@langchain/core/tools";
-import { CompiledGraph, MemorySaver } from "@langchain/langgraph";
+import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { FastifyRequest } from "fastify";
 import { newClient } from "../authentication/authentication.js";
 import { getModel, listModels } from "../client/sdk.gen.js";
 import { Agent } from "../client/types.gen.js";
+import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
-import { getChatModel } from "./chat.js";
+import { getChatModelFull } from "./chat.js";
+import { OpenAIVoiceReactAgent } from "./voice/openai.js";
 
 export type CallbackFunctionAgentVariadic = (...args: any[]) => any;
+export type FunctionRun = (request: FastifyRequest) => Promise<any>;
+export type FunctionRunStream = (
+  ws: WebSocket,
+  request: FastifyRequest
+) => Promise<AsyncGenerator<any>>;
 
 export type WrapAgentType = (
   func: CallbackFunctionAgentVariadic,
@@ -18,8 +23,9 @@ export type WrapAgentType = (
 ) => Promise<AgentBase>;
 
 export type AgentBase = {
-  run(request: FastifyRequest): Promise<any>;
+  run: FunctionRun | FunctionRunStream;
   agent: Agent | null;
+  stream?: boolean;
 };
 
 export type AgentOptions = {
@@ -27,7 +33,6 @@ export type AgentOptions = {
   overrideAgent?: any;
   overrideModel?: any;
   remoteFunctions?: string[];
-  mcpHub?: string[];
 };
 
 export const wrapAgent: WrapAgentType = async (
@@ -45,7 +50,7 @@ export const wrapAgent: WrapAgentType = async (
   }
 
   const client = newClient();
-  const { agent, overrideAgent, overrideModel, remoteFunctions, mcpHub } =
+  const { agent, overrideAgent, overrideModel, remoteFunctions } =
     options ?? {};
 
   if (overrideModel) {
@@ -79,7 +84,6 @@ export const wrapAgent: WrapAgentType = async (
   const functions = await getFunctions({
     client,
     dir: settings.agent.functionsDirectory,
-    mcpHub,
     remoteFunctions,
     chain: agent?.spec?.agentChain,
     warning: settings.agent.model !== null,
@@ -111,38 +115,49 @@ export const wrapAgent: WrapAgentType = async (
       }
     }
 
-    const { chat } = await getChatModel(
+    const { chat } = await getChatModelFull(
       settings.agent.model.metadata.name,
       settings.agent.model
     );
     settings.agent.chatModel = chat;
-    settings.agent.agent = createReactAgent({
-      llm: chat,
-      tools: settings.agent.functions ?? [],
-      checkpointSaver: new MemorySaver(),
-    });
+    if (chat instanceof OpenAIVoiceReactAgent) {
+      settings.agent.agent = chat;
+    } else {
+      settings.agent.agent = createReactAgent({
+        llm: chat,
+        tools: settings.agent.functions ?? [],
+        checkpointSaver: new MemorySaver(),
+      });
+    }
   }
 
   if (functions.length === 0 && !overrideAgent) {
-    throw new Error(`
+    logger.warn(`
       You can define this function in directory ${settings.agent.functionsDirectory}. Here is a sample function you can use:\n\n
       import { wrapFunction } from '@beamlit/sdk/functions'\n\n
       wrapFunction(() => return 'Hello, world!', { name: 'hello_world', description: 'This is a sample function' })
       `);
   }
+  if (settings.agent.agent instanceof OpenAIVoiceReactAgent) {
+    return {
+      run: async (ws: WebSocket, request: FastifyRequest) => {
+        const args = {
+          agent: settings.agent.agent,
+          model: settings.agent.model,
+          functions: settings.agent.functions,
+        };
+        return await func(ws, request, args);
+      },
+      agent: options?.agent ?? null,
+      stream: true,
+    };
+  }
   return {
-    async run(request: FastifyRequest): Promise<any> {
+    run: async (request: FastifyRequest) => {
       const args = {
-        agent: settings.agent.agent as CompiledGraph<
-          any,
-          any,
-          any,
-          any,
-          any,
-          any
-        >,
-        model: settings.agent.model as BaseChatModel,
-        functions: settings.agent.functions as StructuredTool[],
+        agent: settings.agent.agent,
+        model: settings.agent.model,
+        functions: settings.agent.functions,
       };
       if (func.constructor.name === "AsyncFunction") {
         return await func(request, args);

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable no-case-declarations */
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { ChatOpenAI } from "@langchain/openai";
 import {
   getAuthenticationHeaders,
   newClient,
@@ -8,6 +9,7 @@ import { getModel } from "../client/sdk.gen.js";
 import { Model } from "../client/types.gen.js";
 import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
+import { OpenAIVoiceReactAgent } from "./voice/openai.js";
 
 function getBaseUrl(name: string): string {
   const settings = getSettings();
@@ -87,10 +89,43 @@ async function getCohereModel() {
   }
 }
 
-export async function getChatModel(
+async function getAzurAIInferenceModel() {
+  try {
+    const { ChatOpenAI } = require("@langchain/openai");
+    return ChatOpenAI;
+  } catch (e) {
+    logger.warn(
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+    );
+    throw e;
+  }
+}
+
+async function getAzureMarketplaceModel() {
+  try {
+    const { OpenAI } = require("@langchain/openai");
+    return OpenAI;
+  } catch (e) {
+    logger.warn(
+      "Could not import @langchain/openai. Please install it with: npm install @langchain/openai"
+    );
+    throw e;
+  }
+}
+
+export async function getChatModel(name: string, agentModel?: Model) {
+  const { chat } = await getChatModelFull(name, agentModel);
+  return chat;
+}
+
+export async function getChatModelFull(
   name: string,
   agentModel?: Model
-): Promise<{ chat: BaseChatModel; provider: string; model: string }> {
+): Promise<{
+  chat: BaseChatModel | OpenAIVoiceReactAgent;
+  provider: string;
+  model: string;
+}> {
   const settings = getSettings();
   const client = newClient();
 
@@ -119,7 +154,6 @@ export async function getChatModel(
     headers["X-Beamlit-Api-Key"] ||
     "";
   const params = { environment };
-
   let provider = agentModel?.spec?.runtime?.type;
   if (!provider) {
     logger.warn("Provider not found in agent model, defaulting to OpenAI");
@@ -132,7 +166,29 @@ export async function getChatModel(
     model = "gpt-4o-mini";
   }
 
-  const chatClasses = ["openai", "anthropic", "mistral", "xai", "cohere"];
+  if (["openai"].includes(provider) && model.includes("realtime")) {
+    logger.info("Starting OpenAI Realtime Agent");
+    return {
+      chat: new OpenAIVoiceReactAgent({
+        url: getBaseUrl(name),
+        model,
+        headers,
+      }),
+      provider,
+      model,
+    };
+  }
+
+  const chatClasses = [
+    "openai",
+    "anthropic",
+    "mistral",
+    "xai",
+    "cohere",
+    "deepseek",
+    "azure-ai-inference",
+    "azure-marketplace",
+  ];
   if (!chatClasses.includes(provider)) {
     logger.warn(
       `Provider ${provider} not currently supported, defaulting to OpenAI`
@@ -144,7 +200,7 @@ export async function getChatModel(
   switch (provider) {
     case "openai":
       // const chatClassOpenAI = await getOpenAIChatModel();
-      const chatClassOpenAI = ChatOpenAI;
+      const chatClassOpenAI = await getOpenAIChatModel();
       const chatOpenAI = new chatClassOpenAI({
         apiKey: "fake_api_key",
         temperature: 0,
@@ -229,6 +285,33 @@ export async function getChatModel(
         },
       });
       chat = chatDeepSeek;
+      break;
+    case "azure-ai-inference":
+      const chatClassAzureAIInference = await getAzurAIInferenceModel();
+      const chatAzureAIInference = new chatClassAzureAIInference({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
+          baseURL: getBaseUrl(name).replace("/v1", ""),
+          defaultHeaders: headers,
+          defaultQuery: params,
+        },
+      });
+      chat = chatAzureAIInference;
+      break;
+    case "azure-marketplace":
+      const chatClassAzureMarketplace = await getAzureMarketplaceModel();
+      const chatAzureMarketplace = new chatClassAzureMarketplace({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        configuration: {
+          defaultHeaders: headers,
+          defaultQuery: params,
+        },
+      });
+      chat = chatAzureMarketplace;
       break;
     default:
       logger.warn(

@@ -70,7 +70,7 @@ export const wrapFunction: WrapFunctionType = async (
       functionBeamlit.metadata?.name || ""
     );
     await toolkit.initialize();
-    toolBeamlit = toolkit.getTools();
+    toolBeamlit = await toolkit.getTools();
   } else {
     toolBeamlit = [
       tool(func, {

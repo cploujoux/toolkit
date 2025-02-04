@@ -9,15 +9,16 @@ import inspect
 from logging import getLogger
 from typing import Callable
 
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.prebuilt import create_react_agent
+
 from beamlit.api.models import get_model, list_models
 from beamlit.authentication import new_client
 from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
-from beamlit.models import Agent, AgentMetadata, AgentSpec
-from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
-
+from beamlit.models import Agent, AgentSpec, EnvironmentMetadata
+from .voice.openai import OpenAIVoiceReactAgent
 from .chat import get_chat_model_full
 
 
@@ -26,7 +27,6 @@ def agent(
     override_model=None,
     override_agent=None,
     override_functions=None,
-    mcp_hub=None,
     remote_functions=None,
 ) -> Callable:
     """
@@ -92,7 +92,7 @@ def agent(
             return wrapped
 
         if agent is not None:
-            metadata = AgentMetadata(**agent.get("metadata", {}))
+            metadata = EnvironmentMetadata(**agent.get("metadata", {}))
             spec = AgentSpec(**agent.get("spec", {}))
             agent = Agent(metadata=metadata, spec=spec)
             if agent.spec.model and chat_model is None:
@@ -127,7 +127,6 @@ def agent(
             functions = get_functions(
                 client=client,
                 dir=settings.agent.functions_directory,
-                mcp_hub=mcp_hub,
                 remote_functions=remote_functions,
                 chain=agent.spec.agent_chain,
             remote_functions_empty=not remote_functions,
@@ -161,19 +160,24 @@ def agent(
                     '        "model": "MODEL_NAME",\n'
                     f'        "description": "{agent.spec.description}",\n'
                     "    },\n"
-                    "}"
-                )
-            memory = MemorySaver()
-            if len(functions) == 0:
-                raise ValueError(
-                    f'You can define this function in directory "{settings.agent.functions_directory}". '
-                    "Here is a sample function you can use:\n\n"
-                    "from beamlit.functions import function\n\n"
-                    "@function()\n"
-                    "def hello_world(query: str):\n"
-                    "    return 'Hello, world!'\n"
-                )
-            _agent = create_react_agent(chat_model, functions, checkpointer=memory)
+                    "}")
+            if isinstance(chat_model, OpenAIVoiceReactAgent):
+                _agent = chat_model
+            else:
+                memory = MemorySaver()
+                if len(functions) == 0:
+                    raise ValueError("You can define this function in directory "
+                        f'"{settings.agent.functions_directory}". Here is a sample function you can use:\n\n'
+                        "from beamlit.functions import function\n\n"
+                        "@function()\n"
+                        "def hello_world(query: str):\n"
+                        "    return 'Hello, world!'\n")
+                try:
+                    _agent = create_react_agent(chat_model, functions, checkpointer=memory)
+                except AttributeError: # special case for azure-marketplace where it uses the old OpenAI interface (no tools)
+                    logger.warning("Using the old OpenAI interface for Azure Marketplace, no tools available")
+                    _agent = create_react_agent(chat_model, [], checkpointer=memory)
+
             settings.agent.agent = _agent
         else:
             settings.agent.agent = override_agent

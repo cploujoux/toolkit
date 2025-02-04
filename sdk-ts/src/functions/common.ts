@@ -10,7 +10,6 @@ import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 import { FunctionBase } from "./base.js";
-import { MCPClient, MCPToolkit } from "./mcp.js";
 import { RemoteToolkit } from "./remote.js";
 
 export const parametersToZodSchema = (
@@ -43,7 +42,6 @@ export const parametersToZodSchema = (
 };
 
 export type GetFunctionsOptions = {
-  mcpHub?: string[] | null;
   remoteFunctions?: string[] | null;
   chain?: AgentChain[] | null;
   client?: Client | null;
@@ -91,7 +89,7 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   const settings = getSettings();
   let { client, dir } = options;
   const { warning } = options;
-  const { mcpHub, remoteFunctions, chain } = options;
+  const { remoteFunctions, chain } = options;
   if (!client) {
     client = newClient();
   }
@@ -114,19 +112,13 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   if (remoteFunctions) {
     await Promise.all(
       remoteFunctions.map(async (name) => {
-        const toolkit = new RemoteToolkit(client, name);
-        await toolkit.initialize();
-        functions.push(...toolkit.getTools());
-      })
-    );
-  }
-  if (mcpHub) {
-    await Promise.all(
-      mcpHub.map(async (serverName) => {
-        const mcpClient = new MCPClient(client, serverName);
-        const toolkit = new MCPToolkit(mcpClient);
-        await toolkit.initialize();
-        functions.push(...toolkit.getTools());
+        try {
+          const toolkit = new RemoteToolkit(client, name);
+          await toolkit.initialize();
+          functions.push(...(await toolkit.getTools()));
+        } catch (error) {
+          logger.warn(`Failed to initialize remote function ${name}: ${error}`);
+        }
       })
     );
   }

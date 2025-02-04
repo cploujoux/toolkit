@@ -1,11 +1,13 @@
 from logging import getLogger
 from typing import Tuple, Union
 
+from langchain_core.language_models import BaseChatModel
+
 from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
-from langchain_core.language_models import BaseChatModel
+from .voice.openai import OpenAIVoiceReactAgent
 
 logger = getLogger(__name__)
 
@@ -103,6 +105,20 @@ def get_deepseek_chat_model(**kwargs):
 
     return ChatDeepSeek(**kwargs)
 
+def get_azure_ai_inference_chat_model(**kwargs):
+    from langchain_openai import ChatOpenAI  # type: ignore
+
+    return ChatOpenAI(
+        **kwargs
+    )  # It uses a compatible endpoint, so we can use the ChatOpenAI interface
+
+def get_azure_marketplace_chat_model(**kwargs):
+    from langchain_openai import OpenAI  # type: ignore
+
+    return OpenAI(
+        **kwargs
+    )  # It seems to use a compatible endpoint, so we can use the classic OpenAI interface
+
 def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
     """
     Gets a chat model instance for the specified model name.
@@ -193,6 +209,16 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
                 "api_key": jwt,
             },
         },
+        "azure-ai-inference": {
+            "func": get_azure_ai_inference_chat_model,
+            "kwargs": {
+                "base_url": get_base_url(name).replace("/v1", ""),
+            },
+        },
+        "azure-marketplace": {
+            "func": get_azure_marketplace_chat_model,
+            "kwargs": {},
+        },
     }
 
     provider = (
@@ -215,6 +241,17 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
         logger.warning("Model not found in agent model, defaulting to gpt-4o-mini")
         model = "gpt-4o-mini"
 
+    if provider == "openai" and "realtime" in model:
+        logger.info("Starting OpenAI Realtime Agent")
+        return (
+            OpenAIVoiceReactAgent(
+                url=get_base_url(name),
+                model=model,
+                headers=headers
+            ),
+            provider,
+            model
+        )
     kwargs = {
         "model": model,
         "base_url": get_base_url(name),

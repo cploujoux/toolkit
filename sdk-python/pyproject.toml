@@ -21,11 +21,9 @@ dependencies = [
     "requests>=2.32.3,<2.33.0",
     "langchain-core>=0.3.13,<0.4.0",
     "langchain-community>=0.3.3,<0.4.0",
-    "langchain-openai>=0.3.0,<0.4.0",
     "langgraph>=0.2.40,<0.3.0",
     "fastapi[standard]>=0.115.4,<0.116.0",
     "asgi-correlation-id>=4.3.4,<5.0.0",
-    "mcp>=1.1.2",
     "opentelemetry-sdk>=1.28.2",
     "opentelemetry-exporter-otlp>=1.28.2",
     "opentelemetry-api>=1.28.2",
@@ -51,11 +49,8 @@ dependencies = [
     "opentelemetry-instrumentation-together>=0.35.0",
     "opentelemetry-instrumentation-watsonx>=0.35.0",
     "opentelemetry-instrumentation-weaviate>=0.35.0",
-    "langchain-cohere>=0.4.2",
-    "langchain-xai>=0.2.0",
-    "langchain-anthropic>=0.3.4",
-    "langchain-mistralai>=0.2.5",
-    "langchain-deepseek-official>=0.1.0",
+    "mcp>=1.2.1",
+    "websockets>=14.1",
 ]
 [dependency-groups]
 dev = [

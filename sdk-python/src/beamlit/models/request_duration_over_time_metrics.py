@@ -25,8 +25,14 @@ class RequestDurationOverTimeMetrics:
 
     def to_dict(self) -> dict[str, Any]:
         request_duration_over_time: Union[Unset, dict[str, Any]] = UNSET
-        if self.request_duration_over_time and not isinstance(self.request_duration_over_time, Unset):
+        if (
+            self.request_duration_over_time
+            and not isinstance(self.request_duration_over_time, Unset)
+            and not isinstance(self.request_duration_over_time, dict)
+        ):
             request_duration_over_time = self.request_duration_over_time.to_dict()
+        elif self.request_duration_over_time and isinstance(self.request_duration_over_time, dict):
+            request_duration_over_time = self.request_duration_over_time
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
