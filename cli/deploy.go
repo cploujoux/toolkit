@@ -385,9 +385,9 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			// }
 			fmt.Println()
 			if len(agents) > 1 {
-				fmt.Printf("Your beamlit agents are ready:\n")
+				fmt.Printf("Your beamlit agents are deploying:\n")
 			} else {
-				fmt.Printf("Your beamlit agent is ready:\n")
+				fmt.Printf("Your beamlit agent is deploying:\n")
 			}
 			for _, agent := range agents {
 				fmt.Printf(
