@@ -1,6 +1,7 @@
+import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { HumanMessage } from "@langchain/core/messages";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { init, logger, wrapFunction } from "../src";
+import { getChatModel, init, logger, wrapFunction } from "../src";
 
 const main = async () => {
   init();
