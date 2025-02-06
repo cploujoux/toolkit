@@ -1,7 +1,6 @@
-import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { HumanMessage } from "@langchain/core/messages";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { getChatModel, init, logger, wrapFunction } from "../src";
+import { init, logger, wrapFunction } from "../src";
 
 const main = async () => {
   init();
@@ -29,11 +28,11 @@ const main = async () => {
   );
 
   // const chat = await getChatModel("xai-grok-beta") as BaseChatModel;;
-  // const chat = await getChatModel("ministral-3b-2410") as BaseChatModel;;
+  // const chat = (await getChatModel("ministral-3b-2410")) as BaseChatModel;
   const chat = (await getChatModel("gpt-4o-mini")) as BaseChatModel;
   // const chat = await getChatModel("cohere-command-r-plus") as BaseChatModel;;
   // const chat = await getChatModel("claude-3-5-sonnet") as BaseChatModel;;
-  // const chat = await getChatModel("deepseek-chat") as BaseChatModel;;
+  // const chat = (await getChatModel("deepseek-chat")) as BaseChatModel;
   const agent = createReactAgent({
     llm: chat,
     tools: getWeather.tools,
@@ -41,7 +40,7 @@ const main = async () => {
   const result = await agent.invoke({
     messages: [new HumanMessage("What is the weather in San Francisco?")],
   });
-  logger.info(result);
+  logger.info(JSON.stringify(result));
 };
 
 main();
