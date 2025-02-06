@@ -1,3 +1,4 @@
+import "../src/common/instrumentation.js"; // Ensure instrumentation is initialized
 import { HumanMessage } from "@langchain/core/messages";
 import { CompiledGraph, MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
