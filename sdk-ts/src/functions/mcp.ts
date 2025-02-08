@@ -6,6 +6,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { getSettings, Settings } from "../common/settings.js";
+import { logger } from "../common/logger.js";
 
 /**
  * Represents a property expected by MCP tools.
@@ -107,13 +108,15 @@ export class MCPClient {
       body: { name: toolName, arguments: args[0] },
     });
     if (response.status >= 400) {
-      throw new Error(
-        `Failed to call tool ${toolName} for ${this.url} cause ${response.status}`
-      );
+      const error = `Failed to call tool ${toolName} for ${this.url} cause ${response.status}`;
+      logger.error(error);
+      throw new Error(error);
     }
     const mcpResponse = CallToolResultSchema.parse(data);
     if (mcpResponse.isError) {
-      throw new Error(JSON.stringify(mcpResponse.content));
+      const error = `MCP error: ${JSON.stringify(mcpResponse.content)}`;
+      logger.error(error);
+      throw new Error(error);
     }
     return mcpResponse;
   }
