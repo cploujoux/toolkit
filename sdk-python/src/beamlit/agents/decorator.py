@@ -160,6 +160,7 @@ def agent(
                     '    "spec": {\n'
                     '        "model": "MODEL_NAME",\n'
                     f'        "description": "{agent.spec.description}",\n'
+                    f'        "prompt": "{agent.spec.prompt}",\n'
                     "    },\n"
                     "}")
             if isinstance(chat_model, OpenAIVoiceReactAgent):
@@ -174,10 +175,10 @@ def agent(
                         "def hello_world(query: str):\n"
                         "    return 'Hello, world!'\n")
                 try:
-                    _agent = create_react_agent(chat_model, functions, checkpointer=memory)
+                    _agent = create_react_agent(chat_model, functions, checkpointer=memory, stateModifier=agent.spec.prompt or "")
                 except AttributeError: # special case for azure-marketplace where it uses the old OpenAI interface (no tools)
                     logger.warning("Using the old OpenAI interface for Azure Marketplace, no tools available")
-                    _agent = create_react_agent(chat_model, [], checkpointer=memory)
+                    _agent = create_react_agent(chat_model, [], checkpointer=memory, stateModifier=agent.spec.prompt or "")
 
             settings.agent.agent = _agent
         else:

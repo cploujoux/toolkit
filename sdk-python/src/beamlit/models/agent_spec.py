@@ -35,9 +35,10 @@ class AgentSpec:
         sandbox (Union[Unset, bool]): Sandbox mode
         serverless_config (Union[Unset, ServerlessConfig]): Configuration for a serverless deployment
         agent_chain (Union[Unset, list['AgentChain']]): Agent chain
-        description (Union[Unset, str]): Agent description
+        description (Union[Unset, str]): Description, small description computed from the prompt
         functions (Union[Unset, list[str]]):
         model (Union[Unset, str]): Model name
+        prompt (Union[Unset, str]): Prompt, describe what your agent does
         repository (Union[Unset, Repository]): Repository
         store_id (Union[Unset, str]): Store id
     """
@@ -56,6 +57,7 @@ class AgentSpec:
     description: Union[Unset, str] = UNSET
     functions: Union[Unset, list[str]] = UNSET
     model: Union[Unset, str] = UNSET
+    prompt: Union[Unset, str] = UNSET
     repository: Union[Unset, "Repository"] = UNSET
     store_id: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -137,6 +139,8 @@ class AgentSpec:
 
         model = self.model
 
+        prompt = self.prompt
+
         repository: Union[Unset, dict[str, Any]] = UNSET
         if self.repository and not isinstance(self.repository, Unset) and not isinstance(self.repository, dict):
             repository = self.repository.to_dict()
@@ -176,6 +180,8 @@ class AgentSpec:
             field_dict["functions"] = functions
         if model is not UNSET:
             field_dict["model"] = model
+        if prompt is not UNSET:
+            field_dict["prompt"] = prompt
         if repository is not UNSET:
             field_dict["repository"] = repository
         if store_id is not UNSET:
@@ -260,6 +266,8 @@ class AgentSpec:
 
         model = d.pop("model", UNSET)
 
+        prompt = d.pop("prompt", UNSET)
+
         _repository = d.pop("repository", UNSET)
         repository: Union[Unset, Repository]
         if isinstance(_repository, Unset):
@@ -284,6 +292,7 @@ class AgentSpec:
             description=description,
             functions=functions,
             model=model,
+            prompt=prompt,
             repository=repository,
             store_id=store_id,
         )

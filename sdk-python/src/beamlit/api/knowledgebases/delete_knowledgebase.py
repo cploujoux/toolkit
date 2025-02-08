@@ -5,33 +5,33 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.account import Account
-from ...types import Response
+from ...models.knowledgebase import Knowledgebase
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
+    knowledgebase_id: str,
     *,
-    body: Account,
+    environment: Union[Unset, str] = UNSET,
 ) -> dict[str, Any]:
-    headers: dict[str, Any] = {}
+    params: dict[str, Any] = {}
+
+    params["environment"] = environment
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/accounts",
+        "method": "delete",
+        "url": f"/knowledgebases/{knowledgebase_id}",
+        "params": params,
     }
 
-    _body = body.to_dict()
-
-    _kwargs["json"] = _body
-    headers["Content-Type"] = "application/json"
-
-    _kwargs["headers"] = headers
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Account]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Knowledgebase]:
     if response.status_code == 200:
-        response_200 = Account.from_dict(response.json())
+        response_200 = Knowledgebase.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +40,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Account]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Knowledgebase]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,27 +50,30 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
+    knowledgebase_id: str,
     *,
     client: AuthenticatedClient,
-    body: Account,
-) -> Response[Account]:
-    """Create account
+    environment: Union[Unset, str] = UNSET,
+) -> Response[Knowledgebase]:
+    """Delete environment
 
-     Creates an account.
+     Deletes an knowledgebase by ID.
 
     Args:
-        body (Account): Account
+        knowledgebase_id (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Account]
+        Response[Knowledgebase]
     """
 
     kwargs = _get_kwargs(
-        body=body,
+        knowledgebase_id=knowledgebase_id,
+        environment=environment,
     )
 
     response = client.get_httpx_client().request(
@@ -81,53 +84,59 @@ def sync_detailed(
 
 
 def sync(
+    knowledgebase_id: str,
     *,
     client: AuthenticatedClient,
-    body: Account,
-) -> Optional[Account]:
-    """Create account
+    environment: Union[Unset, str] = UNSET,
+) -> Optional[Knowledgebase]:
+    """Delete environment
 
-     Creates an account.
+     Deletes an knowledgebase by ID.
 
     Args:
-        body (Account): Account
+        knowledgebase_id (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Account
+        Knowledgebase
     """
 
     return sync_detailed(
+        knowledgebase_id=knowledgebase_id,
         client=client,
-        body=body,
+        environment=environment,
     ).parsed
 
 
 async def asyncio_detailed(
+    knowledgebase_id: str,
     *,
     client: AuthenticatedClient,
-    body: Account,
-) -> Response[Account]:
-    """Create account
+    environment: Union[Unset, str] = UNSET,
+) -> Response[Knowledgebase]:
+    """Delete environment
 
-     Creates an account.
+     Deletes an knowledgebase by ID.
 
     Args:
-        body (Account): Account
+        knowledgebase_id (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Account]
+        Response[Knowledgebase]
     """
 
     kwargs = _get_kwargs(
-        body=body,
+        knowledgebase_id=knowledgebase_id,
+        environment=environment,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -136,28 +145,31 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    knowledgebase_id: str,
     *,
     client: AuthenticatedClient,
-    body: Account,
-) -> Optional[Account]:
-    """Create account
+    environment: Union[Unset, str] = UNSET,
+) -> Optional[Knowledgebase]:
+    """Delete environment
 
-     Creates an account.
+     Deletes an knowledgebase by ID.
 
     Args:
-        body (Account): Account
+        knowledgebase_id (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Account
+        Knowledgebase
     """
 
     return (
         await asyncio_detailed(
+            knowledgebase_id=knowledgebase_id,
             client=client,
-            body=body,
+            environment=environment,
         )
     ).parsed

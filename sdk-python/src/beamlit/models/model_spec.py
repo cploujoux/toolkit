@@ -32,6 +32,7 @@ class ModelSpec:
         runtime (Union[Unset, Runtime]): Set of configurations for a deployment
         sandbox (Union[Unset, bool]): Sandbox mode
         serverless_config (Union[Unset, ServerlessConfig]): Configuration for a serverless deployment
+        knowledgebase (Union[Unset, str]): Knowledgebase Name
     """
 
     configurations: Union[Unset, "CoreSpecConfigurations"] = UNSET
@@ -44,6 +45,7 @@ class ModelSpec:
     runtime: Union[Unset, "Runtime"] = UNSET
     sandbox: Union[Unset, bool] = UNSET
     serverless_config: Union[Unset, "ServerlessConfig"] = UNSET
+    knowledgebase: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -108,6 +110,8 @@ class ModelSpec:
         elif self.serverless_config and isinstance(self.serverless_config, dict):
             serverless_config = self.serverless_config
 
+        knowledgebase = self.knowledgebase
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -131,6 +135,8 @@ class ModelSpec:
             field_dict["sandbox"] = sandbox
         if serverless_config is not UNSET:
             field_dict["serverlessConfig"] = serverless_config
+        if knowledgebase is not UNSET:
+            field_dict["knowledgebase"] = knowledgebase
 
         return field_dict
 
@@ -196,6 +202,8 @@ class ModelSpec:
         else:
             serverless_config = ServerlessConfig.from_dict(_serverless_config)
 
+        knowledgebase = d.pop("knowledgebase", UNSET)
+
         model_spec = cls(
             configurations=configurations,
             enabled=enabled,
@@ -207,6 +215,7 @@ class ModelSpec:
             runtime=runtime,
             sandbox=sandbox,
             serverless_config=serverless_config,
+            knowledgebase=knowledgebase,
         )
 
         model_spec.additional_properties = d

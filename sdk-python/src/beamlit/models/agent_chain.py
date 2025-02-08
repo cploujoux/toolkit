@@ -16,11 +16,13 @@ class AgentChain:
         description (Union[Unset, str]): Description of the agent in case you want to override the default one
         enabled (Union[Unset, bool]): Whether the agent chain is enabled
         name (Union[Unset, str]): The name of the agent to chain to
+        prompt (Union[Unset, str]): Prompt of the agent in case you want to override the default one
     """
 
     description: Union[Unset, str] = UNSET
     enabled: Union[Unset, bool] = UNSET
     name: Union[Unset, str] = UNSET
+    prompt: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -29,6 +31,8 @@ class AgentChain:
         enabled = self.enabled
 
         name = self.name
+
+        prompt = self.prompt
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -39,6 +43,8 @@ class AgentChain:
             field_dict["enabled"] = enabled
         if name is not UNSET:
             field_dict["name"] = name
+        if prompt is not UNSET:
+            field_dict["prompt"] = prompt
 
         return field_dict
 
@@ -53,10 +59,13 @@ class AgentChain:
 
         name = d.pop("name", UNSET)
 
+        prompt = d.pop("prompt", UNSET)
+
         agent_chain = cls(
             description=description,
             enabled=enabled,
             name=name,
+            prompt=prompt,
         )
 
         agent_chain.additional_properties = d

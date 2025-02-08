@@ -77,6 +77,8 @@ def get_beamlit_deployment_from_resource(
                 metadata = EnvironmentMetadata(**value.get("metadata", {}))
                 spec = AgentSpec(**value.get("spec", {}))
                 agent = Agent(metadata=metadata, spec=spec)
+                if not agent.spec.prompt:
+                    agent.spec.prompt = get_description(None, resource)
                 return set_default_values(resource, agent)
         if arg.arg == "function":
             if isinstance(arg.value, ast.Dict):

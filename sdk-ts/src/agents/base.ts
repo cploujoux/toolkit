@@ -164,6 +164,7 @@ export const wrapAgent: WrapAgentType = async (
         llm: chat,
         tools: settings.agent.functions ?? [],
         checkpointSaver: new MemorySaver(),
+        stateModifier: agent?.spec?.prompt || "",
       });
     }
   }

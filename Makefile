@@ -1,6 +1,8 @@
 ARGS:= $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
-sdk:
+sdk: sdk-go sdk-python sdk-ts
+
+sdk-go:
 	cp ../controlplane/api/api/definitions/controlplane.yml ./definition.yml
 	oapi-codegen -package=sdk \
 		-generate=types,client,spec \

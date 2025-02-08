@@ -81,6 +81,7 @@ export class ChainToolkit {
           (agent: Agent) => agent.metadata?.name === chain.name
         );
         if (agent && agent.spec) {
+          agent.spec.prompt = chain.prompt || agent.spec.prompt;
           agent.spec.description = chain.description || agent.spec.description;
           agentsChain.push(agent);
         }
@@ -104,7 +105,7 @@ export class ChainToolkit {
           ? getChainTool(
               this.client,
               agent.metadata.name,
-              agent.spec.description || "",
+              agent.spec.description || agent.spec.prompt || "",
               ChainInputSchema
             )
           : null

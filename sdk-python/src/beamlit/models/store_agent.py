@@ -28,6 +28,7 @@ class StoreAgent:
         image (Union[Unset, str]): Store agent image
         labels (Union[Unset, StoreAgentLabels]): Store agent labels
         name (Union[Unset, str]): Store agent name
+        prompt (Union[Unset, str]): Store agent prompt, this is to define what the agent does
     """
 
     created_at: Union[Unset, str] = UNSET
@@ -40,6 +41,7 @@ class StoreAgent:
     image: Union[Unset, str] = UNSET
     labels: Union[Unset, "StoreAgentLabels"] = UNSET
     name: Union[Unset, str] = UNSET
+    prompt: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -72,6 +74,8 @@ class StoreAgent:
 
         name = self.name
 
+        prompt = self.prompt
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -95,6 +99,8 @@ class StoreAgent:
             field_dict["labels"] = labels
         if name is not UNSET:
             field_dict["name"] = name
+        if prompt is not UNSET:
+            field_dict["prompt"] = prompt
 
         return field_dict
 
@@ -136,6 +142,8 @@ class StoreAgent:
 
         name = d.pop("name", UNSET)
 
+        prompt = d.pop("prompt", UNSET)
+
         store_agent = cls(
             created_at=created_at,
             updated_at=updated_at,
@@ -147,6 +155,7 @@ class StoreAgent:
             image=image,
             labels=labels,
             name=name,
+            prompt=prompt,
         )
 
         store_agent.additional_properties = d

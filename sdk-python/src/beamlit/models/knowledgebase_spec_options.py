@@ -3,12 +3,12 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="AccountSpecAddress")
+T = TypeVar("T", bound="KnowledgebaseSpecOptions")
 
 
 @_attrs_define
-class AccountSpecAddress:
-    """Billing address"""
+class KnowledgebaseSpecOptions:
+    """Options specific to the knowledge base"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -23,10 +23,10 @@ class AccountSpecAddress:
         if not src_dict:
             return None
         d = src_dict.copy()
-        account_spec_address = cls()
+        knowledgebase_spec_options = cls()
 
-        account_spec_address.additional_properties = d
-        return account_spec_address
+        knowledgebase_spec_options.additional_properties = d
+        return knowledgebase_spec_options
 
     @property
     def additional_keys(self) -> list[str]:

@@ -9,11 +9,11 @@ from ...types import Response
 
 
 def _get_kwargs(
-    integration_name: str,
+    connection_name: str,
 ) -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/integrations/{integration_name}/models",
+        "url": f"/integrations/connections/{connection_name}/endpointConfigurations",
     }
 
     return _kwargs
@@ -38,16 +38,16 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
-    integration_name: str,
+    connection_name: str,
     *,
     client: AuthenticatedClient,
 ) -> Response[Any]:
-    """List integration models
+    """Get integration connection model endpoint configurations
 
-     Returns a list of all models for an integration.
+     Returns a list of all endpoint configurations for a model.
 
     Args:
-        integration_name (str):
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -58,7 +58,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        integration_name=integration_name,
+        connection_name=connection_name,
     )
 
     response = client.get_httpx_client().request(
@@ -69,16 +69,16 @@ def sync_detailed(
 
 
 async def asyncio_detailed(
-    integration_name: str,
+    connection_name: str,
     *,
     client: AuthenticatedClient,
 ) -> Response[Any]:
-    """List integration models
+    """Get integration connection model endpoint configurations
 
-     Returns a list of all models for an integration.
+     Returns a list of all endpoint configurations for a model.
 
     Args:
-        integration_name (str):
+        connection_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -89,7 +89,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        integration_name=integration_name,
+        connection_name=connection_name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)

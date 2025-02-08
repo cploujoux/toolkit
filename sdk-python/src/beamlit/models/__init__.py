@@ -1,9 +1,5 @@
 """Contains all the data models used in inputs/outputs"""
 
-from .account import Account
-from .account_metadata import AccountMetadata
-from .account_spec import AccountSpec
-from .account_spec_address import AccountSpecAddress
 from .acl import ACL
 from .agent import Agent
 from .agent_chain import AgentChain
@@ -12,7 +8,6 @@ from .agent_history_event import AgentHistoryEvent
 from .agent_release import AgentRelease
 from .agent_spec import AgentSpec
 from .api_key import ApiKey
-from .billing_address import BillingAddress
 from .configuration import Configuration
 from .continent import Continent
 from .core_event import CoreEvent
@@ -47,6 +42,10 @@ from .integration_connection_spec_secret import IntegrationConnectionSpecSecret
 from .integration_model import IntegrationModel
 from .integration_repository import IntegrationRepository
 from .invite_workspace_user_body import InviteWorkspaceUserBody
+from .knowledgebase import Knowledgebase
+from .knowledgebase_release import KnowledgebaseRelease
+from .knowledgebase_spec import KnowledgebaseSpec
+from .knowledgebase_spec_options import KnowledgebaseSpecOptions
 from .last_n_requests_metric import LastNRequestsMetric
 from .latency_metric import LatencyMetric
 from .location_response import LocationResponse
@@ -121,10 +120,6 @@ from .workspace_labels import WorkspaceLabels
 from .workspace_user import WorkspaceUser
 
 __all__ = (
-    "Account",
-    "AccountMetadata",
-    "AccountSpec",
-    "AccountSpecAddress",
     "ACL",
     "Agent",
     "AgentChain",
@@ -133,7 +128,6 @@ __all__ = (
     "AgentRelease",
     "AgentSpec",
     "ApiKey",
-    "BillingAddress",
     "Configuration",
     "Continent",
     "CoreEvent",
@@ -166,6 +160,10 @@ __all__ = (
     "IntegrationModel",
     "IntegrationRepository",
     "InviteWorkspaceUserBody",
+    "Knowledgebase",
+    "KnowledgebaseRelease",
+    "KnowledgebaseSpec",
+    "KnowledgebaseSpecOptions",
     "LastNRequestsMetric",
     "LatencyMetric",
     "LocationResponse",

@@ -5,13 +5,12 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
-from langchain_core.tools.base import BaseTool, ToolException
-
 from beamlit.api.agents import list_agents
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 from beamlit.models import Agent, AgentChain
 from beamlit.run import RunClient
+from langchain_core.tools.base import BaseTool, ToolException
 
 
 class ChainTool(BaseTool):
@@ -112,6 +111,7 @@ class ChainToolkit:
             for chain in chain_enabled:
                 agent = [agent for agent in agents if agent.metadata.name == chain.name]
                 if agent:
+                    agent[0].spec.prompt = chain.prompt or agent[0].spec.prompt
                     agent[0].spec.description = chain.description or agent[0].spec.description
                     agents_chain.append(agent[0])
             self._chain = agents_chain
@@ -133,7 +133,7 @@ class ChainToolkit:
             ChainTool(
                 client=RunClient(self.client),
                 name=agent.metadata.name,
-                description=agent.spec.description or "",
+                description=agent.spec.description or agent.spec.prompt or "",
                 args_schema=ChainInput,
             )
             for agent in self._chain
