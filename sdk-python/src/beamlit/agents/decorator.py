@@ -175,10 +175,10 @@ def agent(
                         "def hello_world(query: str):\n"
                         "    return 'Hello, world!'\n")
                 try:
-                    _agent = create_react_agent(chat_model, functions, checkpointer=memory, stateModifier=agent.spec.prompt or "")
+                    _agent = create_react_agent(chat_model, functions, checkpointer=memory, state_modifier=agent.spec.prompt or "")
                 except AttributeError: # special case for azure-marketplace where it uses the old OpenAI interface (no tools)
                     logger.warning("Using the old OpenAI interface for Azure Marketplace, no tools available")
-                    _agent = create_react_agent(chat_model, [], checkpointer=memory, stateModifier=agent.spec.prompt or "")
+                    _agent = create_react_agent(chat_model, [], checkpointer=memory, state_modifier=agent.spec.prompt or "")
 
             settings.agent.agent = _agent
         else:

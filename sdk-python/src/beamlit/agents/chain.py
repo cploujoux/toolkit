@@ -5,12 +5,13 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
+from langchain_core.tools.base import BaseTool, ToolException
+
 from beamlit.api.agents import list_agents
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 from beamlit.models import Agent, AgentChain
 from beamlit.run import RunClient
-from langchain_core.tools.base import BaseTool, ToolException
 
 
 class ChainTool(BaseTool):
