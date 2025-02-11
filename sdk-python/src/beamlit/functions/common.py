@@ -18,7 +18,6 @@ import asyncio
 import importlib.util
 import os
 import traceback
-import pydantic
 from logging import getLogger
 from typing import Union
 
@@ -29,15 +28,15 @@ from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
 from beamlit.common.settings import get_settings
+from beamlit.functions.local.local import LocalToolKit
 from beamlit.functions.remote.remote import RemoteToolkit
 from beamlit.models import AgentChain
-from beamlit.functions.local.local import LocalToolKit
 
 logger = getLogger(__name__)
 
 def get_functions(
     remote_functions: Union[list[str], None] = None,
-    local_functions: Union[list[pydantic.ConfigDict(arbitrary_types_allowed=True)], None] = None,
+    local_functions: Union[list[dict], None] = None,
     client: Union[AuthenticatedClient, None] = None,
     dir: Union[str, None] = None,
     chain: Union[list[AgentChain], None] = None,

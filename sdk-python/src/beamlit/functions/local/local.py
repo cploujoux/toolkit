@@ -1,19 +1,12 @@
-import asyncio
-import warnings
 from dataclasses import dataclass
-from typing import Callable
 
 import pydantic
-import typing_extensions as t
-from langchain_core.tools.base import BaseTool, ToolException
+from langchain_core.tools.base import BaseTool
 
-from beamlit.api.functions import get_function, list_functions
 from beamlit.authentication.authentication import AuthenticatedClient
-from beamlit.common.settings import get_settings
-from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
-from beamlit.models import Function, StoreFunctionParameter
-from beamlit.run import RunClient
+from beamlit.models import Function
+
 
 @dataclass
 class LocalToolKit:
@@ -26,7 +19,7 @@ class LocalToolKit:
         _function (Function | None): Cached Function object after initialization.
     """
     client: AuthenticatedClient
-    local_function: pydantic.ConfigDict(arbitrary_types_allowed=True)
+    local_function: dict
     _function: Function | None = None
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
@@ -39,7 +32,7 @@ class LocalToolKit:
                 self._function = Function(
                     metadata={"name": self.local_function['name']},
                     spec={
-                        "configurations": {                            
+                        "configurations": {
                             "url": self.local_function['url'],
                             "sse": self.local_function['sse'],
                         },
@@ -50,8 +43,7 @@ class LocalToolKit:
                 raise RuntimeError(f"Failed to initialize local function: {e}")
 
     def get_tools(self) -> list[BaseTool]:
-        settings = get_settings()
-        mcp_client = MCPClient(self.client, self._function.spec["configurations"]["url"])
-        mcp_toolkit = MCPToolkit(client=mcp_client, sse=self._function.spec["configurations"]["sse"])
+        mcp_client = MCPClient(self.client, self._function.spec["configurations"]["url"], sse=self._function.spec["configurations"]["sse"])
+        mcp_toolkit = MCPToolkit(client=mcp_client)
         mcp_toolkit.initialize()
         return mcp_toolkit.get_tools()

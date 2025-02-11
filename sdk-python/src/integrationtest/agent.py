@@ -28,13 +28,12 @@ settings = init()
     ],
 )
 async def main(
-    input, agent,
+    input, agent, functions
 ):
     agent_config = {"configurable": {"thread_id": str(uuid.uuid4())}}
+    print(functions)
 
-    body = await input.json()
-
-    agent_body = {"messages": [("user", body["inputs"])]}
+    agent_body = {"messages": [("user", input)]}
     responses = []
 
     async for chunk in agent.astream(agent_body, config=agent_config):
@@ -47,7 +46,7 @@ async def main(
 
 if __name__ == "__main__":
     async def check():
-        input = "Generate a dog picture, a golden retriever because they are the best"
+        input = "Give me the content of the README.md file for beamlit/toolkit repository"
         response = await main(input)
         print(response)
 

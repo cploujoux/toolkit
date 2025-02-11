@@ -10,8 +10,6 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
-from langchain_core.tools.base import BaseTool, ToolException
-
 from beamlit.api.functions import get_function, list_functions
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
@@ -19,6 +17,7 @@ from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
+from langchain_core.tools.base import BaseTool, ToolException
 
 
 def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
@@ -139,8 +138,8 @@ class RemoteToolkit:
 
         if self._function.spec.integration_connections:
             url = f"{settings.run_url}/{settings.workspace}/functions/{self._function.metadata.name}"
-            mcp_client = MCPClient(self.client, url)
-            mcp_toolkit = MCPToolkit(client=mcp_client, sse=False)
+            mcp_client = MCPClient(self.client, url, sse=False)
+            mcp_toolkit = MCPToolkit(client=mcp_client)
             mcp_toolkit.initialize()
             return mcp_toolkit.get_tools()
 
