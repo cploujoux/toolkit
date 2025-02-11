@@ -1,4 +1,9 @@
-import { MemorySaver } from "@langchain/langgraph";
+import { SystemMessage } from "@langchain/core/messages";
+import {
+  InMemoryStore,
+  MemorySaver,
+  MessagesAnnotation,
+} from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { FastifyRequest } from "fastify";
 import { newClient } from "../authentication/authentication.js";
@@ -8,6 +13,7 @@ import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
 import { getChatModelFull } from "./chat.js";
+import { EmbeddingModel } from "./memory/embeddings.js";
 import { OpenAIVoiceReactAgent } from "./voice/openai.js";
 
 /**
@@ -160,11 +166,37 @@ export const wrapAgent: WrapAgentType = async (
     if (chat instanceof OpenAIVoiceReactAgent) {
       settings.agent.agent = chat;
     } else {
+      const knowledgeBase = {
+        embeddingModel: "text-embedding-3-large",
+        embeddingModelType: "openai",
+        collectionName: "beamlit-test",
+        integrationConnections: ["qdrant-6ynswo"],
+      };
+      // const { data: integrationConnection } = await getIntegrationConnection({
+      //   client,
+      //   path: { connectionName: knowledgeBase.integrationConnections[0] },
+      //   query: { environment: settings.environment },
+      // });
+
+      const embeddingModel = new EmbeddingModel({
+        model: knowledgeBase.embeddingModel,
+        modelType: knowledgeBase.embeddingModelType,
+        client,
+      });
+
       settings.agent.agent = createReactAgent({
         llm: chat,
         tools: settings.agent.functions ?? [],
         checkpointSaver: new MemorySaver(),
-        stateModifier: agent?.spec?.prompt || "",
+        stateModifier: async (state: typeof MessagesAnnotation.State) => {
+          const prompt = new SystemMessage(agent?.spec?.prompt || "");
+          const embedding = await embeddingModel.embed(
+            state.messages[state.messages.length - 1].content as string
+          );
+          console.log(embedding);
+          return [prompt].concat(state.messages);
+        },
+        store: new InMemoryStore(),
       });
     }
   }
