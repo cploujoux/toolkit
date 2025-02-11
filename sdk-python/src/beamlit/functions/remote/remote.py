@@ -140,7 +140,7 @@ class RemoteToolkit:
         if self._function.spec.integration_connections:
             url = f"{settings.run_url}/{settings.workspace}/functions/{self._function.metadata.name}"
             mcp_client = MCPClient(self.client, url)
-            mcp_toolkit = MCPToolkit(client=mcp_client)
+            mcp_toolkit = MCPToolkit(client=mcp_client, sse=False)
             mcp_toolkit.initialize()
             return mcp_toolkit.get_tools()
 

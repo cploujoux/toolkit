@@ -5,16 +5,21 @@ It includes classes for managing MCP clients, creating dynamic schemas, and inte
 
 import asyncio
 import warnings
-from typing import Any, Callable
+from typing import Any, Callable, AsyncIterator, Optional
+from contextlib import AsyncExitStack
+import json
+import time
 
 import pydantic
 import pydantic_core
 import requests
 import typing_extensions as t
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
+from mcp import ClientSession
 from mcp.types import CallToolResult, ListToolsResult
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema as cs
+from mcp.client.sse import sse_client
 
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
@@ -73,22 +78,76 @@ class MCPClient:
     def __init__(self, client: AuthenticatedClient, url: str):
         self.client = client
         self.url = url
+        self.session: Optional[ClientSession] = None
+        
+    async def list_sse_tools(self) -> ListToolsResult:
+        # Create a new context for each SSE connection
+        async with sse_client(f"{self.url}/sse") as (read_stream, write_stream):
+            async with ClientSession(read_stream, write_stream) as session:
+                await session.initialize()
+                response = await session.list_tools()
+                return response
 
-    def list_tools(self) -> requests.Response:
-        client = self.client.get_httpx_client()
-        response = client.request("GET", f"{self.url}/tools/list")
-        response.raise_for_status()
-        return response
+    def list_tools(self, sse: bool = False) -> ListToolsResult:
+        if sse:
+            print("Using SSE for list_tools")
+            loop = asyncio.get_event_loop()
+            try:
+                result = loop.run_until_complete(self.list_sse_tools())
+                print(f"SSE result: {result}")
+                return result
+            except Exception as e:
+                print(f"Error in list_tools: {e}")
+                raise
+        else:
+            client = self.client.get_httpx_client()
+            response = client.request("GET", f"{self.url}/tools/list")
+            response.raise_for_status()
+            return ListToolsResult(**response.json())
 
-    def call_tool(self, tool_name: str, arguments: dict[str, Any] = None) -> requests.Response:
-        client = self.client.get_httpx_client()
-        response = client.request(
-            "POST",
-            f"{self.url}/tools/call",
-            json={"name": tool_name, "arguments": arguments},
-        )
-        response.raise_for_status()
-        return response
+    def call_tool(
+        self, 
+        tool_name: str, 
+        arguments: dict[str, Any] = None,
+        sse: bool = False
+    ) -> requests.Response | AsyncIterator[CallToolResult]:
+        if sse:
+            # Return an async generator for SSE streaming
+            return self.call_tool_stream(tool_name, arguments)
+        else:
+            # Regular HTTP request
+            client = self.client.get_httpx_client()
+            response = client.request(
+                "POST",
+                f"{self.url}/tools/call",
+                json={"name": tool_name, "arguments": arguments},
+            )
+            response.raise_for_status()
+            return response
+
+    async def call_tool_stream(
+        self,
+        tool_name: str,
+        arguments: dict[str, Any] = None
+    ) -> AsyncIterator[CallToolResult]:
+        """Stream responses from the MCP server using SSE."""
+        # Create a new context for each SSE connection
+        async with sse_client(f"{self.url}/tools/call") as (read_stream, write_stream):
+            # Send the initial request
+            await write_stream.send({
+                "name": tool_name,
+                "arguments": arguments or {}
+            })
+
+            # Read responses
+            async for message in read_stream:
+                if isinstance(message, Exception):
+                    raise ToolException(str(message))
+                
+                result = CallToolResult(**message)
+                if result.isError:
+                    raise ToolException(result.content)
+                yield result
 
 class MCPTool(BaseTool):
     """
@@ -97,10 +156,12 @@ class MCPTool(BaseTool):
     Attributes:
         client (MCPClient): The MCP client instance.
         handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
+        sse (bool): Whether to use SSE streaming for responses.
     """
 
     client: MCPClient
     handle_tool_error: bool | str | Callable[[ToolException], str] | None = True
+    sse: bool = False
 
     @t.override
     def _run(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
@@ -112,13 +173,23 @@ class MCPTool(BaseTool):
 
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
-        result = self.client.call_tool(self.name, arguments=kwargs)
-        response = result.json()
-        result = CallToolResult(**response)
-        if result.isError:
-            raise ToolException(result.content)
-        content = pydantic_core.to_json(result.content).decode()
-        return content
+        if self.sse:
+            # Handle SSE streaming
+            response_parts = []
+            async for result in self.client.call_tool(self.name, arguments=kwargs, sse=True):
+                response_parts.append(result.content)
+            # Combine all parts into final response
+            content = pydantic_core.to_json(response_parts).decode()
+            return content
+        else:
+            # Handle regular HTTP response
+            result = self.client.call_tool(self.name, arguments=kwargs, sse=False)
+            response = result.json()
+            result = CallToolResult(**response)
+            if result.isError:
+                raise ToolException(result.content)
+            content = pydantic_core.to_json(result.content).decode()
+            return content
 
     @t.override
     @property
@@ -139,15 +210,15 @@ class MCPToolkit(BaseToolkit):
     """The MCP session used to obtain the tools"""
 
     _tools: ListToolsResult | None = None
-
+    sse: bool = False
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
         """Initialize the session and retrieve tools list"""
         if self._tools is None:
-            response = self.client.list_tools()
-            self._tools = ListToolsResult(**response.json())
-
+            response = self.client.list_tools(sse=self.sse)
+            self._tools = response
+            print(self._tools)
     @t.override
     def get_tools(self) -> list[BaseTool]:
         if self._tools is None:
@@ -159,6 +230,7 @@ class MCPToolkit(BaseToolkit):
                 name=tool.name,
                 description=tool.description or "",
                 args_schema=create_schema_model(tool.name, tool.inputSchema),
+                sse=self.sse,
             )
             # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
             for tool in self._tools.tools

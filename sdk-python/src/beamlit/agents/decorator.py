@@ -29,6 +29,7 @@ def agent(
     override_agent=None,
     override_functions=None,
     remote_functions=None,
+    local_functions=None,
 ) -> Callable:
     """
     A decorator factory that configures and wraps functions to integrate with Beamlit agents.
@@ -40,6 +41,7 @@ def agent(
         override_agent (Any, optional): An optional agent instance to override the default agent.
         mcp_hub (Any, optional): An optional MCP hub configuration.
         remote_functions (Any, optional): An optional list of remote functions to be integrated.
+        local_functions (Any, optional): An optional list of local functions to be integrated.
 
     Returns:
         Callable: A decorator that wraps the target function, injecting agent-related configurations and dependencies.
@@ -130,9 +132,10 @@ def agent(
                 dir=settings.agent.functions_directory,
                 remote_functions=remote_functions,
                 chain=agent.spec.agent_chain,
-            remote_functions_empty=not remote_functions,
-            warning=chat_model is not None,
-        )
+                local_functions=local_functions,
+                remote_functions_empty=not remote_functions,
+                warning=chat_model is not None,
+            )
 
         settings.agent.functions = functions
 
