@@ -10,7 +10,7 @@ from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     environment: Union[Unset, str] = UNSET,
 ) -> dict[str, Any]:
@@ -22,7 +22,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/knowledgebases/{knowledgebase_id}",
+        "url": f"/knowledgebases/{knowledgebase_name}",
         "params": params,
     }
 
@@ -50,17 +50,17 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
 ) -> Response[Knowledgebase]:
     """Get knowledgebase
 
-     Returns an knowledgebase by ID.
+     Returns an knowledgebase by Name.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         environment (Union[Unset, str]):
 
     Raises:
@@ -72,7 +72,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        knowledgebase_id=knowledgebase_id,
+        knowledgebase_name=knowledgebase_name,
         environment=environment,
     )
 
@@ -84,17 +84,17 @@ def sync_detailed(
 
 
 def sync(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
 ) -> Optional[Knowledgebase]:
     """Get knowledgebase
 
-     Returns an knowledgebase by ID.
+     Returns an knowledgebase by Name.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         environment (Union[Unset, str]):
 
     Raises:
@@ -106,24 +106,24 @@ def sync(
     """
 
     return sync_detailed(
-        knowledgebase_id=knowledgebase_id,
+        knowledgebase_name=knowledgebase_name,
         client=client,
         environment=environment,
     ).parsed
 
 
 async def asyncio_detailed(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
 ) -> Response[Knowledgebase]:
     """Get knowledgebase
 
-     Returns an knowledgebase by ID.
+     Returns an knowledgebase by Name.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         environment (Union[Unset, str]):
 
     Raises:
@@ -135,7 +135,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        knowledgebase_id=knowledgebase_id,
+        knowledgebase_name=knowledgebase_name,
         environment=environment,
     )
 
@@ -145,17 +145,17 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     environment: Union[Unset, str] = UNSET,
 ) -> Optional[Knowledgebase]:
     """Get knowledgebase
 
-     Returns an knowledgebase by ID.
+     Returns an knowledgebase by Name.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         environment (Union[Unset, str]):
 
     Raises:
@@ -168,7 +168,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            knowledgebase_id=knowledgebase_id,
+            knowledgebase_name=knowledgebase_name,
             client=client,
             environment=environment,
         )

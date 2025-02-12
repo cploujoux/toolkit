@@ -53,6 +53,9 @@ export const agent = async () => {
       spec: {
         description: "{{.ProjectDescription}}",
         model: "gpt-4o-mini",
+        prompt:
+          "You are a helpful assistant. Always do a small joke to make everyone happy",
+        knowledgebase: "qdrant-kb",
       },
     },
   });

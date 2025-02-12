@@ -183,6 +183,10 @@ export type AgentSpec = CoreSpec & {
     description?: string;
     functions?: FunctionsList;
     /**
+     * Knowledgebase Name
+     */
+    knowledgebase?: string;
+    /**
      * Model name
      */
     model?: string;
@@ -879,12 +883,7 @@ export type ModelRelease = {
 /**
  * Model specification
  */
-export type ModelSpec = CoreSpec & {
-    /**
-     * Knowledgebase Name
-     */
-    knowledgebase?: string;
-};
+export type ModelSpec = CoreSpec & unknown;
 
 /**
  * Owner fields for Persistance
@@ -1165,11 +1164,6 @@ export type PrivateLocation = {
      */
     name?: string;
 };
-
-/**
- * Workspace quotas
- */
-export type Quotas = unknown;
 
 /**
  * Repository
@@ -1744,10 +1738,6 @@ export type Workspace = TimeFields & OwnerFields & {
      * Workspace name
      */
     name?: string;
-    /**
-     * Workspace quotas
-     */
-    'quotas,omitempty'?: Quotas;
     /**
      * Workspace write region
      */
@@ -2345,9 +2335,9 @@ export type CreateKnowledgebaseError = unknown;
 export type DeleteKnowledgebaseData = {
     path: {
         /**
-         * ID of the knowledgebase
+         * Name of the knowledgebase
          */
-        knowledgebaseId: string;
+        knowledgebaseName: string;
     };
     query?: {
         /**
@@ -2364,9 +2354,9 @@ export type DeleteKnowledgebaseError = unknown;
 export type GetKnowledgebaseData = {
     path: {
         /**
-         * ID of the knowledgebase
+         * Name of the knowledgebase
          */
-        knowledgebaseId: string;
+        knowledgebaseName: string;
     };
     query?: {
         /**
@@ -2384,9 +2374,9 @@ export type UpdateKnowledgebaseData = {
     body: Knowledgebase;
     path: {
         /**
-         * ID of the knowledgebase
+         * Name of the knowledgebase
          */
-        knowledgebaseId: string;
+        knowledgebaseName: string;
     };
 };
 
@@ -3084,16 +3074,3 @@ export type LeaveWorkspaceData = {
 export type LeaveWorkspaceResponse = (Workspace);
 
 export type LeaveWorkspaceError = (unknown);
-
-export type WorkspaceQuotasRequestData = {
-    path: {
-        /**
-         * Name of the workspace
-         */
-        workspaceName: string;
-    };
-};
-
-export type WorkspaceQuotasRequestResponse = (Quotas);
-
-export type WorkspaceQuotasRequestError = unknown;

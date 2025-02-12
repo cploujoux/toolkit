@@ -1,7 +1,7 @@
 import { Client } from "@hey-api/client-fetch";
-import { HTTPError } from "../../common/error.js";
-import { getSettings } from "../../common/settings.js";
-import { RunClient } from "../../run.js";
+import { HTTPError } from "../common/error.js";
+import { getSettings } from "../common/settings.js";
+import { RunClient } from "../run.js";
 
 export interface EmbeddingsConfig {
   model: string;
