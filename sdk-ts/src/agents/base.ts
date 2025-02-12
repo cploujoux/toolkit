@@ -106,12 +106,12 @@ export const wrapAgent: WrapAgentType = async (
       settings.agent.model = data;
     } else if (
       response.status === 404 &&
-      settings.environment !== "production"
+      settings.environment !== "development"
     ) {
       const { response, data } = await getModel({
         client,
         path: { modelName: agent.spec.model },
-        query: { environment: "production" },
+        query: { environment: "development" },
       });
       if (response.status === 200) {
         settings.agent.model = data;

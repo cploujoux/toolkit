@@ -373,7 +373,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			env := "production"
+			env := "development"
 			if environment != "" {
 				env = environment
 			}

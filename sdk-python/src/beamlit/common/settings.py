@@ -76,7 +76,7 @@ class Settings(BaseSettings):
     )
 
     workspace: str
-    environment: str = Field(default="production")
+    environment: str = Field(default="development")
     remote: bool = Field(default=False)
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")

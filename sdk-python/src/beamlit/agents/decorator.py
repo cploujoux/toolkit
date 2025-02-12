@@ -103,10 +103,10 @@ def agent(
                     )
                     settings.agent.model = response.parsed
                 except UnexpectedStatus as e:
-                    if e.status_code == 404 and settings.environment != "production":
+                    if e.status_code == 404 and settings.environment != "development":
                         try:
                             response = get_model.sync_detailed(
-                                agent.spec.model, environment="production", client=client
+                                agent.spec.model, environment="development", client=client
                             )
                             settings.agent.model = response.parsed
                         except UnexpectedStatus as e:

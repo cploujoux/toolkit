@@ -128,7 +128,7 @@ func Execute(releaseVersion string, releaseCommit string, releaseDate string) er
 		environment = sdk.CurrentContext().Environment
 	}
 	if environment == "" {
-		environment = "production"
+		environment = "development"
 	}
 	if version == "" {
 		version = releaseVersion

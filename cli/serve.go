@@ -166,7 +166,7 @@ func getServerEnvironment(port int, host string, module string, remote bool) []s
 	env := []string{}
 
 	if environment == "" {
-		environment = "production"
+		environment = "development"
 	}
 
 	env = append(env, fmt.Sprintf("BL_ENVIRONMENT=%s", environment))

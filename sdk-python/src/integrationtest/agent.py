@@ -10,7 +10,7 @@ settings = init()
     agent={
         "metadata": {
             "name": "agent-custom",
-            "environment": "production",
+            "environment": "development",
         },
         "spec": {
             "description": "A chat agent using Beamlit to handle your tasks.",

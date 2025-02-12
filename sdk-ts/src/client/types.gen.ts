@@ -1167,11 +1167,6 @@ export type PrivateLocation = {
 };
 
 /**
- * Workspace quotas
- */
-export type Quotas = unknown;
-
-/**
  * Repository
  */
 export type Repository = {
@@ -1744,10 +1739,6 @@ export type Workspace = TimeFields & OwnerFields & {
      * Workspace name
      */
     name?: string;
-    /**
-     * Workspace quotas
-     */
-    'quotas,omitempty'?: Quotas;
     /**
      * Workspace write region
      */
@@ -3084,16 +3075,3 @@ export type LeaveWorkspaceData = {
 export type LeaveWorkspaceResponse = (Workspace);
 
 export type LeaveWorkspaceError = (unknown);
-
-export type WorkspaceQuotasRequestData = {
-    path: {
-        /**
-         * Name of the workspace
-         */
-        workspaceName: string;
-    };
-};
-
-export type WorkspaceQuotasRequestResponse = (Quotas);
-
-export type WorkspaceQuotasRequestError = unknown;
