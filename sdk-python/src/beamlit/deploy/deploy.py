@@ -59,6 +59,7 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
     return deployment
 
 def get_beamlit_deployment_from_resource(
+    settings: Settings,
     resource: Resource,
 ) -> Agent | Function:
     """
@@ -75,6 +76,7 @@ def get_beamlit_deployment_from_resource(
             if isinstance(arg.value, ast.Dict):
                 value = arg_to_dict(arg.value)
                 metadata = EnvironmentMetadata(**value.get("metadata", {}))
+                metadata.environment = settings.environment
                 spec = AgentSpec(**value.get("spec", {}))
                 agent = Agent(metadata=metadata, spec=spec)
                 if not agent.spec.prompt:
@@ -84,6 +86,7 @@ def get_beamlit_deployment_from_resource(
             if isinstance(arg.value, ast.Dict):
                 value = arg_to_dict(arg.value)
                 metadata = EnvironmentMetadata(**value.get("metadata", {}))
+                metadata.environment = settings.environment
                 spec = FunctionSpec(**value.get("spec", {}))
                 func = Function(metadata=metadata, spec=spec)
                 if not func.spec.parameters:
@@ -265,13 +268,13 @@ def generate_beamlit_deployment(directory: str, name: str):
     functions: list[tuple[Resource, Function]] = []
     agents: list[tuple[Resource, Agent]] = []
     for resource in get_resources("agent", settings.server.directory):
-        agent = get_beamlit_deployment_from_resource(resource)
+        agent = get_beamlit_deployment_from_resource(settings, resource)
         if name and agent.metadata.name != name:
             agent.metadata.name = slugify(name)
         if agent:
             agents.append((resource, agent))
     for resource in get_resources("function", settings.server.directory):
-        function = get_beamlit_deployment_from_resource(resource)
+        function = get_beamlit_deployment_from_resource(settings, resource)
         if function:
             functions.append((resource, function))
 

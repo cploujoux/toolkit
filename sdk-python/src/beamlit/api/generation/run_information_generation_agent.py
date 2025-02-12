@@ -5,33 +5,36 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.knowledgebase import Knowledgebase
-from ...types import UNSET, Response, Unset
+from ...models.agent_information_request import AgentInformationRequest
+from ...models.agent_information_response import AgentInformationResponse
+from ...types import Response
 
 
 def _get_kwargs(
-    knowledgebase_name: str,
     *,
-    environment: Union[Unset, str] = UNSET,
+    body: AgentInformationRequest,
 ) -> dict[str, Any]:
-    params: dict[str, Any] = {}
-
-    params["environment"] = environment
-
-    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "delete",
-        "url": f"/knowledgebases/{knowledgebase_name}",
-        "params": params,
+        "method": "post",
+        "url": "/generation/agents/information",
     }
 
+    _body = body.to_dict()
+
+    _kwargs["json"] = _body
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Knowledgebase]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[AgentInformationResponse]:
     if response.status_code == 200:
-        response_200 = Knowledgebase.from_dict(response.json())
+        response_200 = AgentInformationResponse.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +43,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Knowledgebase]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[AgentInformationResponse]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,30 +55,27 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
-    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
-) -> Response[Knowledgebase]:
-    """Delete environment
+    body: AgentInformationRequest,
+) -> Response[AgentInformationResponse]:
+    """Run information generation agent
 
-     Deletes an knowledgebase by Name.
+     Run information generation agent
 
     Args:
-        knowledgebase_name (str):
-        environment (Union[Unset, str]):
+        body (AgentInformationRequest): generation agent information request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Knowledgebase]
+        Response[AgentInformationResponse]
     """
 
     kwargs = _get_kwargs(
-        knowledgebase_name=knowledgebase_name,
-        environment=environment,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -84,59 +86,53 @@ def sync_detailed(
 
 
 def sync(
-    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
-) -> Optional[Knowledgebase]:
-    """Delete environment
+    body: AgentInformationRequest,
+) -> Optional[AgentInformationResponse]:
+    """Run information generation agent
 
-     Deletes an knowledgebase by Name.
+     Run information generation agent
 
     Args:
-        knowledgebase_name (str):
-        environment (Union[Unset, str]):
+        body (AgentInformationRequest): generation agent information request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Knowledgebase
+        AgentInformationResponse
     """
 
     return sync_detailed(
-        knowledgebase_name=knowledgebase_name,
         client=client,
-        environment=environment,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
-) -> Response[Knowledgebase]:
-    """Delete environment
+    body: AgentInformationRequest,
+) -> Response[AgentInformationResponse]:
+    """Run information generation agent
 
-     Deletes an knowledgebase by Name.
+     Run information generation agent
 
     Args:
-        knowledgebase_name (str):
-        environment (Union[Unset, str]):
+        body (AgentInformationRequest): generation agent information request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Knowledgebase]
+        Response[AgentInformationResponse]
     """
 
     kwargs = _get_kwargs(
-        knowledgebase_name=knowledgebase_name,
-        environment=environment,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -145,31 +141,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
-) -> Optional[Knowledgebase]:
-    """Delete environment
+    body: AgentInformationRequest,
+) -> Optional[AgentInformationResponse]:
+    """Run information generation agent
 
-     Deletes an knowledgebase by Name.
+     Run information generation agent
 
     Args:
-        knowledgebase_name (str):
-        environment (Union[Unset, str]):
+        body (AgentInformationRequest): generation agent information request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Knowledgebase
+        AgentInformationResponse
     """
 
     return (
         await asyncio_detailed(
-            knowledgebase_name=knowledgebase_name,
             client=client,
-            environment=environment,
+            body=body,
         )
     ).parsed

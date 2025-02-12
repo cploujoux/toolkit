@@ -22,10 +22,10 @@ class Workspace:
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         account_id (Union[Unset, str]): Workspace account id
+        default_environment (Union[Unset, str]): Workspace environment
         display_name (Union[Unset, str]): Workspace display name
         labels (Union[Unset, WorkspaceLabels]): Workspace labels
         name (Union[Unset, str]): Workspace name
-        quotasomitempty (Union[Unset, Any]): Workspace quotas
         region (Union[Unset, str]): Workspace write region
     """
 
@@ -34,10 +34,10 @@ class Workspace:
     created_by: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     account_id: Union[Unset, str] = UNSET
+    default_environment: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     labels: Union[Unset, "WorkspaceLabels"] = UNSET
     name: Union[Unset, str] = UNSET
-    quotasomitempty: Union[Unset, Any] = UNSET
     region: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -52,6 +52,8 @@ class Workspace:
 
         account_id = self.account_id
 
+        default_environment = self.default_environment
+
         display_name = self.display_name
 
         labels: Union[Unset, dict[str, Any]] = UNSET
@@ -61,8 +63,6 @@ class Workspace:
             labels = self.labels
 
         name = self.name
-
-        quotasomitempty = self.quotasomitempty
 
         region = self.region
 
@@ -79,14 +79,14 @@ class Workspace:
             field_dict["updatedBy"] = updated_by
         if account_id is not UNSET:
             field_dict["accountId"] = account_id
+        if default_environment is not UNSET:
+            field_dict["defaultEnvironment"] = default_environment
         if display_name is not UNSET:
             field_dict["displayName"] = display_name
         if labels is not UNSET:
             field_dict["labels"] = labels
         if name is not UNSET:
             field_dict["name"] = name
-        if quotasomitempty is not UNSET:
-            field_dict["quotas,omitempty"] = quotasomitempty
         if region is not UNSET:
             field_dict["region"] = region
 
@@ -109,6 +109,8 @@ class Workspace:
 
         account_id = d.pop("accountId", UNSET)
 
+        default_environment = d.pop("defaultEnvironment", UNSET)
+
         display_name = d.pop("displayName", UNSET)
 
         _labels = d.pop("labels", UNSET)
@@ -120,8 +122,6 @@ class Workspace:
 
         name = d.pop("name", UNSET)
 
-        quotasomitempty = d.pop("quotas,omitempty", UNSET)
-
         region = d.pop("region", UNSET)
 
         workspace = cls(
@@ -130,10 +130,10 @@ class Workspace:
             created_by=created_by,
             updated_by=updated_by,
             account_id=account_id,
+            default_environment=default_environment,
             display_name=display_name,
             labels=labels,
             name=name,
-            quotasomitempty=quotasomitempty,
             region=region,
         )
 
