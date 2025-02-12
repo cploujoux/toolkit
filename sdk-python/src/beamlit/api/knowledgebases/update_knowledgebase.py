@@ -10,7 +10,7 @@ from ...types import Response
 
 
 def _get_kwargs(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     body: Knowledgebase,
 ) -> dict[str, Any]:
@@ -18,7 +18,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "put",
-        "url": f"/knowledgebases/{knowledgebase_id}",
+        "url": f"/knowledgebases/{knowledgebase_name}",
     }
 
     _body = body.to_dict()
@@ -51,7 +51,7 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     body: Knowledgebase,
@@ -61,7 +61,7 @@ def sync_detailed(
      Updates an knowledgebase.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         body (Knowledgebase): Knowledgebase
 
     Raises:
@@ -73,7 +73,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        knowledgebase_id=knowledgebase_id,
+        knowledgebase_name=knowledgebase_name,
         body=body,
     )
 
@@ -85,7 +85,7 @@ def sync_detailed(
 
 
 def sync(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     body: Knowledgebase,
@@ -95,7 +95,7 @@ def sync(
      Updates an knowledgebase.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         body (Knowledgebase): Knowledgebase
 
     Raises:
@@ -107,14 +107,14 @@ def sync(
     """
 
     return sync_detailed(
-        knowledgebase_id=knowledgebase_id,
+        knowledgebase_name=knowledgebase_name,
         client=client,
         body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     body: Knowledgebase,
@@ -124,7 +124,7 @@ async def asyncio_detailed(
      Updates an knowledgebase.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         body (Knowledgebase): Knowledgebase
 
     Raises:
@@ -136,7 +136,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        knowledgebase_id=knowledgebase_id,
+        knowledgebase_name=knowledgebase_name,
         body=body,
     )
 
@@ -146,7 +146,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    knowledgebase_id: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
     body: Knowledgebase,
@@ -156,7 +156,7 @@ async def asyncio(
      Updates an knowledgebase.
 
     Args:
-        knowledgebase_id (str):
+        knowledgebase_name (str):
         body (Knowledgebase): Knowledgebase
 
     Raises:
@@ -169,7 +169,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            knowledgebase_id=knowledgebase_id,
+            knowledgebase_name=knowledgebase_name,
             client=client,
             body=body,
         )

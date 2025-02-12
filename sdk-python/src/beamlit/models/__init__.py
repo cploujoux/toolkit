@@ -5,6 +5,8 @@ from .agent import Agent
 from .agent_chain import AgentChain
 from .agent_history import AgentHistory
 from .agent_history_event import AgentHistoryEvent
+from .agent_information_request import AgentInformationRequest
+from .agent_information_response import AgentInformationResponse
 from .agent_release import AgentRelease
 from .agent_spec import AgentSpec
 from .api_key import ApiKey
@@ -18,11 +20,17 @@ from .create_api_key_for_service_account_body import CreateApiKeyForServiceAccou
 from .create_workspace_service_account_body import CreateWorkspaceServiceAccountBody
 from .create_workspace_service_account_response_200 import CreateWorkspaceServiceAccountResponse200
 from .delete_workspace_service_account_response_200 import DeleteWorkspaceServiceAccountResponse200
+from .entrypoint import Entrypoint
+from .entrypoint_env import EntrypointEnv
 from .environment import Environment
 from .environment_metadata import EnvironmentMetadata
 from .environment_metrics import EnvironmentMetrics
 from .environment_spec import EnvironmentSpec
 from .flavor import Flavor
+from .form import Form
+from .form_config import FormConfig
+from .form_oauthomitempty import FormOauthomitempty
+from .form_secrets import FormSecrets
 from .function import Function
 from .function_kit import FunctionKit
 from .function_release import FunctionRelease
@@ -49,6 +57,12 @@ from .knowledgebase_spec_options import KnowledgebaseSpecOptions
 from .last_n_requests_metric import LastNRequestsMetric
 from .latency_metric import LatencyMetric
 from .location_response import LocationResponse
+from .mcp_definition import MCPDefinition
+from .mcp_definition_entrypoint import MCPDefinitionEntrypoint
+from .mcp_definition_form import MCPDefinitionForm
+from .mcp_hub_artifact import MCPHubArtifact
+from .mcp_hub_artifact_entrypoint import MCPHubArtifactEntrypoint
+from .mcp_hub_artifact_form import MCPHubArtifactForm
 from .metadata import Metadata
 from .metadata_labels import MetadataLabels
 from .metric import Metric
@@ -60,6 +74,7 @@ from .model import Model
 from .model_private_cluster import ModelPrivateCluster
 from .model_release import ModelRelease
 from .model_spec import ModelSpec
+from .o_auth import OAuth
 from .owner_fields import OwnerFields
 from .pending_invitation import PendingInvitation
 from .pending_invitation_accept import PendingInvitationAccept
@@ -125,6 +140,8 @@ __all__ = (
     "AgentChain",
     "AgentHistory",
     "AgentHistoryEvent",
+    "AgentInformationRequest",
+    "AgentInformationResponse",
     "AgentRelease",
     "AgentSpec",
     "ApiKey",
@@ -138,11 +155,17 @@ __all__ = (
     "CreateWorkspaceServiceAccountBody",
     "CreateWorkspaceServiceAccountResponse200",
     "DeleteWorkspaceServiceAccountResponse200",
+    "Entrypoint",
+    "EntrypointEnv",
     "Environment",
     "EnvironmentMetadata",
     "EnvironmentMetrics",
     "EnvironmentSpec",
     "Flavor",
+    "Form",
+    "FormConfig",
+    "FormOauthomitempty",
+    "FormSecrets",
     "Function",
     "FunctionKit",
     "FunctionRelease",
@@ -167,6 +190,12 @@ __all__ = (
     "LastNRequestsMetric",
     "LatencyMetric",
     "LocationResponse",
+    "MCPDefinition",
+    "MCPDefinitionEntrypoint",
+    "MCPDefinitionForm",
+    "MCPHubArtifact",
+    "MCPHubArtifactEntrypoint",
+    "MCPHubArtifactForm",
     "Metadata",
     "MetadataLabels",
     "Metric",
@@ -178,6 +207,7 @@ __all__ = (
     "ModelPrivateCluster",
     "ModelRelease",
     "ModelSpec",
+    "OAuth",
     "OwnerFields",
     "PendingInvitation",
     "PendingInvitationAccept",

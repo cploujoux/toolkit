@@ -94,6 +94,7 @@ const generateFunctions = async (settings: Settings, directory: string) => {
     if (functionConfiguration.metadata?.name) {
       const funcName = slugify(functionConfiguration.metadata.name);
       functionConfiguration.metadata.name = funcName;
+      functionConfiguration.metadata.environment = settings.environment;
       functionConfiguration.metadata.labels =
         functionConfiguration.metadata.labels || {};
       functionConfiguration.metadata.labels["x-beamlit-auto-generated"] =
@@ -154,6 +155,7 @@ const generateAgents = async (
         const remoteFunctions = agentConfiguration.spec?.functions || [];
         const agentName = slugify(agentConfiguration.metadata.name);
         agentConfiguration.metadata.name = agentName;
+        agentConfiguration.metadata.environment = settings.environment;
         agentConfiguration.spec!.functions = [
           ...new Set([...functionsNames, ...remoteFunctions]),
         ];

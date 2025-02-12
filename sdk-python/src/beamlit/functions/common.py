@@ -28,6 +28,7 @@ from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
 from beamlit.common.settings import get_settings
+from beamlit.functions.local.local import LocalToolKit
 from beamlit.functions.remote.remote import RemoteToolkit
 from beamlit.models import AgentChain
 
@@ -35,10 +36,12 @@ logger = getLogger(__name__)
 
 def get_functions(
     remote_functions: Union[list[str], None] = None,
+    local_functions: Union[list[dict], None] = None,
     client: Union[AuthenticatedClient, None] = None,
     dir: Union[str, None] = None,
     chain: Union[list[AgentChain], None] = None,
     remote_functions_empty: bool = True,
+    local_functions_empty: bool = True,
     from_decorator: str = "function",
     warning: bool = True,
 ):
@@ -140,6 +143,7 @@ def get_functions(
                                             client=client,
                                             dir=os.path.join(root),
                                             remote_functions_empty=remote_functions_empty,
+                                            local_functions_empty=local_functions_empty,
                                             from_decorator="kit",
                                         )
                                         functions.extend(kit_functions)
@@ -187,6 +191,18 @@ def get_functions(
                     f"Traceback:\n{traceback.format_exc()}"
                 )
                 logger.warn(f"Failed to initialize remote function {function}: {e!s}")
+    if local_functions:
+        for function in local_functions:
+            try:
+                toolkit = LocalToolKit(client, function)
+                toolkit.initialize()
+                functions.extend(toolkit.get_tools())
+            except Exception as e:
+                logger.debug(
+                    f"Failed to initialize local function {function}: {e!s}\n"
+                    f"Traceback:\n{traceback.format_exc()}"
+                )
+                logger.warn(f"Failed to initialize local function {function}: {e!s}")
 
     if chain:
         toolkit = ChainToolkit(client, chain)

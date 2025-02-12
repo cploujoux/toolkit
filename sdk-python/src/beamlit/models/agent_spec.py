@@ -37,6 +37,7 @@ class AgentSpec:
         agent_chain (Union[Unset, list['AgentChain']]): Agent chain
         description (Union[Unset, str]): Description, small description computed from the prompt
         functions (Union[Unset, list[str]]):
+        knowledgebase (Union[Unset, str]): Knowledgebase Name
         model (Union[Unset, str]): Model name
         prompt (Union[Unset, str]): Prompt, describe what your agent does
         repository (Union[Unset, Repository]): Repository
@@ -56,6 +57,7 @@ class AgentSpec:
     agent_chain: Union[Unset, list["AgentChain"]] = UNSET
     description: Union[Unset, str] = UNSET
     functions: Union[Unset, list[str]] = UNSET
+    knowledgebase: Union[Unset, str] = UNSET
     model: Union[Unset, str] = UNSET
     prompt: Union[Unset, str] = UNSET
     repository: Union[Unset, "Repository"] = UNSET
@@ -137,6 +139,8 @@ class AgentSpec:
         if not isinstance(self.functions, Unset):
             functions = self.functions
 
+        knowledgebase = self.knowledgebase
+
         model = self.model
 
         prompt = self.prompt
@@ -178,6 +182,8 @@ class AgentSpec:
             field_dict["description"] = description
         if functions is not UNSET:
             field_dict["functions"] = functions
+        if knowledgebase is not UNSET:
+            field_dict["knowledgebase"] = knowledgebase
         if model is not UNSET:
             field_dict["model"] = model
         if prompt is not UNSET:
@@ -264,6 +270,8 @@ class AgentSpec:
 
         functions = cast(list[str], d.pop("functions", UNSET))
 
+        knowledgebase = d.pop("knowledgebase", UNSET)
+
         model = d.pop("model", UNSET)
 
         prompt = d.pop("prompt", UNSET)
@@ -291,6 +299,7 @@ class AgentSpec:
             agent_chain=agent_chain,
             description=description,
             functions=functions,
+            knowledgebase=knowledgebase,
             model=model,
             prompt=prompt,
             repository=repository,
