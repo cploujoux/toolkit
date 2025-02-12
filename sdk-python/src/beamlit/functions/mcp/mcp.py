@@ -4,91 +4,87 @@ It includes classes for managing MCP clients, creating dynamic schemas, and inte
 """
 
 import asyncio
+import logging
 import warnings
-from typing import Any, Callable
+from typing import Any, AsyncIterator, Callable
 
 import pydantic
 import pydantic_core
 import requests
 import typing_extensions as t
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
+from mcp import ClientSession
+from mcp.client.sse import sse_client
 from mcp.types import CallToolResult, ListToolsResult
-from pydantic.json_schema import JsonSchemaValue
-from pydantic_core import core_schema as cs
 
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 
+from .utils import create_schema_model
+
 settings = get_settings()
 
-TYPE_MAP = {
-    "integer": int,
-    "number": float,
-    "array": list,
-    "object": dict,
-    "boolean": bool,
-    "string": str,
-    "null": type(None),
-}
-
-FIELD_DEFAULTS = {
-    int: 0,
-    float: 0.0,
-    list: [],
-    bool: False,
-    str: "",
-    type(None): None,
-}
-
-def configure_field(name: str, type_: dict[str, t.Any], required: list[str]) -> tuple[type, t.Any]:
-    field_type = TYPE_MAP[type_["type"]]
-    default_ = FIELD_DEFAULTS.get(field_type) if name not in required else ...
-    return field_type, default_
-
-def create_schema_model(name: str, schema: dict[str, t.Any]) -> type[pydantic.BaseModel]:
-    # Create a new model class that returns our JSON schema.
-    # LangChain requires a BaseModel class.
-    class SchemaBase(pydantic.BaseModel):
-        model_config = pydantic.ConfigDict(extra="allow")
-
-        @t.override
-        @classmethod
-        def __get_pydantic_json_schema__(
-            cls, core_schema: cs.CoreSchema, handler: pydantic.GetJsonSchemaHandler
-        ) -> JsonSchemaValue:
-            return schema
-
-    # Since this langchain patch, we need to synthesize pydantic fields from the schema
-    # https://github.com/langchain-ai/langchain/commit/033ac417609297369eb0525794d8b48a425b8b33
-    required = schema.get("required", [])
-    fields: dict[str, t.Any] = {
-        name: configure_field(name, type_, required) for name, type_ in schema["properties"].items()
-    }
-
-    return pydantic.create_model(f"{name}Schema", __base__=SchemaBase, **fields)
-
+logger = logging.getLogger(__name__)
 
 
 class MCPClient:
     def __init__(self, client: AuthenticatedClient, url: str):
         self.client = client
         self.url = url
+        self._sse = False
 
-    def list_tools(self) -> requests.Response:
-        client = self.client.get_httpx_client()
-        response = client.request("GET", f"{self.url}/tools/list")
-        response.raise_for_status()
-        return response
+    async def list_sse_tools(self) -> ListToolsResult:
+        # Create a new context for each SSE connection
+        try:
+            async with sse_client(f"{self.url}/sse") as (read_stream, write_stream):
+                async with ClientSession(read_stream, write_stream) as session:
+                    await session.initialize()
+                    response = await session.list_tools()
+                    return response
+        except Exception:
+            self._sse = False
+            logger.info("SSE not available, trying HTTP")
+            return None  # Signal to list_tools() to try HTTP instead
 
-    def call_tool(self, tool_name: str, arguments: dict[str, Any] = None) -> requests.Response:
-        client = self.client.get_httpx_client()
-        response = client.request(
-            "POST",
-            f"{self.url}/tools/call",
-            json={"name": tool_name, "arguments": arguments},
-        )
-        response.raise_for_status()
-        return response
+    def list_tools(self) -> ListToolsResult:
+        try:
+            loop = asyncio.get_event_loop()
+            result = loop.run_until_complete(self.list_sse_tools())
+            if result is None:  # SSE failed, try HTTP
+                raise Exception("SSE failed")
+            self._sse = True
+            return result
+        except Exception:  # Fallback to HTTP
+            client = self.client.get_httpx_client()
+            response = client.request("GET", f"{self.url}/tools/list")
+            response.raise_for_status()
+            return ListToolsResult(**response.json())
+
+    async def call_tool(
+        self,
+        tool_name: str,
+        arguments: dict[str, Any] = None,
+    ) -> requests.Response | AsyncIterator[CallToolResult]:
+        if self._sse:
+            async with sse_client(f"{self.url}/sse") as (read_stream, write_stream):
+                async with ClientSession(read_stream, write_stream) as session:
+                    await session.initialize()
+                    response = await session.call_tool(tool_name, arguments or {})
+                    content = pydantic_core.to_json(response).decode()
+                    return content
+        else: # Fallback to HTTP
+            client = self.client.get_httpx_client()
+            response = client.request(
+                "POST",
+                f"{self.url}/tools/call",
+                json={"name": tool_name, "arguments": arguments},
+            )
+            response.raise_for_status()
+            result = CallToolResult(response.json())
+            if result.isError:
+                raise ToolException(result.content)
+            content = pydantic_core.to_json(result.content).decode()
+            return content
 
 class MCPTool(BaseTool):
     """
@@ -97,6 +93,7 @@ class MCPTool(BaseTool):
     Attributes:
         client (MCPClient): The MCP client instance.
         handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
+        sse (bool): Whether to use SSE streaming for responses.
     """
 
     client: MCPClient
@@ -112,13 +109,7 @@ class MCPTool(BaseTool):
 
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
-        result = self.client.call_tool(self.name, arguments=kwargs)
-        response = result.json()
-        result = CallToolResult(**response)
-        if result.isError:
-            raise ToolException(result.content)
-        content = pydantic_core.to_json(result.content).decode()
-        return content
+        return await self.client.call_tool(self.name, arguments=kwargs)
 
     @t.override
     @property
@@ -139,14 +130,13 @@ class MCPToolkit(BaseToolkit):
     """The MCP session used to obtain the tools"""
 
     _tools: ListToolsResult | None = None
-
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     def initialize(self) -> None:
         """Initialize the session and retrieve tools list"""
         if self._tools is None:
             response = self.client.list_tools()
-            self._tools = ListToolsResult(**response.json())
+            self._tools = response
 
     @t.override
     def get_tools(self) -> list[BaseTool]:
