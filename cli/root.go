@@ -16,9 +16,15 @@ var RUN_URL = "https://run.beamlit.com"
 var REGISTRY_URL = "https://us.registry.beamlit.com"
 
 func init() {
-	if os.Getenv("BL_ENV") == "dev" {
+	env := os.Getenv("BL_ENV")
+	if env == "dev" {
 		BASE_URL = "https://api.beamlit.dev/v0"
 		APP_URL = "https://app.beamlit.dev"
+		RUN_URL = "https://run.beamlit.dev"
+		REGISTRY_URL = "https://eu.registry.beamlit.dev"
+	} else if env == "local" {
+		BASE_URL = "http://localhost:8080/v0"
+		APP_URL = "http://localhost:3000"
 		RUN_URL = "https://run.beamlit.dev"
 		REGISTRY_URL = "https://eu.registry.beamlit.dev"
 	}

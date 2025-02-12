@@ -1726,6 +1726,10 @@ export type Workspace = TimeFields & OwnerFields & {
      */
     accountId?: string;
     /**
+     * Workspace environment
+     */
+    defaultEnvironment?: string;
+    /**
      * Workspace display name
      */
     displayName?: string;

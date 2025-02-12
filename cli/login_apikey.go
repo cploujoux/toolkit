@@ -33,9 +33,13 @@ func (r *Operations) ApiKeyLogin(workspace string, environment string) {
 		APIKey: apiKey,
 	}
 
-	if err := CheckWorkspaceAccess(workspace, creds); err != nil {
+	workspaceObject, err := CheckWorkspaceAccess(workspace, creds)
+	if err != nil {
 		fmt.Printf("Error accessing workspace %s : %s\n", workspace, err)
 		os.Exit(1)
+	}
+	if environment == "" && workspaceObject.DefaultEnvironment != nil {
+		environment = *workspaceObject.DefaultEnvironment
 	}
 
 	sdk.SaveCredentials(workspace, creds)

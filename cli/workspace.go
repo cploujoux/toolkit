@@ -1,10 +1,8 @@
 package cli
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/beamlit/toolkit/sdk"
@@ -47,7 +45,8 @@ func (r *Operations) ListOrSetWorkspacesCmd() *cobra.Command {
 	}
 }
 
-func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) error {
+func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) (sdk.Workspace, error) {
+	fmt.Println(BASE_URL)
 	c, err := sdk.NewClientWithCredentials(
 		sdk.RunClientWithCredentials{
 			ApiURL:      BASE_URL,
@@ -57,21 +56,15 @@ func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) err
 		},
 	)
 	if err != nil {
-		return err
+		return sdk.Workspace{}, err
 	}
-	response, err := c.GetWorkspace(context.Background(), workspaceName)
+	response, err := c.GetWorkspaceWithResponse(context.Background(), workspaceName)
 	if err != nil {
-		return err
+		return sdk.Workspace{}, err
 	}
-	var buf bytes.Buffer
-	if _, err := io.Copy(&buf, response.Body); err != nil {
-		formattedError := fmt.Sprintf("Resource %s error: ", "workspace")
-		fmt.Printf("%s%v", formattedError, err)
+	if response.StatusCode() >= 400 {
+		ErrorHandler(response.HTTPResponse.Request, "workspace", workspaceName, string(response.Body))
 		os.Exit(1)
 	}
-	if response.StatusCode >= 400 {
-		ErrorHandler(response.Request, "workspace", workspaceName, buf.String())
-		os.Exit(1)
-	}
-	return nil
+	return *response.JSON200, nil
 }
