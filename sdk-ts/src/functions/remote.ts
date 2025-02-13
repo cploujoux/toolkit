@@ -77,6 +77,7 @@ export class RemoteToolkit {
       const { response, data } = await getFunction({
         client: this.client,
         path: { functionName: this.functionName },
+        query: { environment: this.settings.environment },
       });
       if (response.status >= 400) {
         const { data: listData } = await listFunctions({
