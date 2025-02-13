@@ -46,10 +46,21 @@ build:
 		fi; \
 		cp ~/.local/bin/beamlit ~/.local/bin/bl; \
 	fi
-doc:
+
+doc: doc-go doc-python doc-ts
+
+doc-go:
 	rm -rf docs
 	go run main.go docs --format=markdown --output=docs
 	rm docs/bl_completion_zsh.md docs/bl_completion_bash.md
+
+doc-python:
+	rm -rf sdk-python/docs
+	cd sdk-python && sh doc.sh
+
+doc-ts:
+	rm -rf sdk-ts/docs
+	cd sdk-ts && pnpm run docs
 
 lint:
 	golangci-lint run

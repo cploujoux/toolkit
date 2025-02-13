@@ -7,7 +7,7 @@ Defines decorators for agent functionalities.
 Functions
 ---------
 
-`agent(agent: beamlit.models.agent.Agent | dict = None, override_model=None, override_agent=None, override_functions=None, remote_functions=None) ‑> Callable`
+`agent(agent: beamlit.models.agent.Agent | dict = None, override_model=None, override_agent=None, override_functions=None, remote_functions=None, local_functions=None) ‑> Callable`
 :   A decorator factory that configures and wraps functions to integrate with Beamlit agents.
     Handles model initialization, function retrieval, and agent setup.
     
@@ -17,6 +17,7 @@ Functions
         override_agent (Any, optional): An optional agent instance to override the default agent.
         mcp_hub (Any, optional): An optional MCP hub configuration.
         remote_functions (Any, optional): An optional list of remote functions to be integrated.
+        local_functions (Any, optional): An optional list of local functions to be integrated.
     
     Returns:
         Callable: A decorator that wraps the target function, injecting agent-related configurations and dependencies.

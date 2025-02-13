@@ -4,19 +4,11 @@ Contains all the data models used in inputs/outputs
 
 Sub-modules
 -----------
-* beamlit.models.account
-* beamlit.models.account_metadata
-* beamlit.models.account_spec
-* beamlit.models.account_spec_address
 * beamlit.models.acl
 * beamlit.models.agent
 * beamlit.models.agent_chain
-* beamlit.models.agent_history
-* beamlit.models.agent_history_event
-* beamlit.models.agent_release
 * beamlit.models.agent_spec
 * beamlit.models.api_key
-* beamlit.models.billing_address
 * beamlit.models.configuration
 * beamlit.models.continent
 * beamlit.models.core_event
@@ -27,14 +19,15 @@ Sub-modules
 * beamlit.models.create_workspace_service_account_body
 * beamlit.models.create_workspace_service_account_response_200
 * beamlit.models.delete_workspace_service_account_response_200
-* beamlit.models.environment
-* beamlit.models.environment_metadata
-* beamlit.models.environment_metrics
-* beamlit.models.environment_spec
+* beamlit.models.entrypoint
+* beamlit.models.entrypoint_env
 * beamlit.models.flavor
+* beamlit.models.form
+* beamlit.models.form_config
+* beamlit.models.form_oauthomitempty
+* beamlit.models.form_secrets
 * beamlit.models.function
 * beamlit.models.function_kit
-* beamlit.models.function_release
 * beamlit.models.function_spec
 * beamlit.models.get_trace_ids_response_200
 * beamlit.models.get_trace_logs_response_200
@@ -49,9 +42,15 @@ Sub-modules
 * beamlit.models.integration_model
 * beamlit.models.integration_repository
 * beamlit.models.invite_workspace_user_body
+* beamlit.models.knowledgebase
+* beamlit.models.knowledgebase_spec
+* beamlit.models.knowledgebase_spec_options
 * beamlit.models.last_n_requests_metric
 * beamlit.models.latency_metric
 * beamlit.models.location_response
+* beamlit.models.mcp_definition
+* beamlit.models.mcp_definition_entrypoint
+* beamlit.models.mcp_definition_form
 * beamlit.models.metadata
 * beamlit.models.metadata_labels
 * beamlit.models.metric
@@ -61,8 +60,8 @@ Sub-modules
 * beamlit.models.metrics_rps_per_code
 * beamlit.models.model
 * beamlit.models.model_private_cluster
-* beamlit.models.model_release
 * beamlit.models.model_spec
+* beamlit.models.o_auth
 * beamlit.models.owner_fields
 * beamlit.models.pending_invitation
 * beamlit.models.pending_invitation_accept
@@ -86,10 +85,11 @@ Sub-modules
 * beamlit.models.request_total_metric
 * beamlit.models.request_total_metric_request_total_per_code
 * beamlit.models.request_total_metric_rps_per_code
-* beamlit.models.resource_environment_metrics
-* beamlit.models.resource_environment_metrics_request_total_per_code
-* beamlit.models.resource_environment_metrics_rps_per_code
 * beamlit.models.resource_log
+* beamlit.models.resource_metrics
+* beamlit.models.resource_metrics_request_total_per_code
+* beamlit.models.resource_metrics_rps_per_code
+* beamlit.models.revision_metadata
 * beamlit.models.runtime
 * beamlit.models.runtime_readiness_probe
 * beamlit.models.runtime_resources
@@ -180,222 +180,12 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`Account(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('MetadataLabels') = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>, address: beamlit.types.Unset | ForwardRef('AccountSpecAddress') = <beamlit.types.Unset object>, admins: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, currency: beamlit.types.Unset | str = <beamlit.types.Unset object>, owner: beamlit.types.Unset | str = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>, tax_id: beamlit.types.Unset | str = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | Any = <beamlit.types.Unset object>, spec: beamlit.types.Unset | Any = <beamlit.types.Unset object>)`
-:   Account
-    
-    Attributes:
-        created_at (Union[Unset, str]): The date and time when the resource was created
-        updated_at (Union[Unset, str]): The date and time when the resource was updated
-        created_by (Union[Unset, str]): The user or service account who created the resource
-        updated_by (Union[Unset, str]): The user or service account who updated the resource
-        display_name (Union[Unset, str]): Model display name
-        labels (Union[Unset, MetadataLabels]): Labels
-        name (Union[Unset, str]): Model name
-        workspace (Union[Unset, str]): Workspace name
-        address (Union[Unset, AccountSpecAddress]): Billing address
-        admins (Union[Unset, list[Any]]): Admins
-        currency (Union[Unset, str]): Currency
-        owner (Union[Unset, str]): Owner
-        status (Union[Unset, str]): Status
-        tax_id (Union[Unset, str]): Tax ID
-        metadata (Union[Unset, Any]):
-        spec (Union[Unset, Any]):
-    
-    Method generated by attrs for class Account.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties`
-    :
-
-    `address`
-    :
-
-    `admins`
-    :
-
-    `created_at`
-    :
-
-    `created_by`
-    :
-
-    `currency`
-    :
-
-    `display_name`
-    :
-
-    `labels`
-    :
-
-    `metadata`
-    :
-
-    `name`
-    :
-
-    `owner`
-    :
-
-    `spec`
-    :
-
-    `status`
-    :
-
-    `tax_id`
-    :
-
-    `updated_at`
-    :
-
-    `updated_by`
-    :
-
-    `workspace`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`AccountMetadata(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, id: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('MetadataLabels') = <beamlit.types.Unset object>)`
-:   AccountMetadata
-    
-    Attributes:
-        created_at (Union[Unset, str]): The date and time when the resource was created
-        updated_at (Union[Unset, str]): The date and time when the resource was updated
-        created_by (Union[Unset, str]): The user or service account who created the resource
-        updated_by (Union[Unset, str]): The user or service account who updated the resource
-        id (Union[Unset, str]): Account id
-        labels (Union[Unset, MetadataLabels]): Labels
-    
-    Method generated by attrs for class AccountMetadata.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties`
-    :
-
-    `created_at`
-    :
-
-    `created_by`
-    :
-
-    `id`
-    :
-
-    `labels`
-    :
-
-    `updated_at`
-    :
-
-    `updated_by`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`AccountSpec(address: beamlit.types.Unset | ForwardRef('AccountSpecAddress') = <beamlit.types.Unset object>, admins: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, currency: beamlit.types.Unset | str = <beamlit.types.Unset object>, owner: beamlit.types.Unset | str = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>, tax_id: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   AccountSpec
-    
-    Attributes:
-        address (Union[Unset, AccountSpecAddress]): Billing address
-        admins (Union[Unset, list[Any]]): Admins
-        currency (Union[Unset, str]): Currency
-        owner (Union[Unset, str]): Owner
-        status (Union[Unset, str]): Status
-        tax_id (Union[Unset, str]): Tax ID
-    
-    Method generated by attrs for class AccountSpec.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties`
-    :
-
-    `address`
-    :
-
-    `admins`
-    :
-
-    `currency`
-    :
-
-    `owner`
-    :
-
-    `status`
-    :
-
-    `tax_id`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`AccountSpecAddress()`
-:   Billing address
-    
-    Method generated by attrs for class AccountSpecAddress.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties: dict[str, typing.Any]`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`Agent(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('EnvironmentMetadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('AgentSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`Agent(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('Metadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('AgentSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Agent
     
     Attributes:
         events (Union[Unset, list['CoreEvent']]): Core events
-        metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
+        metadata (Union[Unset, Metadata]): Metadata
         spec (Union[Unset, AgentSpec]): Agent specification
         status (Union[Unset, str]): Agent status
     
@@ -431,13 +221,14 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`AgentChain(description: beamlit.types.Unset | str = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`AgentChain(description: beamlit.types.Unset | str = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, prompt: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Agent chain configuration
     
     Attributes:
         description (Union[Unset, str]): Description of the agent in case you want to override the default one
         enabled (Union[Unset, bool]): Whether the agent chain is enabled
         name (Union[Unset, str]): The name of the agent to chain to
+        prompt (Union[Unset, str]): Prompt of the agent in case you want to override the default one
     
     Method generated by attrs for class AgentChain.
 
@@ -463,73 +254,7 @@ Classes
     `name: beamlit.types.Unset | str`
     :
 
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`AgentHistory(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, agent: beamlit.types.Unset | str = <beamlit.types.Unset object>, end: beamlit.types.Unset | str = <beamlit.types.Unset object>, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>, events: beamlit.types.Unset | list['AgentHistoryEvent'] = <beamlit.types.Unset object>, request_id: beamlit.types.Unset | str = <beamlit.types.Unset object>, start: beamlit.types.Unset | str = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>, took: beamlit.types.Unset | int = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Agent deployment history
-    
-    Attributes:
-        created_at (Union[Unset, str]): The date and time when the resource was created
-        updated_at (Union[Unset, str]): The date and time when the resource was updated
-        agent (Union[Unset, str]): Agent name
-        end (Union[Unset, str]): End time
-        environment (Union[Unset, str]): Environment name
-        events (Union[Unset, list['AgentHistoryEvent']]): Events
-        request_id (Union[Unset, str]): Request ID
-        start (Union[Unset, str]): Start time
-        status (Union[Unset, str]): Status, eg: running, success, failed
-        took (Union[Unset, int]): Number of milliseconds it took to complete the event
-        workspace (Union[Unset, str]): The workspace the agent deployment belongs to
-    
-    Method generated by attrs for class AgentHistory.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties`
-    :
-
-    `agent`
-    :
-
-    `created_at`
-    :
-
-    `end`
-    :
-
-    `environment`
-    :
-
-    `events`
-    :
-
-    `request_id`
-    :
-
-    `start`
-    :
-
-    `status`
-    :
-
-    `took`
-    :
-
-    `updated_at`
-    :
-
-    `workspace`
+    `prompt: beamlit.types.Unset | str`
     :
 
     ### Methods
@@ -537,101 +262,7 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`AgentHistoryEvent(end: beamlit.types.Unset | str = <beamlit.types.Unset object>, error: beamlit.types.Unset | str = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, parameters: beamlit.types.Unset | str = <beamlit.types.Unset object>, start: beamlit.types.Unset | str = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>, sub_function: beamlit.types.Unset | str = <beamlit.types.Unset object>, took: beamlit.types.Unset | int = <beamlit.types.Unset object>, type_: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Agent deployment history event
-    
-    Attributes:
-        end (Union[Unset, str]): End time
-        error (Union[Unset, str]): Error message
-        name (Union[Unset, str]): Name of the function or agent
-        parameters (Union[Unset, str]): Parameters
-        start (Union[Unset, str]): Start time
-        status (Union[Unset, str]): Status, eg: running, success, failed
-        sub_function (Union[Unset, str]): Function used in kit if a kit was used
-        took (Union[Unset, int]): Number of milliseconds it took to complete the event
-        type_ (Union[Unset, str]): Type, one of function or agent
-    
-    Method generated by attrs for class AgentHistoryEvent.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties: dict[str, typing.Any]`
-    :
-
-    `end: beamlit.types.Unset | str`
-    :
-
-    `error: beamlit.types.Unset | str`
-    :
-
-    `name: beamlit.types.Unset | str`
-    :
-
-    `parameters: beamlit.types.Unset | str`
-    :
-
-    `start: beamlit.types.Unset | str`
-    :
-
-    `status: beamlit.types.Unset | str`
-    :
-
-    `sub_function: beamlit.types.Unset | str`
-    :
-
-    `took: beamlit.types.Unset | int`
-    :
-
-    `type_: beamlit.types.Unset | str`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`AgentRelease(from_: beamlit.types.Unset | str = <beamlit.types.Unset object>, to: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Agent release, used to deploy a agent from one environment to another
-    
-    Attributes:
-        from_ (Union[Unset, str]): Origin environment from which the agent is released
-        to (Union[Unset, str]): Destination environment to which the agent is released
-    
-    Method generated by attrs for class AgentRelease.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties: dict[str, typing.Any]`
-    :
-
-    `from_: beamlit.types.Unset | str`
-    :
-
-    `to: beamlit.types.Unset | str`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`AgentSpec(configurations: beamlit.types.Unset | ForwardRef('CoreSpecConfigurations') = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, flavors: beamlit.types.Unset | list['Flavor'] = <beamlit.types.Unset object>, integration_connections: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, pod_template: beamlit.types.Unset | ForwardRef('PodTemplateSpec') = <beamlit.types.Unset object>, policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, private_clusters: beamlit.types.Unset | ForwardRef('ModelPrivateCluster') = <beamlit.types.Unset object>, runtime: beamlit.types.Unset | ForwardRef('Runtime') = <beamlit.types.Unset object>, sandbox: beamlit.types.Unset | bool = <beamlit.types.Unset object>, serverless_config: beamlit.types.Unset | ForwardRef('ServerlessConfig') = <beamlit.types.Unset object>, agent_chain: beamlit.types.Unset | list['AgentChain'] = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, functions: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, model: beamlit.types.Unset | str = <beamlit.types.Unset object>, repository: beamlit.types.Unset | ForwardRef('Repository') = <beamlit.types.Unset object>, store_id: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`AgentSpec(configurations: beamlit.types.Unset | ForwardRef('CoreSpecConfigurations') = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, flavors: beamlit.types.Unset | list['Flavor'] = <beamlit.types.Unset object>, integration_connections: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, pod_template: beamlit.types.Unset | ForwardRef('PodTemplateSpec') = <beamlit.types.Unset object>, policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, private_clusters: beamlit.types.Unset | ForwardRef('ModelPrivateCluster') = <beamlit.types.Unset object>, runtime: beamlit.types.Unset | ForwardRef('Runtime') = <beamlit.types.Unset object>, sandbox: beamlit.types.Unset | bool = <beamlit.types.Unset object>, serverless_config: beamlit.types.Unset | ForwardRef('ServerlessConfig') = <beamlit.types.Unset object>, agent_chain: beamlit.types.Unset | list['AgentChain'] = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, functions: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, knowledgebase: beamlit.types.Unset | str = <beamlit.types.Unset object>, model: beamlit.types.Unset | str = <beamlit.types.Unset object>, prompt: beamlit.types.Unset | str = <beamlit.types.Unset object>, repository: beamlit.types.Unset | ForwardRef('Repository') = <beamlit.types.Unset object>, store_id: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Agent specification
     
     Attributes:
@@ -646,9 +277,11 @@ Classes
         sandbox (Union[Unset, bool]): Sandbox mode
         serverless_config (Union[Unset, ServerlessConfig]): Configuration for a serverless deployment
         agent_chain (Union[Unset, list['AgentChain']]): Agent chain
-        description (Union[Unset, str]): Agent description
+        description (Union[Unset, str]): Description, small description computed from the prompt
         functions (Union[Unset, list[str]]):
+        knowledgebase (Union[Unset, str]): Knowledgebase Name
         model (Union[Unset, str]): Model name
+        prompt (Union[Unset, str]): Prompt, describe what your agent does
         repository (Union[Unset, Repository]): Repository
         store_id (Union[Unset, str]): Store id
     
@@ -688,6 +321,9 @@ Classes
     `integration_connections`
     :
 
+    `knowledgebase`
+    :
+
     `model`
     :
 
@@ -698,6 +334,9 @@ Classes
     :
 
     `private_clusters`
+    :
+
+    `prompt`
     :
 
     `repository`
@@ -778,67 +417,6 @@ Classes
     :
 
     `updated_by: beamlit.types.Unset | str`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`BillingAddress(city: beamlit.types.Unset | str = <beamlit.types.Unset object>, country: beamlit.types.Unset | str = <beamlit.types.Unset object>, first_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, last_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, phone_number: beamlit.types.Unset | str = <beamlit.types.Unset object>, postal_code: beamlit.types.Unset | str = <beamlit.types.Unset object>, state: beamlit.types.Unset | str = <beamlit.types.Unset object>, street1: beamlit.types.Unset | str = <beamlit.types.Unset object>, street2: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   BillingAddress
-    
-    Attributes:
-        city (Union[Unset, str]): City
-        country (Union[Unset, str]): Country
-        first_name (Union[Unset, str]): First name
-        last_name (Union[Unset, str]): Last name
-        phone_number (Union[Unset, str]): Phone number
-        postal_code (Union[Unset, str]): Postal code
-        state (Union[Unset, str]): State/Province/Region
-        street1 (Union[Unset, str]): Street 1
-        street2 (Union[Unset, str]): Street 2
-    
-    Method generated by attrs for class BillingAddress.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties: dict[str, typing.Any]`
-    :
-
-    `city: beamlit.types.Unset | str`
-    :
-
-    `country: beamlit.types.Unset | str`
-    :
-
-    `first_name: beamlit.types.Unset | str`
-    :
-
-    `last_name: beamlit.types.Unset | str`
-    :
-
-    `phone_number: beamlit.types.Unset | str`
-    :
-
-    `postal_code: beamlit.types.Unset | str`
-    :
-
-    `state: beamlit.types.Unset | str`
-    :
-
-    `street1: beamlit.types.Unset | str`
-    :
-
-    `street2: beamlit.types.Unset | str`
     :
 
     ### Methods
@@ -1237,14 +815,15 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`Environment(metadata: beamlit.types.Unset | ForwardRef('Metadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('EnvironmentSpec') = <beamlit.types.Unset object>)`
-:   Environment on which deployments will be made (e.g. development, production), enforcing multiple policies at once.
+`Entrypoint(args: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, command: beamlit.types.Unset | str = <beamlit.types.Unset object>, env: beamlit.types.Unset | ForwardRef('EntrypointEnv') = <beamlit.types.Unset object>)`
+:   Entrypoint of the artifact
     
     Attributes:
-        metadata (Union[Unset, Metadata]): Metadata
-        spec (Union[Unset, EnvironmentSpec]): Environment specification
+        args (Union[Unset, list[Any]]): Args of the entrypoint
+        command (Union[Unset, str]): Command of the entrypoint
+        env (Union[Unset, EntrypointEnv]): Env of the entrypoint
     
-    Method generated by attrs for class Environment.
+    Method generated by attrs for class Entrypoint.
 
     ### Static methods
 
@@ -1259,71 +838,13 @@ Classes
     `additional_properties`
     :
 
-    `metadata`
+    `args`
     :
 
-    `spec`
+    `command`
     :
 
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`EnvironmentMetadata(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('MetadataLabels') = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Environment metadata
-    
-    Attributes:
-        created_at (Union[Unset, str]): The date and time when the resource was created
-        updated_at (Union[Unset, str]): The date and time when the resource was updated
-        created_by (Union[Unset, str]): The user or service account who created the resource
-        updated_by (Union[Unset, str]): The user or service account who updated the resource
-        display_name (Union[Unset, str]): Model display name
-        labels (Union[Unset, MetadataLabels]): Labels
-        name (Union[Unset, str]): Model name
-        workspace (Union[Unset, str]): Workspace name
-        environment (Union[Unset, str]): Environment name
-    
-    Method generated by attrs for class EnvironmentMetadata.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties`
-    :
-
-    `created_at`
-    :
-
-    `created_by`
-    :
-
-    `display_name`
-    :
-
-    `environment`
-    :
-
-    `labels`
-    :
-
-    `name`
-    :
-
-    `updated_at`
-    :
-
-    `updated_by`
-    :
-
-    `workspace`
+    `env`
     :
 
     ### Methods
@@ -1331,42 +852,10 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`EnvironmentMetrics(inference_global: beamlit.types.Unset | list['Metric'] = <beamlit.types.Unset object>)`
-:   Metrics for the environment
+`EntrypointEnv()`
+:   Env of the entrypoint
     
-    Attributes:
-        inference_global (Union[Unset, list['Metric']]): Array of metrics
-    
-    Method generated by attrs for class EnvironmentMetrics.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties`
-    :
-
-    `inference_global`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`EnvironmentSpec(policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>)`
-:   Environment specification
-    
-    Attributes:
-        policies (Union[Unset, list[str]]):
-    
-    Method generated by attrs for class EnvironmentSpec.
+    Method generated by attrs for class EntrypointEnv.
 
     ### Static methods
 
@@ -1379,9 +868,6 @@ Classes
     :
 
     `additional_properties: dict[str, typing.Any]`
-    :
-
-    `policies: beamlit.types.Unset | list[str]`
     :
 
     ### Methods
@@ -1422,12 +908,118 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`Function(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('EnvironmentMetadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('FunctionSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`Form(config: beamlit.types.Unset | ForwardRef('FormConfig') = <beamlit.types.Unset object>, oauthomitempty: beamlit.types.Unset | ForwardRef('FormOauthomitempty') = <beamlit.types.Unset object>, secrets: beamlit.types.Unset | ForwardRef('FormSecrets') = <beamlit.types.Unset object>)`
+:   Form of the artifact
+    
+    Attributes:
+        config (Union[Unset, FormConfig]): Config of the artifact
+        oauthomitempty (Union[Unset, FormOauthomitempty]): OAuth of the artifact
+        secrets (Union[Unset, FormSecrets]): Secrets of the artifact
+    
+    Method generated by attrs for class Form.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties`
+    :
+
+    `config`
+    :
+
+    `oauthomitempty`
+    :
+
+    `secrets`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`FormConfig()`
+:   Config of the artifact
+    
+    Method generated by attrs for class FormConfig.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`FormOauthomitempty()`
+:   OAuth of the artifact
+    
+    Method generated by attrs for class FormOauthomitempty.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`FormSecrets()`
+:   Secrets of the artifact
+    
+    Method generated by attrs for class FormSecrets.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`Function(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('Metadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('FunctionSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Function
     
     Attributes:
         events (Union[Unset, list['CoreEvent']]): Core events
-        metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
+        metadata (Union[Unset, Metadata]): Metadata
         spec (Union[Unset, FunctionSpec]): Function specification
         status (Union[Unset, str]): Function status
     
@@ -1495,39 +1087,6 @@ Classes
     :
 
     `parameters`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
-`FunctionRelease(from_: beamlit.types.Unset | str = <beamlit.types.Unset object>, to: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Function release, used to deploy a function from one environment to another
-    
-    Attributes:
-        from_ (Union[Unset, str]): Origin environment from which the function is released
-        to (Union[Unset, str]): Destination environment to which the function is released
-    
-    Method generated by attrs for class FunctionRelease.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties: dict[str, typing.Any]`
-    :
-
-    `from_: beamlit.types.Unset | str`
-    :
-
-    `to: beamlit.types.Unset | str`
     :
 
     ### Methods
@@ -1921,18 +1480,20 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`IntegrationModel(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, downloads: beamlit.types.Unset | int = <beamlit.types.Unset object>, id: beamlit.types.Unset | str = <beamlit.types.Unset object>, library_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, likes: beamlit.types.Unset | int = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, pipeline_tag: beamlit.types.Unset | str = <beamlit.types.Unset object>, private: beamlit.types.Unset | bool = <beamlit.types.Unset object>, tags: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, trending_score: beamlit.types.Unset | int = <beamlit.types.Unset object>)`
+`IntegrationModel(author: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, downloads: beamlit.types.Unset | int = <beamlit.types.Unset object>, endpoint: beamlit.types.Unset | str = <beamlit.types.Unset object>, id: beamlit.types.Unset | str = <beamlit.types.Unset object>, library_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, likes: beamlit.types.Unset | int = <beamlit.types.Unset object>, model_private: beamlit.types.Unset | str = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, pipeline_tag: beamlit.types.Unset | str = <beamlit.types.Unset object>, tags: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, trending_score: beamlit.types.Unset | int = <beamlit.types.Unset object>)`
 :   Model obtained from an external authentication provider, such as HuggingFace, OpenAI, etc...
     
     Attributes:
+        author (Union[Unset, str]): Provider model author
         created_at (Union[Unset, str]): Provider model created at
         downloads (Union[Unset, int]): Provider model downloads
+        endpoint (Union[Unset, str]): Model endpoint URL
         id (Union[Unset, str]): Provider model ID
         library_name (Union[Unset, str]): Provider model library name
         likes (Union[Unset, int]): Provider model likes
+        model_private (Union[Unset, str]): Is the model private
         name (Union[Unset, str]): Provider model name
         pipeline_tag (Union[Unset, str]): Provider model pipeline tag
-        private (Union[Unset, bool]): Provider model private
         tags (Union[Unset, list[str]]): Provider model tags
         trending_score (Union[Unset, int]): Provider model trending score
     
@@ -1951,10 +1512,16 @@ Classes
     `additional_properties: dict[str, typing.Any]`
     :
 
+    `author: beamlit.types.Unset | str`
+    :
+
     `created_at: beamlit.types.Unset | str`
     :
 
     `downloads: beamlit.types.Unset | int`
+    :
+
+    `endpoint: beamlit.types.Unset | str`
     :
 
     `id: beamlit.types.Unset | str`
@@ -1966,13 +1533,13 @@ Classes
     `likes: beamlit.types.Unset | int`
     :
 
+    `model_private: beamlit.types.Unset | str`
+    :
+
     `name: beamlit.types.Unset | str`
     :
 
     `pipeline_tag: beamlit.types.Unset | str`
-    :
-
-    `private: beamlit.types.Unset | bool`
     :
 
     `tags: beamlit.types.Unset | list[str]`
@@ -2054,12 +1621,132 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`LastNRequestsMetric(date: beamlit.types.Unset | str = <beamlit.types.Unset object>, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>, workload_type: beamlit.types.Unset | str = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`Knowledgebase(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('Metadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('KnowledgebaseSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+:   Knowledgebase
+    
+    Attributes:
+        events (Union[Unset, list['CoreEvent']]): Core events
+        metadata (Union[Unset, Metadata]): Metadata
+        spec (Union[Unset, KnowledgebaseSpec]): Knowledgebase specification
+        status (Union[Unset, str]): Knowledgebase status
+    
+    Method generated by attrs for class Knowledgebase.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties`
+    :
+
+    `events`
+    :
+
+    `metadata`
+    :
+
+    `spec`
+    :
+
+    `status`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`KnowledgebaseSpec(collection_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, embedding_model: beamlit.types.Unset | str = <beamlit.types.Unset object>, embedding_model_type: beamlit.types.Unset | str = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, integration_connections: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, options: beamlit.types.Unset | ForwardRef('KnowledgebaseSpecOptions') = <beamlit.types.Unset object>, policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, sandbox: beamlit.types.Unset | bool = <beamlit.types.Unset object>)`
+:   Knowledgebase specification
+    
+    Attributes:
+        collection_name (Union[Unset, str]): Collection name
+        embedding_model (Union[Unset, str]): Embedding model
+        embedding_model_type (Union[Unset, str]): Embedding model type
+        enabled (Union[Unset, bool]): Enable or disable the agent
+        integration_connections (Union[Unset, list[str]]):
+        options (Union[Unset, KnowledgebaseSpecOptions]): Options specific to the knowledge base
+        policies (Union[Unset, list[str]]):
+        sandbox (Union[Unset, bool]): Sandbox mode
+    
+    Method generated by attrs for class KnowledgebaseSpec.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties`
+    :
+
+    `collection_name`
+    :
+
+    `embedding_model`
+    :
+
+    `embedding_model_type`
+    :
+
+    `enabled`
+    :
+
+    `integration_connections`
+    :
+
+    `options`
+    :
+
+    `policies`
+    :
+
+    `sandbox`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`KnowledgebaseSpecOptions()`
+:   Options specific to the knowledge base
+    
+    Method generated by attrs for class KnowledgebaseSpecOptions.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`LastNRequestsMetric(date: beamlit.types.Unset | str = <beamlit.types.Unset object>, workload_type: beamlit.types.Unset | str = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Last N requests
     
     Attributes:
         date (Union[Unset, str]): Timestamp
-        environment (Union[Unset, str]): Environment
         workload_type (Union[Unset, str]): Workload type
         workspace (Union[Unset, str]): Workspace
     
@@ -2079,9 +1766,6 @@ Classes
     :
 
     `date: beamlit.types.Unset | str`
-    :
-
-    `environment: beamlit.types.Unset | str`
     :
 
     `workload_type: beamlit.types.Unset | str`
@@ -2174,6 +1858,125 @@ Classes
     :
 
     `status`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`MCPDefinition(categories: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, coming_soon: beamlit.types.Unset | bool = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, enterprise: beamlit.types.Unset | bool = <beamlit.types.Unset object>, entrypoint: beamlit.types.Unset | ForwardRef('MCPDefinitionEntrypoint') = <beamlit.types.Unset object>, form: beamlit.types.Unset | ForwardRef('MCPDefinitionForm') = <beamlit.types.Unset object>, icon: beamlit.types.Unset | str = <beamlit.types.Unset object>, integration: beamlit.types.Unset | str = <beamlit.types.Unset object>, long_description: beamlit.types.Unset | str = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, url: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+:   Definition of an MCP from the MCP Hub
+    
+    Attributes:
+        categories (Union[Unset, list[Any]]): Categories of the artifact
+        coming_soon (Union[Unset, bool]): If the artifact is coming soon
+        description (Union[Unset, str]): Description of the artifact
+        display_name (Union[Unset, str]): Display name of the artifact
+        enterprise (Union[Unset, bool]): If the artifact is enterprise
+        entrypoint (Union[Unset, MCPDefinitionEntrypoint]): Entrypoint of the artifact
+        form (Union[Unset, MCPDefinitionForm]): Form of the artifact
+        icon (Union[Unset, str]): Icon of the artifact
+        integration (Union[Unset, str]): Integration of the artifact
+        long_description (Union[Unset, str]): Long description of the artifact
+        name (Union[Unset, str]): Name of the artifact
+        url (Union[Unset, str]): URL of the artifact
+    
+    Method generated by attrs for class MCPDefinition.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties`
+    :
+
+    `categories`
+    :
+
+    `coming_soon`
+    :
+
+    `description`
+    :
+
+    `display_name`
+    :
+
+    `enterprise`
+    :
+
+    `entrypoint`
+    :
+
+    `form`
+    :
+
+    `icon`
+    :
+
+    `integration`
+    :
+
+    `long_description`
+    :
+
+    `name`
+    :
+
+    `url`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`MCPDefinitionEntrypoint()`
+:   Entrypoint of the artifact
+    
+    Method generated by attrs for class MCPDefinitionEntrypoint.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`MCPDefinitionForm()`
+:   Form of the artifact
+    
+    Method generated by attrs for class MCPDefinitionForm.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
     :
 
     ### Methods
@@ -2426,12 +2229,12 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`Model(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('EnvironmentMetadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('ModelSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Logical object representing a model, that can be instantiated in multiple environments as model deployments
+`Model(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('Metadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('ModelSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+:   Logical object representing a model
     
     Attributes:
         events (Union[Unset, list['CoreEvent']]): Core events
-        metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
+        metadata (Union[Unset, Metadata]): Metadata
         spec (Union[Unset, ModelSpec]): Model specification
         status (Union[Unset, str]): Model status
     
@@ -2504,39 +2307,6 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`ModelRelease(from_: beamlit.types.Unset | str = <beamlit.types.Unset object>, to: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Model release, used to deploy a model from one environment to another
-    
-    Attributes:
-        from_ (Union[Unset, str]): Origin environment from which the model is released
-        to (Union[Unset, str]): Destination environment to which the model is released
-    
-    Method generated by attrs for class ModelRelease.
-
-    ### Static methods
-
-    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
-    :
-
-    ### Instance variables
-
-    `additional_keys: list[str]`
-    :
-
-    `additional_properties: dict[str, typing.Any]`
-    :
-
-    `from_: beamlit.types.Unset | str`
-    :
-
-    `to: beamlit.types.Unset | str`
-    :
-
-    ### Methods
-
-    `to_dict(self) ‑> dict[str, typing.Any]`
-    :
-
 `ModelSpec(configurations: beamlit.types.Unset | ForwardRef('CoreSpecConfigurations') = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, flavors: beamlit.types.Unset | list['Flavor'] = <beamlit.types.Unset object>, integration_connections: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, pod_template: beamlit.types.Unset | ForwardRef('PodTemplateSpec') = <beamlit.types.Unset object>, policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, private_clusters: beamlit.types.Unset | ForwardRef('ModelPrivateCluster') = <beamlit.types.Unset object>, runtime: beamlit.types.Unset | ForwardRef('Runtime') = <beamlit.types.Unset object>, sandbox: beamlit.types.Unset | bool = <beamlit.types.Unset object>, serverless_config: beamlit.types.Unset | ForwardRef('ServerlessConfig') = <beamlit.types.Unset object>)`
 :   Model specification
     
@@ -2595,6 +2365,39 @@ Classes
     :
 
     `serverless_config`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`OAuth(scope: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, type_: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+:   OAuth of the artifact
+    
+    Attributes:
+        scope (Union[Unset, list[Any]]): Scope of the OAuth
+        type_ (Union[Unset, str]): Type of the OAuth
+    
+    Method generated by attrs for class OAuth.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    `scope: beamlit.types.Unset | list[typing.Any]`
+    :
+
+    `type_: beamlit.types.Unset | str`
     :
 
     ### Methods
@@ -3460,7 +3263,44 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`ResourceEnvironmentMetrics(inference_global: beamlit.types.Unset | list['Metric'] = <beamlit.types.Unset object>, last_n_requests: beamlit.types.Unset | list['Metric'] = <beamlit.types.Unset object>, latency: beamlit.types.Unset | ForwardRef('LatencyMetric') = <beamlit.types.Unset object>, request_duration_over_time: beamlit.types.Unset | ForwardRef('RequestDurationOverTimeMetrics') = <beamlit.types.Unset object>, request_total: beamlit.types.Unset | float = <beamlit.types.Unset object>, request_total_by_origin: beamlit.types.Unset | ForwardRef('RequestTotalByOriginMetric') = <beamlit.types.Unset object>, request_total_per_code: beamlit.types.Unset | ForwardRef('ResourceEnvironmentMetricsRequestTotalPerCode') = <beamlit.types.Unset object>, rps: beamlit.types.Unset | float = <beamlit.types.Unset object>, rps_per_code: beamlit.types.Unset | ForwardRef('ResourceEnvironmentMetricsRpsPerCode') = <beamlit.types.Unset object>, token_rate: beamlit.types.Unset | ForwardRef('TokenRateMetrics') = <beamlit.types.Unset object>, token_total: beamlit.types.Unset | ForwardRef('TokenTotalMetric') = <beamlit.types.Unset object>)`
+`ResourceLog(message: beamlit.types.Unset | str = <beamlit.types.Unset object>, severity: beamlit.types.Unset | int = <beamlit.types.Unset object>, timestamp: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+:   Log for a resource deployment (eg. model deployment, function deployment)
+    
+    Attributes:
+        message (Union[Unset, str]): Content of the log
+        severity (Union[Unset, int]): Severity of the log
+        timestamp (Union[Unset, str]): The timestamp of the log
+    
+    Method generated by attrs for class ResourceLog.
+
+    ### Static methods
+
+    `from_dict(src_dict: dict[str, typing.Any]) ‑> ~T`
+    :
+
+    ### Instance variables
+
+    `additional_keys: list[str]`
+    :
+
+    `additional_properties: dict[str, typing.Any]`
+    :
+
+    `message: beamlit.types.Unset | str`
+    :
+
+    `severity: beamlit.types.Unset | int`
+    :
+
+    `timestamp: beamlit.types.Unset | str`
+    :
+
+    ### Methods
+
+    `to_dict(self) ‑> dict[str, typing.Any]`
+    :
+
+`ResourceMetrics(inference_global: beamlit.types.Unset | list['Metric'] = <beamlit.types.Unset object>, last_n_requests: beamlit.types.Unset | list['Metric'] = <beamlit.types.Unset object>, latency: beamlit.types.Unset | ForwardRef('LatencyMetric') = <beamlit.types.Unset object>, request_duration_over_time: beamlit.types.Unset | ForwardRef('RequestDurationOverTimeMetrics') = <beamlit.types.Unset object>, request_total: beamlit.types.Unset | float = <beamlit.types.Unset object>, request_total_by_origin: beamlit.types.Unset | ForwardRef('RequestTotalByOriginMetric') = <beamlit.types.Unset object>, request_total_per_code: beamlit.types.Unset | ForwardRef('ResourceMetricsRequestTotalPerCode') = <beamlit.types.Unset object>, rps: beamlit.types.Unset | float = <beamlit.types.Unset object>, rps_per_code: beamlit.types.Unset | ForwardRef('ResourceMetricsRpsPerCode') = <beamlit.types.Unset object>, token_rate: beamlit.types.Unset | ForwardRef('TokenRateMetrics') = <beamlit.types.Unset object>, token_total: beamlit.types.Unset | ForwardRef('TokenTotalMetric') = <beamlit.types.Unset object>)`
 :   Metrics for a single resource deployment (eg. model deployment, function deployment)
     
     Attributes:
@@ -3470,15 +3310,15 @@ Classes
         request_duration_over_time (Union[Unset, RequestDurationOverTimeMetrics]): Request duration over time metrics
         request_total (Union[Unset, float]): Number of requests for the resource globally
         request_total_by_origin (Union[Unset, RequestTotalByOriginMetric]): Request total by origin metric
-        request_total_per_code (Union[Unset, ResourceEnvironmentMetricsRequestTotalPerCode]): Number of requests for the
-            resource globally per code
+        request_total_per_code (Union[Unset, ResourceMetricsRequestTotalPerCode]): Number of requests for the resource
+            globally per code
         rps (Union[Unset, float]): Number of requests per second for the resource globally
-        rps_per_code (Union[Unset, ResourceEnvironmentMetricsRpsPerCode]): Number of requests per second for the
-            resource globally per code
+        rps_per_code (Union[Unset, ResourceMetricsRpsPerCode]): Number of requests per second for the resource globally
+            per code
         token_rate (Union[Unset, TokenRateMetrics]): Token rate metrics
         token_total (Union[Unset, TokenTotalMetric]): Token total metric
     
-    Method generated by attrs for class ResourceEnvironmentMetrics.
+    Method generated by attrs for class ResourceMetrics.
 
     ### Static methods
 
@@ -3531,10 +3371,10 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`ResourceEnvironmentMetricsRequestTotalPerCode()`
+`ResourceMetricsRequestTotalPerCode()`
 :   Number of requests for the resource globally per code
     
-    Method generated by attrs for class ResourceEnvironmentMetricsRequestTotalPerCode.
+    Method generated by attrs for class ResourceMetricsRequestTotalPerCode.
 
     ### Static methods
 
@@ -3554,10 +3394,10 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`ResourceEnvironmentMetricsRpsPerCode()`
+`ResourceMetricsRpsPerCode()`
 :   Number of requests per second for the resource globally per code
     
-    Method generated by attrs for class ResourceEnvironmentMetricsRpsPerCode.
+    Method generated by attrs for class ResourceMetricsRpsPerCode.
 
     ### Static methods
 
@@ -3577,15 +3417,14 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`ResourceLog(message: beamlit.types.Unset | str = <beamlit.types.Unset object>, severity: beamlit.types.Unset | int = <beamlit.types.Unset object>, timestamp: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
-:   Log for a resource deployment (eg. model deployment, function deployment)
+`RevisionMetadata(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, id: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+:   Revision metadata
     
     Attributes:
-        message (Union[Unset, str]): Content of the log
-        severity (Union[Unset, int]): Severity of the log
-        timestamp (Union[Unset, str]): The timestamp of the log
+        created_at (Union[Unset, str]): Revision created at
+        id (Union[Unset, str]): Revision ID
     
-    Method generated by attrs for class ResourceLog.
+    Method generated by attrs for class RevisionMetadata.
 
     ### Static methods
 
@@ -3600,13 +3439,10 @@ Classes
     `additional_properties: dict[str, typing.Any]`
     :
 
-    `message: beamlit.types.Unset | str`
+    `created_at: beamlit.types.Unset | str`
     :
 
-    `severity: beamlit.types.Unset | int`
-    :
-
-    `timestamp: beamlit.types.Unset | str`
+    `id: beamlit.types.Unset | str`
     :
 
     ### Methods
@@ -3614,22 +3450,25 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`Runtime(args: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, command: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, envs: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, image: beamlit.types.Unset | str = <beamlit.types.Unset object>, metric_port: beamlit.types.Unset | int = <beamlit.types.Unset object>, model: beamlit.types.Unset | str = <beamlit.types.Unset object>, readiness_probe: beamlit.types.Unset | ForwardRef('RuntimeReadinessProbe') = <beamlit.types.Unset object>, resources: beamlit.types.Unset | ForwardRef('RuntimeResources') = <beamlit.types.Unset object>, serving_port: beamlit.types.Unset | int = <beamlit.types.Unset object>, type_: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`Runtime(args: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, command: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, endpoint_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, envs: beamlit.types.Unset | list[typing.Any] = <beamlit.types.Unset object>, image: beamlit.types.Unset | str = <beamlit.types.Unset object>, metric_port: beamlit.types.Unset | int = <beamlit.types.Unset object>, model: beamlit.types.Unset | str = <beamlit.types.Unset object>, organization: beamlit.types.Unset | str = <beamlit.types.Unset object>, readiness_probe: beamlit.types.Unset | ForwardRef('RuntimeReadinessProbe') = <beamlit.types.Unset object>, resources: beamlit.types.Unset | ForwardRef('RuntimeResources') = <beamlit.types.Unset object>, serving_port: beamlit.types.Unset | int = <beamlit.types.Unset object>, type_: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Set of configurations for a deployment
     
     Attributes:
         args (Union[Unset, list[Any]]): The arguments to pass to the deployment runtime
         command (Union[Unset, list[Any]]): The command to run the deployment
-        envs (Union[Unset, list[Any]]): The environment variables to set in the deployment. Should be a list of
-            Kubernetes EnvVar types
+        endpoint_name (Union[Unset, str]): Endpoint Name of the model. In case of hf_private_endpoint, it is the
+            endpoint name. In case of hf_public_endpoint, it is not used.
+        envs (Union[Unset, list[Any]]): The env variables to set in the deployment. Should be a list of Kubernetes
+            EnvVar types
         image (Union[Unset, str]): The Docker image for the deployment
         metric_port (Union[Unset, int]): The port to serve the metrics on
-        model (Union[Unset, str]): The slug name of the origin model. Only used if the deployment is a Deployment
+        model (Union[Unset, str]): The slug name of the origin model at HuggingFace.
+        organization (Union[Unset, str]): The organization of the model
         readiness_probe (Union[Unset, RuntimeReadinessProbe]): The readiness probe. Should be a Kubernetes Probe type
         resources (Union[Unset, RuntimeResources]): The resources for the deployment. Should be a Kubernetes
             ResourceRequirements type
         serving_port (Union[Unset, int]): The port to serve the model on
-        type_ (Union[Unset, str]): The type of origin for the deployment
+        type_ (Union[Unset, str]): The type of origin for the deployment (hf_private_endpoint, hf_public_endpoint)
     
     Method generated by attrs for class Runtime.
 
@@ -3652,6 +3491,9 @@ Classes
     `command`
     :
 
+    `endpoint_name`
+    :
+
     `envs`
     :
 
@@ -3662,6 +3504,9 @@ Classes
     :
 
     `model`
+    :
+
+    `organization`
     :
 
     `readiness_probe`
@@ -3824,7 +3669,7 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`StoreAgent(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, configuration: beamlit.types.Unset | list['StoreConfiguration'] = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, image: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('StoreAgentLabels') = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`StoreAgent(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, configuration: beamlit.types.Unset | list['StoreConfiguration'] = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, image: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('StoreAgentLabels') = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, prompt: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Store agent
     
     Attributes:
@@ -3838,6 +3683,7 @@ Classes
         image (Union[Unset, str]): Store agent image
         labels (Union[Unset, StoreAgentLabels]): Store agent labels
         name (Union[Unset, str]): Store agent name
+        prompt (Union[Unset, str]): Store agent prompt, this is to define what the agent does
     
     Method generated by attrs for class StoreAgent.
 
@@ -3876,6 +3722,9 @@ Classes
     :
 
     `name`
+    :
+
+    `prompt`
     :
 
     `updated_at`
@@ -4511,7 +4360,7 @@ Classes
     `to_dict(self) ‑> dict[str, typing.Any]`
     :
 
-`Workspace(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, account_id: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('WorkspaceLabels') = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, quotasomitempty: beamlit.types.Unset | Any = <beamlit.types.Unset object>, region: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`Workspace(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, updated_by: beamlit.types.Unset | str = <beamlit.types.Unset object>, account_id: beamlit.types.Unset | str = <beamlit.types.Unset object>, display_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, labels: beamlit.types.Unset | ForwardRef('WorkspaceLabels') = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, region: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Workspace
     
     Attributes:
@@ -4523,7 +4372,6 @@ Classes
         display_name (Union[Unset, str]): Workspace display name
         labels (Union[Unset, WorkspaceLabels]): Workspace labels
         name (Union[Unset, str]): Workspace name
-        quotasomitempty (Union[Unset, Any]): Workspace quotas
         region (Union[Unset, str]): Workspace write region
     
     Method generated by attrs for class Workspace.
@@ -4557,9 +4405,6 @@ Classes
     :
 
     `name`
-    :
-
-    `quotasomitempty`
     :
 
     `region`

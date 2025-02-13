@@ -5,7 +5,6 @@ import urllib.parse
 from typing import Any
 
 import requests
-
 from beamlit.client import AuthenticatedClient
 from beamlit.common import HTTPError, get_settings
 
@@ -14,8 +13,7 @@ class RunClient:
     """Provides functionality for executing HTTP requests against Beamlit resources.
 
     This module contains the RunClient class which handles authenticated HTTP requests to Beamlit
-    resources. It allows users to interact with different resource types (like functions or services)
-    in specific environments, supporting various HTTP methods and request parameters.
+    resources. It allows users to interact with different resource types (like functions or services), supporting various HTTP methods and request parameters.
 
     Example:
         ```python
@@ -75,7 +73,7 @@ class RunClient:
 
         if cloud and path and service_name:
             url = f"https://{service_name}.{settings.run_internal_hostname}/{path}"
-        
+
         if cloud and not path and service_name:
             url = f"https://{service_name}.{settings.run_internal_hostname}"
 

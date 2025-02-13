@@ -46,6 +46,9 @@ Classes
     `client: beamlit.run.RunClient`
     :
 
+    `cloud: bool`
+    :
+
     `handle_tool_error: bool | str | Callable[[langchain_core.tools.base.ToolException], str] | None`
     :
 
@@ -56,6 +59,9 @@ Classes
     :
 
     `resource_name: str`
+    :
+
+    `service_name: str | None`
     :
 
     ### Instance variables

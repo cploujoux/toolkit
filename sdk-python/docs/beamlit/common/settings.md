@@ -16,7 +16,7 @@ Functions
 `init() ‑> beamlit.common.settings.Settings`
 :   Initializes the settings by parsing the `beamlit.yaml` file and setting up logging.
     
-    This function reads workspace and environment configurations from the current context,
+    This function reads workspace configuration from the current context,
     initializes the global SETTINGS variable, and configures the logger based on the log level.
     
     Returns:
@@ -96,10 +96,10 @@ Classes
     `base_url: str`
     :
 
-    `enable_opentelemetry: bool`
+    `cloud: bool`
     :
 
-    `environment: str`
+    `enable_opentelemetry: bool`
     :
 
     `log_level: str`
@@ -115,6 +115,9 @@ Classes
     :
 
     `remote: bool`
+    :
+
+    `run_internal_hostname: str`
     :
 
     `run_url: str`

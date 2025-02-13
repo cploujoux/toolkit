@@ -5,7 +5,7 @@ Functions
 ---------
 
 `asyncio_detailed(connection_name: str, model_id: str, *, client: beamlit.client.AuthenticatedClient) ‑> beamlit.types.Response[typing.Any]`
-:   List integration connection models
+:   Get integration model endpoint configurations
     
      Returns a model for an integration connection by ID.
     
@@ -21,7 +21,7 @@ Functions
         Response[Any]
 
 `sync_detailed(connection_name: str, model_id: str, *, client: beamlit.client.AuthenticatedClient) ‑> beamlit.types.Response[typing.Any]`
-:   List integration connection models
+:   Get integration model endpoint configurations
     
      Returns a model for an integration connection by ID.
     

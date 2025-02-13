@@ -15,4 +15,3 @@ Sub-modules
 * beamlit.api.workspaces.remove_workspace_user
 * beamlit.api.workspaces.update_workspace
 * beamlit.api.workspaces.update_workspace_user_role
-* beamlit.api.workspaces.workspace_quotas_request
