@@ -109,7 +109,7 @@ func (m *ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Messages = m.Messages[:len(m.Messages)-1]
 
 		now := time.Now()
-		formattedContent := FormatMarkdownImage(msg.content)
+		formattedContent := FormatMarkdown(msg.content)
 		m.Messages = append(m.Messages, Message{
 			Content:   formattedContent,
 			Timestamp: &now,
