@@ -22,13 +22,13 @@ export function getChainTool(
   return tool(
     async (args: Record<string, any>) => {
       const settings = getSettings();
-      const result = await client.run(
-        "agent",
-        name,
-        settings.environment,
-        "POST",
-        { json: args }
-      );
+      const result = await client.run({
+        resourceType: "agent",
+        resourceName: name,
+        environment: settings.environment,
+        method: "POST",
+        json: args,
+      });
       return result;
     },
     {
