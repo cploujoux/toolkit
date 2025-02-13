@@ -159,6 +159,38 @@ export type AgentHistoryEvent = {
 };
 
 /**
+ * generation agent information request
+ */
+export type AgentInformationRequest = {
+    /**
+     * Functions to generate information for
+     */
+    functions?: Array<unknown>;
+};
+
+/**
+ * generation agent information response
+ */
+export type AgentInformationResponse = {
+    /**
+     * Description of the agent
+     */
+    description?: string;
+    /**
+     * Display name of the agent
+     */
+    displayName?: string;
+    /**
+     * Name of the agent
+     */
+    name?: string;
+    /**
+     * Prompt of the agent
+     */
+    prompt?: string;
+};
+
+/**
  * Agent release, used to deploy a agent from one environment to another
  */
 export type AgentRelease = {
@@ -340,6 +372,26 @@ export type Country = {
 };
 
 /**
+ * Entrypoint of the artifact
+ */
+export type Entrypoint = {
+    /**
+     * Args of the entrypoint
+     */
+    args?: Array<unknown>;
+    /**
+     * Command of the entrypoint
+     */
+    command?: string;
+    /**
+     * Env of the entrypoint
+     */
+    env?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
  * Environment on which deployments will be made (e.g. development, production), enforcing multiple policies at once.
  */
 export type Environment = {
@@ -392,6 +444,30 @@ export type Flavor = {
  * Types of hardware available for deployments
  */
 export type Flavors = Array<Flavor>;
+
+/**
+ * Form of the artifact
+ */
+export type Form = {
+    /**
+     * Config of the artifact
+     */
+    config?: {
+        [key: string]: unknown;
+    };
+    /**
+     * OAuth of the artifact
+     */
+    'oauth,omitempty'?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Secrets of the artifact
+     */
+    secrets?: {
+        [key: string]: unknown;
+    };
+};
 
 /**
  * Function
@@ -748,6 +824,122 @@ export type LocationResponse = {
 };
 
 /**
+ * Definition of an MCP from the MCP Hub
+ */
+export type MCPDefinition = {
+    /**
+     * Categories of the artifact
+     */
+    categories?: Array<unknown>;
+    /**
+     * If the artifact is coming soon
+     */
+    coming_soon?: boolean;
+    /**
+     * Description of the artifact
+     */
+    description?: string;
+    /**
+     * Display name of the artifact
+     */
+    displayName?: string;
+    /**
+     * If the artifact is enterprise
+     */
+    enterprise?: boolean;
+    /**
+     * Entrypoint of the artifact
+     */
+    entrypoint?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Form of the artifact
+     */
+    form?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Icon of the artifact
+     */
+    icon?: string;
+    /**
+     * Integration of the artifact
+     */
+    integration?: string;
+    /**
+     * Long description of the artifact
+     */
+    longDescription?: string;
+    /**
+     * Name of the artifact
+     */
+    name?: string;
+    /**
+     * URL of the artifact
+     */
+    url?: string;
+};
+
+/**
+ * Artifact from the MCP Hub
+ */
+export type MCPHubArtifact = {
+    /**
+     * Categories of the artifact
+     */
+    categories?: Array<unknown>;
+    /**
+     * If the artifact is coming soon
+     */
+    coming_soon?: boolean;
+    /**
+     * Description of the artifact
+     */
+    description?: string;
+    /**
+     * Display name of the artifact
+     */
+    displayName?: string;
+    /**
+     * If the artifact is enterprise
+     */
+    enterprise?: boolean;
+    /**
+     * Entrypoint of the artifact
+     */
+    entrypoint?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Form of the artifact
+     */
+    form?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Icon of the artifact
+     */
+    icon?: string;
+    /**
+     * Integration of the artifact
+     */
+    integration?: string;
+    /**
+     * Long description of the artifact
+     */
+    longDescription?: string;
+    /**
+     * Name of the artifact
+     */
+    name?: string;
+    /**
+     * URL of the artifact
+     */
+    url?: string;
+};
+
+/**
  * Metadata
  */
 export type Metadata = TimeFields & OwnerFields & {
@@ -884,6 +1076,20 @@ export type ModelRelease = {
  * Model specification
  */
 export type ModelSpec = CoreSpec & unknown;
+
+/**
+ * OAuth of the artifact
+ */
+export type OAuth = {
+    /**
+     * Scope of the OAuth
+     */
+    scope?: Array<unknown>;
+    /**
+     * Type of the OAuth
+     */
+    type?: string;
+};
 
 /**
  * Owner fields for Persistance
@@ -1725,6 +1931,10 @@ export type Workspace = TimeFields & OwnerFields & {
      */
     accountId?: string;
     /**
+     * Workspace environment
+     */
+    defaultEnvironment?: string;
+    /**
      * Workspace display name
      */
     displayName?: string;
@@ -2186,6 +2396,14 @@ export type GetFunctionTraceIdsResponse = (TraceIdsResponse);
 
 export type GetFunctionTraceIdsError = unknown;
 
+export type RunInformationGenerationAgentData = {
+    body: AgentInformationRequest;
+};
+
+export type RunInformationGenerationAgentResponse = (AgentInformationResponse);
+
+export type RunInformationGenerationAgentError = unknown;
+
 export type ListAgentsHistoryResponse = (Array<AgentHistory>);
 
 export type ListAgentsHistoryError = unknown;
@@ -2387,6 +2605,10 @@ export type UpdateKnowledgebaseError = unknown;
 export type ListLocationsResponse = (Array<LocationResponse>);
 
 export type ListLocationsError = unknown;
+
+export type ListMcpHubDefinitionsResponse = (Array<MCPHubArtifact>);
+
+export type ListMcpHubDefinitionsError = unknown;
 
 export type GetMetricsResponse = (Metrics);
 

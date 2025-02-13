@@ -26,13 +26,13 @@ export function getRemoteTool(
   return tool(
     async (args: Record<string, any>) => {
       const settings = getSettings();
-      const data = await client.run(
-        "function",
-        name,
-        settings.environment,
-        "POST",
-        { json: args }
-      );
+      const data = await client.run({
+        resourceType: "function",
+        resourceName: name,
+        environment: settings.environment,
+        method: "POST",
+        json: args,
+      });
       return data;
     },
     {
