@@ -17,10 +17,8 @@ from mcp import ClientSession
 from mcp.client.sse import sse_client
 from mcp.types import CallToolResult, ListToolsResult
 
-
-
-from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.authentication import get_authentication_headers
+from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 
 from .utils import create_schema_model

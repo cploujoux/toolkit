@@ -5,35 +5,31 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.agent_history import AgentHistory
+from ...models.revision_metadata import RevisionMetadata
 from ...types import Response
 
 
 def _get_kwargs(
     agent_name: str,
-    request_id: str,
-    *,
-    body: AgentHistory,
 ) -> dict[str, Any]:
-    headers: dict[str, Any] = {}
-
     _kwargs: dict[str, Any] = {
-        "method": "put",
-        "url": f"/agents/{agent_name}/history/{request_id}",
+        "method": "get",
+        "url": f"/agents/{agent_name}/revisions",
     }
 
-    _body = body.to_dict()
-
-    _kwargs["json"] = _body
-    headers["Content-Type"] = "application/json"
-
-    _kwargs["headers"] = headers
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[AgentHistory]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[list["RevisionMetadata"]]:
     if response.status_code == 200:
-        response_200 = AgentHistory.from_dict(response.json())
+        response_200 = []
+        _response_200 = response.json()
+        for response_200_item_data in _response_200:
+            response_200_item = RevisionMetadata.from_dict(response_200_item_data)
+
+            response_200.append(response_200_item)
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -42,7 +38,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[AgentHistory]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[list["RevisionMetadata"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -53,30 +51,24 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 def sync_detailed(
     agent_name: str,
-    request_id: str,
     *,
     client: AuthenticatedClient,
-    body: AgentHistory,
-) -> Response[AgentHistory]:
-    """Update agent's history by request ID
+) -> Response[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
         agent_name (str):
-        request_id (str):
-        body (AgentHistory): Agent deployment history
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AgentHistory]
+        Response[list['RevisionMetadata']]
     """
 
     kwargs = _get_kwargs(
         agent_name=agent_name,
-        request_id=request_id,
-        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -88,60 +80,48 @@ def sync_detailed(
 
 def sync(
     agent_name: str,
-    request_id: str,
     *,
     client: AuthenticatedClient,
-    body: AgentHistory,
-) -> Optional[AgentHistory]:
-    """Update agent's history by request ID
+) -> Optional[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
         agent_name (str):
-        request_id (str):
-        body (AgentHistory): Agent deployment history
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AgentHistory
+        list['RevisionMetadata']
     """
 
     return sync_detailed(
         agent_name=agent_name,
-        request_id=request_id,
         client=client,
-        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
     agent_name: str,
-    request_id: str,
     *,
     client: AuthenticatedClient,
-    body: AgentHistory,
-) -> Response[AgentHistory]:
-    """Update agent's history by request ID
+) -> Response[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
         agent_name (str):
-        request_id (str):
-        body (AgentHistory): Agent deployment history
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AgentHistory]
+        Response[list['RevisionMetadata']]
     """
 
     kwargs = _get_kwargs(
         agent_name=agent_name,
-        request_id=request_id,
-        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -151,31 +131,25 @@ async def asyncio_detailed(
 
 async def asyncio(
     agent_name: str,
-    request_id: str,
     *,
     client: AuthenticatedClient,
-    body: AgentHistory,
-) -> Optional[AgentHistory]:
-    """Update agent's history by request ID
+) -> Optional[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
         agent_name (str):
-        request_id (str):
-        body (AgentHistory): Agent deployment history
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AgentHistory
+        list['RevisionMetadata']
     """
 
     return (
         await asyncio_detailed(
             agent_name=agent_name,
-            request_id=request_id,
             client=client,
-            body=body,
         )
     ).parsed

@@ -59,69 +59,6 @@ type AgentChain struct {
 // AgentChains Agent chain
 type AgentChains = []AgentChain
 
-// AgentHistory defines model for AgentHistory.
-type AgentHistory struct {
-	// Agent Agent name
-	Agent *string `json:"agent,omitempty"`
-
-	// CreatedAt The date and time when the resource was created
-	CreatedAt *string `json:"createdAt,omitempty"`
-
-	// End End time
-	End *string `json:"end,omitempty"`
-
-	// Events Events
-	Events *[]AgentHistoryEvent `json:"events,omitempty"`
-
-	// RequestId Request ID
-	RequestId *string `json:"request_id,omitempty"`
-
-	// Start Start time
-	Start *string `json:"start,omitempty"`
-
-	// Status Status, eg: running, success, failed
-	Status *string `json:"status,omitempty"`
-
-	// Took Number of milliseconds it took to complete the event
-	Took *int `json:"took,omitempty"`
-
-	// UpdatedAt The date and time when the resource was updated
-	UpdatedAt *string `json:"updatedAt,omitempty"`
-
-	// Workspace The workspace the agent deployment belongs to
-	Workspace *string `json:"workspace,omitempty"`
-}
-
-// AgentHistoryEvent Agent deployment history event
-type AgentHistoryEvent struct {
-	// End End time
-	End *string `json:"end,omitempty"`
-
-	// Error Error message
-	Error *string `json:"error,omitempty"`
-
-	// Name Name of the function or agent
-	Name *string `json:"name,omitempty"`
-
-	// Parameters Parameters
-	Parameters *string `json:"parameters,omitempty"`
-
-	// Start Start time
-	Start *string `json:"start,omitempty"`
-
-	// Status Status, eg: running, success, failed
-	Status *string `json:"status,omitempty"`
-
-	// SubFunction Function used in kit if a kit was used
-	SubFunction *string `json:"subFunction,omitempty"`
-
-	// Took Number of milliseconds it took to complete the event
-	Took *int `json:"took,omitempty"`
-
-	// Type Type, one of function or agent
-	Type *string `json:"type,omitempty"`
-}
-
 // AgentSpec defines model for AgentSpec.
 type AgentSpec struct {
 	// AgentChain Agent chain
@@ -961,6 +898,15 @@ type ResourceMetrics struct {
 	TokenTotal *TokenTotalMetric `json:"tokenTotal,omitempty"`
 }
 
+// RevisionMetadata Revision metadata
+type RevisionMetadata struct {
+	// CreatedAt Revision created at
+	CreatedAt *string `json:"createdAt,omitempty"`
+
+	// Id Revision ID
+	Id *string `json:"id,omitempty"`
+}
+
 // Runtime Set of configurations for a deployment
 type Runtime struct {
 	// Args The arguments to pass to the deployment runtime
@@ -1387,9 +1333,6 @@ type CreateAgentJSONRequestBody = Agent
 // UpdateAgentJSONRequestBody defines body for UpdateAgent for application/json ContentType.
 type UpdateAgentJSONRequestBody = Agent
 
-// PutAgentHistoryJSONRequestBody defines body for PutAgentHistory for application/json ContentType.
-type PutAgentHistoryJSONRequestBody = AgentHistory
-
 // CreateFunctionJSONRequestBody defines body for CreateFunction for application/json ContentType.
 type CreateFunctionJSONRequestBody = Function
 
@@ -1551,25 +1494,14 @@ type ClientInterface interface {
 
 	UpdateAgent(ctx context.Context, agentName string, body UpdateAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListAgentHistory request
-	ListAgentHistory(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteAgentHistory request
-	DeleteAgentHistory(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetAgentHistory request
-	GetAgentHistory(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PutAgentHistoryWithBody request with any body
-	PutAgentHistoryWithBody(ctx context.Context, agentName string, requestId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PutAgentHistory(ctx context.Context, agentName string, requestId string, body PutAgentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetAgentLogs request
 	GetAgentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAgentMetrics request
 	GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAgentRevisions request
+	ListAgentRevisions(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAgentTraceIds request
 	GetAgentTraceIds(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1602,14 +1534,11 @@ type ClientInterface interface {
 	// GetFunctionMetrics request
 	GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListFunctionRevisions request
+	ListFunctionRevisions(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetFunctionTraceIds request
 	GetFunctionTraceIds(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ListAgentsHistory request
-	ListAgentsHistory(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetAgentsHistory request
-	GetAgentsHistory(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListIntegrationConnections request
 	ListIntegrationConnections(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1661,6 +1590,9 @@ type ClientInterface interface {
 
 	UpdateKnowledgebase(ctx context.Context, knowledgebaseName string, body UpdateKnowledgebaseJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListKnowledgebaseRevisions request
+	ListKnowledgebaseRevisions(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListLocations request
 	ListLocations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1694,6 +1626,9 @@ type ClientInterface interface {
 
 	// GetModelMetrics request
 	GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListModelRevisions request
+	ListModelRevisions(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetModelTraceIds request
 	GetModelTraceIds(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1852,23 +1787,14 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateAgent
 	reg.CliCommand(ctx, "UpdateAgent", c.UpdateAgent)
 
-	// Register CLI commands for ListAgentHistory
-	reg.CliCommand(ctx, "ListAgentHistory", c.ListAgentHistory)
-
-	// Register CLI commands for DeleteAgentHistory
-	reg.CliCommand(ctx, "DeleteAgentHistory", c.DeleteAgentHistory)
-
-	// Register CLI commands for GetAgentHistory
-	reg.CliCommand(ctx, "GetAgentHistory", c.GetAgentHistory)
-
-	// Register CLI commands for PutAgentHistory
-	reg.CliCommand(ctx, "PutAgentHistory", c.PutAgentHistory)
-
 	// Register CLI commands for GetAgentLogs
 	reg.CliCommand(ctx, "GetAgentLogs", c.GetAgentLogs)
 
 	// Register CLI commands for GetAgentMetrics
 	reg.CliCommand(ctx, "GetAgentMetrics", c.GetAgentMetrics)
+
+	// Register CLI commands for ListAgentRevisions
+	reg.CliCommand(ctx, "ListAgentRevisions", c.ListAgentRevisions)
 
 	// Register CLI commands for GetAgentTraceIds
 	reg.CliCommand(ctx, "GetAgentTraceIds", c.GetAgentTraceIds)
@@ -1897,14 +1823,11 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for GetFunctionMetrics
 	reg.CliCommand(ctx, "GetFunctionMetrics", c.GetFunctionMetrics)
 
+	// Register CLI commands for ListFunctionRevisions
+	reg.CliCommand(ctx, "ListFunctionRevisions", c.ListFunctionRevisions)
+
 	// Register CLI commands for GetFunctionTraceIds
 	reg.CliCommand(ctx, "GetFunctionTraceIds", c.GetFunctionTraceIds)
-
-	// Register CLI commands for ListAgentsHistory
-	reg.CliCommand(ctx, "ListAgentsHistory", c.ListAgentsHistory)
-
-	// Register CLI commands for GetAgentsHistory
-	reg.CliCommand(ctx, "GetAgentsHistory", c.GetAgentsHistory)
 
 	// Register CLI commands for ListIntegrationConnections
 	reg.CliCommand(ctx, "ListIntegrationConnections", c.ListIntegrationConnections)
@@ -1948,6 +1871,9 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateKnowledgebase
 	reg.CliCommand(ctx, "UpdateKnowledgebase", c.UpdateKnowledgebase)
 
+	// Register CLI commands for ListKnowledgebaseRevisions
+	reg.CliCommand(ctx, "ListKnowledgebaseRevisions", c.ListKnowledgebaseRevisions)
+
 	// Register CLI commands for ListLocations
 	reg.CliCommand(ctx, "ListLocations", c.ListLocations)
 
@@ -1977,6 +1903,9 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for GetModelMetrics
 	reg.CliCommand(ctx, "GetModelMetrics", c.GetModelMetrics)
+
+	// Register CLI commands for ListModelRevisions
+	reg.CliCommand(ctx, "ListModelRevisions", c.ListModelRevisions)
 
 	// Register CLI commands for GetModelTraceIds
 	reg.CliCommand(ctx, "GetModelTraceIds", c.GetModelTraceIds)
@@ -2184,66 +2113,6 @@ func (c *Client) UpdateAgent(ctx context.Context, agentName string, body UpdateA
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListAgentHistory(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListAgentHistoryRequest(c.Server, agentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteAgentHistory(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteAgentHistoryRequest(c.Server, agentName, requestId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetAgentHistory(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentHistoryRequest(c.Server, agentName, requestId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PutAgentHistoryWithBody(ctx context.Context, agentName string, requestId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutAgentHistoryRequestWithBody(c.Server, agentName, requestId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PutAgentHistory(ctx context.Context, agentName string, requestId string, body PutAgentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutAgentHistoryRequest(c.Server, agentName, requestId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) GetAgentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAgentLogsRequest(c.Server, agentName)
 	if err != nil {
@@ -2258,6 +2127,18 @@ func (c *Client) GetAgentLogs(ctx context.Context, agentName string, reqEditors 
 
 func (c *Client) GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAgentMetricsRequest(c.Server, agentName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListAgentRevisions(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAgentRevisionsRequest(c.Server, agentName)
 	if err != nil {
 		return nil, err
 	}
@@ -2400,32 +2281,20 @@ func (c *Client) GetFunctionMetrics(ctx context.Context, functionName string, re
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListFunctionRevisions(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListFunctionRevisionsRequest(c.Server, functionName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetFunctionTraceIds(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetFunctionTraceIdsRequest(c.Server, functionName, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListAgentsHistory(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListAgentsHistoryRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetAgentsHistory(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentsHistoryRequest(c.Server, requestId)
 	if err != nil {
 		return nil, err
 	}
@@ -2652,6 +2521,18 @@ func (c *Client) UpdateKnowledgebase(ctx context.Context, knowledgebaseName stri
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListKnowledgebaseRevisions(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListKnowledgebaseRevisionsRequest(c.Server, knowledgebaseName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ListLocations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListLocationsRequest(c.Server)
 	if err != nil {
@@ -2786,6 +2667,18 @@ func (c *Client) GetModelLogs(ctx context.Context, modelName string, reqEditors 
 
 func (c *Client) GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetModelMetricsRequest(c.Server, modelName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListModelRevisions(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListModelRevisionsRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -3566,176 +3459,6 @@ func NewUpdateAgentRequestWithBody(server string, agentName string, contentType 
 	return req, nil
 }
 
-// NewListAgentHistoryRequest generates requests for ListAgentHistory
-func NewListAgentHistoryRequest(server string, agentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/history", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewDeleteAgentHistoryRequest generates requests for DeleteAgentHistory
-func NewDeleteAgentHistoryRequest(server string, agentName string, requestId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "requestId", runtime.ParamLocationPath, requestId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/history/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetAgentHistoryRequest generates requests for GetAgentHistory
-func NewGetAgentHistoryRequest(server string, agentName string, requestId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "requestId", runtime.ParamLocationPath, requestId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/history/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewPutAgentHistoryRequest calls the generic PutAgentHistory builder with application/json body
-func NewPutAgentHistoryRequest(server string, agentName string, requestId string, body PutAgentHistoryJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPutAgentHistoryRequestWithBody(server, agentName, requestId, "application/json", bodyReader)
-}
-
-// NewPutAgentHistoryRequestWithBody generates requests for PutAgentHistory with any type of body
-func NewPutAgentHistoryRequestWithBody(server string, agentName string, requestId string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "requestId", runtime.ParamLocationPath, requestId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/history/%s", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
 // NewGetAgentLogsRequest generates requests for GetAgentLogs
 func NewGetAgentLogsRequest(server string, agentName string) (*http.Request, error) {
 	var err error
@@ -3787,6 +3510,40 @@ func NewGetAgentMetricsRequest(server string, agentName string) (*http.Request, 
 	}
 
 	operationPath := fmt.Sprintf("/agents/%s/metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListAgentRevisionsRequest generates requests for ListAgentRevisions
+func NewListAgentRevisionsRequest(server string, agentName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/agents/%s/revisions", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -4169,6 +3926,40 @@ func NewGetFunctionMetricsRequest(server string, functionName string) (*http.Req
 	return req, nil
 }
 
+// NewListFunctionRevisionsRequest generates requests for ListFunctionRevisions
+func NewListFunctionRevisionsRequest(server string, functionName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/functions/%s/revisions", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetFunctionTraceIdsRequest generates requests for GetFunctionTraceIds
 func NewGetFunctionTraceIdsRequest(server string, functionName string, params *GetFunctionTraceIdsParams) (*http.Request, error) {
 	var err error
@@ -4247,67 +4038,6 @@ func NewGetFunctionTraceIdsRequest(server string, functionName string, params *G
 		}
 
 		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewListAgentsHistoryRequest generates requests for ListAgentsHistory
-func NewListAgentsHistoryRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/history/agents")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetAgentsHistoryRequest generates requests for GetAgentsHistory
-func NewGetAgentsHistoryRequest(server string, requestId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "requestId", runtime.ParamLocationPath, requestId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/history/agents/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -4825,6 +4555,40 @@ func NewUpdateKnowledgebaseRequestWithBody(server string, knowledgebaseName stri
 	return req, nil
 }
 
+// NewListKnowledgebaseRevisionsRequest generates requests for ListKnowledgebaseRevisions
+func NewListKnowledgebaseRevisionsRequest(server string, knowledgebaseName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "knowledgebaseName", runtime.ParamLocationPath, knowledgebaseName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/knowledgebases/%s/revisions", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListLocationsRequest generates requests for ListLocations
 func NewListLocationsRequest(server string) (*http.Request, error) {
 	var err error
@@ -5139,6 +4903,40 @@ func NewGetModelMetricsRequest(server string, modelName string) (*http.Request, 
 	}
 
 	operationPath := fmt.Sprintf("/models/%s/metrics", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListModelRevisionsRequest generates requests for ListModelRevisions
+func NewListModelRevisionsRequest(server string, modelName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelName", runtime.ParamLocationPath, modelName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/models/%s/revisions", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -6782,25 +6580,14 @@ type ClientWithResponsesInterface interface {
 
 	UpdateAgentWithResponse(ctx context.Context, agentName string, body UpdateAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAgentResponse, error)
 
-	// ListAgentHistoryWithResponse request
-	ListAgentHistoryWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentHistoryResponse, error)
-
-	// DeleteAgentHistoryWithResponse request
-	DeleteAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*DeleteAgentHistoryResponse, error)
-
-	// GetAgentHistoryWithResponse request
-	GetAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*GetAgentHistoryResponse, error)
-
-	// PutAgentHistoryWithBodyWithResponse request with any body
-	PutAgentHistoryWithBodyWithResponse(ctx context.Context, agentName string, requestId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutAgentHistoryResponse, error)
-
-	PutAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, body PutAgentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentHistoryResponse, error)
-
 	// GetAgentLogsWithResponse request
 	GetAgentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentLogsResponse, error)
 
 	// GetAgentMetricsWithResponse request
 	GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error)
+
+	// ListAgentRevisionsWithResponse request
+	ListAgentRevisionsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentRevisionsResponse, error)
 
 	// GetAgentTraceIdsWithResponse request
 	GetAgentTraceIdsWithResponse(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*GetAgentTraceIdsResponse, error)
@@ -6833,14 +6620,11 @@ type ClientWithResponsesInterface interface {
 	// GetFunctionMetricsWithResponse request
 	GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error)
 
+	// ListFunctionRevisionsWithResponse request
+	ListFunctionRevisionsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*ListFunctionRevisionsResponse, error)
+
 	// GetFunctionTraceIdsWithResponse request
 	GetFunctionTraceIdsWithResponse(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*GetFunctionTraceIdsResponse, error)
-
-	// ListAgentsHistoryWithResponse request
-	ListAgentsHistoryWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsHistoryResponse, error)
-
-	// GetAgentsHistoryWithResponse request
-	GetAgentsHistoryWithResponse(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*GetAgentsHistoryResponse, error)
 
 	// ListIntegrationConnectionsWithResponse request
 	ListIntegrationConnectionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsResponse, error)
@@ -6892,6 +6676,9 @@ type ClientWithResponsesInterface interface {
 
 	UpdateKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, body UpdateKnowledgebaseJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKnowledgebaseResponse, error)
 
+	// ListKnowledgebaseRevisionsWithResponse request
+	ListKnowledgebaseRevisionsWithResponse(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*ListKnowledgebaseRevisionsResponse, error)
+
 	// ListLocationsWithResponse request
 	ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error)
 
@@ -6925,6 +6712,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetModelMetricsWithResponse request
 	GetModelMetricsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error)
+
+	// ListModelRevisionsWithResponse request
+	ListModelRevisionsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ListModelRevisionsResponse, error)
 
 	// GetModelTraceIdsWithResponse request
 	GetModelTraceIdsWithResponse(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*GetModelTraceIdsResponse, error)
@@ -7175,94 +6965,6 @@ func (r UpdateAgentResponse) StatusCode() int {
 	return 0
 }
 
-type ListAgentHistoryResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]AgentHistory
-}
-
-// Status returns HTTPResponse.Status
-func (r ListAgentHistoryResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListAgentHistoryResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteAgentHistoryResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AgentHistory
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteAgentHistoryResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteAgentHistoryResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetAgentHistoryResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AgentHistory
-}
-
-// Status returns HTTPResponse.Status
-func (r GetAgentHistoryResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetAgentHistoryResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PutAgentHistoryResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AgentHistory
-}
-
-// Status returns HTTPResponse.Status
-func (r PutAgentHistoryResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PutAgentHistoryResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type GetAgentLogsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7301,6 +7003,28 @@ func (r GetAgentMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetAgentMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListAgentRevisionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]RevisionMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAgentRevisionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAgentRevisionsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7505,6 +7229,28 @@ func (r GetFunctionMetricsResponse) StatusCode() int {
 	return 0
 }
 
+type ListFunctionRevisionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *RevisionMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r ListFunctionRevisionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListFunctionRevisionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetFunctionTraceIdsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7521,50 +7267,6 @@ func (r GetFunctionTraceIdsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetFunctionTraceIdsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListAgentsHistoryResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]AgentHistory
-}
-
-// Status returns HTTPResponse.Status
-func (r ListAgentsHistoryResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListAgentsHistoryResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetAgentsHistoryResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]AgentHistory
-}
-
-// Status returns HTTPResponse.Status
-func (r GetAgentsHistoryResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetAgentsHistoryResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7875,6 +7577,28 @@ func (r UpdateKnowledgebaseResponse) StatusCode() int {
 	return 0
 }
 
+type ListKnowledgebaseRevisionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *RevisionMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r ListKnowledgebaseRevisionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListKnowledgebaseRevisionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ListLocationsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -8089,6 +7813,28 @@ func (r GetModelMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetModelMetricsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListModelRevisionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *RevisionMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r ListModelRevisionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListModelRevisionsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -9095,50 +8841,6 @@ func (c *ClientWithResponses) UpdateAgentWithResponse(ctx context.Context, agent
 	return ParseUpdateAgentResponse(rsp)
 }
 
-// ListAgentHistoryWithResponse request returning *ListAgentHistoryResponse
-func (c *ClientWithResponses) ListAgentHistoryWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentHistoryResponse, error) {
-	rsp, err := c.ListAgentHistory(ctx, agentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListAgentHistoryResponse(rsp)
-}
-
-// DeleteAgentHistoryWithResponse request returning *DeleteAgentHistoryResponse
-func (c *ClientWithResponses) DeleteAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*DeleteAgentHistoryResponse, error) {
-	rsp, err := c.DeleteAgentHistory(ctx, agentName, requestId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteAgentHistoryResponse(rsp)
-}
-
-// GetAgentHistoryWithResponse request returning *GetAgentHistoryResponse
-func (c *ClientWithResponses) GetAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, reqEditors ...RequestEditorFn) (*GetAgentHistoryResponse, error) {
-	rsp, err := c.GetAgentHistory(ctx, agentName, requestId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetAgentHistoryResponse(rsp)
-}
-
-// PutAgentHistoryWithBodyWithResponse request with arbitrary body returning *PutAgentHistoryResponse
-func (c *ClientWithResponses) PutAgentHistoryWithBodyWithResponse(ctx context.Context, agentName string, requestId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutAgentHistoryResponse, error) {
-	rsp, err := c.PutAgentHistoryWithBody(ctx, agentName, requestId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutAgentHistoryResponse(rsp)
-}
-
-func (c *ClientWithResponses) PutAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, body PutAgentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentHistoryResponse, error) {
-	rsp, err := c.PutAgentHistory(ctx, agentName, requestId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePutAgentHistoryResponse(rsp)
-}
-
 // GetAgentLogsWithResponse request returning *GetAgentLogsResponse
 func (c *ClientWithResponses) GetAgentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentLogsResponse, error) {
 	rsp, err := c.GetAgentLogs(ctx, agentName, reqEditors...)
@@ -9155,6 +8857,15 @@ func (c *ClientWithResponses) GetAgentMetricsWithResponse(ctx context.Context, a
 		return nil, err
 	}
 	return ParseGetAgentMetricsResponse(rsp)
+}
+
+// ListAgentRevisionsWithResponse request returning *ListAgentRevisionsResponse
+func (c *ClientWithResponses) ListAgentRevisionsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentRevisionsResponse, error) {
+	rsp, err := c.ListAgentRevisions(ctx, agentName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAgentRevisionsResponse(rsp)
 }
 
 // GetAgentTraceIdsWithResponse request returning *GetAgentTraceIdsResponse
@@ -9254,6 +8965,15 @@ func (c *ClientWithResponses) GetFunctionMetricsWithResponse(ctx context.Context
 	return ParseGetFunctionMetricsResponse(rsp)
 }
 
+// ListFunctionRevisionsWithResponse request returning *ListFunctionRevisionsResponse
+func (c *ClientWithResponses) ListFunctionRevisionsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*ListFunctionRevisionsResponse, error) {
+	rsp, err := c.ListFunctionRevisions(ctx, functionName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListFunctionRevisionsResponse(rsp)
+}
+
 // GetFunctionTraceIdsWithResponse request returning *GetFunctionTraceIdsResponse
 func (c *ClientWithResponses) GetFunctionTraceIdsWithResponse(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*GetFunctionTraceIdsResponse, error) {
 	rsp, err := c.GetFunctionTraceIds(ctx, functionName, params, reqEditors...)
@@ -9261,24 +8981,6 @@ func (c *ClientWithResponses) GetFunctionTraceIdsWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseGetFunctionTraceIdsResponse(rsp)
-}
-
-// ListAgentsHistoryWithResponse request returning *ListAgentsHistoryResponse
-func (c *ClientWithResponses) ListAgentsHistoryWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsHistoryResponse, error) {
-	rsp, err := c.ListAgentsHistory(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListAgentsHistoryResponse(rsp)
-}
-
-// GetAgentsHistoryWithResponse request returning *GetAgentsHistoryResponse
-func (c *ClientWithResponses) GetAgentsHistoryWithResponse(ctx context.Context, requestId string, reqEditors ...RequestEditorFn) (*GetAgentsHistoryResponse, error) {
-	rsp, err := c.GetAgentsHistory(ctx, requestId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetAgentsHistoryResponse(rsp)
 }
 
 // ListIntegrationConnectionsWithResponse request returning *ListIntegrationConnectionsResponse
@@ -9439,6 +9141,15 @@ func (c *ClientWithResponses) UpdateKnowledgebaseWithResponse(ctx context.Contex
 	return ParseUpdateKnowledgebaseResponse(rsp)
 }
 
+// ListKnowledgebaseRevisionsWithResponse request returning *ListKnowledgebaseRevisionsResponse
+func (c *ClientWithResponses) ListKnowledgebaseRevisionsWithResponse(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*ListKnowledgebaseRevisionsResponse, error) {
+	rsp, err := c.ListKnowledgebaseRevisions(ctx, knowledgebaseName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListKnowledgebaseRevisionsResponse(rsp)
+}
+
 // ListLocationsWithResponse request returning *ListLocationsResponse
 func (c *ClientWithResponses) ListLocationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListLocationsResponse, error) {
 	rsp, err := c.ListLocations(ctx, reqEditors...)
@@ -9543,6 +9254,15 @@ func (c *ClientWithResponses) GetModelMetricsWithResponse(ctx context.Context, m
 		return nil, err
 	}
 	return ParseGetModelMetricsResponse(rsp)
+}
+
+// ListModelRevisionsWithResponse request returning *ListModelRevisionsResponse
+func (c *ClientWithResponses) ListModelRevisionsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ListModelRevisionsResponse, error) {
+	rsp, err := c.ListModelRevisions(ctx, modelName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListModelRevisionsResponse(rsp)
 }
 
 // GetModelTraceIdsWithResponse request returning *GetModelTraceIdsResponse
@@ -10107,110 +9827,6 @@ func ParseUpdateAgentResponse(rsp *http.Response) (*UpdateAgentResponse, error) 
 	return response, nil
 }
 
-// ParseListAgentHistoryResponse parses an HTTP response from a ListAgentHistoryWithResponse call
-func ParseListAgentHistoryResponse(rsp *http.Response) (*ListAgentHistoryResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListAgentHistoryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []AgentHistory
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteAgentHistoryResponse parses an HTTP response from a DeleteAgentHistoryWithResponse call
-func ParseDeleteAgentHistoryResponse(rsp *http.Response) (*DeleteAgentHistoryResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteAgentHistoryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentHistory
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetAgentHistoryResponse parses an HTTP response from a GetAgentHistoryWithResponse call
-func ParseGetAgentHistoryResponse(rsp *http.Response) (*GetAgentHistoryResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetAgentHistoryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentHistory
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePutAgentHistoryResponse parses an HTTP response from a PutAgentHistoryWithResponse call
-func ParsePutAgentHistoryResponse(rsp *http.Response) (*PutAgentHistoryResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PutAgentHistoryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentHistory
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetAgentLogsResponse parses an HTTP response from a GetAgentLogsWithResponse call
 func ParseGetAgentLogsResponse(rsp *http.Response) (*GetAgentLogsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10253,6 +9869,32 @@ func ParseGetAgentMetricsResponse(rsp *http.Response) (*GetAgentMetricsResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAgentRevisionsResponse parses an HTTP response from a ListAgentRevisionsWithResponse call
+func ParseListAgentRevisionsResponse(rsp *http.Response) (*ListAgentRevisionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAgentRevisionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []RevisionMetadata
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -10497,6 +10139,32 @@ func ParseGetFunctionMetricsResponse(rsp *http.Response) (*GetFunctionMetricsRes
 	return response, nil
 }
 
+// ParseListFunctionRevisionsResponse parses an HTTP response from a ListFunctionRevisionsWithResponse call
+func ParseListFunctionRevisionsResponse(rsp *http.Response) (*ListFunctionRevisionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListFunctionRevisionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RevisionMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetFunctionTraceIdsResponse parses an HTTP response from a GetFunctionTraceIdsWithResponse call
 func ParseGetFunctionTraceIdsResponse(rsp *http.Response) (*GetFunctionTraceIdsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10513,58 +10181,6 @@ func ParseGetFunctionTraceIdsResponse(rsp *http.Response) (*GetFunctionTraceIdsR
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest TraceIdsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListAgentsHistoryResponse parses an HTTP response from a ListAgentsHistoryWithResponse call
-func ParseListAgentsHistoryResponse(rsp *http.Response) (*ListAgentsHistoryResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListAgentsHistoryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []AgentHistory
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetAgentsHistoryResponse parses an HTTP response from a GetAgentsHistoryWithResponse call
-func ParseGetAgentsHistoryResponse(rsp *http.Response) (*GetAgentsHistoryResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetAgentsHistoryResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []AgentHistory
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -10899,6 +10515,32 @@ func ParseUpdateKnowledgebaseResponse(rsp *http.Response) (*UpdateKnowledgebaseR
 	return response, nil
 }
 
+// ParseListKnowledgebaseRevisionsResponse parses an HTTP response from a ListKnowledgebaseRevisionsWithResponse call
+func ParseListKnowledgebaseRevisionsResponse(rsp *http.Response) (*ListKnowledgebaseRevisionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListKnowledgebaseRevisionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RevisionMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListLocationsResponse parses an HTTP response from a ListLocationsWithResponse call
 func ParseListLocationsResponse(rsp *http.Response) (*ListLocationsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -11149,6 +10791,32 @@ func ParseGetModelMetricsResponse(rsp *http.Response) (*GetModelMetricsResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ResourceMetrics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListModelRevisionsResponse parses an HTTP response from a ListModelRevisionsWithResponse call
+func ParseListModelRevisionsResponse(rsp *http.Response) (*ListModelRevisionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListModelRevisionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest RevisionMetadata
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -12225,153 +11893,149 @@ func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"Piec5EkfDK9yF8zk4Y+H/x8AAP//AKDUrKYdAQA=",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

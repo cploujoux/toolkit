@@ -75,114 +75,6 @@ export type AgentChain = {
 export type AgentChains = Array<AgentChain>;
 
 /**
- * Agent deployment history
- */
-export type AgentHistory = TimeFields & {
-    /**
-     * Agent name
-     */
-    agent?: string;
-    /**
-     * End time
-     */
-    end?: string;
-    /**
-     * Events
-     */
-    events?: Array<AgentHistoryEvent>;
-    /**
-     * Request ID
-     */
-    request_id?: string;
-    /**
-     * Start time
-     */
-    start?: string;
-    /**
-     * Status, eg: running, success, failed
-     */
-    status?: string;
-    /**
-     * Number of milliseconds it took to complete the event
-     */
-    took?: number;
-    /**
-     * The workspace the agent deployment belongs to
-     */
-    workspace?: string;
-};
-
-/**
- * Agent deployment history event
- */
-export type AgentHistoryEvent = {
-    /**
-     * End time
-     */
-    end?: string;
-    /**
-     * Error message
-     */
-    error?: string;
-    /**
-     * Name of the function or agent
-     */
-    name?: string;
-    /**
-     * Parameters
-     */
-    parameters?: string;
-    /**
-     * Start time
-     */
-    start?: string;
-    /**
-     * Status, eg: running, success, failed
-     */
-    status?: string;
-    /**
-     * Function used in kit if a kit was used
-     */
-    subFunction?: string;
-    /**
-     * Number of milliseconds it took to complete the event
-     */
-    took?: number;
-    /**
-     * Type, one of function or agent
-     */
-    type?: string;
-};
-
-/**
- * generation agent information request
- */
-export type AgentInformationRequest = {
-    /**
-     * Functions to generate information for
-     */
-    functions?: Array<unknown>;
-};
-
-/**
- * generation agent information response
- */
-export type AgentInformationResponse = {
-    /**
-     * Description of the agent
-     */
-    description?: string;
-    /**
-     * Display name of the agent
-     */
-    displayName?: string;
-    /**
-     * Prompt of the agent
-     */
-    prompt?: string;
-};
-
-/**
  * Agent specification
  */
 export type AgentSpec = CoreSpec & {
@@ -1374,6 +1266,20 @@ export type ResourceMetrics = {
 };
 
 /**
+ * Revision metadata
+ */
+export type RevisionMetadata = {
+    /**
+     * Revision created at
+     */
+    createdAt?: string;
+    /**
+     * Revision ID
+     */
+    id?: string;
+};
+
+/**
  * Set of configurations for a deployment
  */
 export type Runtime = {
@@ -1875,71 +1781,6 @@ export type UpdateAgentResponse = (Agent);
 
 export type UpdateAgentError = unknown;
 
-export type ListAgentHistoryData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-    };
-};
-
-export type ListAgentHistoryResponse = (Array<AgentHistory>);
-
-export type ListAgentHistoryError = unknown;
-
-export type DeleteAgentHistoryData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-        /**
-         * Request ID
-         */
-        requestId: string;
-    };
-};
-
-export type DeleteAgentHistoryResponse = (AgentHistory);
-
-export type DeleteAgentHistoryError = unknown;
-
-export type GetAgentHistoryData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-        /**
-         * Request ID
-         */
-        requestId: string;
-    };
-};
-
-export type GetAgentHistoryResponse = (AgentHistory);
-
-export type GetAgentHistoryError = unknown;
-
-export type PutAgentHistoryData = {
-    body: AgentHistory;
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-        /**
-         * Request ID
-         */
-        requestId: string;
-    };
-};
-
-export type PutAgentHistoryResponse = (AgentHistory);
-
-export type PutAgentHistoryError = unknown;
-
 export type GetAgentLogsData = {
     path: {
         /**
@@ -1965,6 +1806,19 @@ export type GetAgentMetricsData = {
 export type GetAgentMetricsResponse = (ResourceMetrics);
 
 export type GetAgentMetricsError = unknown;
+
+export type ListAgentRevisionsData = {
+    path: {
+        /**
+         * Name of the agent
+         */
+        agentName: string;
+    };
+};
+
+export type ListAgentRevisionsResponse = (Array<RevisionMetadata>);
+
+export type ListAgentRevisionsError = unknown;
 
 export type GetAgentTraceIdsData = {
     path: {
@@ -2075,6 +1929,19 @@ export type GetFunctionMetricsResponse = (ResourceMetrics);
 
 export type GetFunctionMetricsError = unknown;
 
+export type ListFunctionRevisionsData = {
+    path: {
+        /**
+         * Name of the function
+         */
+        functionName: string;
+    };
+};
+
+export type ListFunctionRevisionsResponse = (RevisionMetadata);
+
+export type ListFunctionRevisionsError = unknown;
+
 export type GetFunctionTraceIdsData = {
     path: {
         /**
@@ -2101,23 +1968,6 @@ export type GetFunctionTraceIdsData = {
 export type GetFunctionTraceIdsResponse = (TraceIdsResponse);
 
 export type GetFunctionTraceIdsError = unknown;
-
-export type ListAgentsHistoryResponse = (Array<AgentHistory>);
-
-export type ListAgentsHistoryError = unknown;
-
-export type GetAgentsHistoryData = {
-    path: {
-        /**
-         * Request ID of the agent history
-         */
-        requestId: string;
-    };
-};
-
-export type GetAgentsHistoryResponse = (Array<AgentHistory>);
-
-export type GetAgentsHistoryError = unknown;
 
 export type GetIntegrationData = {
     path: {
@@ -2279,6 +2129,19 @@ export type UpdateKnowledgebaseResponse = (Knowledgebase);
 
 export type UpdateKnowledgebaseError = unknown;
 
+export type ListKnowledgebaseRevisionsData = {
+    path: {
+        /**
+         * Name of the knowledgebase
+         */
+        knowledgebaseName: string;
+    };
+};
+
+export type ListKnowledgebaseRevisionsResponse = (RevisionMetadata);
+
+export type ListKnowledgebaseRevisionsError = unknown;
+
 export type ListLocationsResponse = (Array<LocationResponse>);
 
 export type ListLocationsError = unknown;
@@ -2368,6 +2231,19 @@ export type GetModelMetricsData = {
 export type GetModelMetricsResponse = (ResourceMetrics);
 
 export type GetModelMetricsError = unknown;
+
+export type ListModelRevisionsData = {
+    path: {
+        /**
+         * Name of the model
+         */
+        modelName: string;
+    };
+};
+
+export type ListModelRevisionsResponse = (RevisionMetadata);
+
+export type ListModelRevisionsError = unknown;
 
 export type GetModelTraceIdsData = {
     path: {

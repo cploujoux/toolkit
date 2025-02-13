@@ -5,16 +5,16 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.agent_history import AgentHistory
+from ...models.revision_metadata import RevisionMetadata
 from ...types import Response
 
 
 def _get_kwargs(
-    agent_name: str,
+    knowledgebase_name: str,
 ) -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/agents/{agent_name}/history",
+        "url": f"/knowledgebases/{knowledgebase_name}/revisions",
     }
 
     return _kwargs
@@ -22,14 +22,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[list["AgentHistory"]]:
+) -> Optional[RevisionMetadata]:
     if response.status_code == 200:
-        response_200 = []
-        _response_200 = response.json()
-        for response_200_item_data in _response_200:
-            response_200_item = AgentHistory.from_dict(response_200_item_data)
-
-            response_200.append(response_200_item)
+        response_200 = RevisionMetadata.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -40,7 +35,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[list["AgentHistory"]]:
+) -> Response[RevisionMetadata]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,24 +45,27 @@ def _build_response(
 
 
 def sync_detailed(
-    agent_name: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[list["AgentHistory"]]:
-    """
+) -> Response[RevisionMetadata]:
+    """List knowledgebase revisions
+
+     Returns revisions for a knowledgebase by name.
+
     Args:
-        agent_name (str):
+        knowledgebase_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['AgentHistory']]
+        Response[RevisionMetadata]
     """
 
     kwargs = _get_kwargs(
-        agent_name=agent_name,
+        knowledgebase_name=knowledgebase_name,
     )
 
     response = client.get_httpx_client().request(
@@ -78,47 +76,53 @@ def sync_detailed(
 
 
 def sync(
-    agent_name: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[list["AgentHistory"]]:
-    """
+) -> Optional[RevisionMetadata]:
+    """List knowledgebase revisions
+
+     Returns revisions for a knowledgebase by name.
+
     Args:
-        agent_name (str):
+        knowledgebase_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['AgentHistory']
+        RevisionMetadata
     """
 
     return sync_detailed(
-        agent_name=agent_name,
+        knowledgebase_name=knowledgebase_name,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    agent_name: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[list["AgentHistory"]]:
-    """
+) -> Response[RevisionMetadata]:
+    """List knowledgebase revisions
+
+     Returns revisions for a knowledgebase by name.
+
     Args:
-        agent_name (str):
+        knowledgebase_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['AgentHistory']]
+        Response[RevisionMetadata]
     """
 
     kwargs = _get_kwargs(
-        agent_name=agent_name,
+        knowledgebase_name=knowledgebase_name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -127,25 +131,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    agent_name: str,
+    knowledgebase_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[list["AgentHistory"]]:
-    """
+) -> Optional[RevisionMetadata]:
+    """List knowledgebase revisions
+
+     Returns revisions for a knowledgebase by name.
+
     Args:
-        agent_name (str):
+        knowledgebase_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['AgentHistory']
+        RevisionMetadata
     """
 
     return (
         await asyncio_detailed(
-            agent_name=agent_name,
+            knowledgebase_name=knowledgebase_name,
             client=client,
         )
     ).parsed

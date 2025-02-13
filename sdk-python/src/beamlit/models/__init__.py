@@ -3,10 +3,6 @@
 from .acl import ACL
 from .agent import Agent
 from .agent_chain import AgentChain
-from .agent_history import AgentHistory
-from .agent_history_event import AgentHistoryEvent
-from .agent_information_request import AgentInformationRequest
-from .agent_information_response import AgentInformationResponse
 from .agent_spec import AgentSpec
 from .api_key import ApiKey
 from .configuration import Configuration
@@ -95,6 +91,7 @@ from .resource_log import ResourceLog
 from .resource_metrics import ResourceMetrics
 from .resource_metrics_request_total_per_code import ResourceMetricsRequestTotalPerCode
 from .resource_metrics_rps_per_code import ResourceMetricsRpsPerCode
+from .revision_metadata import RevisionMetadata
 from .runtime import Runtime
 from .runtime_readiness_probe import RuntimeReadinessProbe
 from .runtime_resources import RuntimeResources
@@ -125,10 +122,6 @@ __all__ = (
     "ACL",
     "Agent",
     "AgentChain",
-    "AgentHistory",
-    "AgentHistoryEvent",
-    "AgentInformationRequest",
-    "AgentInformationResponse",
     "AgentSpec",
     "ApiKey",
     "Configuration",
@@ -211,6 +204,7 @@ __all__ = (
     "ResourceMetrics",
     "ResourceMetricsRequestTotalPerCode",
     "ResourceMetricsRpsPerCode",
+    "RevisionMetadata",
     "Runtime",
     "RuntimeReadinessProbe",
     "RuntimeResources",
