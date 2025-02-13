@@ -1517,14 +1517,6 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	Chat(
-		ctx context.Context,
-		workspace string,
-		resourceType string,
-		resourceName string,
-		debug bool,
-		local bool,
-	) error
 	Run(
 		ctx context.Context,
 		workspaceName string,
