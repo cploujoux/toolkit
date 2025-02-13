@@ -36,13 +36,14 @@ export class EmbeddingModel {
     try {
       const { model } = this.config;
       const settings = getSettings();
-      const data = (await this.runClient.run(
-        "model",
-        model,
-        settings.environment,
-        "POST",
-        { json: { input: query }, path: "/v1/embeddings" }
-      )) as { data: [{ embedding: number[] }] };
+      const data = (await this.runClient.run({
+        resourceType: "model",
+        resourceName: model,
+        environment: settings.environment,
+        method: "POST",
+        json: { input: query },
+        path: "/v1/embeddings",
+      })) as { data: [{ embedding: number[] }] };
       return data.data[0].embedding;
     } catch (error: any) {
       if (error instanceof HTTPError) {
