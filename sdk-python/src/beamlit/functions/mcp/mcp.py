@@ -14,10 +14,10 @@ import requests
 import typing_extensions as t
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
 from mcp import ClientSession
-from mcp.client.sse import sse_client
+
 from mcp.types import CallToolResult, ListToolsResult
 
-
+from beamlit.functions.mcp.client import sse_client
 
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.authentication import get_authentication_headers
@@ -40,16 +40,21 @@ class MCPClient:
         # Create a new context for each SSE connection
         try:
             async with sse_client(f"{self.url}/sse", headers=get_authentication_headers(settings)) as (read_stream, write_stream):
-                async with ClientSession(read_stream, write_stream) as session:
-                    await session.initialize()
-                    response = await session.list_tools()
+                logger.info("SSE connection established")
+                async with ClientSession(read_stream, write_stream) as client:
+                    logger.info("Client session created", client)
+                    await client.initialize()
+                    response = await client.list_tools()
+                    logger.info(f"SSE tools: {response}")
                     return response
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error listing SSE tools: {e}")
             self._sse = False
             logger.info("SSE not available, trying HTTP")
             return None  # Signal to list_tools() to try HTTP instead
 
     def list_tools(self) -> ListToolsResult:
+        logger.info(f"Listing tools for {self.url}")
         try:
             loop = asyncio.get_event_loop()
             result = loop.run_until_complete(self.list_sse_tools())

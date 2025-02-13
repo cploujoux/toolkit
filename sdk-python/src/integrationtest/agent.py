@@ -17,7 +17,7 @@ settings = init()
             "model": "gpt-4o-mini",
         },
     },
-    remote_functions=["brave-search"],
+    remote_functions=["brave-search-2"],
     # local_functions=[
     #     {
     #         "name": "github-search",

@@ -150,7 +150,7 @@ class RemoteToolkit:
             if self._service_name:
                 url = f"https://{self._service_name}.{settings.run_internal_hostname}"
             mcp_client = MCPClient(self.client, url)
-            mcp_toolkit = MCPToolkit(client=mcp_client)
+            mcp_toolkit = MCPToolkit(client=mcp_client, url=url)
             mcp_toolkit.initialize()
             return mcp_toolkit.get_tools()
 
