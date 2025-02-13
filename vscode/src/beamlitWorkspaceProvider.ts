@@ -1,4 +1,5 @@
 import {
+  init,
   listAgents,
   ListAgentsResponse,
   listFunctions,
@@ -9,7 +10,7 @@ import {
   ListModelsResponse,
   listPolicies,
   ListPoliciesResponse,
-  newClient
+  newClient,
 } from "@beamlit/sdk";
 
 export class BeamlitWorkspaceProvider {
@@ -25,6 +26,7 @@ export class BeamlitWorkspaceProvider {
     this.agents = [];
     this.policies = [];
     this.integrations = [];
+    init();
   }
 
   async getResourceTypes() {

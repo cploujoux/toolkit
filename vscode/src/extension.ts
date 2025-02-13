@@ -43,10 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-async function selectResource(
-  resourceType: string,
-  resourceId: string,
-) {
+async function selectResource(resourceType: string, resourceId: string) {
   try {
     const uri = vscode.Uri.parse(
       `beamlit://${resourceId}/${resourceId}.yaml?resourceType=${resourceType}&resourceId=${resourceId}`
