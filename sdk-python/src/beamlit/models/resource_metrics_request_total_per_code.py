@@ -3,11 +3,11 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="ResourceEnvironmentMetricsRequestTotalPerCode")
+T = TypeVar("T", bound="ResourceMetricsRequestTotalPerCode")
 
 
 @_attrs_define
-class ResourceEnvironmentMetricsRequestTotalPerCode:
+class ResourceMetricsRequestTotalPerCode:
     """Number of requests for the resource globally per code"""
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -23,10 +23,10 @@ class ResourceEnvironmentMetricsRequestTotalPerCode:
         if not src_dict:
             return None
         d = src_dict.copy()
-        resource_environment_metrics_request_total_per_code = cls()
+        resource_metrics_request_total_per_code = cls()
 
-        resource_environment_metrics_request_total_per_code.additional_properties = d
-        return resource_environment_metrics_request_total_per_code
+        resource_metrics_request_total_per_code.additional_properties = d
+        return resource_metrics_request_total_per_code
 
     @property
     def additional_keys(self) -> list[str]:

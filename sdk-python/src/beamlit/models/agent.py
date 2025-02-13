@@ -8,7 +8,7 @@ from ..types import UNSET, Unset
 if TYPE_CHECKING:
     from ..models.agent_spec import AgentSpec
     from ..models.core_event import CoreEvent
-    from ..models.environment_metadata import EnvironmentMetadata
+    from ..models.metadata import Metadata
 
 
 T = TypeVar("T", bound="Agent")
@@ -20,13 +20,13 @@ class Agent:
 
     Attributes:
         events (Union[Unset, list['CoreEvent']]): Core events
-        metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
+        metadata (Union[Unset, Metadata]): Metadata
         spec (Union[Unset, AgentSpec]): Agent specification
         status (Union[Unset, str]): Agent status
     """
 
     events: Union[Unset, list["CoreEvent"]] = UNSET
-    metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
+    metadata: Union[Unset, "Metadata"] = UNSET
     spec: Union[Unset, "AgentSpec"] = UNSET
     status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -71,7 +71,7 @@ class Agent:
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.agent_spec import AgentSpec
         from ..models.core_event import CoreEvent
-        from ..models.environment_metadata import EnvironmentMetadata
+        from ..models.metadata import Metadata
 
         if not src_dict:
             return None
@@ -84,11 +84,11 @@ class Agent:
             events.append(componentsschemas_core_events_item)
 
         _metadata = d.pop("metadata", UNSET)
-        metadata: Union[Unset, EnvironmentMetadata]
+        metadata: Union[Unset, Metadata]
         if isinstance(_metadata, Unset):
             metadata = UNSET
         else:
-            metadata = EnvironmentMetadata.from_dict(_metadata)
+            metadata = Metadata.from_dict(_metadata)
 
         _spec = d.pop("spec", UNSET)
         spec: Union[Unset, AgentSpec]

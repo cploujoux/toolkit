@@ -39,7 +39,7 @@ export type ACL = TimeFields & {
  */
 export type Agent = {
     events?: CoreEvents;
-    metadata?: EnvironmentMetadata;
+    metadata?: Metadata;
     spec?: AgentSpec;
     /**
      * Agent status
@@ -86,10 +86,6 @@ export type AgentHistory = TimeFields & {
      * End time
      */
     end?: string;
-    /**
-     * Environment name
-     */
-    environment?: string;
     /**
      * Events
      */
@@ -184,20 +180,6 @@ export type AgentInformationResponse = {
      * Prompt of the agent
      */
     prompt?: string;
-};
-
-/**
- * Agent release, used to deploy a agent from one environment to another
- */
-export type AgentRelease = {
-    /**
-     * Origin environment from which the agent is released
-     */
-    from?: string;
-    /**
-     * Destination environment to which the agent is released
-     */
-    to?: string;
 };
 
 /**
@@ -388,41 +370,6 @@ export type Entrypoint = {
 };
 
 /**
- * Environment on which deployments will be made (e.g. development, production), enforcing multiple policies at once.
- */
-export type Environment = {
-    metadata?: Metadata;
-    spec?: EnvironmentSpec;
-};
-
-/**
- * Environment metadata
- */
-export type EnvironmentMetadata = Metadata & {
-    /**
-     * Environment name
-     */
-    environment?: string;
-};
-
-/**
- * Metrics for the environment
- */
-export type EnvironmentMetrics = {
-    /**
-     * Historical requests (in last 24 hours) for the environment globally
-     */
-    inferenceGlobal?: ArrayMetric;
-};
-
-/**
- * Environment specification
- */
-export type EnvironmentSpec = {
-    policies?: PoliciesList;
-};
-
-/**
  * A type of hardware available for deployments
  */
 export type Flavor = {
@@ -470,7 +417,7 @@ export type Form = {
  */
 export type Function = {
     events?: CoreEvents;
-    metadata?: EnvironmentMetadata;
+    metadata?: Metadata;
     spec?: FunctionSpec;
     /**
      * Function status
@@ -494,20 +441,6 @@ export type FunctionKit = {
      * Kit parameters, for your kit to be callable with an Agent
      */
     parameters?: Array<StoreFunctionParameter>;
-};
-
-/**
- * Function release, used to deploy a function from one environment to another
- */
-export type FunctionRelease = {
-    /**
-     * Origin environment from which the function is released
-     */
-    from?: string;
-    /**
-     * Destination environment to which the function is released
-     */
-    to?: string;
 };
 
 export type FunctionsList = Array<(string)>;
@@ -691,26 +624,12 @@ export type IntegrationRepository = {
  */
 export type Knowledgebase = {
     events?: CoreEvents;
-    metadata?: EnvironmentMetadata;
+    metadata?: Metadata;
     spec?: KnowledgebaseSpec;
     /**
      * Knowledgebase status
      */
     status?: string;
-};
-
-/**
- * Knowledgebase release, used to deploy a function from one environment to another
- */
-export type KnowledgebaseRelease = {
-    /**
-     * Origin environment from which the function is released
-     */
-    from?: string;
-    /**
-     * Destination environment to which the function is released
-     */
-    to?: string;
 };
 
 export type KnowledgebasesList = Array<(string)>;
@@ -757,10 +676,6 @@ export type LastNRequestsMetric = {
      * Timestamp
      */
     date?: string;
-    /**
-     * Environment
-     */
-    environment?: string;
     /**
      * Workload type
      */
@@ -823,64 +738,6 @@ export type LocationResponse = {
  * Definition of an MCP from the MCP Hub
  */
 export type MCPDefinition = {
-    /**
-     * Categories of the artifact
-     */
-    categories?: Array<unknown>;
-    /**
-     * If the artifact is coming soon
-     */
-    coming_soon?: boolean;
-    /**
-     * Description of the artifact
-     */
-    description?: string;
-    /**
-     * Display name of the artifact
-     */
-    displayName?: string;
-    /**
-     * If the artifact is enterprise
-     */
-    enterprise?: boolean;
-    /**
-     * Entrypoint of the artifact
-     */
-    entrypoint?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Form of the artifact
-     */
-    form?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Icon of the artifact
-     */
-    icon?: string;
-    /**
-     * Integration of the artifact
-     */
-    integration?: string;
-    /**
-     * Long description of the artifact
-     */
-    longDescription?: string;
-    /**
-     * Name of the artifact
-     */
-    name?: string;
-    /**
-     * URL of the artifact
-     */
-    url?: string;
-};
-
-/**
- * Artifact from the MCP Hub
- */
-export type MCPHubArtifact = {
     /**
      * Categories of the artifact
      */
@@ -1024,11 +881,11 @@ export type Metrics = {
 };
 
 /**
- * Logical object representing a model, that can be instantiated in multiple environments as model deployments
+ * Logical object representing a model
  */
 export type Model = {
     events?: CoreEvents;
-    metadata?: EnvironmentMetadata;
+    metadata?: Metadata;
     spec?: ModelSpec;
     /**
      * Model status
@@ -1052,20 +909,6 @@ export type ModelPrivateCluster = {
      * The name of the private cluster
      */
     name?: string;
-};
-
-/**
- * Model release, used to deploy a model from one environment to another
- */
-export type ModelRelease = {
-    /**
-     * Origin environment from which the model is released
-     */
-    from?: string;
-    /**
-     * Destination environment to which the model is released
-     */
-    to?: string;
 };
 
 /**
@@ -1459,9 +1302,27 @@ export type RequestTotalMetric = {
 };
 
 /**
+ * Log for a resource deployment (eg. model deployment, function deployment)
+ */
+export type ResourceLog = {
+    /**
+     * Content of the log
+     */
+    message?: string;
+    /**
+     * Severity of the log
+     */
+    severity?: number;
+    /**
+     * The timestamp of the log
+     */
+    timestamp?: string;
+};
+
+/**
  * Metrics for a single resource deployment (eg. model deployment, function deployment)
  */
-export type ResourceEnvironmentMetrics = {
+export type ResourceMetrics = {
     /**
      * Historical requests (in last 24 hours) for the model deployment globally
      */
@@ -1513,24 +1374,6 @@ export type ResourceEnvironmentMetrics = {
 };
 
 /**
- * Log for a resource deployment (eg. model deployment, function deployment)
- */
-export type ResourceLog = {
-    /**
-     * Content of the log
-     */
-    message?: string;
-    /**
-     * Severity of the log
-     */
-    severity?: number;
-    /**
-     * The timestamp of the log
-     */
-    timestamp?: string;
-};
-
-/**
  * Set of configurations for a deployment
  */
 export type Runtime = {
@@ -1547,7 +1390,7 @@ export type Runtime = {
      */
     endpointName?: string;
     /**
-     * The environment variables to set in the deployment. Should be a list of Kubernetes EnvVar types
+     * The env variables to set in the deployment. Should be a list of Kubernetes EnvVar types
      */
     envs?: Array<unknown>;
     /**
@@ -1927,10 +1770,6 @@ export type Workspace = TimeFields & OwnerFields & {
      */
     accountId?: string;
     /**
-     * Workspace environment
-     */
-    defaultEnvironment?: string;
-    /**
      * Workspace display name
      */
     displayName?: string;
@@ -1984,15 +1823,6 @@ export type WorkspaceUser = {
     sub?: string;
 };
 
-export type ListAgentsData = {
-    query?: {
-        /**
-         * Environment to filter agents by
-         */
-        environment?: string;
-    };
-};
-
 export type ListAgentsResponse = (Array<Agent>);
 
 export type ListAgentsError = unknown;
@@ -2012,12 +1842,6 @@ export type DeleteAgentData = {
          */
         agentName: string;
     };
-    query: {
-        /**
-         * Environment of the model
-         */
-        environment: string;
-    };
 };
 
 export type DeleteAgentResponse = (Agent);
@@ -2030,12 +1854,6 @@ export type GetAgentData = {
          * Name of the agent
          */
         agentName: string;
-    };
-    query?: {
-        /**
-         * Environment to filter agents by
-         */
-        environment?: string;
     };
 };
 
@@ -2122,7 +1940,7 @@ export type PutAgentHistoryResponse = (AgentHistory);
 
 export type PutAgentHistoryError = unknown;
 
-export type GetAgentEnvironmentLogsData = {
+export type GetAgentLogsData = {
     path: {
         /**
          * Name of the agent
@@ -2131,9 +1949,9 @@ export type GetAgentEnvironmentLogsData = {
     };
 };
 
-export type GetAgentEnvironmentLogsResponse = (Array<ResourceLog>);
+export type GetAgentLogsResponse = (Array<ResourceLog>);
 
-export type GetAgentEnvironmentLogsError = unknown;
+export type GetAgentLogsError = unknown;
 
 export type GetAgentMetricsData = {
     path: {
@@ -2142,30 +1960,11 @@ export type GetAgentMetricsData = {
          */
         agentName: string;
     };
-    query?: {
-        /**
-         * Environment to filter agents by
-         */
-        environment?: string;
-    };
 };
 
-export type GetAgentMetricsResponse = (ResourceEnvironmentMetrics);
+export type GetAgentMetricsResponse = (ResourceMetrics);
 
 export type GetAgentMetricsError = unknown;
-
-export type CreateAgentReleaseData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-    };
-};
-
-export type CreateAgentReleaseResponse = (AgentRelease);
-
-export type CreateAgentReleaseError = unknown;
 
 export type GetAgentTraceIdsData = {
     path: {
@@ -2176,9 +1975,17 @@ export type GetAgentTraceIdsData = {
     };
     query?: {
         /**
-         * Environment to filter agents by
+         * End time
          */
-        environment?: string;
+        endTime?: string;
+        /**
+         * Limit
+         */
+        limit?: string;
+        /**
+         * Start time
+         */
+        startTime?: string;
     };
 };
 
@@ -2189,80 +1996,6 @@ export type GetAgentTraceIdsError = unknown;
 export type GetConfigurationResponse = (Configuration);
 
 export type GetConfigurationError = unknown;
-
-export type ListEnvironmentsResponse = (Array<Environment>);
-
-export type ListEnvironmentsError = unknown;
-
-export type CreateEnvironmentData = {
-    body: Environment;
-};
-
-export type CreateEnvironmentResponse = (Environment);
-
-export type CreateEnvironmentError = unknown;
-
-export type DeleteEnvironmentData = {
-    path: {
-        /**
-         * Name of the environment
-         */
-        environmentName: string;
-    };
-};
-
-export type DeleteEnvironmentResponse = (Environment);
-
-export type DeleteEnvironmentError = unknown;
-
-export type GetEnvironmentData = {
-    path: {
-        /**
-         * Name of the environment
-         */
-        environmentName: string;
-    };
-};
-
-export type GetEnvironmentResponse = (Environment);
-
-export type GetEnvironmentError = unknown;
-
-export type UpdateEnvironmentData = {
-    body: Environment;
-    path: {
-        /**
-         * Name of the environment
-         */
-        environmentName: string;
-    };
-};
-
-export type UpdateEnvironmentResponse = (Environment);
-
-export type UpdateEnvironmentError = unknown;
-
-export type GetEnvironmentMetricsData = {
-    path: {
-        /**
-         * Name of the environment
-         */
-        environmentName: string;
-    };
-};
-
-export type GetEnvironmentMetricsResponse = (EnvironmentMetrics);
-
-export type GetEnvironmentMetricsError = unknown;
-
-export type ListFunctionsData = {
-    query?: {
-        /**
-         * Environment to filter functions by
-         */
-        environment?: string;
-    };
-};
 
 export type ListFunctionsResponse = (Array<Function>);
 
@@ -2283,12 +2016,6 @@ export type DeleteFunctionData = {
          */
         functionName: string;
     };
-    query: {
-        /**
-         * Environment of the model
-         */
-        environment: string;
-    };
 };
 
 export type DeleteFunctionResponse = (Function);
@@ -2301,12 +2028,6 @@ export type GetFunctionData = {
          * Name of the function
          */
         functionName: string;
-    };
-    query?: {
-        /**
-         * Environment to filter functions by
-         */
-        environment?: string;
     };
 };
 
@@ -2328,7 +2049,7 @@ export type UpdateFunctionResponse = (Function);
 
 export type UpdateFunctionError = unknown;
 
-export type GetFunctionEnvironmentLogsData = {
+export type GetFunctionLogsData = {
     path: {
         /**
          * Name of the function
@@ -2337,9 +2058,9 @@ export type GetFunctionEnvironmentLogsData = {
     };
 };
 
-export type GetFunctionEnvironmentLogsResponse = (Array<ResourceLog>);
+export type GetFunctionLogsResponse = (Array<ResourceLog>);
 
-export type GetFunctionEnvironmentLogsError = unknown;
+export type GetFunctionLogsError = unknown;
 
 export type GetFunctionMetricsData = {
     path: {
@@ -2348,30 +2069,11 @@ export type GetFunctionMetricsData = {
          */
         functionName: string;
     };
-    query?: {
-        /**
-         * Environment to filter functions by
-         */
-        environment?: string;
-    };
 };
 
-export type GetFunctionMetricsResponse = (ResourceEnvironmentMetrics);
+export type GetFunctionMetricsResponse = (ResourceMetrics);
 
 export type GetFunctionMetricsError = unknown;
-
-export type CreateFunctionReleaseData = {
-    path: {
-        /**
-         * Name of the function
-         */
-        functionName: string;
-    };
-};
-
-export type CreateFunctionReleaseResponse = (FunctionRelease);
-
-export type CreateFunctionReleaseError = unknown;
 
 export type GetFunctionTraceIdsData = {
     path: {
@@ -2382,23 +2084,23 @@ export type GetFunctionTraceIdsData = {
     };
     query?: {
         /**
-         * Environment to filter function by
+         * End time
          */
-        environment?: string;
+        endTime?: string;
+        /**
+         * Limit
+         */
+        limit?: string;
+        /**
+         * Start time
+         */
+        startTime?: string;
     };
 };
 
 export type GetFunctionTraceIdsResponse = (TraceIdsResponse);
 
 export type GetFunctionTraceIdsError = unknown;
-
-export type RunInformationGenerationAgentData = {
-    body: AgentInformationRequest;
-};
-
-export type RunInformationGenerationAgentResponse = (AgentInformationResponse);
-
-export type RunInformationGenerationAgentError = unknown;
 
 export type ListAgentsHistoryResponse = (Array<AgentHistory>);
 
@@ -2525,15 +2227,6 @@ export type GetIntegrationConnectionModelResponse = (unknown);
 
 export type GetIntegrationConnectionModelError = unknown;
 
-export type ListKnowledgebasesData = {
-    query?: {
-        /**
-         * Environment to filter functions by
-         */
-        environment?: string;
-    };
-};
-
 export type ListKnowledgebasesResponse = (Array<Knowledgebase>);
 
 export type ListKnowledgebasesError = unknown;
@@ -2553,12 +2246,6 @@ export type DeleteKnowledgebaseData = {
          */
         knowledgebaseName: string;
     };
-    query?: {
-        /**
-         * Environment to filter knowledgebases by
-         */
-        environment?: string;
-    };
 };
 
 export type DeleteKnowledgebaseResponse = (Knowledgebase);
@@ -2571,12 +2258,6 @@ export type GetKnowledgebaseData = {
          * Name of the knowledgebase
          */
         knowledgebaseName: string;
-    };
-    query?: {
-        /**
-         * Environment to filter functions by
-         */
-        environment?: string;
     };
 };
 
@@ -2602,22 +2283,13 @@ export type ListLocationsResponse = (Array<LocationResponse>);
 
 export type ListLocationsError = unknown;
 
-export type ListMcpHubDefinitionsResponse = (Array<MCPHubArtifact>);
+export type ListMcpHubDefinitionsResponse = (Array<MCPDefinition>);
 
 export type ListMcpHubDefinitionsError = unknown;
 
 export type GetMetricsResponse = (Metrics);
 
 export type GetMetricsError = unknown;
-
-export type ListModelsData = {
-    query?: {
-        /**
-         * Environment of the model
-         */
-        environment?: string;
-    };
-};
 
 export type ListModelsResponse = (Array<Model>);
 
@@ -2638,12 +2310,6 @@ export type DeleteModelData = {
          */
         modelName: string;
     };
-    query: {
-        /**
-         * Environment of the model
-         */
-        environment: string;
-    };
 };
 
 export type DeleteModelResponse = (Model);
@@ -2656,12 +2322,6 @@ export type GetModelData = {
          * Name of the model
          */
         modelName: string;
-    };
-    query?: {
-        /**
-         * Environment of the model
-         */
-        environment?: string;
     };
 };
 
@@ -2683,7 +2343,7 @@ export type UpdateModelResponse = (Model);
 
 export type UpdateModelError = unknown;
 
-export type GetModelEnvironmentLogsData = {
+export type GetModelLogsData = {
     path: {
         /**
          * Name of the model
@@ -2692,9 +2352,9 @@ export type GetModelEnvironmentLogsData = {
     };
 };
 
-export type GetModelEnvironmentLogsResponse = (Array<ResourceLog>);
+export type GetModelLogsResponse = (Array<ResourceLog>);
 
-export type GetModelEnvironmentLogsError = unknown;
+export type GetModelLogsError = unknown;
 
 export type GetModelMetricsData = {
     path: {
@@ -2703,30 +2363,11 @@ export type GetModelMetricsData = {
          */
         modelName: string;
     };
-    query?: {
-        /**
-         * Environment of the model
-         */
-        environment?: string;
-    };
 };
 
-export type GetModelMetricsResponse = (ResourceEnvironmentMetrics);
+export type GetModelMetricsResponse = (ResourceMetrics);
 
 export type GetModelMetricsError = unknown;
-
-export type ReleaseModelData = {
-    path: {
-        /**
-         * Name of the model
-         */
-        modelName: string;
-    };
-};
-
-export type ReleaseModelResponse = (ModelRelease);
-
-export type ReleaseModelError = unknown;
 
 export type GetModelTraceIdsData = {
     path: {
@@ -2737,9 +2378,17 @@ export type GetModelTraceIdsData = {
     };
     query?: {
         /**
-         * Environment to filter models by
+         * End time
          */
-        environment?: string;
+        endTime?: string;
+        /**
+         * Limit
+         */
+        limit?: string;
+        /**
+         * Start time
+         */
+        startTime?: string;
     };
 };
 
@@ -3111,7 +2760,6 @@ export type GetStoreFunctionError = unknown;
 export type GetTraceIdsData = {
     query?: {
         endTime?: string;
-        environment?: string;
         limit?: string;
         startTime?: string;
         workloadId?: string;

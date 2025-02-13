@@ -1,34 +1,20 @@
-from typing import Any, TypeVar, Union, cast
+from typing import Any, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="EnvironmentSpec")
+T = TypeVar("T", bound="ResourceMetricsRpsPerCode")
 
 
 @_attrs_define
-class EnvironmentSpec:
-    """Environment specification
+class ResourceMetricsRpsPerCode:
+    """Number of requests per second for the resource globally per code"""
 
-    Attributes:
-        policies (Union[Unset, list[str]]):
-    """
-
-    policies: Union[Unset, list[str]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        policies: Union[Unset, list[str]] = UNSET
-        if not isinstance(self.policies, Unset):
-            policies = self.policies
-
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
-        if policies is not UNSET:
-            field_dict["policies"] = policies
 
         return field_dict
 
@@ -37,14 +23,10 @@ class EnvironmentSpec:
         if not src_dict:
             return None
         d = src_dict.copy()
-        policies = cast(list[str], d.pop("policies", UNSET))
+        resource_metrics_rps_per_code = cls()
 
-        environment_spec = cls(
-            policies=policies,
-        )
-
-        environment_spec.additional_properties = d
-        return environment_spec
+        resource_metrics_rps_per_code.additional_properties = d
+        return resource_metrics_rps_per_code
 
     @property
     def additional_keys(self) -> list[str]:

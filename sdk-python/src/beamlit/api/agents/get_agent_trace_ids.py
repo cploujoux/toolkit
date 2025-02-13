@@ -12,11 +12,17 @@ from ...types import UNSET, Response, Unset
 def _get_kwargs(
     agent_name: str,
     *,
-    environment: Union[Unset, str] = UNSET,
+    limit: Union[Unset, str] = UNSET,
+    start_time: Union[Unset, str] = UNSET,
+    end_time: Union[Unset, str] = UNSET,
 ) -> dict[str, Any]:
     params: dict[str, Any] = {}
 
-    params["environment"] = environment
+    params["limit"] = limit
+
+    params["startTime"] = start_time
+
+    params["endTime"] = end_time
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -57,13 +63,17 @@ def sync_detailed(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
+    limit: Union[Unset, str] = UNSET,
+    start_time: Union[Unset, str] = UNSET,
+    end_time: Union[Unset, str] = UNSET,
 ) -> Response[TraceIdsResponse]:
     """Get agent trace IDs
 
     Args:
         agent_name (str):
-        environment (Union[Unset, str]):
+        limit (Union[Unset, str]):
+        start_time (Union[Unset, str]):
+        end_time (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -75,7 +85,9 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         agent_name=agent_name,
-        environment=environment,
+        limit=limit,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     response = client.get_httpx_client().request(
@@ -89,13 +101,17 @@ def sync(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
+    limit: Union[Unset, str] = UNSET,
+    start_time: Union[Unset, str] = UNSET,
+    end_time: Union[Unset, str] = UNSET,
 ) -> Optional[TraceIdsResponse]:
     """Get agent trace IDs
 
     Args:
         agent_name (str):
-        environment (Union[Unset, str]):
+        limit (Union[Unset, str]):
+        start_time (Union[Unset, str]):
+        end_time (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -108,7 +124,9 @@ def sync(
     return sync_detailed(
         agent_name=agent_name,
         client=client,
-        environment=environment,
+        limit=limit,
+        start_time=start_time,
+        end_time=end_time,
     ).parsed
 
 
@@ -116,13 +134,17 @@ async def asyncio_detailed(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
+    limit: Union[Unset, str] = UNSET,
+    start_time: Union[Unset, str] = UNSET,
+    end_time: Union[Unset, str] = UNSET,
 ) -> Response[TraceIdsResponse]:
     """Get agent trace IDs
 
     Args:
         agent_name (str):
-        environment (Union[Unset, str]):
+        limit (Union[Unset, str]):
+        start_time (Union[Unset, str]):
+        end_time (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -134,7 +156,9 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         agent_name=agent_name,
-        environment=environment,
+        limit=limit,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -146,13 +170,17 @@ async def asyncio(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-    environment: Union[Unset, str] = UNSET,
+    limit: Union[Unset, str] = UNSET,
+    start_time: Union[Unset, str] = UNSET,
+    end_time: Union[Unset, str] = UNSET,
 ) -> Optional[TraceIdsResponse]:
     """Get agent trace IDs
 
     Args:
         agent_name (str):
-        environment (Union[Unset, str]):
+        limit (Union[Unset, str]):
+        start_time (Union[Unset, str]):
+        end_time (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -166,6 +194,8 @@ async def asyncio(
         await asyncio_detailed(
             agent_name=agent_name,
             client=client,
-            environment=environment,
+            limit=limit,
+            start_time=start_time,
+            end_time=end_time,
         )
     ).parsed

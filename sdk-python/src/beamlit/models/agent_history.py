@@ -21,7 +21,6 @@ class AgentHistory:
         updated_at (Union[Unset, str]): The date and time when the resource was updated
         agent (Union[Unset, str]): Agent name
         end (Union[Unset, str]): End time
-        environment (Union[Unset, str]): Environment name
         events (Union[Unset, list['AgentHistoryEvent']]): Events
         request_id (Union[Unset, str]): Request ID
         start (Union[Unset, str]): Start time
@@ -34,7 +33,6 @@ class AgentHistory:
     updated_at: Union[Unset, str] = UNSET
     agent: Union[Unset, str] = UNSET
     end: Union[Unset, str] = UNSET
-    environment: Union[Unset, str] = UNSET
     events: Union[Unset, list["AgentHistoryEvent"]] = UNSET
     request_id: Union[Unset, str] = UNSET
     start: Union[Unset, str] = UNSET
@@ -51,8 +49,6 @@ class AgentHistory:
         agent = self.agent
 
         end = self.end
-
-        environment = self.environment
 
         events: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.events, Unset):
@@ -82,8 +78,6 @@ class AgentHistory:
             field_dict["agent"] = agent
         if end is not UNSET:
             field_dict["end"] = end
-        if environment is not UNSET:
-            field_dict["environment"] = environment
         if events is not UNSET:
             field_dict["events"] = events
         if request_id is not UNSET:
@@ -114,8 +108,6 @@ class AgentHistory:
 
         end = d.pop("end", UNSET)
 
-        environment = d.pop("environment", UNSET)
-
         events = []
         _events = d.pop("events", UNSET)
         for events_item_data in _events or []:
@@ -138,7 +130,6 @@ class AgentHistory:
             updated_at=updated_at,
             agent=agent,
             end=end,
-            environment=environment,
             events=events,
             request_id=request_id,
             start=start,
