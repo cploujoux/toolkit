@@ -27,7 +27,7 @@ func (r *Operations) ListOrSetWorkspacesCmd() *cobra.Command {
 			currentWorkspace := sdk.CurrentContext().Workspace
 
 			// En-têtes avec largeurs fixes
-			fmt.Printf("%-30s %-20s %-20s\n", "NAME", "CURRENT")
+			fmt.Printf("%-30s %-20s\n", "NAME", "CURRENT")
 
 			// Afficher chaque workspace avec les mêmes largeurs fixes
 			for _, workspace := range workspaces {

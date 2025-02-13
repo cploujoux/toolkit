@@ -96,7 +96,6 @@ if websocket_detected:
 else:
     @app.post("/")
     async def root(request: Request):
-        settings = get_settings()
         logger = getLogger(__name__)
         try:
             original_func = getattr(func, "__wrapped__", func)

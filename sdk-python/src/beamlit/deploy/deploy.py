@@ -23,10 +23,10 @@ from beamlit.common.settings import Settings, get_settings, init
 from beamlit.models import (
     Agent,
     AgentSpec,
-    Metadata,
     Flavor,
     Function,
     FunctionSpec,
+    Metadata,
     MetadataLabels,
 )
 

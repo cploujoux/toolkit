@@ -122,7 +122,7 @@ func (resource Resource) GetFn(name string) {
 	output(resource, []interface{}{res}, outputFormat)
 }
 
-func (resource Resource) ListFn(options map[string]string) {
+func (resource Resource) ListFn() {
 	formattedError := fmt.Sprintf("Resource %s error: ", resource.Kind)
 	ctx := context.Background()
 	// Use reflect to call the function
@@ -133,12 +133,6 @@ func (resource Resource) ListFn(options map[string]string) {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx)} // Add the context
-
-	// Handle the options if the resource has ListParamsType
-	if resource.ListParamsType != nil {
-		paramsValue := retrieveListParams(resource.ListParamsType, options)
-		fnargs = append(fnargs, paramsValue)
-	}
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
