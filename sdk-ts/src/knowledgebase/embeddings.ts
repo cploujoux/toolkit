@@ -1,6 +1,5 @@
 import { Client } from "@hey-api/client-fetch";
 import { HTTPError } from "../common/error.js";
-import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 
 export interface EmbeddingsConfig {
@@ -35,11 +34,9 @@ export class EmbeddingModel {
   async openAIEmbed(query: string): Promise<number[]> {
     try {
       const { model } = this.config;
-      const settings = getSettings();
       const data = (await this.runClient.run({
         resourceType: "model",
         resourceName: model,
-        environment: settings.environment,
         method: "POST",
         json: { input: query },
         path: "/v1/embeddings",

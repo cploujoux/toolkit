@@ -19,9 +19,9 @@ import { logger } from "../common/logger.js";
 import { getSettings, Settings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
 import { KnowledgebaseFactory } from "../knowledgebase/factory.js";
+import { KnowledgebaseClass } from "../knowledgebase/types.js";
 import { getChatModelFull } from "./chat.js";
 import { OpenAIVoiceReactAgent } from "./voice/openai.js";
-import { KnowledgebaseClass } from "../knowledgebase/types.js";
 
 /**
  * A variadic callback function type for agents.
@@ -139,7 +139,6 @@ const initKnowledgebase = async (
   const { data: kb } = await getKnowledgebase({
     client,
     path: { knowledgebaseName: agent.spec.knowledgebase },
-    query: { environment: settings.environment },
   });
   if (kb && kb.spec) {
     let config = {
@@ -150,7 +149,6 @@ const initKnowledgebase = async (
       const { data: integrationConnection } = await getIntegrationConnection({
         client,
         path: { connectionName: kb.spec?.integrationConnections[0] },
-        query: { environment: settings.environment },
       });
       if (integrationConnection?.spec) {
         if (integrationConnection?.spec?.config) {
