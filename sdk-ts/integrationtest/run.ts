@@ -19,7 +19,6 @@ const main = async () => {
   const data = await runClient.run({
     resourceType: "agents",
     resourceName: "agent-gpt-4o-mini",
-    environment: "production",
     method: "POST",
     json: {
       input: "Hello world",

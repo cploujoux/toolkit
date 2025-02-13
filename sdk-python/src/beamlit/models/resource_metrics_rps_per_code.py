@@ -1,38 +1,20 @@
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="AgentRelease")
+T = TypeVar("T", bound="ResourceMetricsRpsPerCode")
 
 
 @_attrs_define
-class AgentRelease:
-    """Agent release, used to deploy a agent from one environment to another
+class ResourceMetricsRpsPerCode:
+    """Number of requests per second for the resource globally per code"""
 
-    Attributes:
-        from_ (Union[Unset, str]): Origin environment from which the agent is released
-        to (Union[Unset, str]): Destination environment to which the agent is released
-    """
-
-    from_: Union[Unset, str] = UNSET
-    to: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        from_ = self.from_
-
-        to = self.to
-
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
-        if from_ is not UNSET:
-            field_dict["from"] = from_
-        if to is not UNSET:
-            field_dict["to"] = to
 
         return field_dict
 
@@ -41,17 +23,10 @@ class AgentRelease:
         if not src_dict:
             return None
         d = src_dict.copy()
-        from_ = d.pop("from", UNSET)
+        resource_metrics_rps_per_code = cls()
 
-        to = d.pop("to", UNSET)
-
-        agent_release = cls(
-            from_=from_,
-            to=to,
-        )
-
-        agent_release.additional_properties = d
-        return agent_release
+        resource_metrics_rps_per_code.additional_properties = d
+        return resource_metrics_rps_per_code
 
     @property
     def additional_keys(self) -> list[str]:

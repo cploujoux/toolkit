@@ -216,22 +216,9 @@ export const wrapAgent: WrapAgentType = async (
     const { response, data } = await getModel({
       client,
       path: { modelName: agent.spec.model },
-      query: { environment: settings.environment },
     });
     if (response.status === 200) {
       settings.agent.model = data;
-    } else if (
-      response.status === 404 &&
-      settings.environment !== "production"
-    ) {
-      const { response, data } = await getModel({
-        client,
-        path: { modelName: agent.spec.model },
-        query: { environment: "production" },
-      });
-      if (response.status === 200) {
-        settings.agent.model = data;
-      }
     }
   }
   const functions = await getFunctions({
@@ -246,7 +233,6 @@ export const wrapAgent: WrapAgentType = async (
     if (!settings.agent.model) {
       const { response, data: models } = await listModels({
         client,
-        query: { environment: settings.environment },
         throwOnError: false,
       });
       if (models?.length) {

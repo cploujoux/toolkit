@@ -28,15 +28,12 @@ func (r *Operations) GetCmd() *cobra.Command {
 			Aliases: []string{resource.Singular, resource.Short},
 			Short:   fmt.Sprintf("Get a %s", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
-				options := map[string]string{
-					"environment": environment,
-				}
 				if watch {
 					seconds := 2
 					duration := time.Duration(seconds) * time.Second
 
 					// Execute immediately before starting the ticker
-					executeAndDisplayWatch(args, *resource, options, seconds)
+					executeAndDisplayWatch(args, *resource, seconds)
 
 					// Create a ticker to periodically fetch updates
 					ticker := time.NewTicker(duration)
@@ -49,7 +46,7 @@ func (r *Operations) GetCmd() *cobra.Command {
 					for {
 						select {
 						case <-ticker.C:
-							executeAndDisplayWatch(args, *resource, options, seconds)
+							executeAndDisplayWatch(args, *resource, seconds)
 						case <-sigChan:
 							fmt.Println("\nStopped watching.")
 							return
@@ -57,11 +54,11 @@ func (r *Operations) GetCmd() *cobra.Command {
 					}
 				} else {
 					if len(args) == 0 {
-						resource.ListFn(options)
+						resource.ListFn()
 						return
 					}
 					if len(args) == 1 {
-						resource.GetFn(args[0], options)
+						resource.GetFn(args[0])
 					}
 				}
 			},
@@ -72,7 +69,7 @@ func (r *Operations) GetCmd() *cobra.Command {
 	return cmd
 }
 
-func (resource Resource) GetFn(name string, options map[string]string) {
+func (resource Resource) GetFn(name string) {
 	ctx := context.Background()
 	formattedError := fmt.Sprintf("Resource %s:%s error: ", resource.Kind, name)
 	// Use reflect to call the function
@@ -83,11 +80,6 @@ func (resource Resource) GetFn(name string, options map[string]string) {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(name)} // Add the context and the resource name
-
-	if resource.GetParamsType != nil {
-		paramsValue := retrieveListParams(resource.GetParamsType, options)
-		fnargs = append(fnargs, paramsValue)
-	}
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
@@ -130,7 +122,7 @@ func (resource Resource) GetFn(name string, options map[string]string) {
 	output(resource, []interface{}{res}, outputFormat)
 }
 
-func (resource Resource) ListFn(options map[string]string) {
+func (resource Resource) ListFn() {
 	formattedError := fmt.Sprintf("Resource %s error: ", resource.Kind)
 	ctx := context.Background()
 	// Use reflect to call the function
@@ -141,12 +133,6 @@ func (resource Resource) ListFn(options map[string]string) {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx)} // Add the context
-
-	// Handle the options if the resource has ListParamsType
-	if resource.ListParamsType != nil {
-		paramsValue := retrieveListParams(resource.ListParamsType, options)
-		fnargs = append(fnargs, paramsValue)
-	}
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
@@ -187,7 +173,7 @@ func (resource Resource) ListFn(options map[string]string) {
 }
 
 // Helper function to execute and display results
-func executeAndDisplayWatch(args []string, resource Resource, options map[string]string, seconds int) {
+func executeAndDisplayWatch(args []string, resource Resource, seconds int) {
 	// Create a pipe to capture output
 	r, w, _ := os.Pipe()
 	// Save the original stdout
@@ -197,9 +183,9 @@ func executeAndDisplayWatch(args []string, resource Resource, options map[string
 
 	// Execute the resource function
 	if len(args) == 0 {
-		resource.ListFn(options)
+		resource.ListFn()
 	} else if len(args) == 1 {
-		resource.GetFn(args[0], options)
+		resource.GetFn(args[0])
 	}
 
 	// Close the write end of the pipe

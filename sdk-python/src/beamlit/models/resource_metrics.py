@@ -10,21 +10,17 @@ if TYPE_CHECKING:
     from ..models.metric import Metric
     from ..models.request_duration_over_time_metrics import RequestDurationOverTimeMetrics
     from ..models.request_total_by_origin_metric import RequestTotalByOriginMetric
-    from ..models.resource_environment_metrics_request_total_per_code import (
-        ResourceEnvironmentMetricsRequestTotalPerCode,
-    )
-    from ..models.resource_environment_metrics_rps_per_code import (
-        ResourceEnvironmentMetricsRpsPerCode,
-    )
+    from ..models.resource_metrics_request_total_per_code import ResourceMetricsRequestTotalPerCode
+    from ..models.resource_metrics_rps_per_code import ResourceMetricsRpsPerCode
     from ..models.token_rate_metrics import TokenRateMetrics
     from ..models.token_total_metric import TokenTotalMetric
 
 
-T = TypeVar("T", bound="ResourceEnvironmentMetrics")
+T = TypeVar("T", bound="ResourceMetrics")
 
 
 @_attrs_define
-class ResourceEnvironmentMetrics:
+class ResourceMetrics:
     """Metrics for a single resource deployment (eg. model deployment, function deployment)
 
     Attributes:
@@ -34,11 +30,11 @@ class ResourceEnvironmentMetrics:
         request_duration_over_time (Union[Unset, RequestDurationOverTimeMetrics]): Request duration over time metrics
         request_total (Union[Unset, float]): Number of requests for the resource globally
         request_total_by_origin (Union[Unset, RequestTotalByOriginMetric]): Request total by origin metric
-        request_total_per_code (Union[Unset, ResourceEnvironmentMetricsRequestTotalPerCode]): Number of requests for the
-            resource globally per code
+        request_total_per_code (Union[Unset, ResourceMetricsRequestTotalPerCode]): Number of requests for the resource
+            globally per code
         rps (Union[Unset, float]): Number of requests per second for the resource globally
-        rps_per_code (Union[Unset, ResourceEnvironmentMetricsRpsPerCode]): Number of requests per second for the
-            resource globally per code
+        rps_per_code (Union[Unset, ResourceMetricsRpsPerCode]): Number of requests per second for the resource globally
+            per code
         token_rate (Union[Unset, TokenRateMetrics]): Token rate metrics
         token_total (Union[Unset, TokenTotalMetric]): Token total metric
     """
@@ -49,9 +45,9 @@ class ResourceEnvironmentMetrics:
     request_duration_over_time: Union[Unset, "RequestDurationOverTimeMetrics"] = UNSET
     request_total: Union[Unset, float] = UNSET
     request_total_by_origin: Union[Unset, "RequestTotalByOriginMetric"] = UNSET
-    request_total_per_code: Union[Unset, "ResourceEnvironmentMetricsRequestTotalPerCode"] = UNSET
+    request_total_per_code: Union[Unset, "ResourceMetricsRequestTotalPerCode"] = UNSET
     rps: Union[Unset, float] = UNSET
-    rps_per_code: Union[Unset, "ResourceEnvironmentMetricsRpsPerCode"] = UNSET
+    rps_per_code: Union[Unset, "ResourceMetricsRpsPerCode"] = UNSET
     token_rate: Union[Unset, "TokenRateMetrics"] = UNSET
     token_total: Union[Unset, "TokenTotalMetric"] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -163,12 +159,10 @@ class ResourceEnvironmentMetrics:
         from ..models.metric import Metric
         from ..models.request_duration_over_time_metrics import RequestDurationOverTimeMetrics
         from ..models.request_total_by_origin_metric import RequestTotalByOriginMetric
-        from ..models.resource_environment_metrics_request_total_per_code import (
-            ResourceEnvironmentMetricsRequestTotalPerCode,
+        from ..models.resource_metrics_request_total_per_code import (
+            ResourceMetricsRequestTotalPerCode,
         )
-        from ..models.resource_environment_metrics_rps_per_code import (
-            ResourceEnvironmentMetricsRpsPerCode,
-        )
+        from ..models.resource_metrics_rps_per_code import ResourceMetricsRpsPerCode
         from ..models.token_rate_metrics import TokenRateMetrics
         from ..models.token_total_metric import TokenTotalMetric
 
@@ -213,20 +207,20 @@ class ResourceEnvironmentMetrics:
             request_total_by_origin = RequestTotalByOriginMetric.from_dict(_request_total_by_origin)
 
         _request_total_per_code = d.pop("requestTotalPerCode", UNSET)
-        request_total_per_code: Union[Unset, ResourceEnvironmentMetricsRequestTotalPerCode]
+        request_total_per_code: Union[Unset, ResourceMetricsRequestTotalPerCode]
         if isinstance(_request_total_per_code, Unset):
             request_total_per_code = UNSET
         else:
-            request_total_per_code = ResourceEnvironmentMetricsRequestTotalPerCode.from_dict(_request_total_per_code)
+            request_total_per_code = ResourceMetricsRequestTotalPerCode.from_dict(_request_total_per_code)
 
         rps = d.pop("rps", UNSET)
 
         _rps_per_code = d.pop("rpsPerCode", UNSET)
-        rps_per_code: Union[Unset, ResourceEnvironmentMetricsRpsPerCode]
+        rps_per_code: Union[Unset, ResourceMetricsRpsPerCode]
         if isinstance(_rps_per_code, Unset):
             rps_per_code = UNSET
         else:
-            rps_per_code = ResourceEnvironmentMetricsRpsPerCode.from_dict(_rps_per_code)
+            rps_per_code = ResourceMetricsRpsPerCode.from_dict(_rps_per_code)
 
         _token_rate = d.pop("tokenRate", UNSET)
         token_rate: Union[Unset, TokenRateMetrics]
@@ -242,7 +236,7 @@ class ResourceEnvironmentMetrics:
         else:
             token_total = TokenTotalMetric.from_dict(_token_total)
 
-        resource_environment_metrics = cls(
+        resource_metrics = cls(
             inference_global=inference_global,
             last_n_requests=last_n_requests,
             latency=latency,
@@ -256,8 +250,8 @@ class ResourceEnvironmentMetrics:
             token_total=token_total,
         )
 
-        resource_environment_metrics.additional_properties = d
-        return resource_environment_metrics
+        resource_metrics.additional_properties = d
+        return resource_metrics
 
     @property
     def additional_keys(self) -> list[str]:

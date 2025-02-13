@@ -9,9 +9,26 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
+	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/qeesung/image2ascii/convert"
 )
+
+func FormatMarkdown(text string) string {
+	text = FormatText(text)
+	text = FormatMarkdownImage(text)
+
+	return text
+}
+
+func FormatText(text string) string {
+	text, err := glamour.Render(text, "dark")
+	if err != nil {
+		return text
+	}
+
+	return text
+}
 
 func FormatMarkdownImage(text string) string {
 	imageRegex := regexp.MustCompile(`!\[([^\]]*)\]\(([^)]+)\)`)

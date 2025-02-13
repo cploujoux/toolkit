@@ -14,21 +14,17 @@ class LastNRequestsMetric:
 
     Attributes:
         date (Union[Unset, str]): Timestamp
-        environment (Union[Unset, str]): Environment
         workload_type (Union[Unset, str]): Workload type
         workspace (Union[Unset, str]): Workspace
     """
 
     date: Union[Unset, str] = UNSET
-    environment: Union[Unset, str] = UNSET
     workload_type: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         date = self.date
-
-        environment = self.environment
 
         workload_type = self.workload_type
 
@@ -39,8 +35,6 @@ class LastNRequestsMetric:
         field_dict.update({})
         if date is not UNSET:
             field_dict["date"] = date
-        if environment is not UNSET:
-            field_dict["environment"] = environment
         if workload_type is not UNSET:
             field_dict["workloadType"] = workload_type
         if workspace is not UNSET:
@@ -55,15 +49,12 @@ class LastNRequestsMetric:
         d = src_dict.copy()
         date = d.pop("date", UNSET)
 
-        environment = d.pop("environment", UNSET)
-
         workload_type = d.pop("workloadType", UNSET)
 
         workspace = d.pop("workspace", UNSET)
 
         last_n_requests_metric = cls(
             date=date,
-            environment=environment,
             workload_type=workload_type,
             workspace=workspace,
         )

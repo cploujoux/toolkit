@@ -13,7 +13,6 @@ def _get_kwargs(
     *,
     workload_id: Union[Unset, str] = UNSET,
     workload_type: Union[Unset, str] = UNSET,
-    environment: Union[Unset, str] = UNSET,
     limit: Union[Unset, str] = UNSET,
     start_time: Union[Unset, str] = UNSET,
     end_time: Union[Unset, str] = UNSET,
@@ -23,8 +22,6 @@ def _get_kwargs(
     params["workloadId"] = workload_id
 
     params["workloadType"] = workload_type
-
-    params["environment"] = environment
 
     params["limit"] = limit
 
@@ -72,7 +69,6 @@ def sync_detailed(
     client: AuthenticatedClient,
     workload_id: Union[Unset, str] = UNSET,
     workload_type: Union[Unset, str] = UNSET,
-    environment: Union[Unset, str] = UNSET,
     limit: Union[Unset, str] = UNSET,
     start_time: Union[Unset, str] = UNSET,
     end_time: Union[Unset, str] = UNSET,
@@ -82,7 +78,6 @@ def sync_detailed(
     Args:
         workload_id (Union[Unset, str]):
         workload_type (Union[Unset, str]):
-        environment (Union[Unset, str]):
         limit (Union[Unset, str]):
         start_time (Union[Unset, str]):
         end_time (Union[Unset, str]):
@@ -98,7 +93,6 @@ def sync_detailed(
     kwargs = _get_kwargs(
         workload_id=workload_id,
         workload_type=workload_type,
-        environment=environment,
         limit=limit,
         start_time=start_time,
         end_time=end_time,
@@ -116,7 +110,6 @@ def sync(
     client: AuthenticatedClient,
     workload_id: Union[Unset, str] = UNSET,
     workload_type: Union[Unset, str] = UNSET,
-    environment: Union[Unset, str] = UNSET,
     limit: Union[Unset, str] = UNSET,
     start_time: Union[Unset, str] = UNSET,
     end_time: Union[Unset, str] = UNSET,
@@ -126,7 +119,6 @@ def sync(
     Args:
         workload_id (Union[Unset, str]):
         workload_type (Union[Unset, str]):
-        environment (Union[Unset, str]):
         limit (Union[Unset, str]):
         start_time (Union[Unset, str]):
         end_time (Union[Unset, str]):
@@ -143,7 +135,6 @@ def sync(
         client=client,
         workload_id=workload_id,
         workload_type=workload_type,
-        environment=environment,
         limit=limit,
         start_time=start_time,
         end_time=end_time,
@@ -155,7 +146,6 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     workload_id: Union[Unset, str] = UNSET,
     workload_type: Union[Unset, str] = UNSET,
-    environment: Union[Unset, str] = UNSET,
     limit: Union[Unset, str] = UNSET,
     start_time: Union[Unset, str] = UNSET,
     end_time: Union[Unset, str] = UNSET,
@@ -165,7 +155,6 @@ async def asyncio_detailed(
     Args:
         workload_id (Union[Unset, str]):
         workload_type (Union[Unset, str]):
-        environment (Union[Unset, str]):
         limit (Union[Unset, str]):
         start_time (Union[Unset, str]):
         end_time (Union[Unset, str]):
@@ -181,7 +170,6 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         workload_id=workload_id,
         workload_type=workload_type,
-        environment=environment,
         limit=limit,
         start_time=start_time,
         end_time=end_time,
@@ -197,7 +185,6 @@ async def asyncio(
     client: AuthenticatedClient,
     workload_id: Union[Unset, str] = UNSET,
     workload_type: Union[Unset, str] = UNSET,
-    environment: Union[Unset, str] = UNSET,
     limit: Union[Unset, str] = UNSET,
     start_time: Union[Unset, str] = UNSET,
     end_time: Union[Unset, str] = UNSET,
@@ -207,7 +194,6 @@ async def asyncio(
     Args:
         workload_id (Union[Unset, str]):
         workload_type (Union[Unset, str]):
-        environment (Union[Unset, str]):
         limit (Union[Unset, str]):
         start_time (Union[Unset, str]):
         end_time (Union[Unset, str]):
@@ -225,7 +211,6 @@ async def asyncio(
             client=client,
             workload_id=workload_id,
             workload_type=workload_type,
-            environment=environment,
             limit=limit,
             start_time=start_time,
             end_time=end_time,

@@ -22,8 +22,8 @@ class Runtime:
         command (Union[Unset, list[Any]]): The command to run the deployment
         endpoint_name (Union[Unset, str]): Endpoint Name of the model. In case of hf_private_endpoint, it is the
             endpoint name. In case of hf_public_endpoint, it is not used.
-        envs (Union[Unset, list[Any]]): The environment variables to set in the deployment. Should be a list of
-            Kubernetes EnvVar types
+        envs (Union[Unset, list[Any]]): The env variables to set in the deployment. Should be a list of Kubernetes
+            EnvVar types
         image (Union[Unset, str]): The Docker image for the deployment
         metric_port (Union[Unset, int]): The port to serve the metrics on
         model (Union[Unset, str]): The slug name of the origin model at HuggingFace.

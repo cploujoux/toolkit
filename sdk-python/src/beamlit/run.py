@@ -24,7 +24,6 @@ class RunClient:
         response = run_client.run(
             resource_type="function",
             resource_name="my-function",
-            environment="prod",
             method="POST",
             json={"key": "value"}
         )
@@ -41,7 +40,6 @@ class RunClient:
         self,
         resource_type: str,
         resource_name: str,
-        environment: str,
         method: str,
         path: str = "",
         headers: dict[str, str] | None = None,
@@ -56,7 +54,6 @@ class RunClient:
         Args:
             resource_type (str): The type of resource to interact with (e.g., 'function', 'service').
             resource_name (str): The name of the specific resource.
-            environment (str): The environment to execute the request in.
             method (str): The HTTP method to use (e.g., 'GET', 'POST', 'PUT', 'DELETE').
             path (str, optional): Additional path segments to append to the resource URL. Defaults to "".
             headers (dict[str, str] | None, optional): HTTP headers to include in the request. Defaults to None.
@@ -90,7 +87,7 @@ class RunClient:
 
         kwargs = {
             "headers": headers,
-            "params": {"environment": environment, **params},
+            "params": {**params},
         }
         if data:
             kwargs["data"] = data

@@ -55,11 +55,9 @@ class ChainTool(BaseTool):
         Returns:
             Any: The result of the asynchronous tool execution.
         """
-        settings = get_settings()
         result = self.client.run(
             "agent",
             self.name,
-            settings.environment,
             "POST",
             cloud=self._cloud,
             service_name=self._service_name,

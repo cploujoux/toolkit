@@ -1,6 +1,5 @@
 import {
   getAgent,
-  getEnvironment,
   getFunction,
   getIntegrationConnection,
   getModel,
@@ -74,12 +73,10 @@ export class BeamlitResourceVirtualFileSystemProvider
     const client = newClient();
     const resourceType = (query.resourceType as string) || "agents";
     const resourceId = (query.resourceId as string) || "";
-    const environment = (query.environment as string) || "";
     const func: Record<string, CallableFunction> = {
       agents: getAgent,
       functions: getFunction,
       models: getModel,
-      environments: getEnvironment,
       policies: getPolicy,
       integrations: getIntegrationConnection,
     };
@@ -87,7 +84,6 @@ export class BeamlitResourceVirtualFileSystemProvider
       agents: "Agent",
       functions: "Function",
       models: "Model",
-      environments: "Environment",
       policies: "Policy",
       integrations: "Integration",
     };
@@ -96,16 +92,12 @@ export class BeamlitResourceVirtualFileSystemProvider
     );
     try {
       const query: Record<string, string> = {};
-      if (environment) {
-        query.environment = environment;
-      }
       const resource = await func[resourceType]({
         client,
         path: {
           functionName: resourceId,
           agentName: resourceId,
           modelName: resourceId,
-          environmentName: resourceId,
           policyName: resourceId,
           connectionName: resourceId,
         },

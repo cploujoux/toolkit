@@ -1,4 +1,3 @@
-import "../common/instrumentation.js"; // Ensure instrumentation is initialized
 import websocket from "@fastify/websocket";
 import { AsyncLocalStorage } from "async_hooks";
 import {
@@ -10,6 +9,7 @@ import {
 import { IncomingMessage, request } from "http";
 import { v4 as uuidv4 } from "uuid";
 import { HTTPError } from "../common/error.js";
+import "../common/instrumentation.js"; // Ensure instrumentation is initialized
 import { logger } from "../common/logger.js";
 import { importModule } from "../common/module.js";
 import { getSettings, init } from "../common/settings.js";
@@ -56,7 +56,7 @@ export async function createApp(
     }
   }
   logger.info(
-    `Running server with environment ${settings.environment} on ${settings.server.host}:${settings.server.port}`
+    `Running server on ${settings.server.host}:${settings.server.port}`
   );
 
   /**
@@ -167,18 +167,14 @@ export async function createApp(
           const content = {
             error: e.message,
             status_code: e.status_code,
-            ...(settings.environment === "development" && {
-              traceback: e.stack,
-            }),
+            traceback: e.stack,
           };
           logger.error(`${e.status_code} ${e.stack}`);
           return reply.code(e.status_code).send(content);
         }
         const content = {
           error: `Internal server error, ${e}`,
-          ...(settings.environment === "development" && {
-            traceback: e instanceof Error ? e.stack : String(e),
-          }),
+          traceback: e instanceof Error ? e.stack : String(e),
         };
         logger.error(e instanceof Error ? e.stack : String(e));
         return reply.code(500).send(content);

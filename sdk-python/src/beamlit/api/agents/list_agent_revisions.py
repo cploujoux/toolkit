@@ -5,24 +5,31 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.model_release import ModelRelease
+from ...models.revision_metadata import RevisionMetadata
 from ...types import Response
 
 
 def _get_kwargs(
-    model_name: str,
+    agent_name: str,
 ) -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": f"/models/{model_name}/release",
+        "method": "get",
+        "url": f"/agents/{agent_name}/revisions",
     }
 
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[ModelRelease]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[list["RevisionMetadata"]]:
     if response.status_code == 200:
-        response_200 = ModelRelease.from_dict(response.json())
+        response_200 = []
+        _response_200 = response.json()
+        for response_200_item_data in _response_200:
+            response_200_item = RevisionMetadata.from_dict(response_200_item_data)
+
+            response_200.append(response_200_item)
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -31,7 +38,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[ModelRelease]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[list["RevisionMetadata"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -41,27 +50,25 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
-    model_name: str,
+    agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[ModelRelease]:
-    """Release model from an environment
-
-     Make a release for a model from an environment to another.
+) -> Response[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
-        model_name (str):
+        agent_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ModelRelease]
+        Response[list['RevisionMetadata']]
     """
 
     kwargs = _get_kwargs(
-        model_name=model_name,
+        agent_name=agent_name,
     )
 
     response = client.get_httpx_client().request(
@@ -72,53 +79,49 @@ def sync_detailed(
 
 
 def sync(
-    model_name: str,
+    agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[ModelRelease]:
-    """Release model from an environment
-
-     Make a release for a model from an environment to another.
+) -> Optional[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
-        model_name (str):
+        agent_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ModelRelease
+        list['RevisionMetadata']
     """
 
     return sync_detailed(
-        model_name=model_name,
+        agent_name=agent_name,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    model_name: str,
+    agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[ModelRelease]:
-    """Release model from an environment
-
-     Make a release for a model from an environment to another.
+) -> Response[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
-        model_name (str):
+        agent_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ModelRelease]
+        Response[list['RevisionMetadata']]
     """
 
     kwargs = _get_kwargs(
-        model_name=model_name,
+        agent_name=agent_name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -127,28 +130,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    model_name: str,
+    agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[ModelRelease]:
-    """Release model from an environment
-
-     Make a release for a model from an environment to another.
+) -> Optional[list["RevisionMetadata"]]:
+    """List all agent revisions
 
     Args:
-        model_name (str):
+        agent_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ModelRelease
+        list['RevisionMetadata']
     """
 
     return (
         await asyncio_detailed(
-            model_name=model_name,
+            agent_name=agent_name,
             client=client,
         )
     ).parsed

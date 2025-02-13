@@ -148,7 +148,6 @@ export async function getChatModelFull(
   provider: string;
   model: string;
 }> {
-  const settings = getSettings();
   const client = newClient();
 
   if (!agentModel) {
@@ -158,9 +157,6 @@ export async function getChatModelFull(
         path: {
           modelName: name,
         },
-        query: {
-          environment: settings.environment,
-        },
       });
       agentModel = data;
     } catch {
@@ -168,14 +164,11 @@ export async function getChatModelFull(
     }
   }
 
-  const environment = agentModel?.metadata?.environment || settings.environment;
   const headers = await getAuthenticationHeaders();
-  headers["X-Beamlit-Environment"] = environment;
   const jwt =
     headers["X-Beamlit-Authorization"]?.replace("Bearer ", "") ||
     headers["X-Beamlit-Api-Key"] ||
     "";
-  const params = { environment };
   let provider = agentModel?.spec?.runtime?.type;
   if (!provider) {
     logger.warn("Provider not found in agent model, defaulting to OpenAI");
@@ -230,7 +223,6 @@ export async function getChatModelFull(
         configuration: {
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
-          defaultQuery: params,
         },
       });
       return { chat: chatOpenAI, provider, model };
@@ -266,7 +258,6 @@ export async function getChatModelFull(
         configuration: {
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
-          defaultQuery: params,
         },
       });
       chat = chatXAI;
@@ -301,7 +292,6 @@ export async function getChatModelFull(
         configuration: {
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
-          defaultQuery: params,
         },
       });
       chat = chatDeepSeek;
@@ -315,7 +305,6 @@ export async function getChatModelFull(
         configuration: {
           baseURL: getBaseUrl(name).replace("/v1", ""),
           defaultHeaders: headers,
-          defaultQuery: params,
         },
       });
       chat = chatAzureAIInference;
@@ -328,7 +317,6 @@ export async function getChatModelFull(
         model,
         configuration: {
           defaultHeaders: headers,
-          defaultQuery: params,
         },
       });
       chat = chatAzureMarketplace;
@@ -343,7 +331,6 @@ export async function getChatModelFull(
         {
           baseURL: getBaseUrl(name),
           defaultHeaders: headers,
-          defaultQuery: params,
         }
       );
       chat = chatDefault;

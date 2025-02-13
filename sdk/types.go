@@ -10,16 +10,15 @@ type WorkspaceConfig struct {
 }
 
 type ContextConfig struct {
-	Workspace   string `yaml:"workspace"`
-	Environment string `yaml:"environment"`
+	Workspace string `yaml:"workspace"`
 }
 
 type Credentials struct {
-	APIKey       string `yaml:"apiKey"`
-	AccessToken  string `yaml:"access_token"`
-	RefreshToken string `yaml:"refresh_token"`
-	ExpiresIn    int    `yaml:"expires_in"`
-	DeviceCode   string `yaml:"device_code"`
+	APIKey            string `yaml:"apiKey"`
+	AccessToken       string `yaml:"access_token"`
+	RefreshToken      string `yaml:"refresh_token"`
+	ExpiresIn         int    `yaml:"expires_in"`
+	DeviceCode        string `yaml:"device_code"`
 	ClientCredentials string `yaml:"client_credentials"`
 }
 

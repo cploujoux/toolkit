@@ -54,7 +54,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     body: Knowledgebase,
 ) -> Response[Knowledgebase]:
-    """Create environment
+    """Create knowledgebase
 
      Creates an knowledgebase.
 
@@ -85,7 +85,7 @@ def sync(
     client: AuthenticatedClient,
     body: Knowledgebase,
 ) -> Optional[Knowledgebase]:
-    """Create environment
+    """Create knowledgebase
 
      Creates an knowledgebase.
 
@@ -111,7 +111,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     body: Knowledgebase,
 ) -> Response[Knowledgebase]:
-    """Create environment
+    """Create knowledgebase
 
      Creates an knowledgebase.
 
@@ -140,7 +140,7 @@ async def asyncio(
     client: AuthenticatedClient,
     body: Knowledgebase,
 ) -> Optional[Knowledgebase]:
-    """Create environment
+    """Create knowledgebase
 
      Creates an knowledgebase.
 

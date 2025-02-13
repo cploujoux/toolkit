@@ -5,25 +5,26 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.agent_history import AgentHistory
+from ...models.revision_metadata import RevisionMetadata
 from ...types import Response
 
 
 def _get_kwargs(
-    agent_name: str,
-    request_id: str,
+    function_name: str,
 ) -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/agents/{agent_name}/history/{request_id}",
+        "url": f"/functions/{function_name}/revisions",
     }
 
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[AgentHistory]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[RevisionMetadata]:
     if response.status_code == 200:
-        response_200 = AgentHistory.from_dict(response.json())
+        response_200 = RevisionMetadata.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -32,7 +33,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[AgentHistory]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[RevisionMetadata]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -42,27 +45,27 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 
 def sync_detailed(
-    agent_name: str,
-    request_id: str,
+    function_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[AgentHistory]:
-    """
+) -> Response[RevisionMetadata]:
+    """List function revisions
+
+     Returns revisions for a function by name.
+
     Args:
-        agent_name (str):
-        request_id (str):
+        function_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AgentHistory]
+        Response[RevisionMetadata]
     """
 
     kwargs = _get_kwargs(
-        agent_name=agent_name,
-        request_id=request_id,
+        function_name=function_name,
     )
 
     response = client.get_httpx_client().request(
@@ -73,53 +76,53 @@ def sync_detailed(
 
 
 def sync(
-    agent_name: str,
-    request_id: str,
+    function_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[AgentHistory]:
-    """
+) -> Optional[RevisionMetadata]:
+    """List function revisions
+
+     Returns revisions for a function by name.
+
     Args:
-        agent_name (str):
-        request_id (str):
+        function_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AgentHistory
+        RevisionMetadata
     """
 
     return sync_detailed(
-        agent_name=agent_name,
-        request_id=request_id,
+        function_name=function_name,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    agent_name: str,
-    request_id: str,
+    function_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[AgentHistory]:
-    """
+) -> Response[RevisionMetadata]:
+    """List function revisions
+
+     Returns revisions for a function by name.
+
     Args:
-        agent_name (str):
-        request_id (str):
+        function_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AgentHistory]
+        Response[RevisionMetadata]
     """
 
     kwargs = _get_kwargs(
-        agent_name=agent_name,
-        request_id=request_id,
+        function_name=function_name,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -128,28 +131,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    agent_name: str,
-    request_id: str,
+    function_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[AgentHistory]:
-    """
+) -> Optional[RevisionMetadata]:
+    """List function revisions
+
+     Returns revisions for a function by name.
+
     Args:
-        agent_name (str):
-        request_id (str):
+        function_name (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AgentHistory
+        RevisionMetadata
     """
 
     return (
         await asyncio_detailed(
-            agent_name=agent_name,
-            request_id=request_id,
+            function_name=function_name,
             client=client,
         )
     ).parsed

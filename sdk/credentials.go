@@ -55,7 +55,7 @@ func CurrentContext() ContextConfig {
 	return config.Context
 }
 
-func SetCurrentWorkspace(workspaceName string, environment string) {
+func SetCurrentWorkspace(workspaceName string) {
 	config := loadConfig()
 	// Check if workspace exists
 	found := false
@@ -70,7 +70,6 @@ func SetCurrentWorkspace(workspaceName string, environment string) {
 		os.Exit(1)
 	}
 	config.Context.Workspace = workspaceName
-	config.Context.Environment = environment
 	saveConfig(config)
 }
 

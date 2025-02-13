@@ -13,7 +13,7 @@ import (
 	"github.com/beamlit/toolkit/sdk"
 )
 
-func (r *Operations) DeviceModeLogin(workspace string, environment string) {
+func (r *Operations) DeviceModeLogin(workspace string) {
 	url := r.BaseURL + "/login/device"
 
 	payload := sdk.DeviceLogin{
@@ -54,10 +54,10 @@ func (r *Operations) DeviceModeLogin(workspace string, environment string) {
 	}
 	fmt.Println("Waiting for user to finish login...")
 
-	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace, environment)
+	r.DeviceModeLoginFinalize(deviceLoginResponse.DeviceCode, workspace)
 }
 
-func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string, environment string) {
+func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string) {
 	time.Sleep(3 * time.Second)
 	url := r.BaseURL + "/oauth/token"
 
@@ -90,7 +90,7 @@ func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string
 	}
 
 	if res.StatusCode != http.StatusOK {
-		r.DeviceModeLoginFinalize(deviceCode, workspace, environment)
+		r.DeviceModeLoginFinalize(deviceCode, workspace)
 	}
 
 	creds := sdk.Credentials{
@@ -100,12 +100,13 @@ func (r *Operations) DeviceModeLoginFinalize(deviceCode string, workspace string
 		DeviceCode:   deviceCode,
 	}
 
-	if err := CheckWorkspaceAccess(workspace, creds); err != nil {
+	_, err = CheckWorkspaceAccess(workspace, creds)
+	if err != nil {
 		fmt.Printf("Error accessing workspace %s : %s\n", workspace, err)
 		os.Exit(1)
 	}
 
 	sdk.SaveCredentials(workspace, creds)
-	sdk.SetCurrentWorkspace(workspace, environment)
+	sdk.SetCurrentWorkspace(workspace)
 	fmt.Println("Successfully logged in")
 }
