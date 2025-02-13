@@ -23,7 +23,7 @@ from beamlit.common.settings import Settings, get_settings, init
 from beamlit.models import (
     Agent,
     AgentSpec,
-    EnvironmentMetadata,
+    Metadata,
     Flavor,
     Function,
     FunctionSpec,
@@ -49,7 +49,6 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
     """
     settings = get_settings()
     deployment.metadata.workspace = settings.workspace
-    deployment.metadata.environment = settings.environment
     if not deployment.metadata.name:
         deployment.metadata.name = slugify(resource.name)
     if not deployment.metadata.display_name:
@@ -75,8 +74,7 @@ def get_beamlit_deployment_from_resource(
         if arg.arg == "agent":
             if isinstance(arg.value, ast.Dict):
                 value = arg_to_dict(arg.value)
-                metadata = EnvironmentMetadata(**value.get("metadata", {}))
-                metadata.environment = settings.environment
+                metadata = Metadata(**value.get("metadata", {}))
                 spec = AgentSpec(**value.get("spec", {}))
                 agent = Agent(metadata=metadata, spec=spec)
                 if not agent.spec.prompt:
@@ -85,18 +83,17 @@ def get_beamlit_deployment_from_resource(
         if arg.arg == "function":
             if isinstance(arg.value, ast.Dict):
                 value = arg_to_dict(arg.value)
-                metadata = EnvironmentMetadata(**value.get("metadata", {}))
-                metadata.environment = settings.environment
+                metadata = Metadata(**value.get("metadata", {}))
                 spec = FunctionSpec(**value.get("spec", {}))
                 func = Function(metadata=metadata, spec=spec)
                 if not func.spec.parameters:
                     func.spec.parameters = get_parameters(resource)
                 return set_default_values(resource, func)
     if resource.type == "agent":
-        agent = Agent(metadata=EnvironmentMetadata(), spec=AgentSpec())
+        agent = Agent(metadata=Metadata(), spec=AgentSpec())
         return set_default_values(resource, agent)
     if resource.type == "function":
-        func = Function(metadata=EnvironmentMetadata(), spec=FunctionSpec())
+        func = Function(metadata=Metadata(), spec=FunctionSpec())
         func.spec.parameters = get_parameters(resource)
         return set_default_values(resource, func)
     return None

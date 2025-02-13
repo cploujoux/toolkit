@@ -2,7 +2,6 @@ import { StructuredTool, tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { listAgents } from "../client/sdk.gen.js";
 import { Agent, AgentChain } from "../client/types.gen.js";
-import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 
 /**
@@ -21,11 +20,9 @@ export function getChainTool(
 ) {
   return tool(
     async (args: Record<string, any>) => {
-      const settings = getSettings();
       const result = await client.run({
         resourceType: "agent",
         resourceName: name,
-        environment: settings.environment,
         method: "POST",
         json: args,
       });

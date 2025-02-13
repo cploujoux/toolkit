@@ -1520,7 +1520,6 @@ type ClientInterface interface {
 	Chat(
 		ctx context.Context,
 		workspace string,
-		environment string,
 		resourceType string,
 		resourceName string,
 		debug bool,
@@ -1529,7 +1528,6 @@ type ClientInterface interface {
 	Run(
 		ctx context.Context,
 		workspaceName string,
-		environment string,
 		resourceType string,
 		resourceName string,
 		method string,

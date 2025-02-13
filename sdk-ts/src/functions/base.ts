@@ -108,7 +108,6 @@ export const wrapFunction: WrapFunctionType = async (
       name: name || slugify(func.name),
       displayName:
         options?.function?.metadata?.displayName || name || slugify(func.name),
-      environment: settings.environment,
     },
     spec: functionSpec,
   };

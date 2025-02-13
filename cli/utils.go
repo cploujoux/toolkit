@@ -15,8 +15,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Entries : ListOperations, ListEnvironments, GetOperation, GetEnvironment
-// Results [list, operations, list environments, get operation, get environment]
 func formatOperationId(operationId string) []string {
 	// Regular expression to match capital letters
 	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
@@ -118,7 +116,7 @@ func getResultsWrapper(action string, filePath string, recursive bool, n int) ([
 
 	contentStr := string(content)
 	if action == "apply" {
-		// Replace environment variables in the content
+		// Replace env variables in the content
 		re := regexp.MustCompile(`\$([A-Za-z0-9_]+)|\${([A-Za-z0-9_]+)}`)
 		contentStr = re.ReplaceAllStringFunc(contentStr, func(match string) string {
 			// Remove $, ${, and } to get the env var name
@@ -251,7 +249,7 @@ func GetHuhTheme() *huh.Theme {
 }
 
 func AddClientEnv(env []string) []string {
-	// Add all current environment variables if not already set
+	// Add all current env variables if not already set
 	for _, envVar := range os.Environ() {
 		found := false
 		for _, existingVar := range env {

@@ -12,7 +12,6 @@ Add an explorer view where you can:
   - Agents
   - Functions
   - Models
-  - Environments
   - Policies
   - Integration
 - Describe every resources

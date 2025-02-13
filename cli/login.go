@@ -12,12 +12,11 @@ import (
 
 func (r *Operations) LoginCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "login [workspace] [environment]",
+		Use:   "login [workspace]",
 		Short: "Login to Beamlit",
 		Args:  cobra.MaximumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			workspace := ""   // Default workspace
-			environment := "" // Default environment
+			workspace := "" // Default workspace
 			if len(args) > 0 {
 				workspace = args[0]
 			}
@@ -26,17 +25,13 @@ func (r *Operations) LoginCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			if len(args) > 1 {
-				environment = args[1]
-			}
-
 			if os.Getenv("BL_AUTHENTICATION_CLIENT_CREDENTIALS") != "" {
-				r.ClientCredentialsLogin(workspace, environment, os.Getenv("BL_AUTHENTICATION_CLIENT_CREDENTIALS"))
+				r.ClientCredentialsLogin(workspace, os.Getenv("BL_AUTHENTICATION_CLIENT_CREDENTIALS"))
 				return
 			}
-			
+
 			if os.Getenv("BL_API_KEY") != "" {
-				r.ApiKeyLogin(workspace, environment)
+				r.ApiKeyLogin(workspace)
 				return
 			}
 
@@ -109,9 +104,9 @@ func (r *Operations) LoginCmd() *cobra.Command {
 				} else if b[0] == 10 { // Enter
 					switch selectedIndex {
 					case 0:
-						r.DeviceModeLogin(workspace, environment)
+						r.DeviceModeLogin(workspace)
 					case 1:
-						r.ApiKeyLogin(workspace, environment)
+						r.ApiKeyLogin(workspace)
 					}
 					return
 				}

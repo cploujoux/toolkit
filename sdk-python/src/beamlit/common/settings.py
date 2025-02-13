@@ -76,7 +76,6 @@ class Settings(BaseSettings):
     )
 
     workspace: str
-    environment: str = Field(default="development")
     remote: bool = Field(default=False)
     type: str = Field(default="agent")
     name: str = Field(default="beamlit-agent")
@@ -130,7 +129,7 @@ def init() -> Settings:
     """
     Initializes the settings by parsing the `beamlit.yaml` file and setting up logging.
 
-    This function reads workspace and environment configurations from the current context,
+    This function reads workspace configuration from the current context,
     initializes the global SETTINGS variable, and configures the logger based on the log level.
 
     Returns:
@@ -144,8 +143,6 @@ def init() -> Settings:
     kwargs = {}
     if context.workspace:
         kwargs["workspace"] = context.workspace
-    if context.environment:
-        kwargs["environment"] = context.environment
 
     SETTINGS = Settings(**kwargs)
     init_logger(SETTINGS.log_level)

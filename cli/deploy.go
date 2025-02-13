@@ -81,7 +81,7 @@ generateBeamlitDeployment("%s", "%s");
 	if os.Getenv("BL_ENV") != "" {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
 	}
-	// Copy environment from computer
+	// Copy env from computer
 	cmd.Env = AddClientEnv(cmd.Env)
 	return cmd.Run()
 }
@@ -373,10 +373,6 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			env := "development"
-			if environment != "" {
-				env = environment
-			}
 			// Print apply summary in table format
 			// if len(applyResults) > 0 {
 			// 	fmt.Print("\nSummary:\n\n")
@@ -394,11 +390,10 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 			}
 			for _, agent := range agents {
 				fmt.Printf(
-					"- Url: %s/%s/global-agentic-network/agent/%s?environment=%s\n",
+					"- Url: %s/%s/global-agentic-network/agent/%s\n",
 					r.AppURL,
 					workspace,
 					agent,
-					env,
 				)
 				fmt.Printf("  Watch status: bl get agent %s --watch\n", agent)
 				fmt.Printf("  Run: bl run agent %s --data '{\"inputs\": \"Hello world\"}'\n\n", agent)

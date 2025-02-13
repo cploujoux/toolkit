@@ -82,7 +82,7 @@ type GithubContentResponse struct {
 func retrieveModels(modelType string) ([]sdk.Model, error) {
 	var modelDeployments []sdk.Model
 	ctx := context.Background()
-	res, err := client.ListModels(ctx, &sdk.ListModelsParams{Environment: &environment})
+	res, err := client.ListModels(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -436,7 +436,6 @@ func createAgentApp(opts CreateAgentAppOptions) error {
 		"ProjectDescription": opts.ProjectDescription,
 		"Author":             opts.Author,
 		"Workspace":          workspace,
-		"Environment":        environment,
 	}
 	for key, value := range opts.TemplateOptions {
 		templateOptions[key] = *value
@@ -585,7 +584,7 @@ func (r *Operations) CreateAgentAppCmd() *cobra.Command {
 				os.RemoveAll(opts.Directory)
 				return
 			}
-			res, err := client.ListModels(context.Background(), &sdk.ListModelsParams{Environment: &environment})
+			res, err := client.ListModels(context.Background())
 			if err != nil {
 				return
 			}

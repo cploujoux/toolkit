@@ -25,13 +25,6 @@ type Resource struct {
 
 var resources = []*Resource{
 	{
-		Kind:     "Environment",
-		Short:    "env",
-		Plural:   "environments",
-		Singular: "environment",
-		SpecType: reflect.TypeOf(sdk.Environment{}),
-	},
-	{
 		Kind:     "Policy",
 		Short:    "pol",
 		Plural:   "policies",

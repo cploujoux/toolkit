@@ -20,7 +20,6 @@ function loadConfig(): Config {
     workspaces: [],
     context: {
       workspace: "",
-      environment: "",
     },
   };
 
@@ -107,17 +106,14 @@ export function currentContext(): ContextConfig {
 }
 
 /**
- * Sets the current workspace and environment in the context.
+ * Sets the current workspace in the context.
  * @param workspaceName - The name of the workspace to set.
- * @param environment - The environment to set.
  */
 export function setCurrentWorkspace(
   workspaceName: string,
-  environment: string
 ): void {
   const config = loadConfig();
   config.context.workspace = workspaceName;
-  config.context.environment = environment;
   saveConfig(config);
 }
 

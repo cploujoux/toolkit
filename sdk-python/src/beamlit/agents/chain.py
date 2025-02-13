@@ -59,7 +59,6 @@ class ChainTool(BaseTool):
         result = self.client.run(
             "agent",
             self.name,
-            settings.environment,
             "POST",
             cloud=self._cloud,
             service_name=self._service_name,

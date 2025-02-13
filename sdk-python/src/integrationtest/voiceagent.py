@@ -13,7 +13,6 @@ logger = getLogger(__name__)
     agent={
         "metadata": {
             "name": "voice-agent",
-            "environment": "development",
         },
         "spec": {
             "description": "A chat agent using Beamlit to handle your tasks.",

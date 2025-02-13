@@ -8,7 +8,6 @@ import { getSettings } from "./common/settings.js";
  * @typedef {Object} RunOptions
  * @property {string} resourceType - The type of resource to operate on
  * @property {string} resourceName - The name of the specific resource
- * @property {string} environment - The environment to execute the run in
  * @property {('GET'|'POST'|'PUT'|'DELETE'|'PATCH'|'HEAD'|'OPTIONS'|'CONNECT'|'TRACE')} method - HTTP method to use
  * @property {string} [path] - Optional additional path segments
  * @property {Record<string, string>} [headers] - Optional HTTP headers to include
@@ -19,7 +18,6 @@ import { getSettings } from "./common/settings.js";
 export type RunOptions = {
   resourceType: string;
   resourceName: string;
-  environment: string;
   method:
     | "GET"
     | "POST"
@@ -61,7 +59,6 @@ export class RunClient {
    * const result = await client.run({
    *   resourceType: 'function',
    *   resourceName: 'myFunction',
-   *   environment: 'production',
    *   method: 'POST',
    *   json: { key: 'value' }
    * });
@@ -91,7 +88,7 @@ export class RunClient {
       url: path,
       method: options.method,
       body: options.json || options.data,
-      query: { environment: options.environment, ...params },
+      query: { ...params },
       headers,
     });
 
@@ -102,7 +99,7 @@ export class RunClient {
         url: path,
         method: options.method,
         body: options.json || options.data,
-        query: { environment: options.environment, ...params },
+        query: { ...params },
         headers,
       });
       throw new HTTPError(response.status, JSON.stringify(data));

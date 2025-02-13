@@ -49,7 +49,6 @@ type SettingsServerType = z.infer<typeof SettingsServer>;
  */
 const Settings = z.object({
   workspace: z.string(),
-  environment: z.string().default("development"),
   remote: z.boolean().default(false),
   type: z.string().default("agent"),
   name: z.string().default("beamlit-agent"),

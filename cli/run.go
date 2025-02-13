@@ -64,7 +64,6 @@ bl run function my-function --data '{"query": "4+2"}'`,
 			res, err := client.Run(
 				context.Background(),
 				workspace,
-				environment,
 				resourceType,
 				resourceName,
 				method,

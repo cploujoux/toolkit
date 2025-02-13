@@ -15,26 +15,24 @@ import (
 func (c *Client) Chat(
 	ctx context.Context,
 	workspace string,
-	environment string,
 	resourceType string,
 	resourceName string,
 	debug bool,
 	local bool,
 ) error {
 	if !local {
-		err := c.CheckResource(ctx, workspace, environment, resourceType, resourceName)
+		err := c.CheckResource(ctx, workspace, resourceType, resourceName)
 		if err != nil {
 			return err
 		}
 	}
 
-	return c.BootChat(ctx, workspace, environment, resourceType, resourceName, debug, local)
+	return c.BootChat(ctx, workspace, resourceType, resourceName, debug, local)
 }
 
 func (c *Client) BootChat(
 	ctx context.Context,
 	workspace string,
-	environment string,
 	resourceType string,
 	resourceName string,
 	debug bool,
@@ -44,7 +42,6 @@ func (c *Client) BootChat(
 	m := &chat.ChatModel{
 		Messages:    []chat.Message{},
 		Workspace:   workspace,
-		Environment: environment,
 		ResType:     resourceType,
 		ResName:     resourceName,
 		SendMessage: c.SendMessage,
@@ -67,7 +64,6 @@ func (c *Client) BootChat(
 func (c *Client) CheckResource(
 	ctx context.Context,
 	workspace string,
-	environment string,
 	resourceType string,
 	resourceName string,
 ) error {
@@ -77,9 +73,7 @@ func (c *Client) CheckResource(
 	}
 
 	// Call GetAgent with the required parameters
-	resp, err := c.GetAgent(ctx, resourceName, &GetAgentParams{
-		Environment: &environment,
-	})
+	resp, err := c.GetAgent(ctx, resourceName)
 	if err != nil {
 		return fmt.Errorf("failed to get agent: %w", err)
 	}
@@ -87,7 +81,7 @@ func (c *Client) CheckResource(
 
 	// Check response status code
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("agent %s not found in environment %s", resourceName, environment)
+		return fmt.Errorf("agent %s not found", resourceName)
 	}
 
 	return nil
@@ -96,7 +90,6 @@ func (c *Client) CheckResource(
 func (c *Client) SendMessage(
 	ctx context.Context,
 	workspace string,
-	environment string,
 	resourceType string,
 	resourceName string,
 	message string,
@@ -113,7 +106,6 @@ func (c *Client) SendMessage(
 	response, err := c.Run(
 		ctx,
 		workspace,
-		environment,
 		resourceType,
 		resourceName,
 		"POST",

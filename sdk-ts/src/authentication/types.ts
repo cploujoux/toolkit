@@ -15,11 +15,10 @@ export interface WorkspaceConfig {
 }
 
 /**
- * Represents the context configuration, including workspace and environment.
+ * Represents the context configuration, including workspace
  */
 export interface ContextConfig {
   workspace: string;
-  environment: string;
 }
 
 /**

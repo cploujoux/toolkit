@@ -44,7 +44,7 @@ logger = getLogger(__name__)
 logger.info(f"Importing server module: {settings.server.module}")
 func = import_module()
 logger.info(
-    f"Running server with environment {settings.environment}"
+    f"Running server"
     f" on {settings.server.host}:{settings.server.port}"
 )
 func_params = inspect.signature(func).parameters
@@ -117,19 +117,16 @@ else:
             return JSONResponse(status_code=200, content=response)
         except ValueError as e:
             content = {"error": str(e)}
-            if settings.environment == "development":
-                content["traceback"] = str(traceback.format_exc())
+            content["traceback"] = str(traceback.format_exc())
             logger.error(str(traceback.format_exc()))
             return JSONResponse(status_code=400, content=content)
         except HTTPError as e:
             content = {"error": e.message, "status_code": e.status_code}
-            if settings.environment == "development":
-                content["traceback"] = str(traceback.format_exc())
+            content["traceback"] = str(traceback.format_exc())
             logger.error(f"{e.status_code} {str(traceback.format_exc())}")
             return JSONResponse(status_code=e.status_code, content=content)
         except Exception as e:
             content = {"error": f"Internal server error, {e}"}
-            if settings.environment == "development":
-                content["traceback"] = str(traceback.format_exc())
+            content["traceback"] = str(traceback.format_exc())
             logger.error(str(traceback.format_exc()))
             return JSONResponse(status_code=500, content=content)

@@ -87,7 +87,6 @@ class RemoteTool(BaseTool):
         result = self.client.run(
             "function",
             self.resource_name,
-            settings.environment,
             "POST",
             cloud=self.cloud,
             service_name=self.service_name,
@@ -122,7 +121,7 @@ class RemoteToolkit:
         settings = get_settings()
         if self._function is None:
             try:
-                response = get_function.sync_detailed(self.function, client=self.client, environment=settings.environment)
+                response = get_function.sync_detailed(self.function, client=self.client)
                 function_name = self.function.upper().replace("-", "_")
                 if os.getenv(f"BL_FUNCTION_{function_name}_SERVICE_NAME"):
                     self._service_name = os.getenv(f"BL_FUNCTION_{function_name}_SERVICE_NAME")
@@ -130,7 +129,6 @@ class RemoteToolkit:
             except UnexpectedStatus as e:
                 functions = list_functions.sync_detailed(
                     client=self.client,
-                    environment=settings.environment,
                 ).parsed
                 names = [
                     f.metadata.name

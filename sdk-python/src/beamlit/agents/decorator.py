@@ -17,7 +17,7 @@ from beamlit.authentication import new_client
 from beamlit.common.settings import init
 from beamlit.errors import UnexpectedStatus
 from beamlit.functions import get_functions
-from beamlit.models import Agent, AgentSpec, EnvironmentMetadata
+from beamlit.models import Agent, AgentSpec, Metadata
 
 from .chat import get_chat_model_full
 from .voice.openai import OpenAIVoiceReactAgent
@@ -95,27 +95,17 @@ def agent(
             return wrapped
 
         if agent is not None:
-            metadata = EnvironmentMetadata(**agent.get("metadata", {}))
+            metadata = Metadata(**agent.get("metadata", {}))
             spec = AgentSpec(**agent.get("spec", {}))
             agent = Agent(metadata=metadata, spec=spec)
             if agent.spec.model and chat_model is None:
                 try:
                     response = get_model.sync_detailed(
-                        agent.spec.model, environment=settings.environment, client=client
+                        agent.spec.model, client=client
                     )
                     settings.agent.model = response.parsed
                 except UnexpectedStatus as e:
-                    if e.status_code == 404 and settings.environment != "development":
-                        try:
-                            response = get_model.sync_detailed(
-                                agent.spec.model, environment="development", client=client
-                            )
-                            settings.agent.model = response.parsed
-                        except UnexpectedStatus as e:
-                            if e.status_code == 404:
-                                raise ValueError(f"Model {agent.spec.model} not found")
-                    else:
-                        raise e
+                    raise e
                 except Exception as e:
                     raise e
 
@@ -144,7 +134,7 @@ def agent(
                 models_select = ""
                 try:
                     models = list_models.sync_detailed(
-                        environment=settings.environment, client=client
+                        client=client
                     )
                     models = ", ".join([model.metadata.name for model in models.parsed])
                     models_select = f"You can select one from your models: {models}"
