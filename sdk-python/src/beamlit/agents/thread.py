@@ -22,7 +22,10 @@ def get_default_thread(request: Request) -> str:
         return request.headers.get("X-Beamlit-Sub")
     authorization = request.headers.get("Authorization", request.headers.get("X-Beamlit-Authorization"))
     if authorization and len(authorization.split("Bearer ")) > 1:
-        token = authorization.split(" ")[1]
-        decoded = jwt.decode(token, options={"verify_signature": False})
-        return decoded["sub"]
+        try:
+            token = authorization.split(" ")[1]
+            decoded = jwt.decode(token, options={"verify_signature": False})
+            return decoded["sub"]
+        except Exception:
+            return ""
     return ""
