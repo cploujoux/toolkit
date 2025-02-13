@@ -31,8 +31,8 @@ type Agent struct {
 	// Events Core events
 	Events *CoreEvents `json:"events,omitempty"`
 
-	// Metadata Environment metadata
-	Metadata *EnvironmentMetadata `json:"metadata,omitempty"`
+	// Metadata Metadata
+	Metadata *Metadata `json:"metadata,omitempty"`
 
 	// Spec Agent specification
 	Spec *AgentSpec `json:"spec,omitempty"`
@@ -69,9 +69,6 @@ type AgentHistory struct {
 
 	// End End time
 	End *string `json:"end,omitempty"`
-
-	// Environment Environment name
-	Environment *string `json:"environment,omitempty"`
 
 	// Events Events
 	Events *[]AgentHistoryEvent `json:"events,omitempty"`
@@ -123,36 +120,6 @@ type AgentHistoryEvent struct {
 
 	// Type Type, one of function or agent
 	Type *string `json:"type,omitempty"`
-}
-
-// AgentInformationRequest generation agent information request
-type AgentInformationRequest struct {
-	// Functions Functions to generate information for
-	Functions *[]interface{} `json:"functions,omitempty"`
-}
-
-// AgentInformationResponse generation agent information response
-type AgentInformationResponse struct {
-	// Description Description of the agent
-	Description *string `json:"description,omitempty"`
-
-	// DisplayName Display name of the agent
-	DisplayName *string `json:"displayName,omitempty"`
-
-	// Name Name of the agent
-	Name *string `json:"name,omitempty"`
-
-	// Prompt Prompt of the agent
-	Prompt *string `json:"prompt,omitempty"`
-}
-
-// AgentRelease Agent release, used to deploy a agent from one environment to another
-type AgentRelease struct {
-	// From Origin environment from which the agent is released
-	From *string `json:"from,omitempty"`
-
-	// To Destination environment to which the agent is released
-	To *string `json:"to,omitempty"`
 }
 
 // AgentSpec defines model for AgentSpec.
@@ -307,56 +274,6 @@ type CoreSpec struct {
 	ServerlessConfig *ServerlessConfig `json:"serverlessConfig,omitempty"`
 }
 
-// Environment Environment on which deployments will be made (e.g. development, production), enforcing multiple policies at once.
-type Environment struct {
-	// Metadata Metadata
-	Metadata *Metadata `json:"metadata,omitempty"`
-
-	// Spec Environment specification
-	Spec *EnvironmentSpec `json:"spec,omitempty"`
-}
-
-// EnvironmentMetadata defines model for EnvironmentMetadata.
-type EnvironmentMetadata struct {
-	// CreatedAt The date and time when the resource was created
-	CreatedAt *string `json:"createdAt,omitempty"`
-
-	// CreatedBy The user or service account who created the resource
-	CreatedBy *string `json:"createdBy,omitempty"`
-
-	// DisplayName Model display name
-	DisplayName *string `json:"displayName,omitempty"`
-
-	// Environment Environment name
-	Environment *string `json:"environment,omitempty"`
-
-	// Labels Labels
-	Labels *MetadataLabels `json:"labels,omitempty"`
-
-	// Name Model name
-	Name *string `json:"name,omitempty"`
-
-	// UpdatedAt The date and time when the resource was updated
-	UpdatedAt *string `json:"updatedAt,omitempty"`
-
-	// UpdatedBy The user or service account who updated the resource
-	UpdatedBy *string `json:"updatedBy,omitempty"`
-
-	// Workspace Workspace name
-	Workspace *string `json:"workspace,omitempty"`
-}
-
-// EnvironmentMetrics Metrics for the environment
-type EnvironmentMetrics struct {
-	// InferenceGlobal Array of metrics
-	InferenceGlobal *ArrayMetric `json:"inferenceGlobal,omitempty"`
-}
-
-// EnvironmentSpec Environment specification
-type EnvironmentSpec struct {
-	Policies *PoliciesList `json:"policies,omitempty"`
-}
-
 // Flavor A type of hardware available for deployments
 type Flavor struct {
 	// Name Flavor name (e.g. t4)
@@ -374,8 +291,8 @@ type Function struct {
 	// Events Core events
 	Events *CoreEvents `json:"events,omitempty"`
 
-	// Metadata Environment metadata
-	Metadata *EnvironmentMetadata `json:"metadata,omitempty"`
+	// Metadata Metadata
+	Metadata *Metadata `json:"metadata,omitempty"`
 
 	// Spec Function specification
 	Spec *FunctionSpec `json:"spec,omitempty"`
@@ -394,15 +311,6 @@ type FunctionKit struct {
 
 	// Parameters Kit parameters, for your kit to be callable with an Agent
 	Parameters *[]StoreFunctionParameter `json:"parameters,omitempty"`
-}
-
-// FunctionRelease Function release, used to deploy a function from one environment to another
-type FunctionRelease struct {
-	// From Origin environment from which the function is released
-	From *string `json:"from,omitempty"`
-
-	// To Destination environment to which the function is released
-	To *string `json:"to,omitempty"`
 }
 
 // FunctionSpec defines model for FunctionSpec.
@@ -511,8 +419,8 @@ type Knowledgebase struct {
 	// Events Core events
 	Events *CoreEvents `json:"events,omitempty"`
 
-	// Metadata Environment metadata
-	Metadata *EnvironmentMetadata `json:"metadata,omitempty"`
+	// Metadata Metadata
+	Metadata *Metadata `json:"metadata,omitempty"`
 
 	// Spec Knowledgebase specification
 	Spec *KnowledgebaseSpec `json:"spec,omitempty"`
@@ -577,8 +485,8 @@ type LocationResponse struct {
 	Status *string `json:"status,omitempty"`
 }
 
-// MCPHubArtifact Artifact from the MCP Hub
-type MCPHubArtifact struct {
+// MCPDefinition Definition of an MCP from the MCP Hub
+type MCPDefinition struct {
 	// Categories Categories of the artifact
 	Categories *[]interface{} `json:"categories,omitempty"`
 
@@ -685,13 +593,13 @@ type Metrics struct {
 	RpsPerCode *map[string]interface{} `json:"rpsPerCode,omitempty"`
 }
 
-// Model Logical object representing a model, that can be instantiated in multiple environments as model deployments
+// Model Logical object representing a model
 type Model struct {
 	// Events Core events
 	Events *CoreEvents `json:"events,omitempty"`
 
-	// Metadata Environment metadata
-	Metadata *EnvironmentMetadata `json:"metadata,omitempty"`
+	// Metadata Metadata
+	Metadata *Metadata `json:"metadata,omitempty"`
 
 	// Spec Model specification
 	Spec *ModelSpec `json:"spec,omitempty"`
@@ -710,15 +618,6 @@ type ModelPrivateCluster struct {
 
 	// Name The name of the private cluster
 	Name *string `json:"name,omitempty"`
-}
-
-// ModelRelease Model release, used to deploy a model from one environment to another
-type ModelRelease struct {
-	// From Origin environment from which the model is released
-	From *string `json:"from,omitempty"`
-
-	// To Destination environment to which the model is released
-	To *string `json:"to,omitempty"`
 }
 
 // ModelSpec defines model for ModelSpec.
@@ -1014,8 +913,20 @@ type RequestTotalByOriginMetric struct {
 	RequestTotalByOriginAndCode *map[string]interface{} `json:"requestTotalByOriginAndCode,omitempty"`
 }
 
-// ResourceEnvironmentMetrics Metrics for a single resource deployment (eg. model deployment, function deployment)
-type ResourceEnvironmentMetrics struct {
+// ResourceLog Log for a resource deployment (eg. model deployment, function deployment)
+type ResourceLog struct {
+	// Message Content of the log
+	Message *string `json:"message,omitempty"`
+
+	// Severity Severity of the log
+	Severity *int `json:"severity,omitempty"`
+
+	// Timestamp The timestamp of the log
+	Timestamp *string `json:"timestamp,omitempty"`
+}
+
+// ResourceMetrics Metrics for a single resource deployment (eg. model deployment, function deployment)
+type ResourceMetrics struct {
 	// InferenceGlobal Array of metrics
 	InferenceGlobal *ArrayMetric `json:"inferenceGlobal,omitempty"`
 
@@ -1050,18 +961,6 @@ type ResourceEnvironmentMetrics struct {
 	TokenTotal *TokenTotalMetric `json:"tokenTotal,omitempty"`
 }
 
-// ResourceLog Log for a resource deployment (eg. model deployment, function deployment)
-type ResourceLog struct {
-	// Message Content of the log
-	Message *string `json:"message,omitempty"`
-
-	// Severity Severity of the log
-	Severity *int `json:"severity,omitempty"`
-
-	// Timestamp The timestamp of the log
-	Timestamp *string `json:"timestamp,omitempty"`
-}
-
 // Runtime Set of configurations for a deployment
 type Runtime struct {
 	// Args The arguments to pass to the deployment runtime
@@ -1073,7 +972,7 @@ type Runtime struct {
 	// EndpointName Endpoint Name of the model. In case of hf_private_endpoint, it is the endpoint name. In case of hf_public_endpoint, it is not used.
 	EndpointName *string `json:"endpointName,omitempty"`
 
-	// Envs The environment variables to set in the deployment. Should be a list of Kubernetes EnvVar types
+	// Envs The env variables to set in the deployment. Should be a list of Kubernetes EnvVar types
 	Envs *[]interface{} `json:"envs,omitempty"`
 
 	// Image The Docker image for the deployment
@@ -1350,9 +1249,6 @@ type Workspace struct {
 	// CreatedBy The user or service account who created the resource
 	CreatedBy *string `json:"createdBy,omitempty"`
 
-	// DefaultEnvironment Workspace environment
-	DefaultEnvironment *string `json:"defaultEnvironment,omitempty"`
-
 	// DisplayName Workspace display name
 	DisplayName *string `json:"displayName,omitempty"`
 
@@ -1396,112 +1292,40 @@ type WorkspaceUser struct {
 	Sub *string `json:"sub,omitempty"`
 }
 
-// ListAgentsParams defines parameters for ListAgents.
-type ListAgentsParams struct {
-	// Environment Environment to filter agents by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// DeleteAgentParams defines parameters for DeleteAgent.
-type DeleteAgentParams struct {
-	// Environment Environment of the model
-	Environment string `form:"environment" json:"environment"`
-}
-
-// GetAgentParams defines parameters for GetAgent.
-type GetAgentParams struct {
-	// Environment Environment to filter agents by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// GetAgentMetricsParams defines parameters for GetAgentMetrics.
-type GetAgentMetricsParams struct {
-	// Environment Environment to filter agents by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
 // GetAgentTraceIdsParams defines parameters for GetAgentTraceIds.
 type GetAgentTraceIdsParams struct {
-	// Environment Environment to filter agents by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
+	// Limit Limit
+	Limit *string `form:"limit,omitempty" json:"limit,omitempty"`
 
-// ListFunctionsParams defines parameters for ListFunctions.
-type ListFunctionsParams struct {
-	// Environment Environment to filter functions by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
+	// StartTime Start time
+	StartTime *string `form:"startTime,omitempty" json:"startTime,omitempty"`
 
-// DeleteFunctionParams defines parameters for DeleteFunction.
-type DeleteFunctionParams struct {
-	// Environment Environment of the model
-	Environment string `form:"environment" json:"environment"`
-}
-
-// GetFunctionParams defines parameters for GetFunction.
-type GetFunctionParams struct {
-	// Environment Environment to filter functions by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// GetFunctionMetricsParams defines parameters for GetFunctionMetrics.
-type GetFunctionMetricsParams struct {
-	// Environment Environment to filter functions by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
+	// EndTime End time
+	EndTime *string `form:"endTime,omitempty" json:"endTime,omitempty"`
 }
 
 // GetFunctionTraceIdsParams defines parameters for GetFunctionTraceIds.
 type GetFunctionTraceIdsParams struct {
-	// Environment Environment to filter function by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
+	// Limit Limit
+	Limit *string `form:"limit,omitempty" json:"limit,omitempty"`
 
-// ListKnowledgebasesParams defines parameters for ListKnowledgebases.
-type ListKnowledgebasesParams struct {
-	// Environment Environment to filter functions by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
+	// StartTime Start time
+	StartTime *string `form:"startTime,omitempty" json:"startTime,omitempty"`
 
-// DeleteKnowledgebaseParams defines parameters for DeleteKnowledgebase.
-type DeleteKnowledgebaseParams struct {
-	// Environment Environment to filter knowledgebases by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// GetKnowledgebaseParams defines parameters for GetKnowledgebase.
-type GetKnowledgebaseParams struct {
-	// Environment Environment to filter functions by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// ListModelsParams defines parameters for ListModels.
-type ListModelsParams struct {
-	// Environment Environment of the model
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// DeleteModelParams defines parameters for DeleteModel.
-type DeleteModelParams struct {
-	// Environment Environment of the model
-	Environment string `form:"environment" json:"environment"`
-}
-
-// GetModelParams defines parameters for GetModel.
-type GetModelParams struct {
-	// Environment Environment of the model
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
-}
-
-// GetModelMetricsParams defines parameters for GetModelMetrics.
-type GetModelMetricsParams struct {
-	// Environment Environment of the model
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
+	// EndTime End time
+	EndTime *string `form:"endTime,omitempty" json:"endTime,omitempty"`
 }
 
 // GetModelTraceIdsParams defines parameters for GetModelTraceIds.
 type GetModelTraceIdsParams struct {
-	// Environment Environment to filter models by
-	Environment *string `form:"environment,omitempty" json:"environment,omitempty"`
+	// Limit Limit
+	Limit *string `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// StartTime Start time
+	StartTime *string `form:"startTime,omitempty" json:"startTime,omitempty"`
+
+	// EndTime End time
+	EndTime *string `form:"endTime,omitempty" json:"endTime,omitempty"`
 }
 
 // CreateWorkspaceServiceAccountJSONBody defines parameters for CreateWorkspaceServiceAccount.
@@ -1535,7 +1359,6 @@ type CreateApiKeyForServiceAccountJSONBody struct {
 type GetTraceIdsParams struct {
 	WorkloadId   *string `form:"workloadId,omitempty" json:"workloadId,omitempty"`
 	WorkloadType *string `form:"workloadType,omitempty" json:"workloadType,omitempty"`
-	Environment  *string `form:"environment,omitempty" json:"environment,omitempty"`
 	Limit        *string `form:"limit,omitempty" json:"limit,omitempty"`
 	StartTime    *string `form:"startTime,omitempty" json:"startTime,omitempty"`
 	EndTime      *string `form:"endTime,omitempty" json:"endTime,omitempty"`
@@ -1567,20 +1390,11 @@ type UpdateAgentJSONRequestBody = Agent
 // PutAgentHistoryJSONRequestBody defines body for PutAgentHistory for application/json ContentType.
 type PutAgentHistoryJSONRequestBody = AgentHistory
 
-// CreateEnvironmentJSONRequestBody defines body for CreateEnvironment for application/json ContentType.
-type CreateEnvironmentJSONRequestBody = Environment
-
-// UpdateEnvironmentJSONRequestBody defines body for UpdateEnvironment for application/json ContentType.
-type UpdateEnvironmentJSONRequestBody = Environment
-
 // CreateFunctionJSONRequestBody defines body for CreateFunction for application/json ContentType.
 type CreateFunctionJSONRequestBody = Function
 
 // UpdateFunctionJSONRequestBody defines body for UpdateFunction for application/json ContentType.
 type UpdateFunctionJSONRequestBody = Function
-
-// RunInformationGenerationAgentJSONRequestBody defines body for RunInformationGenerationAgent for application/json ContentType.
-type RunInformationGenerationAgentJSONRequestBody = AgentInformationRequest
 
 // CreateIntegrationConnectionJSONRequestBody defines body for CreateIntegrationConnection for application/json ContentType.
 type CreateIntegrationConnectionJSONRequestBody = IntegrationConnection
@@ -1729,7 +1543,7 @@ type ClientInterface interface {
 	) (*http.Response, error)
 
 	// ListAgents request
-	ListAgents(ctx context.Context, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ListAgents(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateAgentWithBody request with any body
 	CreateAgentWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1737,10 +1551,10 @@ type ClientInterface interface {
 	CreateAgent(ctx context.Context, body CreateAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteAgent request
-	DeleteAgent(ctx context.Context, agentName string, params *DeleteAgentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAgent request
-	GetAgent(ctx context.Context, agentName string, params *GetAgentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateAgentWithBody request with any body
 	UpdateAgentWithBody(ctx context.Context, agentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1761,14 +1575,11 @@ type ClientInterface interface {
 
 	PutAgentHistory(ctx context.Context, agentName string, requestId string, body PutAgentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetAgentEnvironmentLogs request
-	GetAgentEnvironmentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetAgentLogs request
+	GetAgentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAgentMetrics request
-	GetAgentMetrics(ctx context.Context, agentName string, params *GetAgentMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateAgentRelease request
-	CreateAgentRelease(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetAgentTraceIds request
 	GetAgentTraceIds(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1776,30 +1587,8 @@ type ClientInterface interface {
 	// GetConfiguration request
 	GetConfiguration(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListEnvironments request
-	ListEnvironments(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateEnvironmentWithBody request with any body
-	CreateEnvironmentWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	CreateEnvironment(ctx context.Context, body CreateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteEnvironment request
-	DeleteEnvironment(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetEnvironment request
-	GetEnvironment(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// UpdateEnvironmentWithBody request with any body
-	UpdateEnvironmentWithBody(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	UpdateEnvironment(ctx context.Context, environmentName string, body UpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetEnvironmentMetrics request
-	GetEnvironmentMetrics(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListFunctions request
-	ListFunctions(ctx context.Context, params *ListFunctionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ListFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateFunctionWithBody request with any body
 	CreateFunctionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1807,32 +1596,24 @@ type ClientInterface interface {
 	CreateFunction(ctx context.Context, body CreateFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteFunction request
-	DeleteFunction(ctx context.Context, functionName string, params *DeleteFunctionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetFunction request
-	GetFunction(ctx context.Context, functionName string, params *GetFunctionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateFunctionWithBody request with any body
 	UpdateFunctionWithBody(ctx context.Context, functionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateFunction(ctx context.Context, functionName string, body UpdateFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetFunctionEnvironmentLogs request
-	GetFunctionEnvironmentLogs(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetFunctionLogs request
+	GetFunctionLogs(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetFunctionMetrics request
-	GetFunctionMetrics(ctx context.Context, functionName string, params *GetFunctionMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// CreateFunctionRelease request
-	CreateFunctionRelease(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetFunctionTraceIds request
 	GetFunctionTraceIds(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// RunInformationGenerationAgentWithBody request with any body
-	RunInformationGenerationAgentWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	RunInformationGenerationAgent(ctx context.Context, body RunInformationGenerationAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListAgentsHistory request
 	ListAgentsHistory(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1872,7 +1653,7 @@ type ClientInterface interface {
 	GetIntegration(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListKnowledgebases request
-	ListKnowledgebases(ctx context.Context, params *ListKnowledgebasesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ListKnowledgebases(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateKnowledgebaseWithBody request with any body
 	CreateKnowledgebaseWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1880,10 +1661,10 @@ type ClientInterface interface {
 	CreateKnowledgebase(ctx context.Context, body CreateKnowledgebaseJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteKnowledgebase request
-	DeleteKnowledgebase(ctx context.Context, knowledgebaseName string, params *DeleteKnowledgebaseParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteKnowledgebase(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetKnowledgebase request
-	GetKnowledgebase(ctx context.Context, knowledgebaseName string, params *GetKnowledgebaseParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetKnowledgebase(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateKnowledgebaseWithBody request with any body
 	UpdateKnowledgebaseWithBody(ctx context.Context, knowledgebaseName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1900,7 +1681,7 @@ type ClientInterface interface {
 	GetMetrics(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListModels request
-	ListModels(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	ListModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateModelWithBody request with any body
 	CreateModelWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1908,24 +1689,21 @@ type ClientInterface interface {
 	CreateModel(ctx context.Context, body CreateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteModel request
-	DeleteModel(ctx context.Context, modelName string, params *DeleteModelParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetModel request
-	GetModel(ctx context.Context, modelName string, params *GetModelParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateModelWithBody request with any body
 	UpdateModelWithBody(ctx context.Context, modelName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	UpdateModel(ctx context.Context, modelName string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetModelEnvironmentLogs request
-	GetModelEnvironmentLogs(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetModelLogs request
+	GetModelLogs(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetModelMetrics request
-	GetModelMetrics(ctx context.Context, modelName string, params *GetModelMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ReleaseModel request
-	ReleaseModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetModelTraceIds request
 	GetModelTraceIds(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2096,38 +1874,17 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for PutAgentHistory
 	reg.CliCommand(ctx, "PutAgentHistory", c.PutAgentHistory)
 
-	// Register CLI commands for GetAgentEnvironmentLogs
-	reg.CliCommand(ctx, "GetAgentEnvironmentLogs", c.GetAgentEnvironmentLogs)
+	// Register CLI commands for GetAgentLogs
+	reg.CliCommand(ctx, "GetAgentLogs", c.GetAgentLogs)
 
 	// Register CLI commands for GetAgentMetrics
 	reg.CliCommand(ctx, "GetAgentMetrics", c.GetAgentMetrics)
-
-	// Register CLI commands for CreateAgentRelease
-	reg.CliCommand(ctx, "CreateAgentRelease", c.CreateAgentRelease)
 
 	// Register CLI commands for GetAgentTraceIds
 	reg.CliCommand(ctx, "GetAgentTraceIds", c.GetAgentTraceIds)
 
 	// Register CLI commands for GetConfiguration
 	reg.CliCommand(ctx, "GetConfiguration", c.GetConfiguration)
-
-	// Register CLI commands for ListEnvironments
-	reg.CliCommand(ctx, "ListEnvironments", c.ListEnvironments)
-
-	// Register CLI commands for CreateEnvironment
-	reg.CliCommand(ctx, "CreateEnvironment", c.CreateEnvironment)
-
-	// Register CLI commands for DeleteEnvironment
-	reg.CliCommand(ctx, "DeleteEnvironment", c.DeleteEnvironment)
-
-	// Register CLI commands for GetEnvironment
-	reg.CliCommand(ctx, "GetEnvironment", c.GetEnvironment)
-
-	// Register CLI commands for UpdateEnvironment
-	reg.CliCommand(ctx, "UpdateEnvironment", c.UpdateEnvironment)
-
-	// Register CLI commands for GetEnvironmentMetrics
-	reg.CliCommand(ctx, "GetEnvironmentMetrics", c.GetEnvironmentMetrics)
 
 	// Register CLI commands for ListFunctions
 	reg.CliCommand(ctx, "ListFunctions", c.ListFunctions)
@@ -2144,20 +1901,14 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateFunction
 	reg.CliCommand(ctx, "UpdateFunction", c.UpdateFunction)
 
-	// Register CLI commands for GetFunctionEnvironmentLogs
-	reg.CliCommand(ctx, "GetFunctionEnvironmentLogs", c.GetFunctionEnvironmentLogs)
+	// Register CLI commands for GetFunctionLogs
+	reg.CliCommand(ctx, "GetFunctionLogs", c.GetFunctionLogs)
 
 	// Register CLI commands for GetFunctionMetrics
 	reg.CliCommand(ctx, "GetFunctionMetrics", c.GetFunctionMetrics)
 
-	// Register CLI commands for CreateFunctionRelease
-	reg.CliCommand(ctx, "CreateFunctionRelease", c.CreateFunctionRelease)
-
 	// Register CLI commands for GetFunctionTraceIds
 	reg.CliCommand(ctx, "GetFunctionTraceIds", c.GetFunctionTraceIds)
-
-	// Register CLI commands for RunInformationGenerationAgent
-	reg.CliCommand(ctx, "RunInformationGenerationAgent", c.RunInformationGenerationAgent)
 
 	// Register CLI commands for ListAgentsHistory
 	reg.CliCommand(ctx, "ListAgentsHistory", c.ListAgentsHistory)
@@ -2231,14 +1982,11 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateModel
 	reg.CliCommand(ctx, "UpdateModel", c.UpdateModel)
 
-	// Register CLI commands for GetModelEnvironmentLogs
-	reg.CliCommand(ctx, "GetModelEnvironmentLogs", c.GetModelEnvironmentLogs)
+	// Register CLI commands for GetModelLogs
+	reg.CliCommand(ctx, "GetModelLogs", c.GetModelLogs)
 
 	// Register CLI commands for GetModelMetrics
 	reg.CliCommand(ctx, "GetModelMetrics", c.GetModelMetrics)
-
-	// Register CLI commands for ReleaseModel
-	reg.CliCommand(ctx, "ReleaseModel", c.ReleaseModel)
 
 	// Register CLI commands for GetModelTraceIds
 	reg.CliCommand(ctx, "GetModelTraceIds", c.GetModelTraceIds)
@@ -2362,8 +2110,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 }
 
-func (c *Client) ListAgents(ctx context.Context, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListAgentsRequest(c.Server, params)
+func (c *Client) ListAgents(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAgentsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -2398,8 +2146,8 @@ func (c *Client) CreateAgent(ctx context.Context, body CreateAgentJSONRequestBod
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteAgent(ctx context.Context, agentName string, params *DeleteAgentParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteAgentRequest(c.Server, agentName, params)
+func (c *Client) DeleteAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteAgentRequest(c.Server, agentName)
 	if err != nil {
 		return nil, err
 	}
@@ -2410,8 +2158,8 @@ func (c *Client) DeleteAgent(ctx context.Context, agentName string, params *Dele
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetAgent(ctx context.Context, agentName string, params *GetAgentParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentRequest(c.Server, agentName, params)
+func (c *Client) GetAgent(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentRequest(c.Server, agentName)
 	if err != nil {
 		return nil, err
 	}
@@ -2506,8 +2254,8 @@ func (c *Client) PutAgentHistory(ctx context.Context, agentName string, requestI
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetAgentEnvironmentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentEnvironmentLogsRequest(c.Server, agentName)
+func (c *Client) GetAgentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentLogsRequest(c.Server, agentName)
 	if err != nil {
 		return nil, err
 	}
@@ -2518,20 +2266,8 @@ func (c *Client) GetAgentEnvironmentLogs(ctx context.Context, agentName string, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetAgentMetrics(ctx context.Context, agentName string, params *GetAgentMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentMetricsRequest(c.Server, agentName, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateAgentRelease(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateAgentReleaseRequest(c.Server, agentName)
+func (c *Client) GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAgentMetricsRequest(c.Server, agentName)
 	if err != nil {
 		return nil, err
 	}
@@ -2566,104 +2302,8 @@ func (c *Client) GetConfiguration(ctx context.Context, reqEditors ...RequestEdit
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListEnvironments(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListEnvironmentsRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateEnvironmentWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateEnvironmentRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateEnvironment(ctx context.Context, body CreateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateEnvironmentRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteEnvironment(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteEnvironmentRequest(c.Server, environmentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetEnvironment(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetEnvironmentRequest(c.Server, environmentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateEnvironmentWithBody(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateEnvironmentRequestWithBody(c.Server, environmentName, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) UpdateEnvironment(ctx context.Context, environmentName string, body UpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateEnvironmentRequest(c.Server, environmentName, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetEnvironmentMetrics(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetEnvironmentMetricsRequest(c.Server, environmentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ListFunctions(ctx context.Context, params *ListFunctionsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListFunctionsRequest(c.Server, params)
+func (c *Client) ListFunctions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListFunctionsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -2698,8 +2338,8 @@ func (c *Client) CreateFunction(ctx context.Context, body CreateFunctionJSONRequ
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteFunction(ctx context.Context, functionName string, params *DeleteFunctionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteFunctionRequest(c.Server, functionName, params)
+func (c *Client) DeleteFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteFunctionRequest(c.Server, functionName)
 	if err != nil {
 		return nil, err
 	}
@@ -2710,8 +2350,8 @@ func (c *Client) DeleteFunction(ctx context.Context, functionName string, params
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetFunction(ctx context.Context, functionName string, params *GetFunctionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFunctionRequest(c.Server, functionName, params)
+func (c *Client) GetFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionRequest(c.Server, functionName)
 	if err != nil {
 		return nil, err
 	}
@@ -2746,8 +2386,8 @@ func (c *Client) UpdateFunction(ctx context.Context, functionName string, body U
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetFunctionEnvironmentLogs(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFunctionEnvironmentLogsRequest(c.Server, functionName)
+func (c *Client) GetFunctionLogs(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionLogsRequest(c.Server, functionName)
 	if err != nil {
 		return nil, err
 	}
@@ -2758,20 +2398,8 @@ func (c *Client) GetFunctionEnvironmentLogs(ctx context.Context, functionName st
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetFunctionMetrics(ctx context.Context, functionName string, params *GetFunctionMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFunctionMetricsRequest(c.Server, functionName, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) CreateFunctionRelease(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewCreateFunctionReleaseRequest(c.Server, functionName)
+func (c *Client) GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFunctionMetricsRequest(c.Server, functionName)
 	if err != nil {
 		return nil, err
 	}
@@ -2784,30 +2412,6 @@ func (c *Client) CreateFunctionRelease(ctx context.Context, functionName string,
 
 func (c *Client) GetFunctionTraceIds(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetFunctionTraceIdsRequest(c.Server, functionName, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RunInformationGenerationAgentWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRunInformationGenerationAgentRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) RunInformationGenerationAgent(ctx context.Context, body RunInformationGenerationAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewRunInformationGenerationAgentRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2974,8 +2578,8 @@ func (c *Client) GetIntegration(ctx context.Context, integrationName string, req
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListKnowledgebases(ctx context.Context, params *ListKnowledgebasesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListKnowledgebasesRequest(c.Server, params)
+func (c *Client) ListKnowledgebases(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListKnowledgebasesRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -3010,8 +2614,8 @@ func (c *Client) CreateKnowledgebase(ctx context.Context, body CreateKnowledgeba
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteKnowledgebase(ctx context.Context, knowledgebaseName string, params *DeleteKnowledgebaseParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteKnowledgebaseRequest(c.Server, knowledgebaseName, params)
+func (c *Client) DeleteKnowledgebase(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteKnowledgebaseRequest(c.Server, knowledgebaseName)
 	if err != nil {
 		return nil, err
 	}
@@ -3022,8 +2626,8 @@ func (c *Client) DeleteKnowledgebase(ctx context.Context, knowledgebaseName stri
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetKnowledgebase(ctx context.Context, knowledgebaseName string, params *GetKnowledgebaseParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetKnowledgebaseRequest(c.Server, knowledgebaseName, params)
+func (c *Client) GetKnowledgebase(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetKnowledgebaseRequest(c.Server, knowledgebaseName)
 	if err != nil {
 		return nil, err
 	}
@@ -3094,8 +2698,8 @@ func (c *Client) GetMetrics(ctx context.Context, reqEditors ...RequestEditorFn) 
 	return c.Client.Do(req)
 }
 
-func (c *Client) ListModels(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewListModelsRequest(c.Server, params)
+func (c *Client) ListModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListModelsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -3130,8 +2734,8 @@ func (c *Client) CreateModel(ctx context.Context, body CreateModelJSONRequestBod
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteModel(ctx context.Context, modelName string, params *DeleteModelParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteModelRequest(c.Server, modelName, params)
+func (c *Client) DeleteModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteModelRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -3142,8 +2746,8 @@ func (c *Client) DeleteModel(ctx context.Context, modelName string, params *Dele
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetModel(ctx context.Context, modelName string, params *GetModelParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelRequest(c.Server, modelName, params)
+func (c *Client) GetModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -3178,8 +2782,8 @@ func (c *Client) UpdateModel(ctx context.Context, modelName string, body UpdateM
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetModelEnvironmentLogs(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelEnvironmentLogsRequest(c.Server, modelName)
+func (c *Client) GetModelLogs(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelLogsRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -3190,20 +2794,8 @@ func (c *Client) GetModelEnvironmentLogs(ctx context.Context, modelName string, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetModelMetrics(ctx context.Context, modelName string, params *GetModelMetricsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelMetricsRequest(c.Server, modelName, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseModel(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseModelRequest(c.Server, modelName)
+func (c *Client) GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelMetricsRequest(c.Server, modelName)
 	if err != nil {
 		return nil, err
 	}
@@ -3803,7 +3395,7 @@ func (c *Client) LeaveWorkspace(ctx context.Context, workspaceName string, reqEd
 }
 
 // NewListAgentsRequest generates requests for ListAgents
-func NewListAgentsRequest(server string, params *ListAgentsParams) (*http.Request, error) {
+func NewListAgentsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -3819,28 +3411,6 @@ func NewListAgentsRequest(server string, params *ListAgentsParams) (*http.Reques
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -3892,7 +3462,7 @@ func NewCreateAgentRequestWithBody(server string, contentType string, body io.Re
 }
 
 // NewDeleteAgentRequest generates requests for DeleteAgent
-func NewDeleteAgentRequest(server string, agentName string, params *DeleteAgentParams) (*http.Request, error) {
+func NewDeleteAgentRequest(server string, agentName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3915,24 +3485,6 @@ func NewDeleteAgentRequest(server string, agentName string, params *DeleteAgentP
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, params.Environment); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
@@ -3944,7 +3496,7 @@ func NewDeleteAgentRequest(server string, agentName string, params *DeleteAgentP
 }
 
 // NewGetAgentRequest generates requests for GetAgent
-func NewGetAgentRequest(server string, agentName string, params *GetAgentParams) (*http.Request, error) {
+func NewGetAgentRequest(server string, agentName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3967,28 +3519,6 @@ func NewGetAgentRequest(server string, agentName string, params *GetAgentParams)
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -4216,8 +3746,8 @@ func NewPutAgentHistoryRequestWithBody(server string, agentName string, requestI
 	return req, nil
 }
 
-// NewGetAgentEnvironmentLogsRequest generates requests for GetAgentEnvironmentLogs
-func NewGetAgentEnvironmentLogsRequest(server string, agentName string) (*http.Request, error) {
+// NewGetAgentLogsRequest generates requests for GetAgentLogs
+func NewGetAgentLogsRequest(server string, agentName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4251,7 +3781,7 @@ func NewGetAgentEnvironmentLogsRequest(server string, agentName string) (*http.R
 }
 
 // NewGetAgentMetricsRequest generates requests for GetAgentMetrics
-func NewGetAgentMetricsRequest(server string, agentName string, params *GetAgentMetricsParams) (*http.Request, error) {
+func NewGetAgentMetricsRequest(server string, agentName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4276,63 +3806,7 @@ func NewGetAgentMetricsRequest(server string, agentName string, params *GetAgent
 		return nil, err
 	}
 
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateAgentReleaseRequest generates requests for CreateAgentRelease
-func NewCreateAgentReleaseRequest(server string, agentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/release", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4369,9 +3843,41 @@ func NewGetAgentTraceIdsRequest(server string, agentName string, params *GetAgen
 	if params != nil {
 		queryValues := queryURL.Query()
 
-		if params.Environment != nil {
+		if params.Limit != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.StartTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.EndTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -4423,224 +3929,8 @@ func NewGetConfigurationRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
-// NewListEnvironmentsRequest generates requests for ListEnvironments
-func NewListEnvironmentsRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/environments")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateEnvironmentRequest calls the generic CreateEnvironment builder with application/json body
-func NewCreateEnvironmentRequest(server string, body CreateEnvironmentJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewCreateEnvironmentRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewCreateEnvironmentRequestWithBody generates requests for CreateEnvironment with any type of body
-func NewCreateEnvironmentRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/environments")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDeleteEnvironmentRequest generates requests for DeleteEnvironment
-func NewDeleteEnvironmentRequest(server string, environmentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/environments/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetEnvironmentRequest generates requests for GetEnvironment
-func NewGetEnvironmentRequest(server string, environmentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/environments/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewUpdateEnvironmentRequest calls the generic UpdateEnvironment builder with application/json body
-func NewUpdateEnvironmentRequest(server string, environmentName string, body UpdateEnvironmentJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewUpdateEnvironmentRequestWithBody(server, environmentName, "application/json", bodyReader)
-}
-
-// NewUpdateEnvironmentRequestWithBody generates requests for UpdateEnvironment with any type of body
-func NewUpdateEnvironmentRequestWithBody(server string, environmentName string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/environments/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PUT", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewGetEnvironmentMetricsRequest generates requests for GetEnvironmentMetrics
-func NewGetEnvironmentMetricsRequest(server string, environmentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "environmentName", runtime.ParamLocationPath, environmentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/environments/%s/metrics", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewListFunctionsRequest generates requests for ListFunctions
-func NewListFunctionsRequest(server string, params *ListFunctionsParams) (*http.Request, error) {
+func NewListFunctionsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -4656,28 +3946,6 @@ func NewListFunctionsRequest(server string, params *ListFunctionsParams) (*http.
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -4729,7 +3997,7 @@ func NewCreateFunctionRequestWithBody(server string, contentType string, body io
 }
 
 // NewDeleteFunctionRequest generates requests for DeleteFunction
-func NewDeleteFunctionRequest(server string, functionName string, params *DeleteFunctionParams) (*http.Request, error) {
+func NewDeleteFunctionRequest(server string, functionName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4752,24 +4020,6 @@ func NewDeleteFunctionRequest(server string, functionName string, params *Delete
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, params.Environment); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
@@ -4781,7 +4031,7 @@ func NewDeleteFunctionRequest(server string, functionName string, params *Delete
 }
 
 // NewGetFunctionRequest generates requests for GetFunction
-func NewGetFunctionRequest(server string, functionName string, params *GetFunctionParams) (*http.Request, error) {
+func NewGetFunctionRequest(server string, functionName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4804,28 +4054,6 @@ func NewGetFunctionRequest(server string, functionName string, params *GetFuncti
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -4883,8 +4111,8 @@ func NewUpdateFunctionRequestWithBody(server string, functionName string, conten
 	return req, nil
 }
 
-// NewGetFunctionEnvironmentLogsRequest generates requests for GetFunctionEnvironmentLogs
-func NewGetFunctionEnvironmentLogsRequest(server string, functionName string) (*http.Request, error) {
+// NewGetFunctionLogsRequest generates requests for GetFunctionLogs
+func NewGetFunctionLogsRequest(server string, functionName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4918,7 +4146,7 @@ func NewGetFunctionEnvironmentLogsRequest(server string, functionName string) (*
 }
 
 // NewGetFunctionMetricsRequest generates requests for GetFunctionMetrics
-func NewGetFunctionMetricsRequest(server string, functionName string, params *GetFunctionMetricsParams) (*http.Request, error) {
+func NewGetFunctionMetricsRequest(server string, functionName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4943,63 +4171,7 @@ func NewGetFunctionMetricsRequest(server string, functionName string, params *Ge
 		return nil, err
 	}
 
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewCreateFunctionReleaseRequest generates requests for CreateFunctionRelease
-func NewCreateFunctionReleaseRequest(server string, functionName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/functions/%s/release", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -5036,9 +4208,41 @@ func NewGetFunctionTraceIdsRequest(server string, functionName string, params *G
 	if params != nil {
 		queryValues := queryURL.Query()
 
-		if params.Environment != nil {
+		if params.Limit != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.StartTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.EndTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -5059,46 +4263,6 @@ func NewGetFunctionTraceIdsRequest(server string, functionName string, params *G
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewRunInformationGenerationAgentRequest calls the generic RunInformationGenerationAgent builder with application/json body
-func NewRunInformationGenerationAgentRequest(server string, body RunInformationGenerationAgentJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewRunInformationGenerationAgentRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewRunInformationGenerationAgentRequestWithBody generates requests for RunInformationGenerationAgent with any type of body
-func NewRunInformationGenerationAgentRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/generation/agents/information")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -5490,7 +4654,7 @@ func NewGetIntegrationRequest(server string, integrationName string) (*http.Requ
 }
 
 // NewListKnowledgebasesRequest generates requests for ListKnowledgebases
-func NewListKnowledgebasesRequest(server string, params *ListKnowledgebasesParams) (*http.Request, error) {
+func NewListKnowledgebasesRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -5506,28 +4670,6 @@ func NewListKnowledgebasesRequest(server string, params *ListKnowledgebasesParam
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -5579,7 +4721,7 @@ func NewCreateKnowledgebaseRequestWithBody(server string, contentType string, bo
 }
 
 // NewDeleteKnowledgebaseRequest generates requests for DeleteKnowledgebase
-func NewDeleteKnowledgebaseRequest(server string, knowledgebaseName string, params *DeleteKnowledgebaseParams) (*http.Request, error) {
+func NewDeleteKnowledgebaseRequest(server string, knowledgebaseName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5602,28 +4744,6 @@ func NewDeleteKnowledgebaseRequest(server string, knowledgebaseName string, para
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
@@ -5635,7 +4755,7 @@ func NewDeleteKnowledgebaseRequest(server string, knowledgebaseName string, para
 }
 
 // NewGetKnowledgebaseRequest generates requests for GetKnowledgebase
-func NewGetKnowledgebaseRequest(server string, knowledgebaseName string, params *GetKnowledgebaseParams) (*http.Request, error) {
+func NewGetKnowledgebaseRequest(server string, knowledgebaseName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5658,28 +4778,6 @@ func NewGetKnowledgebaseRequest(server string, knowledgebaseName string, params 
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -5819,7 +4917,7 @@ func NewGetMetricsRequest(server string) (*http.Request, error) {
 }
 
 // NewListModelsRequest generates requests for ListModels
-func NewListModelsRequest(server string, params *ListModelsParams) (*http.Request, error) {
+func NewListModelsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -5835,28 +4933,6 @@ func NewListModelsRequest(server string, params *ListModelsParams) (*http.Reques
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -5908,7 +4984,7 @@ func NewCreateModelRequestWithBody(server string, contentType string, body io.Re
 }
 
 // NewDeleteModelRequest generates requests for DeleteModel
-func NewDeleteModelRequest(server string, modelName string, params *DeleteModelParams) (*http.Request, error) {
+func NewDeleteModelRequest(server string, modelName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5931,24 +5007,6 @@ func NewDeleteModelRequest(server string, modelName string, params *DeleteModelP
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, params.Environment); err != nil {
-			return nil, err
-		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-			return nil, err
-		} else {
-			for k, v := range parsed {
-				for _, v2 := range v {
-					queryValues.Add(k, v2)
-				}
-			}
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
@@ -5960,7 +5018,7 @@ func NewDeleteModelRequest(server string, modelName string, params *DeleteModelP
 }
 
 // NewGetModelRequest generates requests for GetModel
-func NewGetModelRequest(server string, modelName string, params *GetModelParams) (*http.Request, error) {
+func NewGetModelRequest(server string, modelName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5983,28 +5041,6 @@ func NewGetModelRequest(server string, modelName string, params *GetModelParams)
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -6062,8 +5098,8 @@ func NewUpdateModelRequestWithBody(server string, modelName string, contentType 
 	return req, nil
 }
 
-// NewGetModelEnvironmentLogsRequest generates requests for GetModelEnvironmentLogs
-func NewGetModelEnvironmentLogsRequest(server string, modelName string) (*http.Request, error) {
+// NewGetModelLogsRequest generates requests for GetModelLogs
+func NewGetModelLogsRequest(server string, modelName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6097,7 +5133,7 @@ func NewGetModelEnvironmentLogsRequest(server string, modelName string) (*http.R
 }
 
 // NewGetModelMetricsRequest generates requests for GetModelMetrics
-func NewGetModelMetricsRequest(server string, modelName string, params *GetModelMetricsParams) (*http.Request, error) {
+func NewGetModelMetricsRequest(server string, modelName string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6122,63 +5158,7 @@ func NewGetModelMetricsRequest(server string, modelName string, params *GetModel
 		return nil, err
 	}
 
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewReleaseModelRequest generates requests for ReleaseModel
-func NewReleaseModelRequest(server string, modelName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelName", runtime.ParamLocationPath, modelName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/models/%s/release", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -6215,9 +5195,41 @@ func NewGetModelTraceIdsRequest(server string, modelName string, params *GetMode
 	if params != nil {
 		queryValues := queryURL.Query()
 
-		if params.Environment != nil {
+		if params.Limit != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.StartTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.EndTime != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -7121,22 +6133,6 @@ func NewGetTraceIdsRequest(server string, params *GetTraceIdsParams) (*http.Requ
 
 		}
 
-		if params.Environment != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "environment", runtime.ParamLocationQuery, *params.Environment); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
 		if params.Limit != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
@@ -7778,7 +6774,7 @@ func WithBaseURL(baseURL string) ClientOption {
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
 	// ListAgentsWithResponse request
-	ListAgentsWithResponse(ctx context.Context, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error)
+	ListAgentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error)
 
 	// CreateAgentWithBodyWithResponse request with any body
 	CreateAgentWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateAgentResponse, error)
@@ -7786,10 +6782,10 @@ type ClientWithResponsesInterface interface {
 	CreateAgentWithResponse(ctx context.Context, body CreateAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAgentResponse, error)
 
 	// DeleteAgentWithResponse request
-	DeleteAgentWithResponse(ctx context.Context, agentName string, params *DeleteAgentParams, reqEditors ...RequestEditorFn) (*DeleteAgentResponse, error)
+	DeleteAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*DeleteAgentResponse, error)
 
 	// GetAgentWithResponse request
-	GetAgentWithResponse(ctx context.Context, agentName string, params *GetAgentParams, reqEditors ...RequestEditorFn) (*GetAgentResponse, error)
+	GetAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentResponse, error)
 
 	// UpdateAgentWithBodyWithResponse request with any body
 	UpdateAgentWithBodyWithResponse(ctx context.Context, agentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAgentResponse, error)
@@ -7810,14 +6806,11 @@ type ClientWithResponsesInterface interface {
 
 	PutAgentHistoryWithResponse(ctx context.Context, agentName string, requestId string, body PutAgentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*PutAgentHistoryResponse, error)
 
-	// GetAgentEnvironmentLogsWithResponse request
-	GetAgentEnvironmentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentEnvironmentLogsResponse, error)
+	// GetAgentLogsWithResponse request
+	GetAgentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentLogsResponse, error)
 
 	// GetAgentMetricsWithResponse request
-	GetAgentMetricsWithResponse(ctx context.Context, agentName string, params *GetAgentMetricsParams, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error)
-
-	// CreateAgentReleaseWithResponse request
-	CreateAgentReleaseWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*CreateAgentReleaseResponse, error)
+	GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error)
 
 	// GetAgentTraceIdsWithResponse request
 	GetAgentTraceIdsWithResponse(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*GetAgentTraceIdsResponse, error)
@@ -7825,30 +6818,8 @@ type ClientWithResponsesInterface interface {
 	// GetConfigurationWithResponse request
 	GetConfigurationWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetConfigurationResponse, error)
 
-	// ListEnvironmentsWithResponse request
-	ListEnvironmentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListEnvironmentsResponse, error)
-
-	// CreateEnvironmentWithBodyWithResponse request with any body
-	CreateEnvironmentWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateEnvironmentResponse, error)
-
-	CreateEnvironmentWithResponse(ctx context.Context, body CreateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateEnvironmentResponse, error)
-
-	// DeleteEnvironmentWithResponse request
-	DeleteEnvironmentWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*DeleteEnvironmentResponse, error)
-
-	// GetEnvironmentWithResponse request
-	GetEnvironmentWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentResponse, error)
-
-	// UpdateEnvironmentWithBodyWithResponse request with any body
-	UpdateEnvironmentWithBodyWithResponse(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateEnvironmentResponse, error)
-
-	UpdateEnvironmentWithResponse(ctx context.Context, environmentName string, body UpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEnvironmentResponse, error)
-
-	// GetEnvironmentMetricsWithResponse request
-	GetEnvironmentMetricsWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentMetricsResponse, error)
-
 	// ListFunctionsWithResponse request
-	ListFunctionsWithResponse(ctx context.Context, params *ListFunctionsParams, reqEditors ...RequestEditorFn) (*ListFunctionsResponse, error)
+	ListFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListFunctionsResponse, error)
 
 	// CreateFunctionWithBodyWithResponse request with any body
 	CreateFunctionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateFunctionResponse, error)
@@ -7856,32 +6827,24 @@ type ClientWithResponsesInterface interface {
 	CreateFunctionWithResponse(ctx context.Context, body CreateFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateFunctionResponse, error)
 
 	// DeleteFunctionWithResponse request
-	DeleteFunctionWithResponse(ctx context.Context, functionName string, params *DeleteFunctionParams, reqEditors ...RequestEditorFn) (*DeleteFunctionResponse, error)
+	DeleteFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*DeleteFunctionResponse, error)
 
 	// GetFunctionWithResponse request
-	GetFunctionWithResponse(ctx context.Context, functionName string, params *GetFunctionParams, reqEditors ...RequestEditorFn) (*GetFunctionResponse, error)
+	GetFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionResponse, error)
 
 	// UpdateFunctionWithBodyWithResponse request with any body
 	UpdateFunctionWithBodyWithResponse(ctx context.Context, functionName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateFunctionResponse, error)
 
 	UpdateFunctionWithResponse(ctx context.Context, functionName string, body UpdateFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFunctionResponse, error)
 
-	// GetFunctionEnvironmentLogsWithResponse request
-	GetFunctionEnvironmentLogsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionEnvironmentLogsResponse, error)
+	// GetFunctionLogsWithResponse request
+	GetFunctionLogsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionLogsResponse, error)
 
 	// GetFunctionMetricsWithResponse request
-	GetFunctionMetricsWithResponse(ctx context.Context, functionName string, params *GetFunctionMetricsParams, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error)
-
-	// CreateFunctionReleaseWithResponse request
-	CreateFunctionReleaseWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*CreateFunctionReleaseResponse, error)
+	GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error)
 
 	// GetFunctionTraceIdsWithResponse request
 	GetFunctionTraceIdsWithResponse(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*GetFunctionTraceIdsResponse, error)
-
-	// RunInformationGenerationAgentWithBodyWithResponse request with any body
-	RunInformationGenerationAgentWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RunInformationGenerationAgentResponse, error)
-
-	RunInformationGenerationAgentWithResponse(ctx context.Context, body RunInformationGenerationAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*RunInformationGenerationAgentResponse, error)
 
 	// ListAgentsHistoryWithResponse request
 	ListAgentsHistoryWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsHistoryResponse, error)
@@ -7921,7 +6884,7 @@ type ClientWithResponsesInterface interface {
 	GetIntegrationWithResponse(ctx context.Context, integrationName string, reqEditors ...RequestEditorFn) (*GetIntegrationResponse, error)
 
 	// ListKnowledgebasesWithResponse request
-	ListKnowledgebasesWithResponse(ctx context.Context, params *ListKnowledgebasesParams, reqEditors ...RequestEditorFn) (*ListKnowledgebasesResponse, error)
+	ListKnowledgebasesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListKnowledgebasesResponse, error)
 
 	// CreateKnowledgebaseWithBodyWithResponse request with any body
 	CreateKnowledgebaseWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateKnowledgebaseResponse, error)
@@ -7929,10 +6892,10 @@ type ClientWithResponsesInterface interface {
 	CreateKnowledgebaseWithResponse(ctx context.Context, body CreateKnowledgebaseJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateKnowledgebaseResponse, error)
 
 	// DeleteKnowledgebaseWithResponse request
-	DeleteKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, params *DeleteKnowledgebaseParams, reqEditors ...RequestEditorFn) (*DeleteKnowledgebaseResponse, error)
+	DeleteKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*DeleteKnowledgebaseResponse, error)
 
 	// GetKnowledgebaseWithResponse request
-	GetKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, params *GetKnowledgebaseParams, reqEditors ...RequestEditorFn) (*GetKnowledgebaseResponse, error)
+	GetKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*GetKnowledgebaseResponse, error)
 
 	// UpdateKnowledgebaseWithBodyWithResponse request with any body
 	UpdateKnowledgebaseWithBodyWithResponse(ctx context.Context, knowledgebaseName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKnowledgebaseResponse, error)
@@ -7949,7 +6912,7 @@ type ClientWithResponsesInterface interface {
 	GetMetricsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMetricsResponse, error)
 
 	// ListModelsWithResponse request
-	ListModelsWithResponse(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
+	ListModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
 
 	// CreateModelWithBodyWithResponse request with any body
 	CreateModelWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelResponse, error)
@@ -7957,24 +6920,21 @@ type ClientWithResponsesInterface interface {
 	CreateModelWithResponse(ctx context.Context, body CreateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelResponse, error)
 
 	// DeleteModelWithResponse request
-	DeleteModelWithResponse(ctx context.Context, modelName string, params *DeleteModelParams, reqEditors ...RequestEditorFn) (*DeleteModelResponse, error)
+	DeleteModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*DeleteModelResponse, error)
 
 	// GetModelWithResponse request
-	GetModelWithResponse(ctx context.Context, modelName string, params *GetModelParams, reqEditors ...RequestEditorFn) (*GetModelResponse, error)
+	GetModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelResponse, error)
 
 	// UpdateModelWithBodyWithResponse request with any body
 	UpdateModelWithBodyWithResponse(ctx context.Context, modelName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error)
 
 	UpdateModelWithResponse(ctx context.Context, modelName string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error)
 
-	// GetModelEnvironmentLogsWithResponse request
-	GetModelEnvironmentLogsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelEnvironmentLogsResponse, error)
+	// GetModelLogsWithResponse request
+	GetModelLogsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelLogsResponse, error)
 
 	// GetModelMetricsWithResponse request
-	GetModelMetricsWithResponse(ctx context.Context, modelName string, params *GetModelMetricsParams, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error)
-
-	// ReleaseModelWithResponse request
-	ReleaseModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ReleaseModelResponse, error)
+	GetModelMetricsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error)
 
 	// GetModelTraceIdsWithResponse request
 	GetModelTraceIdsWithResponse(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*GetModelTraceIdsResponse, error)
@@ -8313,14 +7273,14 @@ func (r PutAgentHistoryResponse) StatusCode() int {
 	return 0
 }
 
-type GetAgentEnvironmentLogsResponse struct {
+type GetAgentLogsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]ResourceLog
 }
 
 // Status returns HTTPResponse.Status
-func (r GetAgentEnvironmentLogsResponse) Status() string {
+func (r GetAgentLogsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -8328,7 +7288,7 @@ func (r GetAgentEnvironmentLogsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetAgentEnvironmentLogsResponse) StatusCode() int {
+func (r GetAgentLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8338,7 +7298,7 @@ func (r GetAgentEnvironmentLogsResponse) StatusCode() int {
 type GetAgentMetricsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceEnvironmentMetrics
+	JSON200      *ResourceMetrics
 }
 
 // Status returns HTTPResponse.Status
@@ -8351,28 +7311,6 @@ func (r GetAgentMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetAgentMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateAgentReleaseResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AgentRelease
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateAgentReleaseResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateAgentReleaseResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8417,138 +7355,6 @@ func (r GetConfigurationResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetConfigurationResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ListEnvironmentsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]Environment
-}
-
-// Status returns HTTPResponse.Status
-func (r ListEnvironmentsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ListEnvironmentsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateEnvironmentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Environment
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateEnvironmentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateEnvironmentResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteEnvironmentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Environment
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteEnvironmentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteEnvironmentResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetEnvironmentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Environment
-}
-
-// Status returns HTTPResponse.Status
-func (r GetEnvironmentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetEnvironmentResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type UpdateEnvironmentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Environment
-}
-
-// Status returns HTTPResponse.Status
-func (r UpdateEnvironmentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r UpdateEnvironmentResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetEnvironmentMetricsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *EnvironmentMetrics
-}
-
-// Status returns HTTPResponse.Status
-func (r GetEnvironmentMetricsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetEnvironmentMetricsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8665,14 +7471,14 @@ func (r UpdateFunctionResponse) StatusCode() int {
 	return 0
 }
 
-type GetFunctionEnvironmentLogsResponse struct {
+type GetFunctionLogsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]ResourceLog
 }
 
 // Status returns HTTPResponse.Status
-func (r GetFunctionEnvironmentLogsResponse) Status() string {
+func (r GetFunctionLogsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -8680,7 +7486,7 @@ func (r GetFunctionEnvironmentLogsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetFunctionEnvironmentLogsResponse) StatusCode() int {
+func (r GetFunctionLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8690,7 +7496,7 @@ func (r GetFunctionEnvironmentLogsResponse) StatusCode() int {
 type GetFunctionMetricsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceEnvironmentMetrics
+	JSON200      *ResourceMetrics
 }
 
 // Status returns HTTPResponse.Status
@@ -8703,28 +7509,6 @@ func (r GetFunctionMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetFunctionMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type CreateFunctionReleaseResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *FunctionRelease
-}
-
-// Status returns HTTPResponse.Status
-func (r CreateFunctionReleaseResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r CreateFunctionReleaseResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8747,28 +7531,6 @@ func (r GetFunctionTraceIdsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetFunctionTraceIdsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type RunInformationGenerationAgentResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AgentInformationResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r RunInformationGenerationAgentResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r RunInformationGenerationAgentResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -9148,7 +7910,7 @@ func (r ListLocationsResponse) StatusCode() int {
 type ListMCPHubDefinitionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]MCPHubArtifact
+	JSON200      *[]MCPDefinition
 }
 
 // Status returns HTTPResponse.Status
@@ -9299,14 +8061,14 @@ func (r UpdateModelResponse) StatusCode() int {
 	return 0
 }
 
-type GetModelEnvironmentLogsResponse struct {
+type GetModelLogsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]ResourceLog
 }
 
 // Status returns HTTPResponse.Status
-func (r GetModelEnvironmentLogsResponse) Status() string {
+func (r GetModelLogsResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -9314,7 +8076,7 @@ func (r GetModelEnvironmentLogsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetModelEnvironmentLogsResponse) StatusCode() int {
+func (r GetModelLogsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -9324,7 +8086,7 @@ func (r GetModelEnvironmentLogsResponse) StatusCode() int {
 type GetModelMetricsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ResourceEnvironmentMetrics
+	JSON200      *ResourceMetrics
 }
 
 // Status returns HTTPResponse.Status
@@ -9337,28 +8099,6 @@ func (r GetModelMetricsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetModelMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ReleaseModelResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ModelRelease
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseModelResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseModelResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -10305,8 +9045,8 @@ func (r LeaveWorkspaceResponse) StatusCode() int {
 }
 
 // ListAgentsWithResponse request returning *ListAgentsResponse
-func (c *ClientWithResponses) ListAgentsWithResponse(ctx context.Context, params *ListAgentsParams, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error) {
-	rsp, err := c.ListAgents(ctx, params, reqEditors...)
+func (c *ClientWithResponses) ListAgentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListAgentsResponse, error) {
+	rsp, err := c.ListAgents(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10331,8 +9071,8 @@ func (c *ClientWithResponses) CreateAgentWithResponse(ctx context.Context, body 
 }
 
 // DeleteAgentWithResponse request returning *DeleteAgentResponse
-func (c *ClientWithResponses) DeleteAgentWithResponse(ctx context.Context, agentName string, params *DeleteAgentParams, reqEditors ...RequestEditorFn) (*DeleteAgentResponse, error) {
-	rsp, err := c.DeleteAgent(ctx, agentName, params, reqEditors...)
+func (c *ClientWithResponses) DeleteAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*DeleteAgentResponse, error) {
+	rsp, err := c.DeleteAgent(ctx, agentName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10340,8 +9080,8 @@ func (c *ClientWithResponses) DeleteAgentWithResponse(ctx context.Context, agent
 }
 
 // GetAgentWithResponse request returning *GetAgentResponse
-func (c *ClientWithResponses) GetAgentWithResponse(ctx context.Context, agentName string, params *GetAgentParams, reqEditors ...RequestEditorFn) (*GetAgentResponse, error) {
-	rsp, err := c.GetAgent(ctx, agentName, params, reqEditors...)
+func (c *ClientWithResponses) GetAgentWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentResponse, error) {
+	rsp, err := c.GetAgent(ctx, agentName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10409,31 +9149,22 @@ func (c *ClientWithResponses) PutAgentHistoryWithResponse(ctx context.Context, a
 	return ParsePutAgentHistoryResponse(rsp)
 }
 
-// GetAgentEnvironmentLogsWithResponse request returning *GetAgentEnvironmentLogsResponse
-func (c *ClientWithResponses) GetAgentEnvironmentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentEnvironmentLogsResponse, error) {
-	rsp, err := c.GetAgentEnvironmentLogs(ctx, agentName, reqEditors...)
+// GetAgentLogsWithResponse request returning *GetAgentLogsResponse
+func (c *ClientWithResponses) GetAgentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentLogsResponse, error) {
+	rsp, err := c.GetAgentLogs(ctx, agentName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetAgentEnvironmentLogsResponse(rsp)
+	return ParseGetAgentLogsResponse(rsp)
 }
 
 // GetAgentMetricsWithResponse request returning *GetAgentMetricsResponse
-func (c *ClientWithResponses) GetAgentMetricsWithResponse(ctx context.Context, agentName string, params *GetAgentMetricsParams, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error) {
-	rsp, err := c.GetAgentMetrics(ctx, agentName, params, reqEditors...)
+func (c *ClientWithResponses) GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error) {
+	rsp, err := c.GetAgentMetrics(ctx, agentName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGetAgentMetricsResponse(rsp)
-}
-
-// CreateAgentReleaseWithResponse request returning *CreateAgentReleaseResponse
-func (c *ClientWithResponses) CreateAgentReleaseWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*CreateAgentReleaseResponse, error) {
-	rsp, err := c.CreateAgentRelease(ctx, agentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateAgentReleaseResponse(rsp)
 }
 
 // GetAgentTraceIdsWithResponse request returning *GetAgentTraceIdsResponse
@@ -10454,79 +9185,9 @@ func (c *ClientWithResponses) GetConfigurationWithResponse(ctx context.Context, 
 	return ParseGetConfigurationResponse(rsp)
 }
 
-// ListEnvironmentsWithResponse request returning *ListEnvironmentsResponse
-func (c *ClientWithResponses) ListEnvironmentsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListEnvironmentsResponse, error) {
-	rsp, err := c.ListEnvironments(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseListEnvironmentsResponse(rsp)
-}
-
-// CreateEnvironmentWithBodyWithResponse request with arbitrary body returning *CreateEnvironmentResponse
-func (c *ClientWithResponses) CreateEnvironmentWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateEnvironmentResponse, error) {
-	rsp, err := c.CreateEnvironmentWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateEnvironmentResponse(rsp)
-}
-
-func (c *ClientWithResponses) CreateEnvironmentWithResponse(ctx context.Context, body CreateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateEnvironmentResponse, error) {
-	rsp, err := c.CreateEnvironment(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateEnvironmentResponse(rsp)
-}
-
-// DeleteEnvironmentWithResponse request returning *DeleteEnvironmentResponse
-func (c *ClientWithResponses) DeleteEnvironmentWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*DeleteEnvironmentResponse, error) {
-	rsp, err := c.DeleteEnvironment(ctx, environmentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteEnvironmentResponse(rsp)
-}
-
-// GetEnvironmentWithResponse request returning *GetEnvironmentResponse
-func (c *ClientWithResponses) GetEnvironmentWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentResponse, error) {
-	rsp, err := c.GetEnvironment(ctx, environmentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetEnvironmentResponse(rsp)
-}
-
-// UpdateEnvironmentWithBodyWithResponse request with arbitrary body returning *UpdateEnvironmentResponse
-func (c *ClientWithResponses) UpdateEnvironmentWithBodyWithResponse(ctx context.Context, environmentName string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateEnvironmentResponse, error) {
-	rsp, err := c.UpdateEnvironmentWithBody(ctx, environmentName, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateEnvironmentResponse(rsp)
-}
-
-func (c *ClientWithResponses) UpdateEnvironmentWithResponse(ctx context.Context, environmentName string, body UpdateEnvironmentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateEnvironmentResponse, error) {
-	rsp, err := c.UpdateEnvironment(ctx, environmentName, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseUpdateEnvironmentResponse(rsp)
-}
-
-// GetEnvironmentMetricsWithResponse request returning *GetEnvironmentMetricsResponse
-func (c *ClientWithResponses) GetEnvironmentMetricsWithResponse(ctx context.Context, environmentName string, reqEditors ...RequestEditorFn) (*GetEnvironmentMetricsResponse, error) {
-	rsp, err := c.GetEnvironmentMetrics(ctx, environmentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetEnvironmentMetricsResponse(rsp)
-}
-
 // ListFunctionsWithResponse request returning *ListFunctionsResponse
-func (c *ClientWithResponses) ListFunctionsWithResponse(ctx context.Context, params *ListFunctionsParams, reqEditors ...RequestEditorFn) (*ListFunctionsResponse, error) {
-	rsp, err := c.ListFunctions(ctx, params, reqEditors...)
+func (c *ClientWithResponses) ListFunctionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListFunctionsResponse, error) {
+	rsp, err := c.ListFunctions(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10551,8 +9212,8 @@ func (c *ClientWithResponses) CreateFunctionWithResponse(ctx context.Context, bo
 }
 
 // DeleteFunctionWithResponse request returning *DeleteFunctionResponse
-func (c *ClientWithResponses) DeleteFunctionWithResponse(ctx context.Context, functionName string, params *DeleteFunctionParams, reqEditors ...RequestEditorFn) (*DeleteFunctionResponse, error) {
-	rsp, err := c.DeleteFunction(ctx, functionName, params, reqEditors...)
+func (c *ClientWithResponses) DeleteFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*DeleteFunctionResponse, error) {
+	rsp, err := c.DeleteFunction(ctx, functionName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10560,8 +9221,8 @@ func (c *ClientWithResponses) DeleteFunctionWithResponse(ctx context.Context, fu
 }
 
 // GetFunctionWithResponse request returning *GetFunctionResponse
-func (c *ClientWithResponses) GetFunctionWithResponse(ctx context.Context, functionName string, params *GetFunctionParams, reqEditors ...RequestEditorFn) (*GetFunctionResponse, error) {
-	rsp, err := c.GetFunction(ctx, functionName, params, reqEditors...)
+func (c *ClientWithResponses) GetFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionResponse, error) {
+	rsp, err := c.GetFunction(ctx, functionName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10585,31 +9246,22 @@ func (c *ClientWithResponses) UpdateFunctionWithResponse(ctx context.Context, fu
 	return ParseUpdateFunctionResponse(rsp)
 }
 
-// GetFunctionEnvironmentLogsWithResponse request returning *GetFunctionEnvironmentLogsResponse
-func (c *ClientWithResponses) GetFunctionEnvironmentLogsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionEnvironmentLogsResponse, error) {
-	rsp, err := c.GetFunctionEnvironmentLogs(ctx, functionName, reqEditors...)
+// GetFunctionLogsWithResponse request returning *GetFunctionLogsResponse
+func (c *ClientWithResponses) GetFunctionLogsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionLogsResponse, error) {
+	rsp, err := c.GetFunctionLogs(ctx, functionName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetFunctionEnvironmentLogsResponse(rsp)
+	return ParseGetFunctionLogsResponse(rsp)
 }
 
 // GetFunctionMetricsWithResponse request returning *GetFunctionMetricsResponse
-func (c *ClientWithResponses) GetFunctionMetricsWithResponse(ctx context.Context, functionName string, params *GetFunctionMetricsParams, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error) {
-	rsp, err := c.GetFunctionMetrics(ctx, functionName, params, reqEditors...)
+func (c *ClientWithResponses) GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error) {
+	rsp, err := c.GetFunctionMetrics(ctx, functionName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGetFunctionMetricsResponse(rsp)
-}
-
-// CreateFunctionReleaseWithResponse request returning *CreateFunctionReleaseResponse
-func (c *ClientWithResponses) CreateFunctionReleaseWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*CreateFunctionReleaseResponse, error) {
-	rsp, err := c.CreateFunctionRelease(ctx, functionName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseCreateFunctionReleaseResponse(rsp)
 }
 
 // GetFunctionTraceIdsWithResponse request returning *GetFunctionTraceIdsResponse
@@ -10619,23 +9271,6 @@ func (c *ClientWithResponses) GetFunctionTraceIdsWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseGetFunctionTraceIdsResponse(rsp)
-}
-
-// RunInformationGenerationAgentWithBodyWithResponse request with arbitrary body returning *RunInformationGenerationAgentResponse
-func (c *ClientWithResponses) RunInformationGenerationAgentWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RunInformationGenerationAgentResponse, error) {
-	rsp, err := c.RunInformationGenerationAgentWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRunInformationGenerationAgentResponse(rsp)
-}
-
-func (c *ClientWithResponses) RunInformationGenerationAgentWithResponse(ctx context.Context, body RunInformationGenerationAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*RunInformationGenerationAgentResponse, error) {
-	rsp, err := c.RunInformationGenerationAgent(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseRunInformationGenerationAgentResponse(rsp)
 }
 
 // ListAgentsHistoryWithResponse request returning *ListAgentsHistoryResponse
@@ -10754,8 +9389,8 @@ func (c *ClientWithResponses) GetIntegrationWithResponse(ctx context.Context, in
 }
 
 // ListKnowledgebasesWithResponse request returning *ListKnowledgebasesResponse
-func (c *ClientWithResponses) ListKnowledgebasesWithResponse(ctx context.Context, params *ListKnowledgebasesParams, reqEditors ...RequestEditorFn) (*ListKnowledgebasesResponse, error) {
-	rsp, err := c.ListKnowledgebases(ctx, params, reqEditors...)
+func (c *ClientWithResponses) ListKnowledgebasesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListKnowledgebasesResponse, error) {
+	rsp, err := c.ListKnowledgebases(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10780,8 +9415,8 @@ func (c *ClientWithResponses) CreateKnowledgebaseWithResponse(ctx context.Contex
 }
 
 // DeleteKnowledgebaseWithResponse request returning *DeleteKnowledgebaseResponse
-func (c *ClientWithResponses) DeleteKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, params *DeleteKnowledgebaseParams, reqEditors ...RequestEditorFn) (*DeleteKnowledgebaseResponse, error) {
-	rsp, err := c.DeleteKnowledgebase(ctx, knowledgebaseName, params, reqEditors...)
+func (c *ClientWithResponses) DeleteKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*DeleteKnowledgebaseResponse, error) {
+	rsp, err := c.DeleteKnowledgebase(ctx, knowledgebaseName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10789,8 +9424,8 @@ func (c *ClientWithResponses) DeleteKnowledgebaseWithResponse(ctx context.Contex
 }
 
 // GetKnowledgebaseWithResponse request returning *GetKnowledgebaseResponse
-func (c *ClientWithResponses) GetKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, params *GetKnowledgebaseParams, reqEditors ...RequestEditorFn) (*GetKnowledgebaseResponse, error) {
-	rsp, err := c.GetKnowledgebase(ctx, knowledgebaseName, params, reqEditors...)
+func (c *ClientWithResponses) GetKnowledgebaseWithResponse(ctx context.Context, knowledgebaseName string, reqEditors ...RequestEditorFn) (*GetKnowledgebaseResponse, error) {
+	rsp, err := c.GetKnowledgebase(ctx, knowledgebaseName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10842,8 +9477,8 @@ func (c *ClientWithResponses) GetMetricsWithResponse(ctx context.Context, reqEdi
 }
 
 // ListModelsWithResponse request returning *ListModelsResponse
-func (c *ClientWithResponses) ListModelsWithResponse(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*ListModelsResponse, error) {
-	rsp, err := c.ListModels(ctx, params, reqEditors...)
+func (c *ClientWithResponses) ListModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelsResponse, error) {
+	rsp, err := c.ListModels(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10868,8 +9503,8 @@ func (c *ClientWithResponses) CreateModelWithResponse(ctx context.Context, body 
 }
 
 // DeleteModelWithResponse request returning *DeleteModelResponse
-func (c *ClientWithResponses) DeleteModelWithResponse(ctx context.Context, modelName string, params *DeleteModelParams, reqEditors ...RequestEditorFn) (*DeleteModelResponse, error) {
-	rsp, err := c.DeleteModel(ctx, modelName, params, reqEditors...)
+func (c *ClientWithResponses) DeleteModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*DeleteModelResponse, error) {
+	rsp, err := c.DeleteModel(ctx, modelName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10877,8 +9512,8 @@ func (c *ClientWithResponses) DeleteModelWithResponse(ctx context.Context, model
 }
 
 // GetModelWithResponse request returning *GetModelResponse
-func (c *ClientWithResponses) GetModelWithResponse(ctx context.Context, modelName string, params *GetModelParams, reqEditors ...RequestEditorFn) (*GetModelResponse, error) {
-	rsp, err := c.GetModel(ctx, modelName, params, reqEditors...)
+func (c *ClientWithResponses) GetModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelResponse, error) {
+	rsp, err := c.GetModel(ctx, modelName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -10902,31 +9537,22 @@ func (c *ClientWithResponses) UpdateModelWithResponse(ctx context.Context, model
 	return ParseUpdateModelResponse(rsp)
 }
 
-// GetModelEnvironmentLogsWithResponse request returning *GetModelEnvironmentLogsResponse
-func (c *ClientWithResponses) GetModelEnvironmentLogsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelEnvironmentLogsResponse, error) {
-	rsp, err := c.GetModelEnvironmentLogs(ctx, modelName, reqEditors...)
+// GetModelLogsWithResponse request returning *GetModelLogsResponse
+func (c *ClientWithResponses) GetModelLogsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelLogsResponse, error) {
+	rsp, err := c.GetModelLogs(ctx, modelName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetModelEnvironmentLogsResponse(rsp)
+	return ParseGetModelLogsResponse(rsp)
 }
 
 // GetModelMetricsWithResponse request returning *GetModelMetricsResponse
-func (c *ClientWithResponses) GetModelMetricsWithResponse(ctx context.Context, modelName string, params *GetModelMetricsParams, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error) {
-	rsp, err := c.GetModelMetrics(ctx, modelName, params, reqEditors...)
+func (c *ClientWithResponses) GetModelMetricsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error) {
+	rsp, err := c.GetModelMetrics(ctx, modelName, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseGetModelMetricsResponse(rsp)
-}
-
-// ReleaseModelWithResponse request returning *ReleaseModelResponse
-func (c *ClientWithResponses) ReleaseModelWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ReleaseModelResponse, error) {
-	rsp, err := c.ReleaseModel(ctx, modelName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseModelResponse(rsp)
 }
 
 // GetModelTraceIdsWithResponse request returning *GetModelTraceIdsResponse
@@ -11595,15 +10221,15 @@ func ParsePutAgentHistoryResponse(rsp *http.Response) (*PutAgentHistoryResponse,
 	return response, nil
 }
 
-// ParseGetAgentEnvironmentLogsResponse parses an HTTP response from a GetAgentEnvironmentLogsWithResponse call
-func ParseGetAgentEnvironmentLogsResponse(rsp *http.Response) (*GetAgentEnvironmentLogsResponse, error) {
+// ParseGetAgentLogsResponse parses an HTTP response from a GetAgentLogsWithResponse call
+func ParseGetAgentLogsResponse(rsp *http.Response) (*GetAgentLogsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetAgentEnvironmentLogsResponse{
+	response := &GetAgentLogsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -11636,33 +10262,7 @@ func ParseGetAgentMetricsResponse(rsp *http.Response) (*GetAgentMetricsResponse,
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceEnvironmentMetrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateAgentReleaseResponse parses an HTTP response from a CreateAgentReleaseWithResponse call
-func ParseCreateAgentReleaseResponse(rsp *http.Response) (*CreateAgentReleaseResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateAgentReleaseResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentRelease
+		var dest ResourceMetrics
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -11715,162 +10315,6 @@ func ParseGetConfigurationResponse(rsp *http.Response) (*GetConfigurationRespons
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Configuration
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseListEnvironmentsResponse parses an HTTP response from a ListEnvironmentsWithResponse call
-func ParseListEnvironmentsResponse(rsp *http.Response) (*ListEnvironmentsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ListEnvironmentsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []Environment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateEnvironmentResponse parses an HTTP response from a CreateEnvironmentWithResponse call
-func ParseCreateEnvironmentResponse(rsp *http.Response) (*CreateEnvironmentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateEnvironmentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Environment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteEnvironmentResponse parses an HTTP response from a DeleteEnvironmentWithResponse call
-func ParseDeleteEnvironmentResponse(rsp *http.Response) (*DeleteEnvironmentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteEnvironmentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Environment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetEnvironmentResponse parses an HTTP response from a GetEnvironmentWithResponse call
-func ParseGetEnvironmentResponse(rsp *http.Response) (*GetEnvironmentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetEnvironmentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Environment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseUpdateEnvironmentResponse parses an HTTP response from a UpdateEnvironmentWithResponse call
-func ParseUpdateEnvironmentResponse(rsp *http.Response) (*UpdateEnvironmentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &UpdateEnvironmentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Environment
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetEnvironmentMetricsResponse parses an HTTP response from a GetEnvironmentMetricsWithResponse call
-func ParseGetEnvironmentMetricsResponse(rsp *http.Response) (*GetEnvironmentMetricsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetEnvironmentMetricsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest EnvironmentMetrics
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -12011,15 +10455,15 @@ func ParseUpdateFunctionResponse(rsp *http.Response) (*UpdateFunctionResponse, e
 	return response, nil
 }
 
-// ParseGetFunctionEnvironmentLogsResponse parses an HTTP response from a GetFunctionEnvironmentLogsWithResponse call
-func ParseGetFunctionEnvironmentLogsResponse(rsp *http.Response) (*GetFunctionEnvironmentLogsResponse, error) {
+// ParseGetFunctionLogsResponse parses an HTTP response from a GetFunctionLogsWithResponse call
+func ParseGetFunctionLogsResponse(rsp *http.Response) (*GetFunctionLogsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetFunctionEnvironmentLogsResponse{
+	response := &GetFunctionLogsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -12052,33 +10496,7 @@ func ParseGetFunctionMetricsResponse(rsp *http.Response) (*GetFunctionMetricsRes
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceEnvironmentMetrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseCreateFunctionReleaseResponse parses an HTTP response from a CreateFunctionReleaseWithResponse call
-func ParseCreateFunctionReleaseResponse(rsp *http.Response) (*CreateFunctionReleaseResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &CreateFunctionReleaseResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest FunctionRelease
+		var dest ResourceMetrics
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -12105,32 +10523,6 @@ func ParseGetFunctionTraceIdsResponse(rsp *http.Response) (*GetFunctionTraceIdsR
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest TraceIdsResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseRunInformationGenerationAgentResponse parses an HTTP response from a RunInformationGenerationAgentWithResponse call
-func ParseRunInformationGenerationAgentResponse(rsp *http.Response) (*RunInformationGenerationAgentResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &RunInformationGenerationAgentResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentInformationResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -12558,7 +10950,7 @@ func ParseListMCPHubDefinitionsResponse(rsp *http.Response) (*ListMCPHubDefiniti
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []MCPHubArtifact
+		var dest []MCPDefinition
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -12725,15 +11117,15 @@ func ParseUpdateModelResponse(rsp *http.Response) (*UpdateModelResponse, error) 
 	return response, nil
 }
 
-// ParseGetModelEnvironmentLogsResponse parses an HTTP response from a GetModelEnvironmentLogsWithResponse call
-func ParseGetModelEnvironmentLogsResponse(rsp *http.Response) (*GetModelEnvironmentLogsResponse, error) {
+// ParseGetModelLogsResponse parses an HTTP response from a GetModelLogsWithResponse call
+func ParseGetModelLogsResponse(rsp *http.Response) (*GetModelLogsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetModelEnvironmentLogsResponse{
+	response := &GetModelLogsResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -12766,33 +11158,7 @@ func ParseGetModelMetricsResponse(rsp *http.Response) (*GetModelMetricsResponse,
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceEnvironmentMetrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseReleaseModelResponse parses an HTTP response from a ReleaseModelWithResponse call
-func ParseReleaseModelResponse(rsp *http.Response) (*ReleaseModelResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseModelResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ModelRelease
+		var dest ResourceMetrics
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -13869,167 +12235,153 @@ func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+x93XPbOPLgv4LSXdVMqrRx9nZ/D5uqffA4H+OLM+NyPDcPs1MpiIQkrCmAC4LyaF35",
-	"36/wRYJkAwRlSXEyeYojAg2gu9HoLzQeZhnflJwRJqvZy4dZla3JBus/z1eESfVHTqpM0FJSzmYv7c/z",
-	"WSl4SYSkRDcmWwfhfwuynL2c/a+zFvCZhXp2wQV5bVp+ms82ROIcSzzW6zXbUsHZhjD53nX5NJ9VJcnG",
-	"uurJflANVQeJZV0FVoTs1/lM7koyezmrpKBsNfv0qfmFL/5NMqkg6R4Xa0xZCFqmPqKMsyVd1QLrb32c",
-	"dfr1wbxq/4f4Esk1QVhDVmBxRdCO1+geM4kkR3xLhKA50c1yssR1IRFnZLia+YwwvChIPhzx1zWRayK8",
-	"ocwiaIVcnwbcgvOCYKbgMbwhQ2C3a4LUl+7cJbcwJYemVgq+KQGWu9a/HxINcaJWUarO5jMqyaZK4j3D",
-	"JO1wWAi8a0b7kVaSi52ChIvi5+Xs5W9xmLd0Q95QUuRqAz30+AlHNqwmBswOACu8ZjmSNNSh2Y1Qx+Zj",
-	"eMRGVPT6mt+nYNfiT/eEkCzIf2pSyY8UWOON+YYuX0GTrCQWwPo+qJ+DqAkJmA/69zkiq5dI1IxRtpqj",
-	"qs4yUlVztMS0s7daeJLzuyG0n+rNggi1Gza0KGhFMs7yClG1Bfid3mN8UxZEmn2g0d1Cp0ySFREK/D0X",
-	"d1WJs8D2bT57uy4nZcF3mrwLUnC2qsCt/OnT73OQC73+a8v7oZ3YoW2AqYfgmuX2jqfJXC4EF0AX9TPa",
-	"kKrCK7AfLA1/8iThsmaZkerCIBWUhFjgDZFEANx03X57qoxb1Ys3dplDoO4LqiuSKzl+RyWiS4T1H/e4",
-	"0h8+w34wvwy2wq4kc3WKqBESiBc8Wi7ZkouNVgWs7BkOtiKMGG2hOeaaTshKswFzu0lVYVyrbYoscNIB",
-	"uuTCE7kDGZq2mqrkrCKTl2O7HUQvgvglp1VZ4N1P4J58ZT4OtZT9tnV4K6crNROY6YYUBEMoN4JRmM9z",
-	"s8ckt5ISYUuHpeAbzdPeaa6aYcaVDjhkMcE3w7F+FnRFWQeGBny/ptna19UqN6HAtgbJLCkzjNKb4yTo",
-	"QQR+sNZDmt6lDBdrRoBaV2MLpCmE2vxJZfM5qja4KJDXQEu0WpLc4FvhwrIZgN6OeIjNrxEWV7TSiLpj",
-	"/L4g+YosQFZ7539GPwXUvQ3PSTHs/F79HNQR45tmbnGxIOh+jaWyAYRTUDgBj0VBSl5Rp2zHsHDTttQn",
-	"IxfkMoeORi4IovkE5UcZrHRJM2cNDhmzpO/I/tZArOnP94yIsOXQDNybd0nRHdmBCtIfJRWk+giZwK+s",
-	"xYtqJmmBdFPzw/eUIXtAP4OgQoq6nQSi+Vxtf0GkoGRL1AHfcP/59eVEsb3kwvUMLbGqF8POv1REoKrW",
-	"NEM0J0zSJdUSE+r/EdYpPtj++msKA11xtvpLQbckdxPWC8BaE6NshX4geFNQCXKVOsnfK6xlAHLVR607",
-	"6QbJ5peFB9hcFx2fx2DAi6hLJONMUgbbhxftt4jCMp9lvGaKRUAQ7lMUQinoFktyxc1WhXRw0wIVrgna",
-	"YIZXJEf3VK7RwlADqaVhOV3Davxk0BIECRg5ziyBLeuY1RLS/03HkGdsPtP2RKBXyNaAd4TtA++HGIaq",
-	"GIqS2blFOMjR9vCHR+qL9QFHt/wOTPZn/Qcuur7CqpFPdsl9sHdk9CBTU+7uNhCTQX/ga/1BWTo5rfSf",
-	"gKLqOQKXBd5yMa5l2GZK2ivby8ztgjNG0tSUS7CX01lKnt+STVlgScYAXbdNnYu45AXNLIrjXU27ZlQj",
-	"Dy6KunJGe1R6KuXnutNHKynqvNyMzvvGNlMbF7N8wf8AThjzASntC6RWRcSWiIJUleGRUW7qtweZ6XWq",
-	"c5Azq8e3LpwK3dOiQAuCNjgn6HvyfPUc5WRLCl6q73Ol4+a1JvezOSLKlMzU2bepC0nLgiBHPYTVABl5",
-	"DojItJDD1DiDtzTDSiPIee/NI03X82b0MHBuPcojC6gbfqcGZaMr0vrDUNE3HxqB5s+2Tx7KlkQQlpG3",
-	"BV/gYtSg8jSbMYzDAtxfaFyO7ycZoEkZAQioYvr4U7rYGov8HguC8BbTQotehT1vqwymB2u6Zijj4jD7",
-	"Sf79WfqhbLvraZnuWVnP0aqsn6Wd0m/aI2HoVKuSl5p0hFu0Auf3uCvySwlnuvmORTQbF+uUoKbr9I7K",
-	"CMQ7Kh/tsFt6wOZoS8QO0U3JhcRMNnKiiRjec3Fn1Gpt59/RCR662zXRXmX19VAjxXzz76hE7fe5HsLB",
-	"UiMsCMpwYfhcD4QZcgH1JC7XbgdHjCYSMEuyKly3oO+wIXLYfdiQ7lQexGbAYzkR0waI4fNgrsToPmqI",
-	"k/uuwShLN0vr8DZm6OrqPYTDO2jnuy3U37utiE6W0J6AgazuyL5qFg9uLn+dgx12lO11KMdgK6jHfINd",
-	"56zSldx6AhBDrtX+QnScdSXw5oc6uyMAAzQN0MK0GJq4NeypqAOBtlA0tm3MdExvLJ45bA9t02b+HySG",
-	"3AXt+irdoL88vCUCdKucmw8uLofy1qs1WEb5Py8AL9L/vEjr/A+o8z9SO/8D6vyPhM4QNkHreziA1wx5",
-	"7U5lj4GzDFtm4ebRhWVN2yQnEMBBeU4h908jxz0PCSQU/M/RmcKOtcf5DzIBSQt/VNtmMPFkEowJu1dt",
-	"/geF6ZIqBd9NCHV9KdZCZ9JjJkM3mDfFbhgOMwZ8ZK8UhSEeHLe/aL6HM8w2C5LnlK3ew7HH1+47MsHJ",
-	"URC3sM+6Cya4yQ7mYT2Gv5SXUcd01VBLKVdqek1QGNm9MGCIfZ2o+wojiCmvsCQsC4a97Gcv6tVlwpX2",
-	"PzWawdhK+jrUp7mF0KgcSb1N60/z2dr9ck3EhVr09PG1LjO1u50AiFAb6Qon+7gWzpVDCypNmLJhiGC4",
-	"LxLtc4aHC7VBO8yE/HahgN8uBcYy5Kv60bmobAvPVUVZH+wjXVUNpGiuUWwZ8VS+cQgQ7d9fXP9YL86F",
-	"pEucQcmY9ksbj39/cY1+rBdDgmNJVjwQnG2+NUlRbsSReO+GstXHioNKUBeSMvJNe6TbQ1J2cvpZO8sD",
-	"ZKBFgBEmiSgFhTYfsE6vObRMojZGySkcNHDfwvNq2WPJBeDaecPFJqU3zUC6ZWkITtaAE2AVnK1exYh/",
-	"xdmqk4aVADQhczDSuxaA+vLLzdV4X3AfT446HSzDKLoRTC5Y7m0HkDx4QYoq1VK8Mq2DFIjnn0VS439t",
-	"0uKTw2nvIyG03nwVZRqj8LqDwqFw6ak0GgA8BKgE2d/7MlrY0DnUGG1xURPQqWPdCbdc4mKP7pJuSCXx",
-	"pgz2bVukMvt4QFKQitciA1QTrYWP9LZt+jmW4Q5tMy26BsFOwDElaIYL56uxwxZFO3FkFM1iFz8ktYUy",
-	"MjvbBsBlnLZtAn7aNAcuKh+8p7I+YhRUEoGyjrngraasksArGCZZcep6ymrKMpLGiawI5H7Y8r3iK81P",
-	"piESpBSkIkrTXiFsGGCO5BpLlGGGFkrDrSRmkmJp7mo0uRZePKVCuLImcCxE/US9JBpTY94Rc1pM8YpA",
-	"KT7BNMLMNED3ayKME6CPTqXQmf/p6FQXs8oQ/wXSFG7XxkpHtSicymAgW8ul7E5gkvdCqZyiJnMIkJpu",
-	"YyY94tro6PyCqA8GOQ0pwxFOg59ThTctNY4U20yAHkTg/lFNQAEy22csxuWrkENcqo9oqb9qOXlNREWV",
-	"dMqGHtlMECWxftjBLFZXSgQrqSu2NCMIZ9qDgO7XHNmuGn9ODIOqeZnvO4TtOjIERJlrwnLKVpdsS2Vj",
-	"9JxYlScbTItAYrz5BtppWxrAlsuoB69t8AIKvF1cIf3l6Jq7xTeiDcKV5GzHSCHReZYR8C7LEDY2TeeH",
-	"wHgHETFqN2hJZLkbwnLwMBvF1eH46ByMPDXjqu01yoVR1zS86Mum/+N5c4/hPUp5wF4Riem4YTyA+Wsf",
-	"wBTyX4b3s/2EFrvDkHyJN7TYfYQVBt3VtAga8yu6JSzWXzcIdo9eA9pTbPfpGZZVw2S7mCelFXFj3hQ2",
-	"0j8gIlMW9yvAmcFp2iYgpwA9r2ilfZJ1wzKV02V9SROxhFXPj9ZWi1hnqhkIOiFHon+xYCgqeY6kbTGu",
-	"FnXiZOFguG62S454m+ZAXYxaxyGVCciZFLyo0JrfI9wzRnSOPma5VnBIbvODXVxBqTVSUOPseHaytA+z",
-	"pnCeh/l+FQyyWBR60ZGULOterxEKjPVOvwPVXU2QI5oG2ijTA5lYtaHyvcCl+r0qlJrKl+hqYjSrh9Qg",
-	"q73Hf9zyOxKeaNMgcaJ9sIMgrsCsLrCgEmDzt95HUFMoa1DHUD9D/kteS7DHz+Z30GOqEKYh/rwl4ucA",
-	"gBuoFQSukqSE4n6khB2usDPP+PiGHcIMeGMtmNsIe/ttDHXdXQdn/8yRFiDWBeUcpXNEZPYcItAQbpUy",
-	"+DTe6ixt0nbo9AxuidDpoCVCPE1m+m27whcU6Rva+OH8vTvet92T2rvbo9E07FWPy1OLCl2pa7tYV2cj",
-	"gbmwof5EMTxw8p3YII9kUdwOfWjfVajp4Lu/JBEbyoz3MSt4RSo58OpJbo571MQuWi/2AitQ3ChMSnv6",
-	"rtovZ0PN2X70HKKAg1FDJ/nnXERUGYeR7xTzUL2MNcGFXO/i9fkAbNh+insZBylLl6G+guB8p4sr1KxF",
-	"C7ifClzJH/VQF2uS3d3S9JXXjP6nJpH4rqSyzpPBufafk/4FZ6tpk3YdPues9/K9zxGVaFNXUslKQ0oI",
-	"Nr9nYado3xn6vSuQ8Mwcw/yeVRYLwXjEpKp1fSxOLVo3AGAEkomUdg4OTYDnkPl20yk90y9C2HzrH/Dw",
-	"wdV2CKabgjkjXr9fbq7SDjZbpcxVc1Hqp9ruoXSCm959Al2OU0ftbZrlt5sVXudIvsPttESHKJmqPeg0",
-	"tKQEPMR4KaUYA8UWo62QH3YmfjbGcNqSQQt19OlwW4DbBAA6GehYVoQDeM5yOO4fmixm+YSwvlOMp168",
-	"x6iibFW04Sbfm/M9cYaX9+scuun37KA39o0y8ZPFTDW5r07hHuvVTQRvqXZQXq72TpLxQ4DJOTI+9ybM",
-	"GdpMj8y6Aad9jKSbdPw8Kudm+nqksm9vEqrM3LqGHqvozg2jjPbWLeNS00z9iq/AnB8rAw69+YMFpy44",
-	"k53U/RUYWCFbAjvnPtgvIIC0pEGlCzafoxMBEdpW4unPTK8KKNaEuzeie5qOWFXwHLFY1SaJSnJU4qpy",
-	"92w8Grm6QGNp8BsMXaw19rT+6Ey8Lvw4XMJynQkO27iv7VfkZzRrdnqOLm2Jdr5E6+VHq0l/dPC0PUEr",
-	"WxPGQlH2x6BjvShoNujHuNQm1PNAkfIAvv1cmS0WFC8KUhnrSrpwT4ua5+jDmtdFrtR8jAobfHpXL4hg",
-	"RJIKvWbb/4dNiZSRonJ0A24VNadXPLtThrhq0YijDn2GVTW1NLjmIuT04UK2NqMmilUHfHXU20qBMp3a",
-	"aivqVccydHqWlhpYoh/r1Yqy1RtsSi4NbUKxwoz+NxB0udUQ2xYdLoJreeKcMlJV14IvAiht2qBSNerS",
-	"0aOfBtEzpXwNz6UHBwZxWZpDogVHdLJaHc5UELv3AxPQBjNbTaKzpkqAyoES12vS+OMtbYcLQt+Dm3i4",
-	"QRNrA30ACpBFSkU6NbbpFRO3Sq+85vkNUacQ5eyaCMoDonFDGd3UG4Q32iWhmE+ZQtofoc8MXOlE2YJm",
-	"2FQoE2SDleaeSbol6PzN7esbNbMMF+Qvkv/lv0RwlJOMVraqyAbncGVc/MdP9ebGgA6w2Ab/oWfHPBXG",
-	"tId4Dt7Z0fR/dI9ltjaeqA2+I3odVN9zMSuonqML4+f41ywr63/NEBfoX7MN2XCxc/8TZeX+zDjLaqFs",
-	"gt2/ZuCyKRtftiVK2rLdBF+oGfxVF5k1OZD6FOmxMa0QLu7xrnIV7ZXUxxIVRBGaszYQ8AzGpyb0K37P",
-	"XpEC78KaB7qnLOf3dirac6bPd6zYKa8zogy/BldoQZZckIaRcn7POlyEy7KgJH+Obte0cT3VFVnWhSmF",
-	"Qv7Am7IgukjuHSGldvNjyoioEBa8dunlrfKyKEjrBZAc4S2nuW5Q5EgX3kAlYbiQO0SXiJH7Vn/O+IYg",
-	"ykBxrxfwS/ne0HAygU1AzpYCdNmY92vSP5sNoipUlyapVu27AMWkWuqvmhyhI47q3DWfbtotYolnz05T",
-	"qEz7pvSGKQXfuvdmdMRYY3iwg8BkACxWUP2EW/27uSjT8Lrbo41nI0W+Dsp/xgXsHEnFWDo8ekd2dgaV",
-	"5Gq1WifTtXbszYEdrzUPNtWY1TRNF111x/DYb3dk9/tAOodKR5xfdItg9MtHeFEIc49o5MToXTaKIkty",
-	"QZoHr04fv4tRyRQUsi8y9aonpxc16lWCHeqn0Wuv/hz8L1NDYh04IxlqAYXZB2GaRO8KhjsXwQtzbHTu",
-	"U+vW+31LW8PebTcdAlpSZovZe4/tgLXsgTCFB30WYu6LFCYbFqFpVdzvyeqlGaOXnvEM8Ovbmx/vA7fO",
-	"zpsb9DaS4gRdkL9H09kS2Le7usezcQ/eGDsvQXnVFAASOiVUnRsgMubufH/pTh2B/vnPf6LvuDqi6Xfp",
-	"cT5o8qFJe9VB9hQ1poxI6HEuKkieNsOm9ZRiRBCgyKkSKNYPAElP0gtiJGkci//G+CncqwEjTws+ktns",
-	"uPvwnJaqUxZn5DAEKnDIR0BNPfH9yrBP8dBvvLCf99xfAqUn95SZLajHnP5tzc6QAgCWsux1NvVdp9eF",
-	"DNSvjOsczaj7qR3LsbKOseqZPRCl/4DcYavOhnSTZVtoOb4T3yXT7VsJ4i+wBHGgbzLHTqN7CMqYHEva",
-	"iC200JYcU3AAUFEtJ6aeALDSdRTvUAOTUSbeuj0P+KpzLM2VEeNlcR6dJip5jyvn74lcuH0MdAsiESvd",
-	"wC2UKn9HGNIvKgZSTqJvn8EPz+6XF9QPKQM5/Ui6WxLDXCQBVuS91T8n3XgaBLnHkTXMMto3pN4Jx1+6",
-	"ixv7AmjvYUyCEMSKH7wPYMXkBMWT5HRLvbhrIoLvh7rEOeOM1GvSWQzt06ED4vvwzdpTBjDXXaaPkAI7",
-	"Cahs8BHidw8HVRBC6NaNAeGvMgxjr10H8ovAGbnMq3CNRd0CXb6q/NdTB3A690pP/ZSgSe2FKqO3tz5d",
-	"/i8FBb19uT36llALq/uezDSbJP26bEi5byFM1evHrtoq/WEFqjVtz3tBpTriVnApx6E2/musckHz8ZcK",
-	"0snaYesK0MRM7QJI2/EvLuh7u2tcIde8e7/WKx4AFy2EL5B3pxa+Sq4/fNwSQZc0ZabfVQaWnvGCEIaa",
-	"vuALaLGb6r05PuLOeg9S/PY6XKWgByJUsAC8+t7rG3sD8xOU1FqRrBZU7j4oeWJ45weCBRHntVzrckb6",
-	"f2/0Q9Gzl7P/++vtbD7T0kfjW39tx1pLWSpe1wXVdKEcSaVa88y+iYkuzD1mdF1gppa5VSqsXsqL5y+e",
-	"/9X4OQnDJZ29nP3t+Yvnf1PMjeVaz+2srQRnA3bm0gLlTAk5fSP9fOUqXnmG2W+xx6YkR0taKDXdgDfV",
-	"Eqhq9p+a6OsAhvizrnwzQhjwiKu97s4EPdn/8+KFuxzmwlqljrCq2Zz9uzKSpYWXZPsZQxGw+/uCxj4S",
-	"v6wL1KCrQ32NH5/uv9mSey8LWsnZ72o9Vb3ZYLFz1/5xUbiSe/OZxKuq7TT7XdedrgD6XGiLwlm4VqP4",
-	"gee7SdhJQMqnjsknRU0+PZIkiYMeDPPG+Orj3iDQuigWrcjqE+DT3O2Vswf9rzpzPxn5URCj1XdJ80r/",
-	"7kiTvHd6+WHjm6ZLlWNuolNTzGK2RzGD13GKzWGJ9pbIyTR5evLs1KRQqOzR4S2RKUSIIrlTKdi56dQH",
-	"dUC1WG023FR2t9ZPlwN+0X6SbzIzgezGpdSnvEHgvjLzTNf/N/cF4zrHj7bhyc5+N+AxVYCPdvmeJvC0",
-	"dk2camcPdsNc5qmn34HImE69Q1KrzchrCOcfS1NPna8NF8258KR4eB66n6i90sAwDU8f5IC5rofEPtIh",
-	"06Hzic+aU/HY+CH0XYVsY3UcCZ/YqYdSwVdhK9jtXk8nvFLtP7N2c/xT0b96d9RD0Sut/VGR4qUgOA9I",
-	"lgAFN21wJkrE922A5ukIqC/X2ohc2j4oh1jyeowBmSJt9C2VbURbSvvzmipj/h1X8/vYYt2Nc1DqWSyP",
-	"eGFsK5sQaJ/5FXyDMOtHQhKpKwW2F9yiMsHFpr4JhcMw0iDWd1BmMkQdkQTSBRND3DLIUQxxyEUvPfFo",
-	"WOtlMw5R1r0BYvnQFjJFpQ4AjCCwe7U77o3utvXQ2Ptg0Ok/meFhs6+Hy1qwyrttrAbqvLbRL0r7fDYH",
-	"/AOv/dFOoQn58dojaUI+GsKUId2VO5p0fvbjBT0O0oK26gnUIY5Nu9cDR/OhjZgOWk9rwwyGPjAFoycd",
-	"fJr1iNjfVmcP3v+A+EM/L7QgQ1I7f92Q5KZ9l+TJh2F3PcCR2Jv5k4lbHJsLojGMJC6Yj4jSRPK+JbK/",
-	"nb9QlAZiEYnIfDIsDWZmGa/GuHw27b7J50ewUdStdCD5DDgl4F288cuZ7bWj93BrfA1C+8C+Bp+cjcth",
-	"XOAAfgeAVzrvKAZDX2+aVntFqJtBvpCkm+aW2pG06gYfcWNn6WHdkbD9bSwB5017A+gYUrjF0WlFcHfc",
-	"Q9Iiqhz796kAUnS20tmD+zMxIccj1deek3M88kW12ua2zjA1oLujQg6XfUj0JAXg5yFO4LhKJkuy/uDt",
-	"U0B58PflAfN2vonaiewQ1XMTmSImckdDp25pj4ieHo/TvooYqkNAShg1mawJ8VRH2T1sjyNRdP5VnRHH",
-	"j602nDMWXm0ExdDSSeaofUKtRzxjEvT5E8Rc+0MdmrD7RF4bYseDr8mEH4/COizsE4h9GqLkzxmQbdhs",
-	"JCbbYAkKy/b5aEWYHd6F9Clb6gtTNlILx7ZuzPM+riFqwTSx+i7f3dTssm3/tml+9NRwb1R3X/hzJPB1",
-	"pnFYvmhx/1LUrM8RCZRyvNF+sszh8pAHF9d6LyAS49dxeYFasPlXrEL33L7OpHMgrXKYf+4S8yFE9/O+",
-	"05HePPXnJWbagyVMD5eY45Ejeh60Cb6d9Bw3kwNn/f7JOUMXn7XZH2cZZ4wM3NopaR9eT+SDTEwBuWy7",
-	"XHhzOAV1wKGPRSYfNWEfdgeBWQcfjoh+k9EUEVNJ2UJxYSkPQihlBEbNcc7SABlOe5JGJnFg2kcVeK9l",
-	"mOSxzXv20P5nSm6JB8/nmMWu80U/sGBeg2qaxNJQwmz0dMnY94MnkWQ8u+PQCH5L5BeN3bdEpqI22YT0",
-	"emY+QgClobtLDpj0cQxaG8jfZPIj2M0SB6bMgUTtmXtd5KKbWTs1jda+MwS+32SeLUqWBrqK22t4WhM2",
-	"1nF3E8RAJ1C4ehLI34bmfZoAJQ7FLZum8PgE7vBqkQcFzQRF2xY//7OzQl/3HvDCgYl+9qD/jRnhLfkN",
-	"M0Ypro6Wy1cTxcITofo8UnkSGMki7guVMYcSLA/e/xo1P8pH/ix8p10sL/Gyo5/to4bBNOxN/gsVEokG",
-	"uqLdHeP3BclXZIErMlXkdzsnulXedUf8U+QgdtZ8LD9OlxphRrnrE8CxR+9D0iWfTp+Qz6a7/OPYBT0U",
-	"n9YeAAb//Jd9BuQc7vezh87/p7hlOh2VrP4p4m3pM8AeW74na550MPT47LDHrR9gd495hhJp/JbIAxD4",
-	"C0mZOQpte6I7kGB510NyTG6nakR9mIBONBARh76INHKGmJbfzpADMFY0VTOZvdQ54l75nKoyNv1Q88yZ",
-	"eUejkljWFawyXjWDnUJZc6O1KQvH0dcaVIRVtcJbuCNH+5uhxCYrz9am0nDwys/7i+sf68UrsqSMng6R",
-	"ZtRzIekSZ0e71b7JynW9aHBocLLHrbiO6fKd/0ByBR55bU7q0UTCgXMxR66bda4ItqjwWM+h1SL5EV7C",
-	"NFMxzQf4qIs0n9kwNO6uY+0Mjb6wdBn4D+0PCYZfyNtvGjgn3jHOaIux057N3qAHI0vUomte7+9Tpt14",
-	"1lObbrNZF99IfYYkB+xXcHftGCSNWmVBks7T3Owxd+jxifb1ECl0+oXJk2xMddAJBAcOHtAfYw3T7ps4",
-	"TmAL2DSy4pgL+/jZVMHcv7sGb3HVyI+i+8/0j277R9x6Owa/fhX33fTqUy67jZF/r/IcqQJ/j1txB6f4",
-	"/Cs4ZY5/C87w09gVOEP24f23MSbb59rbUY4q0GZ4j+/USdW9AGYzB4a3v5DkCDMu10QMGd9eYWvPs2Oe",
-	"Lwe+L2dYYOSynB0zjJ4JXDF+J04vc58LcaeVIm2IwDoP/pQX4Qz/jNyCM3wDXYHrcEvJC5rRyeF+1y3R",
-	"e3PtRjmFUqAHO9pNFrfysC+lbBfrUN78lOJP0Y13IYeKXd1xVHiHutPq8P6oByRQ1KtSOjQCJPL3xdmD",
-	"aTnBt2I6jDlXPDp+WWiNejZiaB11bowh7i2RXyzWAq6GOL6ST+EGDHAMt/x72GBtUE6ZFt/kVCprRCOx",
-	"o3JK0C2WJCvqyvBJJPR3bdpeuLYnOYw7Y+5/KM9nf3/x1yE31gzXcs0F/S/JTaO/DRu94WJB85xYMH8f",
-	"tmifzWVcoiWvWT5Kvi7i4xX/bGOUtahv6Nkj4Fj5vx5Cj8nuPdKdmFTT0B8/7Lvoj2If2FRnD2UHFYnV",
-	"/waUShfng/lCcn0wpycTUPmiOCeuz0zgnHCRwT/Nng2I1x4W9xeyIS2qB39YYA6Usk9sO0YKEX4T+iA7",
-	"xDWnIwj9szXBhXlbPW2v/2ja738d5IB4jW6ZtZvoF7VjQD0J2jINHb6EM/hz8QW8cVJYw+wfvqQFOaNs",
-	"S+VeCaElYTllK+RBSPQvnhfFtel86Y1+EvumP+wNYfljDR3gCGUcQs/4dbGmacRfCcD1L4q1vxpCV0Rs",
-	"aUY+4izj9fQXmGx35LonkPgtkb+6rx9M93M3+KGIXAo1prSu8KyghMmPNB+u6kN3/sg0tS+Adjf4fGbM",
-	"kvwjDnl8dZ06uiGVxJsSgtDpMzYX/ysAy0itMSBOder3NqctvJYrXEmXFxFZTrsr+OLf5HiJwA0vBVXG",
-	"1uLv86PH+wNOT3Hf9+AlsLfpG+DwR3jQuiz9VBip47L7zYD6fcAXh/fsHWmDGzgVyQQkAgOwTHP0PWfF",
-	"DgktJkmOOEOZlQnPvgmTPYTJwYVHNBMsKELiEgQ6Qs8eDGMMHroPxZh6I4aCTGGZEtWDLzyOh+oo2Lme",
-	"1N/07Xz+mreUdbftuaVGQ1Wj28U0fWrb5Ss79r/UI/6bjHgSMsK6J45z7J7hkn68I7up1uz59SVS3Vz9",
-	"4TFBo70VJX1HdtUbLgBV/+jVfvXgR6vzq6GHfQ0ddE2V8Z9BBo8WPbELSiW/fWNfYwmm/yFkPvmjpIJU",
-	"Hykgbl6rb0ZmlURQnjc3Xu1S0oWOdpeO9j6F4E9h+IMy+L2gQbvAZ4mjiKizBzOLVGthMpeanjEuPUZt",
-	"qxhqrX64N2o/g/QYJDKfl1RPnubwKI6o02SUZhrJBRm+UjA8eT6ohuerk71k3473uANnmFGjlzx4wUH/",
-	"6naSh5SzB/1vvwjdwMvszfeIEsnHyt5liT0EAPFuh4gJAS+HS4gzV3u9yttSIe01Wo0X/0naEzHoYZ6F",
-	"jfIo+ObrkFtjT41GebbzUuEx2Xa/twODnBt5E3APFj7WA16KQON3aMLXZ6ALKsqMKTjOtbyPniKx3req",
-	"+R79U6/HBLoXdEP36lhJLOQt3ew56Xy062PdjKOm7c/vxmurbBZEQEGn9jbOp5alzh6kYZxPo8wV4Kwu",
-	"m1toJ3XOngBrungwjLfRV0E18uAb0QdCYIjdS8z22+DjO+wLoJmmiyZZXXWT01NcK7pPYgJI47n9pTpV",
-	"ZntnyBMEsoM+lQZPUJ2mFkAkeK2zV7SjXMFCkndRrvYe2WAKFPkxPbuoOJgXQw2p/jB1oNUBoH/ZyyP5",
-	"WnV1eoJbpc5tGeoCR71D0s8XmpYZBJjalG1xQXNDIWRxdcCLDh4LWnz1mNDwQIPUUS5s5MHZQ1Uvfhaa",
-	"NFFPxg3Z8G3Ln/oydJdDv+cCCbLld+6hIIdeRD2Sr3Gl142zjJSS5LYQeNN2R+Qz6Kq5Gr3P41Gl9EO9",
-	"QFxYknhMByumLRYOnz2oZotaftLpBmo5uZqft3SDvDzIOM3ydQGUakoSt8dAZuzhVXf1q0fbe38wMzNv",
-	"rhHpFosCKhoIXmhjwTLS+NnSiwsqbN7wgjwd+h9C0CqsDPF2uyaIkXuDM8kRriq6Yu5wsKuJ5/ZowL9/",
-	"Zv9v75weSlu9RfQqbXSss1+CcvfSyl3dsxR8S/Oj759oYKxu1pGiCygp7P0wTTVrO46oYydWxT6nGnbv",
-	"r3mS+tXmDqYkCTqqHuNerYfIz7RJj0Cx6NXA+xahCdvk7KH5e0JBgI4iHasJ8Ku3aZOdXv5OBw6XzoSf",
-	"zA3BY9I7eqEvwUYakYMJ1PTz1b+R8ojJ23uqgklE7Kl+Y3RkJ6PjN7F/wCSi/eT+WU6ygjJTZw0801+Z",
-	"Bn1rVOnRsVPedmvwculbPV+3HEnyjLRfu0atpUc+6ZgwJBycE/rnHtEeyy//5iYXB2aWc+2PmMorptc3",
-	"VqGcGVRMYRjnAkoz2Dyq7GO2mcH6nGYmfWBGKwjekphaeqUajNgaus03DabHBx3+KchSJvDOPtxiSNg3",
-	"MdWPCdwxkmKVbyizoInYwvT8geBNQSW64EwKXqDrAjM1YC2K2cvZWsqyenl2hkv6fGFaPs/45mz7YjZM",
-	"eXKgLtmSCMKyIRhRMx/M7NPvn/5/AAAA///ePNkASkEBAA==",
+	"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",
+	"Piec5EkfDK9yF8zk4Y+H/x8AAP//AKDUrKYdAQA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

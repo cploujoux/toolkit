@@ -181,10 +181,6 @@ export type AgentInformationResponse = {
      */
     displayName?: string;
     /**
-     * Name of the agent
-     */
-    name?: string;
-    /**
      * Prompt of the agent
      */
     prompt?: string;
