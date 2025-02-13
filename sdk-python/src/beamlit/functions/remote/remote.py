@@ -119,15 +119,15 @@ class RemoteToolkit:
 
     def initialize(self) -> None:
         """Initialize the session and retrieve the remote function details."""
+        settings = get_settings()
         if self._function is None:
             try:
-                response = get_function.sync_detailed(self.function, client=self.client)
+                response = get_function.sync_detailed(self.function, client=self.client, environment=settings.environment)
                 function_name = self.function.upper().replace("-", "_")
                 if os.getenv(f"BL_FUNCTION_{function_name}_SERVICE_NAME"):
                     self._service_name = os.getenv(f"BL_FUNCTION_{function_name}_SERVICE_NAME")
                 self._function = response.parsed
             except UnexpectedStatus as e:
-                settings = get_settings()
                 functions = list_functions.sync_detailed(
                     client=self.client,
                     environment=settings.environment,

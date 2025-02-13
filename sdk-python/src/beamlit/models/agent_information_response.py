@@ -15,13 +15,11 @@ class AgentInformationResponse:
     Attributes:
         description (Union[Unset, str]): Description of the agent
         display_name (Union[Unset, str]): Display name of the agent
-        name (Union[Unset, str]): Name of the agent
         prompt (Union[Unset, str]): Prompt of the agent
     """
 
     description: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
-    name: Union[Unset, str] = UNSET
     prompt: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -29,8 +27,6 @@ class AgentInformationResponse:
         description = self.description
 
         display_name = self.display_name
-
-        name = self.name
 
         prompt = self.prompt
 
@@ -41,8 +37,6 @@ class AgentInformationResponse:
             field_dict["description"] = description
         if display_name is not UNSET:
             field_dict["displayName"] = display_name
-        if name is not UNSET:
-            field_dict["name"] = name
         if prompt is not UNSET:
             field_dict["prompt"] = prompt
 
@@ -57,14 +51,11 @@ class AgentInformationResponse:
 
         display_name = d.pop("displayName", UNSET)
 
-        name = d.pop("name", UNSET)
-
         prompt = d.pop("prompt", UNSET)
 
         agent_information_response = cls(
             description=description,
             display_name=display_name,
-            name=name,
             prompt=prompt,
         )
 
