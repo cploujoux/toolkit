@@ -28,6 +28,12 @@ sdk-ts:
 	rm -rf sdk-ts/src/client/types.gen.ts sdk-ts/src/client/sdk.gen.ts
 	npx @hey-api/openapi-ts@0.61.0 -i ./definition.yml -o ./tmp/sdk-ts -c @hey-api/client-fetch
 	cp -r ./tmp/sdk-ts/* ./sdk-ts/src/client
+
+	sed -i.bak 's/from '\''\.\/sdk\.gen'\''/from '\''\.\/sdk\.gen\.js'\''/g' sdk-ts/src/client/index.ts
+	sed -i.bak 's/from '\''\.\/types\.gen'\''/from '\''\.\/types\.gen\.js'\''/g' sdk-ts/src/client/index.ts
+	sed -i.bak 's/from '\''\.\/types\.gen'\''/from '\''\.\/types\.gen\.js'\''/g' sdk-ts/src/client/sdk.gen.ts
+	rm -f sdk-ts/src/client/index.ts.bak
+	rm -f sdk-ts/src/client/sdk.gen.ts.bak
 	rm -rf ./tmp/sdk-ts
 
 build:

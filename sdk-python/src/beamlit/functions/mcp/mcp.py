@@ -17,7 +17,10 @@ from mcp import ClientSession
 from mcp.client.sse import sse_client
 from mcp.types import CallToolResult, ListToolsResult
 
+
+
 from beamlit.authentication.authentication import AuthenticatedClient
+from beamlit.authentication import get_authentication_headers
 from beamlit.common.settings import get_settings
 
 from .utils import create_schema_model
@@ -28,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 class MCPClient:
-    def __init__(self, client: AuthenticatedClient, url: str):
+    def __init__(self, client: AuthenticatedClient, url: str, sse: bool = False):
         self.client = client
         self.url = url
         self._sse = False
@@ -36,7 +39,7 @@ class MCPClient:
     async def list_sse_tools(self) -> ListToolsResult:
         # Create a new context for each SSE connection
         try:
-            async with sse_client(f"{self.url}/sse") as (read_stream, write_stream):
+            async with sse_client(f"{self.url}/sse", headers=get_authentication_headers(settings)) as (read_stream, write_stream):
                 async with ClientSession(read_stream, write_stream) as session:
                     await session.initialize()
                     response = await session.list_tools()
@@ -66,7 +69,7 @@ class MCPClient:
         arguments: dict[str, Any] = None,
     ) -> requests.Response | AsyncIterator[CallToolResult]:
         if self._sse:
-            async with sse_client(f"{self.url}/sse") as (read_stream, write_stream):
+            async with sse_client(f"{self.url}/sse", headers=get_authentication_headers(settings)) as (read_stream, write_stream):
                 async with ClientSession(read_stream, write_stream) as session:
                     await session.initialize()
                     response = await session.call_tool(tool_name, arguments or {})
@@ -149,6 +152,7 @@ class MCPToolkit(BaseToolkit):
                 name=tool.name,
                 description=tool.description or "",
                 args_schema=create_schema_model(tool.name, tool.inputSchema),
+                sse=self.sse,
             )
             # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
             for tool in self._tools.tools

@@ -19,9 +19,13 @@ export function getDefaultThread(request: FastifyRequest): string {
     typeof authorization === "string" &&
     authorization.split("Bearer ").length > 1
   ) {
-    const token = authorization.split(" ")[1];
-    const decoded = jwtDecode(token);
-    return decoded.sub || "";
+    try {
+      const token = authorization.split(" ")[1];
+      const decoded = jwtDecode(token);
+      return decoded.sub || "";
+    } catch {
+      return "";
+    }
   }
   return "";
 }

@@ -1,14 +1,27 @@
-import { MemorySaver } from "@langchain/langgraph";
+import { Client } from "@hey-api/client-fetch";
+import { BaseMessage, SystemMessage } from "@langchain/core/messages";
+import {
+  LangGraphRunnableConfig,
+  MemorySaver,
+  MessagesAnnotation,
+} from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { FastifyRequest } from "fastify";
 import { newClient } from "../authentication/authentication.js";
-import { getModel, listModels } from "../client/sdk.gen.js";
+import {
+  getIntegrationConnection,
+  getKnowledgebase,
+  getModel,
+  listModels,
+} from "../client/sdk.gen.js";
 import { Agent } from "../client/types.gen.js";
 import { logger } from "../common/logger.js";
-import { getSettings } from "../common/settings.js";
+import { getSettings, Settings } from "../common/settings.js";
 import { getFunctions } from "../functions/common.js";
+import { KnowledgebaseFactory } from "../knowledgebase/factory.js";
 import { getChatModelFull } from "./chat.js";
 import { OpenAIVoiceReactAgent } from "./voice/openai.js";
+import { KnowledgebaseClass } from "../knowledgebase/types.js";
 
 /**
  * A variadic callback function type for agents.
@@ -64,6 +77,109 @@ export type AgentOptions = {
   overrideAgent?: any;
   overrideModel?: any;
   remoteFunctions?: string[];
+};
+
+/**
+ * Handles the context management for an agent by retrieving relevant memories and constructing messages.
+ * @param agent - The agent configuration object.
+ * @param state - The current state of messages in the conversation.
+ * @param knowledgebase - The memory store instance for retrieving historical context.
+ * @param embeddingModel - The embedding model used for semantic similarity search.
+ * @returns A promise resolving to an array of BaseMessage objects containing the context and current messages.
+ */
+const handleContext = async (
+  agent: Agent | undefined,
+  state: typeof MessagesAnnotation.State,
+  config: LangGraphRunnableConfig,
+  knowledgebase: KnowledgebaseClass
+) => {
+  const messages: BaseMessage[] = [];
+  const prompt = agent?.spec?.prompt || "";
+  try {
+    const memories = await knowledgebase.search(
+      state.messages[state.messages.length - 1].content as string
+    );
+    if (memories.length > 0) {
+      let context = "Relevant information from previous conversations:\n";
+
+      memories.forEach((memory: { value: string; similarity: number }) => {
+        context += `- ${memory.value} (score: ${memory.similarity})\n`;
+      });
+      const message = new SystemMessage(prompt + context);
+      messages.push(message);
+    } else {
+      messages.push(new SystemMessage(prompt));
+    }
+  } catch (error) {
+    let context = "";
+    if (error instanceof Error && "status" in error) {
+      context = ` Could not retrieve memories from store: ${
+        (error as any).status
+      } - ${error.message}`;
+    } else {
+      context = ` Could not retrieve memories from store: ${error}`;
+    }
+    logger.warn(context);
+    const message = new SystemMessage(prompt + context);
+    messages.push(message);
+  }
+  messages.push(...state.messages);
+  return messages;
+};
+
+const initKnowledgebase = async (
+  agent: Agent | undefined,
+  client: Client,
+  settings: Settings
+) => {
+  if (!agent?.spec?.knowledgebase) {
+    return null;
+  }
+  let knowledgebase = null;
+  const { data: kb } = await getKnowledgebase({
+    client,
+    path: { knowledgebaseName: agent.spec.knowledgebase },
+    query: { environment: settings.environment },
+  });
+  if (kb && kb.spec) {
+    let config = {
+      ...(kb.spec.options || {}),
+    };
+    let secrets = {};
+    if (kb.spec.integrationConnections && kb.spec.integrationConnections[0]) {
+      const { data: integrationConnection } = await getIntegrationConnection({
+        client,
+        path: { connectionName: kb.spec?.integrationConnections[0] },
+        query: { environment: settings.environment },
+      });
+      if (integrationConnection?.spec) {
+        if (integrationConnection?.spec?.config) {
+          config = { ...config, ...integrationConnection?.spec?.config };
+        }
+        if (integrationConnection?.spec?.secret) {
+          secrets = {
+            ...secrets,
+            ...integrationConnection?.spec?.secret,
+            apiKey:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwiZXhwIjoxNzQ2NDY3MzI0fQ.75MdQ62X0X3gLxgaJ6Du19_qsMVsdz6srMjD42IRd90",
+          };
+        }
+        knowledgebase = await KnowledgebaseFactory.create({
+          type: integrationConnection.spec.integration || "qdrant",
+          knowledgeBase: kb,
+          connection: {
+            config,
+            secrets,
+          },
+        });
+      }
+    }
+  } else {
+    logger.warn(
+      `Knowledgebase ${agent.spec.knowledgebase} not found. Please create one at ${settings.appUrl}/${settings.workspace}/global-inference-network/knowledgebases/create`
+    );
+  }
+  return knowledgebase;
 };
 
 /**
@@ -146,11 +262,23 @@ export const wrapAgent: WrapAgentType = async (
     if (chat instanceof OpenAIVoiceReactAgent) {
       settings.agent.agent = chat;
     } else {
+      const knowledgebase = await initKnowledgebase(agent, client, settings);
+
       settings.agent.agent = createReactAgent({
         llm: chat,
         tools: settings.agent.functions ?? [],
         checkpointSaver: new MemorySaver(),
-        stateModifier: agent?.spec?.prompt || "",
+        stateModifier: async (
+          state: typeof MessagesAnnotation.State,
+          config: LangGraphRunnableConfig
+        ) => {
+          if (knowledgebase) {
+            return await handleContext(agent, state, config, knowledgebase);
+          }
+          const prompt = agent?.spec?.prompt || "";
+          const messages = [new SystemMessage(prompt), ...state.messages];
+          return messages;
+        },
       });
     }
   }
