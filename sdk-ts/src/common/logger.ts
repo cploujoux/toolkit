@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { logs } from "@opentelemetry/api-logs";
 import { instrumentApp } from "./instrumentation.js";
 
@@ -25,7 +26,6 @@ export const logger = new Proxy({} as any, {
 
     const pino = require("pino");
 
-
     const loggerConfiguration = {
       level: process.env.BL_LOG_LEVEL || "info",
       transport: {
@@ -51,18 +51,21 @@ export const logger = new Proxy({} as any, {
         if (otelLogger) {
           (target as any).__otelLogger = otelLogger;
         }
-      } catch (e) {
+      } catch {
         // OpenTelemetry logger not available
       }
     }
 
     // Try to use OpenTelemetry logger if available
-    if ((target as any).__otelLogger && property in (target as any).__otelLogger) {
+    if (
+      (target as any).__otelLogger &&
+      property in (target as any).__otelLogger
+    ) {
       return (target as any).__otelLogger[property];
     }
-    
+
     return (target as any).__instance[property];
-  }
+  },
 });
 
 export const log = {
@@ -81,5 +84,5 @@ export const log = {
   debug: async (msg: string, ...args: any[]) => {
     const loggerInstance = await (logger as any).debug;
     loggerInstance(msg, ...args);
-  }
+  },
 };
