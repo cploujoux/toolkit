@@ -1,5 +1,4 @@
 import { FastifyRequest } from "fastify";
-import { jwtDecode } from "jwt-decode";
 
 /**
  * Retrieves the default thread identifier from the Fastify request.
@@ -10,25 +9,8 @@ export function getDefaultThread(request: FastifyRequest): string {
   if (request.headers["x-beamlit-thread-id"]) {
     return request.headers["x-beamlit-thread-id"] as string;
   }
-  if (request.headers["x-beamlit-sub"]) {
-    return request.headers["x-beamlit-sub"] as string;
-  }
-
-  const authorization =
-    request.headers["authorization"] ||
-    request.headers["x-beamlit-authorization"];
-  if (
-    authorization &&
-    typeof authorization === "string" &&
-    authorization.split("Bearer ").length > 1
-  ) {
-    try {
-      const token = authorization.split(" ")[1];
-      const decoded = jwtDecode(token);
-      return decoded.sub || "";
-    } catch {
-      return "";
-    }
+  if (request.headers["thread-id"]) {
+    return request.headers["thread-id"] as string;
   }
   return "";
 }
