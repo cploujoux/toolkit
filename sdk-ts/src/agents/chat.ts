@@ -123,6 +123,20 @@ async function getAzureMarketplaceModel() {
   }
 }
 
+async function getGeminiChatModel() {
+  try {
+    const {
+      ChatGoogleGenerativeAI,
+    } = require("./providers/google-genai/chat_models.js");
+    return ChatGoogleGenerativeAI;
+  } catch (e) {
+    logger.warn(
+      "Could not import @google/generative-ai. Please install it with: npm install @google/generative-ai"
+    );
+    throw e;
+  }
+}
+
 /**
  * Retrieves the chat model and its details based on the provided name and agent model.
  * @param name - The name of the model.
@@ -203,6 +217,7 @@ export async function getChatModelFull(
     "deepseek",
     "azure-ai-inference",
     "azure-marketplace",
+    "gemini",
   ];
   if (!chatClasses.includes(provider)) {
     logger.warn(
@@ -212,6 +227,7 @@ export async function getChatModelFull(
   }
 
   let chat: BaseChatModel;
+
   switch (provider) {
     case "openai":
       // const chatClassOpenAI = await getOpenAIChatModel();
@@ -320,6 +336,17 @@ export async function getChatModelFull(
         },
       });
       chat = chatAzureMarketplace;
+      break;
+    case "gemini":
+      const chatClassGemini = await getGeminiChatModel();
+      const chatGemini = new chatClassGemini({
+        apiKey: "fake_api_key",
+        temperature: 0,
+        model,
+        baseUrl: getBaseUrl(name).replace("/v1", ""),
+        customHeaders: headers,
+      });
+      chat = chatGemini;
       break;
     default:
       logger.warn(

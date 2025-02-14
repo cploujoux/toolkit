@@ -30,10 +30,12 @@ const main = async () => {
 
   // const chat = await getChatModel("xai-grok-beta") as BaseChatModel;;
   // const chat = (await getChatModel("ministral-3b-2410")) as BaseChatModel;
-  const chat = (await getChatModel("gpt-4o-mini")) as BaseChatModel;
+  // const chat = (await getChatModel("gpt-4o-mini")) as BaseChatModel;
   // const chat = await getChatModel("cohere-command-r-plus") as BaseChatModel;;
   // const chat = await getChatModel("claude-3-5-sonnet") as BaseChatModel;;
   // const chat = (await getChatModel("deepseek-chat")) as BaseChatModel;
+  const chat = (await getChatModel("gemini-2-0-flash")) as BaseChatModel;
+
   const agent = createReactAgent({
     llm: chat,
     tools: getWeather.tools,
