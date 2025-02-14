@@ -73,22 +73,18 @@ class MCPClient:
         arguments: dict[str, Any] = None,
         is_fallback: bool = False,
     ) -> requests.Response | AsyncIterator[CallToolResult]:
+        if is_fallback:
+            url = self.fallback_url
+        else:
+            url = self.url
         try:
-            if is_fallback:
-                url = self.fallback_url
-            else:
-                url = self.url
-            try:
-                async with websocket_client(url, headers=get_authentication_headers(settings)) as (read_stream, write_stream):
-                    async with ClientSession(read_stream, write_stream) as session:
-                        await session.initialize()
+            async with websocket_client(url, headers=get_authentication_headers(settings)) as (read_stream, write_stream):
+                async with ClientSession(read_stream, write_stream) as session:
+                    await session.initialize()
                     response = await session.call_tool(tool_name, arguments or {})
                     content = pydantic_core.to_json(response).decode()
                     return content
-            except Exception as e:
-                raise e
         except Exception as e:
-            print(e)
             raise e
 
 

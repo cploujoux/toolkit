@@ -151,7 +151,6 @@ class RemoteToolkit:
                 fallback_url = f"https://{self._service_name}.{settings.run_internal_hostname}"
                 url = f"https://{self._service_name}.{settings.run_internal_hostname}"
             mcp_client = MCPClient(self.client, url, fallback_url)
-            # await mcp_client.initialize()
             mcp_toolkit = MCPToolkit(client=mcp_client, url=url)
             await mcp_toolkit.initialize()
             return await mcp_toolkit.get_tools()
