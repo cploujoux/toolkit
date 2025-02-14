@@ -226,8 +226,7 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
             "kwargs": {
                 "api_key": "fake_api_key",
                 "client_options": {
-                    # "api_endpoint": get_base_url(name).replace("/v1", "")
-                    "api_endpoint": f"http://localhost:8787/{settings.workspace}/models/{name}",
+                    "api_endpoint": get_base_url(name).replace("/v1", "")
                 },
                 "transport": "rest",
                 "additional_headers": {"X-Beamlit-Authorization": f"Bearer {jwt}"},
