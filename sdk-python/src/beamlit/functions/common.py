@@ -21,6 +21,9 @@ import traceback
 from logging import getLogger
 from typing import Union
 
+from langchain_core.tools import StructuredTool
+from langchain_core.tools.base import create_schema_from_function
+
 from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
@@ -28,8 +31,6 @@ from beamlit.common.settings import get_settings
 from beamlit.functions.local.local import LocalToolKit
 from beamlit.functions.remote.remote import RemoteToolkit
 from beamlit.models import AgentChain
-from langchain_core.tools import StructuredTool
-from langchain_core.tools.base import create_schema_from_function
 
 logger = getLogger(__name__)
 

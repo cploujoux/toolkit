@@ -4,13 +4,11 @@ from typing import Any
 from urllib.parse import urljoin, urlparse
 
 import anyio
-import httpx
+import mcp.types as types
 from anyio.abc import TaskStatus
 from anyio.streams.memory import MemoryObjectReceiveStream, MemoryObjectSendStream
-from websockets.client import connect as ws_connect
 from websockets.client import WebSocketClientProtocol
-
-import mcp.types as types
+from websockets.client import connect as ws_connect
 
 logger = logging.getLogger(__name__)
 

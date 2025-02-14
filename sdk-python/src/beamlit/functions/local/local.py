@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 
 import pydantic
+from langchain_core.tools.base import BaseTool
+
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function
-from langchain_core.tools.base import BaseTool
 
 
 @dataclass
