@@ -42,7 +42,6 @@ func (r *Operations) ListOrSetWorkspacesCmd() *cobra.Command {
 }
 
 func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) (sdk.Workspace, error) {
-	fmt.Println(BASE_URL)
 	c, err := sdk.NewClientWithCredentials(
 		sdk.RunClientWithCredentials{
 			ApiURL:      BASE_URL,
