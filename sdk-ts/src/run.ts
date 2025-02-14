@@ -93,15 +93,6 @@ export class RunClient {
     });
 
     if (response.status >= 400) {
-      console.log(response);
-      console.log({
-        baseUrl: settings.runUrl,
-        url: path,
-        method: options.method,
-        body: options.json || options.data,
-        query: { ...params },
-        headers,
-      });
       throw new HTTPError(response.status, JSON.stringify(data));
     }
     return data;
