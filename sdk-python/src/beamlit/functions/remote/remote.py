@@ -11,8 +11,6 @@ from typing import Callable
 
 import pydantic
 import typing_extensions as t
-from langchain_core.tools.base import BaseTool, ToolException
-
 from beamlit.api.functions import get_function, list_functions
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
@@ -20,6 +18,7 @@ from beamlit.errors import UnexpectedStatus
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function, StoreFunctionParameter
 from beamlit.run import RunClient
+from langchain_core.tools.base import BaseTool, ToolException
 
 
 def create_dynamic_schema(name: str, parameters: list[StoreFunctionParameter]) -> type[pydantic.BaseModel]:
@@ -117,7 +116,7 @@ class RemoteToolkit:
     _service_name: str | None = None
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
-    def initialize(self) -> None:
+    async def initialize(self) -> None:
         """Initialize the session and retrieve the remote function details."""
         settings = get_settings()
         if self._function is None:
@@ -140,7 +139,7 @@ class RemoteToolkit:
                     f"error: {e.status_code}. Available functions: {', '.join(names)}"
                 )
 
-    def get_tools(self) -> list[BaseTool]:
+    async def get_tools(self) -> list[BaseTool]:
         settings = get_settings()
         if self._function is None:
             raise RuntimeError("Must initialize the toolkit first")
@@ -152,9 +151,10 @@ class RemoteToolkit:
                 fallback_url = f"https://{self._service_name}.{settings.run_internal_hostname}"
                 url = f"https://{self._service_name}.{settings.run_internal_hostname}"
             mcp_client = MCPClient(self.client, url, fallback_url)
+            # await mcp_client.initialize()
             mcp_toolkit = MCPToolkit(client=mcp_client, url=url)
-            mcp_toolkit.initialize()
-            return mcp_toolkit.get_tools()
+            await mcp_toolkit.initialize()
+            return await mcp_toolkit.get_tools()
 
         if self._function.spec.kit:
             return [
