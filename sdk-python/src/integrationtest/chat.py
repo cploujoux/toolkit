@@ -1,10 +1,9 @@
 import asyncio
 
-from langgraph.graph.graph import CompiledGraph
-
 from beamlit.agents import agent, get_chat_model
 from beamlit.common import init
 from beamlit.functions import function
+from langgraph.graph.graph import CompiledGraph
 
 settings = init()
 chat = get_chat_model("gpt-4o-mini") # all good
@@ -13,8 +12,7 @@ chat = get_chat_model("gpt-4o-mini") # all good
 # chat = get_chat_model("claude-3-5-sonnet") # all good
 # chat = get_chat_model("deepseek-chat") # all good
 # chat = get_chat_model("xai-grok-beta") # all good
-
-print(chat)
+# chat = get_chat_model("gemini-2-0-flash") # all good
 
 @function()
 async def get_weather(location: str):
@@ -31,7 +29,7 @@ async def main(request, agent: CompiledGraph):
     agent_body = {"messages": [("user", "What's the weather in san francisco ?")]}
     # chat_body = {"messages": [{"role": "user", "content": "Hello!"}]}
     response = None
-    async for chunk in agent.astream(agent_body, config=config):
+    for chunk in agent.stream(agent_body, config=config):
         response = chunk
     print(response)
 

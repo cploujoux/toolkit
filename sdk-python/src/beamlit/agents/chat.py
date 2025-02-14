@@ -1,12 +1,11 @@
 from logging import getLogger
 from typing import Tuple, Union
 
-from langchain_core.language_models import BaseChatModel
-
 from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
+from langchain_core.language_models import BaseChatModel
 
 from .voice.openai import OpenAIVoiceReactAgent
 
@@ -120,6 +119,14 @@ def get_azure_marketplace_chat_model(**kwargs):
         **kwargs
     )  # It seems to use a compatible endpoint, so we can use the classic OpenAI interface
 
+def get_gemini_chat_model(**kwargs):
+    from langchain_google_genai import ChatGoogleGenerativeAI  # type: ignore
+
+    print(kwargs)
+    return ChatGoogleGenerativeAI(
+        **kwargs,
+    )
+
 def get_chat_model(name: str, agent_model: Union[Model, None] = None) -> BaseChatModel:
     """
     Gets a chat model instance for the specified model name.
@@ -214,6 +221,19 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
         "azure-marketplace": {
             "func": get_azure_marketplace_chat_model,
             "kwargs": {},
+        },
+        "gemini": {
+            "func": get_gemini_chat_model,
+            "kwargs": {
+                "api_key": "fake_api_key",
+                "client_options": {
+                    # "api_endpoint": get_base_url(name).replace("/v1", "")
+                    "api_endpoint": f"http://localhost:8787/{settings.workspace}/models/{name}",
+                },
+                "transport": "rest",
+                "additional_headers": {"X-Beamlit-Authorization": f"Bearer {jwt}"},
+            },
+            "remove_kwargs": ["api_key", "default_headers"]
         },
     }
 
