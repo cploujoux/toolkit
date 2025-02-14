@@ -33,7 +33,6 @@ class LocalToolKit:
                     spec={
                         "configurations": {
                             "url": self.local_function['url'],
-                            "sse": self.local_function['sse'],
                         },
                         "description": self.local_function['description'] or "",
                     }

@@ -95,7 +95,6 @@ class MCPTool(BaseTool):
     Attributes:
         client (MCPClient): The MCP client instance.
         handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
-        sse (bool): Whether to use SSE streaming for responses.
     """
 
     client: MCPClient
@@ -160,7 +159,6 @@ class MCPToolkit(BaseToolkit):
                 name=tool.name,
                 description=tool.description or "",
                 args_schema=create_schema_model(tool.name, tool.inputSchema),
-                sse=self.sse,
             )
             # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
             for tool in self._tools.tools

@@ -22,7 +22,6 @@ settings = init()
     #         "name": "github-search",
     #         "description": "A tool that searches GitHub for a given query",
     #         "url": "http://0.0.0.0:8000",
-    #         "sse": True,
     #     }
     # ],
 )
