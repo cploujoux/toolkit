@@ -122,7 +122,6 @@ def get_azure_marketplace_chat_model(**kwargs):
 def get_gemini_chat_model(**kwargs):
     from langchain_google_genai import ChatGoogleGenerativeAI  # type: ignore
 
-    print(kwargs)
     return ChatGoogleGenerativeAI(
         **kwargs,
     )
