@@ -152,8 +152,8 @@ async def get_functions(
                                         func = getattr(module, func_name)
                                         if settings.remote:
                                             toolkit = RemoteToolkit(client, slugify(func.__name__))
-                                            toolkit.initialize()
-                                            functions.extend(toolkit.get_tools())
+                                            await toolkit.initialize()
+                                            functions.extend(await toolkit.get_tools())
                                         else:
                                             if asyncio.iscoroutinefunction(func):
                                                 functions.append(
