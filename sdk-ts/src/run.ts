@@ -82,27 +82,29 @@ export class RunClient {
     } else {
       path = `${settings.workspace}/${pluralResourceType}/${options.resourceName}`;
     }
-    
+
     // Try internal URL first if available
-    const serviceEnvVar = `BL_${options.resourceType.toUpperCase()}_${toEnvVar(options.resourceName)}_SERVICE_NAME`;
+    const serviceEnvVar = `BL_${options.resourceType.toUpperCase()}_${toEnvVar(
+      options.resourceName
+    )}_SERVICE_NAME`;
     if (process.env[serviceEnvVar]) {
       try {
         const internalUrl = `https://${process.env[serviceEnvVar]}.${settings.runInternalHostname}`;
-        const internalPath = options.path || '';
-        
+        const internalPath = options.path || "";
+
         const { response, data } = await this.client.request({
           baseUrl: internalUrl,
           url: internalPath,
           method: options.method,
           body: options.json || options.data,
-          query: { environment: options.environment, ...params },
+          query: params,
           headers,
         });
 
         if (response.status < 400) {
           return data;
         }
-      } catch (error) {
+      } catch {
         // Silently fall through to external URL if internal fails
       }
     }
