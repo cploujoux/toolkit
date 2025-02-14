@@ -7,6 +7,9 @@ import { jwtDecode } from "jwt-decode";
  * @returns The thread identifier as a string.
  */
 export function getDefaultThread(request: FastifyRequest): string {
+  if (request.headers["x-beamlit-thread-id"]) {
+    return request.headers["x-beamlit-thread-id"] as string;
+  }
   if (request.headers["x-beamlit-sub"]) {
     return request.headers["x-beamlit-sub"] as string;
   }

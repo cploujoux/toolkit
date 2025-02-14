@@ -18,6 +18,8 @@ def get_default_thread(request: Request) -> str:
     Returns:
         str: The extracted thread identifier. Returns an empty string if no valid identifier is found.
     """
+    if request.headers.get("X-Beamlit-Thread-Id"):
+        return request.headers.get("X-Beamlit-Thread-Id")
     if request.headers.get("X-Beamlit-Sub"):
         return request.headers.get("X-Beamlit-Sub")
     authorization = request.headers.get("Authorization", request.headers.get("X-Beamlit-Authorization"))
