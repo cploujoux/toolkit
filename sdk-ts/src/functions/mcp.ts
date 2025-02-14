@@ -55,19 +55,14 @@ export function getMCPTool(
  */
 export class MCPClient {
   private client: Client;
-  private url: string;
-  private settings: Settings;
 
   /**
    * Creates an instance of MCPClient.
    *
-   * @param {Client} client - The HTTP client instance.
-   * @param {string} url - The base URL for MCP services.
+   * @param {Client} client - The Model Context Protocol client instance.
    */
-  constructor(client: Client, url: string) {
-    this.settings = getSettings();
+  constructor(client: Client) {
     this.client = client;
-    this.url = url;
   }
 
   /**

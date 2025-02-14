@@ -92,7 +92,7 @@ export class LocalToolkit {
             this._function.metadata &&
             this._function.spec?.integrationConnections
         ) {
-            const mcpClient = new MCPClient(this.modelContextProtocolClient, this.url);
+            const mcpClient = new MCPClient(this.modelContextProtocolClient);
             const mcpToolkit = new MCPToolkit(mcpClient);
             await mcpToolkit.initialize();
             return mcpToolkit.getTools();

@@ -3,6 +3,12 @@ import { JSONRPCMessage, JSONRPCMessageSchema } from "@modelcontextprotocol/sdk/
 import { logger } from "../../common/logger.js";
 //const SUBPROTOCOL = "mcp";
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000;
+
+// Helper function to wait
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 /**
  * Client transport for WebSocket: this will connect to a server over the WebSocket protocol.
  */
@@ -20,13 +26,30 @@ export class WebSocketClientTransport implements Transport {
     this._headers = headers;
   }
 
-  start(): Promise<void> {
+  async start(): Promise<void> {
     if (this._socket) {
       throw new Error(
         "WebSocketClientTransport already started! If using Client class, note that connect() calls start() automatically.",
       );
     }
 
+    let attempts = 0;
+    while (attempts < MAX_RETRIES) {
+      try {
+        await this._connect();
+        return;
+      } catch (error) {
+        attempts++;
+        if (attempts === MAX_RETRIES) {
+          throw error;
+        }
+        logger.debug(`WebSocket connection attempt ${attempts} failed, retrying in ${RETRY_DELAY_MS}ms...`);
+        await delay(RETRY_DELAY_MS);
+      }
+    }
+  }
+
+  private _connect(): Promise<void> {
     return new Promise((resolve, reject) => {
       this._socket = new WebSocket(this._url, {
         //protocols: SUBPROTOCOL,
@@ -72,15 +95,27 @@ export class WebSocketClientTransport implements Transport {
     this._socket?.close();
   }
 
-  send(message: JSONRPCMessage): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (!this._socket) {
-        reject(new Error("Not connected"));
-        return;
-      }
+  async send(message: JSONRPCMessage): Promise<void> {
+    let attempts = 0;
+    while (attempts < MAX_RETRIES) {
+      try {
+        if (!this._socket) {
+          throw new Error("Not connected");
+        }
 
-      this._socket?.send(JSON.stringify(message));
-      resolve();
-    });
+        await new Promise<void>((resolve, reject) => {
+          this._socket?.send(JSON.stringify(message));
+          resolve();
+        });
+        return;
+      } catch (error) {
+        attempts++;
+        if (attempts === MAX_RETRIES) {
+          throw error;
+        }
+        logger.warn(`WebSocket send attempt ${attempts} failed, retrying in ${RETRY_DELAY_MS}ms...`);
+        await delay(RETRY_DELAY_MS);
+      }
+    }
   }
 }
