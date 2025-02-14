@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "@jest/globals";
 import fs from "fs";
+import * as yaml from "js-yaml";
+import { Agent } from "../src";
 import { init, logger } from "../src/common";
 import { generateBeamlitDeployment } from "../src/deploy/deploy";
 
@@ -48,7 +50,7 @@ export const sub = wrapFunction(function sub(a: number, b: number) { return a - 
       `${dir}/${agentsDir}/agent.ts`,
       `
 import { wrapAgent } from "../src/agents/base";
-export const agent = wrapAgent((r) => { return; }, { agent: { metadata: { name: "agent-math" }, spec: { model: "gpt-4o-mini" } } })
+export const agent = wrapAgent((r) => { return; }, { agent: { metadata: { name: "agent-math" }, spec: { model: "gpt-4o-mini" }}, remoteFunctions: ["search"] })
     `
     );
 
@@ -56,13 +58,22 @@ export const agent = wrapAgent((r) => { return; }, { agent: { metadata: { name: 
       `${dir}/${agentsDir}/agent_custom.ts`,
       `
 import { wrapAgent } from "../src/agents/base";
-export const agent = async () =>wrapAgent((r) => { return; }, { agent: { metadata: { name: "agent-custom" }, spec: { model: "gpt-4o-mini" } } })
-    `
+export const agent = async () => wrapAgent((r) => { return; }, { agent: { metadata: { name: "agent-custom" }, spec: { model: "gpt-4o-mini" }}})
+        `
     );
     await generateBeamlitDeployment(".beamlit");
     expect(fs.existsSync(`.beamlit/agents/agent-math/agent.yaml`)).toBe(true);
     expect(fs.existsSync(`.beamlit/agents/agent-custom/agent.yaml`)).toBe(true);
     expect(fs.existsSync(`.beamlit/functions/add/function.yaml`)).toBe(true);
     expect(fs.existsSync(`.beamlit/functions/sub/function.yaml`)).toBe(true);
+
+    // Read the YAML file for agent-math and verify remoteFunctions contains ["search"]
+    const agentMathYamlPath = `.beamlit/agents/agent-math/agent.yaml`;
+    const agentMathYamlContent = fs.readFileSync(agentMathYamlPath, "utf8");
+    const agentMathConfig = yaml.load(agentMathYamlContent) as Agent;
+
+    // Assuming the YAML structure nests the configuration under an "agent" key,
+    // check that its spec has a remoteFunctions property with the expected value.
+    expect(agentMathConfig?.spec?.functions).toContain("search");
   });
 });

@@ -12,14 +12,13 @@ import pydantic
 import pydantic_core
 import requests
 import typing_extensions as t
-from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
-from mcp import ClientSession
-from mcp.types import CallToolResult, ListToolsResult
-
 from beamlit.authentication import get_authentication_headers
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 from beamlit.functions.mcp.client import websocket_client
+from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
+from mcp import ClientSession
+from mcp.types import CallToolResult, ListToolsResult
 
 from .utils import create_schema_model
 
@@ -48,7 +47,7 @@ class MCPClient:
                     logger.debug(f"WebSocket tools: {response}")
                     return response
         except Exception as e:
-            logger.error(f"Error listing SSE tools: {e}")
+            logger.error(f"Error listing tools: {e}")
             logger.debug("WebSocket not available, trying HTTP")
             return None  # Signal to list_tools() to try HTTP instead
 

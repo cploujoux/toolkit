@@ -46,5 +46,5 @@ export const retrieveWrapperAgent = async (dir: string, warning: boolean) => {
       }
     }
   }
-  return agents;
+  return agents.filter((agent) => agent.agent);
 };

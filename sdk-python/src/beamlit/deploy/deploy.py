@@ -14,21 +14,13 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-
 from beamlit.api.agents import get_agent
 from beamlit.authentication import new_client
 from beamlit.client import AuthenticatedClient
 from beamlit.common import slugify
 from beamlit.common.settings import Settings, get_settings, init
-from beamlit.models import (
-    Agent,
-    AgentSpec,
-    Flavor,
-    Function,
-    FunctionSpec,
-    Metadata,
-    MetadataLabels,
-)
+from beamlit.models import (Agent, AgentSpec, Flavor, Function, FunctionSpec,
+                            Metadata, MetadataLabels)
 
 from .format import arg_to_dict
 from .parser import Resource, get_description, get_parameters, get_resources
@@ -55,6 +47,14 @@ def set_default_values(resource: Resource, deployment: Agent | Function):
         deployment.metadata.display_name = deployment.metadata.name
     if not deployment.spec.description:
         deployment.spec.description = get_description(None, resource)
+    if isinstance(deployment, Agent):
+        deployment.spec.functions = []
+        for arg in resource.decorator.keywords:
+            if arg.arg == "remote_functions":
+                if isinstance(arg.value, ast.List):
+                    for value in arg.value.elts:
+                        if isinstance(value, ast.Constant):
+                            deployment.spec.functions.append(slugify(value.value))
     return deployment
 
 def get_beamlit_deployment_from_resource(
@@ -131,7 +131,8 @@ def get_agent_yaml(
         agent.spec.repository = agent_response.spec.repository
     except Exception:
         pass
-    agent.spec.functions = [slugify(function.metadata.name) for (_, function) in functions]
+    agent.spec.functions = agent.spec.functions or []
+    agent.spec.functions = agent.spec.functions + [slugify(function.metadata.name) for (_, function) in functions]
     agent.metadata.labels = agent.metadata.labels and MetadataLabels.from_dict(agent.metadata.labels) or MetadataLabels()
     agent.metadata.labels["x-beamlit-auto-generated"] = "true"
     agent_yaml = yaml.dump(agent.to_dict())

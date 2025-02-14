@@ -131,6 +131,7 @@ const generateAgents = async (
   if (!fs.existsSync(agentDirectory))
     throw new Error(`Agent directory ${agentDirectory} not found`);
   const agents = await retrieveWrapperAgent(agentDirectory, false);
+
   await Promise.all(
     agents.map(async (agent) => {
       const agentConfiguration = agent.agent;
@@ -151,11 +152,16 @@ const generateAgents = async (
             `Error retrieving agent ${agentConfiguration.metadata.name}: ${error}`
           );
         }
-        const remoteFunctions = agentConfiguration.spec?.functions || [];
+        const remoteFunctions = agent.remoteFunctions || [];
+        const existingFunctions = agentConfiguration.spec?.functions || [];
         const agentName = slugify(agentConfiguration.metadata.name);
         agentConfiguration.metadata.name = agentName;
         agentConfiguration.spec!.functions = [
-          ...new Set([...functionsNames, ...remoteFunctions]),
+          ...new Set([
+            ...functionsNames,
+            ...remoteFunctions,
+            ...existingFunctions,
+          ]),
         ];
         agentConfiguration.metadata.labels =
           agentConfiguration.metadata.labels || {};

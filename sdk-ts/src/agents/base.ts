@@ -67,6 +67,7 @@ export type AgentBase = {
   run: FunctionRun | FunctionRunStream;
   agent: Agent | null;
   stream?: boolean;
+  remoteFunctions?: string[];
 };
 
 /**
@@ -197,6 +198,7 @@ export const wrapAgent: WrapAgentType = async (
         return await func(request);
       },
       agent: options?.agent ?? null,
+      remoteFunctions: options?.remoteFunctions ?? [],
     };
   }
 
@@ -299,6 +301,7 @@ export const wrapAgent: WrapAgentType = async (
         return await func(ws, request, args);
       },
       agent: options?.agent ?? null,
+      remoteFunctions: options?.remoteFunctions ?? [],
       stream: true,
     };
   }
@@ -314,6 +317,7 @@ export const wrapAgent: WrapAgentType = async (
       }
       return func(request, args);
     },
+    remoteFunctions: options?.remoteFunctions ?? [],
     agent: options?.agent ?? null,
   };
 };
