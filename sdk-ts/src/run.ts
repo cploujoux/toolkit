@@ -82,7 +82,32 @@ export class RunClient {
     } else {
       path = `${settings.workspace}/${pluralResourceType}/${options.resourceName}`;
     }
+    
+    // Try internal URL first if available
+    const serviceEnvVar = `BL_${options.resourceType.toUpperCase()}_${toEnvVar(options.resourceName)}_SERVICE_NAME`;
+    if (process.env[serviceEnvVar]) {
+      try {
+        const internalUrl = `https://${process.env[serviceEnvVar]}.${settings.runInternalHostname}`;
+        const internalPath = options.path || '';
+        
+        const { response, data } = await this.client.request({
+          baseUrl: internalUrl,
+          url: internalPath,
+          method: options.method,
+          body: options.json || options.data,
+          query: { environment: options.environment, ...params },
+          headers,
+        });
 
+        if (response.status < 400) {
+          return data;
+        }
+      } catch (error) {
+        // Silently fall through to external URL if internal fails
+      }
+    }
+
+    // Fall back to external URL
     const { response, data } = await this.client.request({
       baseUrl: settings.runUrl,
       url: path,
@@ -97,4 +122,8 @@ export class RunClient {
     }
     return data;
   }
+}
+
+function toEnvVar(name: string) {
+  return name.replace(/-/g, "_").toUpperCase();
 }

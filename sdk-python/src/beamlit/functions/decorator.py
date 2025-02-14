@@ -4,9 +4,8 @@ import functools
 from collections.abc import Callable
 from logging import getLogger
 
-from fastapi import Request
-
 from beamlit.models import Function, FunctionKit
+from fastapi import Request
 
 logger = getLogger(__name__)
 

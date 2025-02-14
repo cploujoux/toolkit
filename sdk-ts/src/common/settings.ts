@@ -64,6 +64,7 @@ const Settings = z.object({
     .string()
     .regex(/^https?:\/\/[^\s/$.?#].[^\s]*$/, "Invalid URL format")
     .default("https://run.beamlit.com"),
+  runInternalHostname: z.string().default("internal.run.beamlit.net"),
   registryUrl: z
     .string()
     .regex(/^https?:\/\/[^\s/$.?#].[^\s]*$/, "Invalid URL format")

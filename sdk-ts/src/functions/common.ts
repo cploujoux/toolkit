@@ -11,6 +11,7 @@ import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 import { FunctionBase } from "./base.js";
 import { RemoteToolkit } from "./remote.js";
+import { LocalFunction, LocalToolkit } from "./local.js";
 
 /**
  * Converts an array of `StoreFunctionParameter` objects into a Zod schema for validation.
@@ -59,6 +60,7 @@ export const parametersToZodSchema = (
  */
 export type GetFunctionsOptions = {
   remoteFunctions?: string[] | null;
+  localFunctions?: LocalFunction[] | null;
   chain?: AgentChain[] | null;
   client?: Client | null;
   dir?: string | null;
@@ -118,7 +120,7 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
   const settings = getSettings();
   let { client, dir } = options;
   const { warning } = options;
-  const { remoteFunctions, chain } = options;
+  const { remoteFunctions, chain, localFunctions } = options;
   if (!client) {
     client = newClient();
   }
@@ -156,6 +158,13 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
     const toolkit = new ChainToolkit(runClient, chain);
     await toolkit.initialize();
     functions.push(...toolkit.getTools());
+  }
+  if (localFunctions) {
+    await Promise.all(localFunctions.map(async (func) => {
+      const toolkit = new LocalToolkit(client, func.name, func.url);
+      await toolkit.initialize(func.name, func.description);
+      functions.push(...(await toolkit.getTools()));
+    }));
   }
   return functions;
 };

@@ -1,12 +1,10 @@
-import { Client } from "@hey-api/client-fetch";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StructuredTool, tool } from "@langchain/core/tools";
 import {
-  CallToolResultSchema,
   ListToolsResult,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { getSettings, Settings } from "../common/settings.js";
-import { logger } from "../common/logger.js";
 
 /**
  * Represents a property expected by MCP tools.
@@ -40,8 +38,8 @@ export function getMCPTool(
   schema: z.ZodType
 ) {
   return tool(
-    async (...args: any[]) => {
-      const result = await client.callTool(name, ...args);
+    async (args: any) => {
+      const result = await client.callTool(name, args);
       return JSON.stringify(result.content);
     },
     {
@@ -57,19 +55,14 @@ export function getMCPTool(
  */
 export class MCPClient {
   private client: Client;
-  private url: string;
-  private settings: Settings;
 
   /**
    * Creates an instance of MCPClient.
    *
-   * @param {Client} client - The HTTP client instance.
-   * @param {string} url - The base URL for MCP services.
+   * @param {Client} client - The Model Context Protocol client instance.
    */
-  constructor(client: Client, url: string) {
-    this.settings = getSettings();
+  constructor(client: Client) {
     this.client = client;
-    this.url = url;
   }
 
   /**
@@ -79,46 +72,22 @@ export class MCPClient {
    * @throws Will throw an error if the request fails.
    */
   async listTools(): Promise<ListToolsResult> {
-    const { response, data } = await this.client.request({
-      method: "GET",
-      url: "tools/list",
-      baseUrl: this.url,
-    });
-    if (response.status >= 400) {
-      throw new Error(
-        `Failed to list tools for ${this.url} cause ${response.status}`
-      );
-    }
-    return data as ListToolsResult;
+    return this.client.listTools();
   }
 
   /**
    * Calls a specific tool with provided arguments.
    *
    * @param {string} toolName - The name of the tool to invoke.
-   * @param {...any[]} args - Arguments to pass to the tool.
+   * @param {any} args - Arguments to pass to the tool.
    * @returns {Promise<any>} The result from the tool invocation.
    * @throws Will throw an error if the call fails or if the tool returns an error.
    */
-  async callTool(toolName: string, ...args: any[]): Promise<any> {
-    const { response, data } = await this.client.request({
-      method: "POST",
-      url: "tools/call",
-      baseUrl: this.url,
-      body: { name: toolName, arguments: args[0] },
+  async callTool(toolName: string, args: any): Promise<any> {
+    return this.client.callTool({
+      name: toolName,
+      arguments: args,
     });
-    if (response.status >= 400) {
-      const error = `Failed to call tool ${toolName} for ${this.url} cause ${response.status}`;
-      logger.error(error);
-      throw new Error(error);
-    }
-    const mcpResponse = CallToolResultSchema.parse(data);
-    if (mcpResponse.isError) {
-      const error = `MCP error: ${JSON.stringify(mcpResponse.content)}`;
-      logger.error(error);
-      throw new Error(error);
-    }
-    return mcpResponse;
   }
 }
 

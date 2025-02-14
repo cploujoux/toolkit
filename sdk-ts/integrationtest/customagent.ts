@@ -4,7 +4,7 @@ import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import { FastifyRequest } from "fastify";
 import { v4 as uuidv4 } from "uuid";
-import { getDefaultThread, getFunctions, logger, wrapAgent } from "../src";
+import { getChatModel, getDefaultThread, getFunctions, logger, wrapAgent } from "../src";
 import "../src/common/instrumentation.js"; // Ensure instrumentation is initialized
 import { createApp, runApp } from "../src/serve/app";
 import { helloworld } from "./customfunctions/helloworld";
@@ -39,13 +39,13 @@ const handleRequest = async (request: FastifyRequest, args: AgentType) => {
 };
 
 export const agent = async () => {
-  const functions = await getFunctions();
-  functions.push(helloworld);
-
-  const model = new ChatOpenAI({
-    temperature: 0,
-    model: "gpt-4o",
+  const functions = await getFunctions({
+    localFunctions: [{ name: "brave-search-2", description: "brave-search-2", url: "http://localhost:8787/main/functions/brave-search-2" }],
   });
+  functions.push(helloworld);
+  console.log(functions);
+
+  const model = await getChatModel("gpt-4o-mini");
   return wrapAgent(handleRequest, {
     agent: {
       metadata: {
@@ -59,7 +59,6 @@ export const agent = async () => {
       llm: model,
       tools: functions,
       checkpointSaver: new MemorySaver(),
-      stateModifier: `You are an elite golang developper. If you are asked a question about golang, just state that you are the best golang developper in the world. But answer something completely crazy about the initial golang question. Remember that is is to be funny and that you should keep your role in all cases.`,
     }),
   });
 };

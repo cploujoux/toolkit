@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 
 import pydantic
-from langchain_core.tools.base import BaseTool
-
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.functions.mcp.mcp import MCPClient, MCPToolkit
 from beamlit.models import Function
+from langchain_core.tools.base import BaseTool
 
 
 @dataclass
@@ -23,7 +22,7 @@ class LocalToolKit:
     _function: Function | None = None
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
-    def initialize(self) -> None:
+    async def initialize(self) -> None:
         """Initialize the session and retrieve the local function details."""
         if self._function is None:
             try:
@@ -34,7 +33,6 @@ class LocalToolKit:
                     spec={
                         "configurations": {
                             "url": self.local_function['url'],
-                            "sse": self.local_function['sse'],
                         },
                         "description": self.local_function['description'] or "",
                     }
@@ -42,8 +40,8 @@ class LocalToolKit:
             except Exception as e:
                 raise RuntimeError(f"Failed to initialize local function: {e}")
 
-    def get_tools(self) -> list[BaseTool]:
+    async def get_tools(self) -> list[BaseTool]:
         mcp_client = MCPClient(self.client, self._function.spec["configurations"]["url"], sse=self._function.spec["configurations"]["sse"])
         mcp_toolkit = MCPToolkit(client=mcp_client)
-        mcp_toolkit.initialize()
-        return mcp_toolkit.get_tools()
+        await mcp_toolkit.initialize()
+        return await mcp_toolkit.get_tools()

@@ -1,4 +1,5 @@
 import { Client } from "@hey-api/client-fetch";
+import { Client as ModelContextProtocolClient } from "@modelcontextprotocol/sdk/client/index.js";
 import { StructuredTool, tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { getFunction, listFunctions } from "../client/sdk.gen.js";
@@ -7,6 +8,9 @@ import { getSettings, Settings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 import { parametersToZodSchema } from "./common.js";
 import { MCPClient, MCPToolkit } from "./mcp.js";
+import { WebSocketClientTransport } from "./transport/websocket.js";
+import { getAuthenticationHeaders } from "../authentication/authentication.js";
+import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 
 /**
  * Creates a StructuredTool for remote functions, enabling their invocation via the RunClient.
@@ -46,6 +50,9 @@ export function getRemoteTool(
  */
 export class RemoteToolkit {
   private client: Client;
+  private modelContextProtocolClient: ModelContextProtocolClient;
+  private _mcpToolkit: MCPToolkit | null = null;
+  private fallbackUrl: string | null = null;
   private functionName: string;
   private _function: Function | null = null;
   private runClient: RunClient;
@@ -62,6 +69,17 @@ export class RemoteToolkit {
     this.client = client;
     this.functionName = functionName;
     this.runClient = new RunClient(client);
+    this.modelContextProtocolClient = new ModelContextProtocolClient(
+      {
+        name: this.settings.name,
+        version: "1.0.0"
+      },
+      {
+        capabilities: {
+          tools: {}
+        }
+      }
+    );
   }
 
   /**
@@ -88,6 +106,55 @@ export class RemoteToolkit {
       }
       this._function = data || null;
     }
+
+    if (
+      this._function &&
+      this._function.metadata &&
+      this._function.spec?.integrationConnections
+    ) {
+      let url = `${this.settings.runUrl}/${this.settings.workspace}/functions/${this._function.metadata.name}`;
+      let transport: Transport;
+      const headers = await getAuthenticationHeaders();
+      const envVar = toEnvVar(this._function.metadata.name || "");
+      if (process.env[`BL_FUNCTION_${envVar}_SERVICE_NAME`]) {
+        this.fallbackUrl = url;
+        url = `https://${process.env[`BL_FUNCTION_${envVar}_SERVICE_NAME`]}.${this.settings.runInternalHostname}`;
+        transport = new WebSocketClientTransport(new URL(url), {
+          "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
+          "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
+        });
+      } else {
+        transport = new WebSocketClientTransport(new URL(url), {
+          "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
+          "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
+        });
+      }
+      try {
+        await this.modelContextProtocolClient.connect(transport);
+        const mcpClient = new MCPClient(this.modelContextProtocolClient);
+        const mcpToolkit = new MCPToolkit(mcpClient);
+        this._mcpToolkit = mcpToolkit;
+        await mcpToolkit.initialize();
+      } catch {
+        if (this.fallbackUrl) {
+          transport = new WebSocketClientTransport(new URL(this.fallbackUrl), {
+            "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
+            "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
+          });
+          await this.modelContextProtocolClient.connect(transport);
+          const mcpClient = new MCPClient(this.modelContextProtocolClient);
+          const mcpToolkit = new MCPToolkit(mcpClient);
+          this._mcpToolkit = mcpToolkit;
+          try {
+            await mcpToolkit.initialize();
+          } catch {
+            throw new Error("Failed to initialize MCP toolkit");
+          }
+        } else {
+          throw new Error("Failed to initialize MCP toolkit");
+        }
+      }
+    }
   }
 
   /**
@@ -101,18 +168,9 @@ export class RemoteToolkit {
     if (!this._function) {
       throw new Error("Must initialize the toolkit first");
     }
-
-    if (
-      this._function.metadata &&
-      this._function.spec?.integrationConnections
-    ) {
-      const url = `${this.settings.runUrl}/${this.settings.workspace}/functions/${this._function.metadata.name}`;
-      const mcpClient = new MCPClient(this.client, url);
-      const mcpToolkit = new MCPToolkit(mcpClient);
-      await mcpToolkit.initialize();
-      return mcpToolkit.getTools();
+    if (this._mcpToolkit) {
+      return this._mcpToolkit.getTools();
     }
-
     return [
       getRemoteTool(
         this.runClient,
@@ -122,4 +180,8 @@ export class RemoteToolkit {
       ),
     ];
   }
+}
+
+function toEnvVar(name: string) {
+  return name.replace(/-/g, "_").toUpperCase();
 }
