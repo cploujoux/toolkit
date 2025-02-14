@@ -1,4 +1,5 @@
 import { Client } from "@hey-api/client-fetch";
+import { Client as ModelContextProtocolClient } from "@modelcontextprotocol/sdk/client/index.js";
 import { StructuredTool, tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { getFunction, listFunctions } from "../client/sdk.gen.js";
@@ -7,6 +8,8 @@ import { getSettings, Settings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 import { parametersToZodSchema } from "./common.js";
 import { MCPClient, MCPToolkit } from "./mcp.js";
+import { WebSocketClientTransport } from "./transport/websocket.js";
+import { getAuthenticationHeaders } from "../authentication/authentication.js";
 
 /**
  * Creates a StructuredTool for remote functions, enabling their invocation via the RunClient.
@@ -48,6 +51,7 @@ export function getRemoteTool(
  */
 export class RemoteToolkit {
   private client: Client;
+  private modelContextProtocolClient: ModelContextProtocolClient;
   private functionName: string;
   private _function: Function | null = null;
   private runClient: RunClient;
@@ -64,6 +68,17 @@ export class RemoteToolkit {
     this.client = client;
     this.functionName = functionName;
     this.runClient = new RunClient(client);
+    this.modelContextProtocolClient = new ModelContextProtocolClient(
+      {
+        name: this.settings.name,
+        version: "1.0.0"
+      },
+      {
+        capabilities: {
+          tools: {}
+        }
+      }
+    );
   }
 
   /**
@@ -92,6 +107,7 @@ export class RemoteToolkit {
       }
       this._function = data || null;
     }
+    
   }
 
   /**
@@ -111,7 +127,13 @@ export class RemoteToolkit {
       this._function.spec?.integrationConnections
     ) {
       const url = `${this.settings.runUrl}/${this.settings.workspace}/functions/${this._function.metadata.name}`;
-      const mcpClient = new MCPClient(this.client, url);
+      const headers = await getAuthenticationHeaders();
+      const transport = new WebSocketClientTransport(new URL(url), {
+        "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
+        "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
+      });
+      await this.modelContextProtocolClient.connect(transport);
+      const mcpClient = new MCPClient(this.modelContextProtocolClient, url);
       const mcpToolkit = new MCPToolkit(mcpClient);
       await mcpToolkit.initialize();
       return mcpToolkit.getTools();

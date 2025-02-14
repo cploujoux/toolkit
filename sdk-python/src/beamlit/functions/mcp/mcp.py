@@ -14,14 +14,13 @@ import requests
 import typing_extensions as t
 from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
 from mcp import ClientSession
-
 from mcp.types import CallToolResult, ListToolsResult
 
-from beamlit.functions.mcp.client import sse_client
 
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.authentication import get_authentication_headers
 from beamlit.common.settings import get_settings
+from beamlit.functions.mcp.client import websocket_client
 
 from .utils import create_schema_model
 
@@ -31,68 +30,68 @@ logger = logging.getLogger(__name__)
 
 
 class MCPClient:
-    def __init__(self, client: AuthenticatedClient, url: str):
+    def __init__(self, client: AuthenticatedClient, url: str, fallback_url: str | None = None):
         self.client = client
         self.url = url
-        self._sse = False
+        self.fallback_url = fallback_url
 
-    async def list_sse_tools(self) -> ListToolsResult:
-        # Create a new context for each SSE connection
+    async def list_ws_tools(self, is_fallback: bool = False) -> ListToolsResult:
+        if is_fallback:
+            url = self.fallback_url
+        else:
+            url = self.url
         try:
-            async with sse_client(f"{self.url}/sse", headers=get_authentication_headers(settings)) as (read_stream, write_stream):
-                logger.info("SSE connection established")
+            async with websocket_client(url, headers=get_authentication_headers(settings)) as (read_stream, write_stream):
+                logger.debug("WebSocket connection established")
                 async with ClientSession(read_stream, write_stream) as client:
-                    logger.info("Client session created", client)
                     await client.initialize()
                     response = await client.list_tools()
-                    logger.info(f"SSE tools: {response}")
+                    logger.debug(f"WebSocket tools: {response}")
                     return response
         except Exception as e:
             logger.error(f"Error listing SSE tools: {e}")
-            self._sse = False
-            logger.info("SSE not available, trying HTTP")
+            logger.debug("WebSocket not available, trying HTTP")
             return None  # Signal to list_tools() to try HTTP instead
 
     def list_tools(self) -> ListToolsResult:
-        logger.info(f"Listing tools for {self.url}")
+        logger.debug(f"Listing tools for {self.url}")
         try:
             loop = asyncio.get_event_loop()
-            result = loop.run_until_complete(self.list_sse_tools())
-            if result is None:  # SSE failed, try HTTP
-                raise Exception("SSE failed")
-            self._sse = True
+            result = loop.run_until_complete(self.list_ws_tools(is_fallback=False))
             return result
-        except Exception:  # Fallback to HTTP
-            client = self.client.get_httpx_client()
-            response = client.request("GET", f"{self.url}/tools/list")
-            response.raise_for_status()
-            return ListToolsResult(**response.json())
+        except Exception as e: # Fallback to Public endpoint
+            print(e)
+            if self.fallback_url:
+                try:
+                    result = loop.run_until_complete(self.list_ws_tools(is_fallback=True))
+                    return result
+                except Exception as e:
+                    raise e
+            else:
+                raise e
+        
 
     async def call_tool(
         self,
         tool_name: str,
         arguments: dict[str, Any] = None,
+        is_fallback: bool = False,
     ) -> requests.Response | AsyncIterator[CallToolResult]:
-        if self._sse:
-            async with sse_client(f"{self.url}/sse", headers=get_authentication_headers(settings)) as (read_stream, write_stream):
+        if is_fallback:
+            url = self.fallback_url
+        else:
+            url = self.url
+        try:
+            async with websocket_client(url, headers=get_authentication_headers(settings)) as (read_stream, write_stream):
                 async with ClientSession(read_stream, write_stream) as session:
                     await session.initialize()
-                    response = await session.call_tool(tool_name, arguments or {})
-                    content = pydantic_core.to_json(response).decode()
-                    return content
-        else: # Fallback to HTTP
-            client = self.client.get_httpx_client()
-            response = client.request(
-                "POST",
-                f"{self.url}/tools/call",
-                json={"name": tool_name, "arguments": arguments},
-            )
-            response.raise_for_status()
-            result = CallToolResult(response.json())
-            if result.isError:
-                raise ToolException(result.content)
-            content = pydantic_core.to_json(result.content).decode()
-            return content
+                response = await session.call_tool(tool_name, arguments or {})
+                content = pydantic_core.to_json(response).decode()
+                return content
+        except Exception as e:
+            raise e
+
+             
 
 class MCPTool(BaseTool):
     """
@@ -117,7 +116,16 @@ class MCPTool(BaseTool):
 
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
-        return await self.client.call_tool(self.name, arguments=kwargs)
+        try:
+            return await self.client.call_tool(self.name, arguments=kwargs)
+        except Exception as e:
+            if self.client.fallback_url:
+                try:
+                    return await self.client.call_tool(self.name, arguments=kwargs, is_fallback=True) # Fallback to Public endpoint
+                except Exception as e:
+                    raise e
+            else:
+                raise e
 
     @t.override
     @property
