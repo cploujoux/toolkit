@@ -7,7 +7,7 @@ from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.core_event import CoreEvent
-    from ..models.environment_metadata import EnvironmentMetadata
+    from ..models.metadata import Metadata
     from ..models.model_spec import ModelSpec
 
 
@@ -16,17 +16,17 @@ T = TypeVar("T", bound="Model")
 
 @_attrs_define
 class Model:
-    """Logical object representing a model, that can be instantiated in multiple environments as model deployments
+    """Logical object representing a model
 
     Attributes:
         events (Union[Unset, list['CoreEvent']]): Core events
-        metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
+        metadata (Union[Unset, Metadata]): Metadata
         spec (Union[Unset, ModelSpec]): Model specification
         status (Union[Unset, str]): Model status
     """
 
     events: Union[Unset, list["CoreEvent"]] = UNSET
-    metadata: Union[Unset, "EnvironmentMetadata"] = UNSET
+    metadata: Union[Unset, "Metadata"] = UNSET
     spec: Union[Unset, "ModelSpec"] = UNSET
     status: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -70,7 +70,7 @@ class Model:
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.core_event import CoreEvent
-        from ..models.environment_metadata import EnvironmentMetadata
+        from ..models.metadata import Metadata
         from ..models.model_spec import ModelSpec
 
         if not src_dict:
@@ -84,11 +84,11 @@ class Model:
             events.append(componentsschemas_core_events_item)
 
         _metadata = d.pop("metadata", UNSET)
-        metadata: Union[Unset, EnvironmentMetadata]
+        metadata: Union[Unset, Metadata]
         if isinstance(_metadata, Unset):
             metadata = UNSET
         else:
-            metadata = EnvironmentMetadata.from_dict(_metadata)
+            metadata = Metadata.from_dict(_metadata)
 
         _spec = d.pop("spec", UNSET)
         spec: Union[Unset, ModelSpec]

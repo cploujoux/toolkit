@@ -70,12 +70,11 @@ Functions
         workspace_name (str): The name of the workspace.
         credentials (Credentials): The credentials to save.
 
-`set_current_workspace(workspace_name: str, environment: str)`
-:   Sets the current workspace and environment in the configuration.
+`set_current_workspace(workspace_name: str)`
+:   Sets the current workspace in the configuration.
     
     Parameters:
         workspace_name (str): The name of the workspace to set as current.
-        environment (str): The environment to set for the workspace.
 
 Classes
 -------
@@ -103,17 +102,13 @@ Classes
         Returns:
             dict: The JSON representation of the configuration.
 
-`ContextConfig(workspace: str = '', environment: str = '')`
+`ContextConfig(workspace: str = '')`
 :   A dataclass representing the current context configuration.
     
     Attributes:
         workspace (str): The name of the current workspace.
-        environment (str): The current environment (e.g., development, production).
 
     ### Class variables
-
-    `environment: str`
-    :
 
     `workspace: str`
     :

@@ -168,17 +168,13 @@ Classes
         Returns:
             dict: The JSON representation of the configuration.
 
-`ContextConfig(workspace: str = '', environment: str = '')`
+`ContextConfig(workspace: str = '')`
 :   A dataclass representing the current context configuration.
     
     Attributes:
         workspace (str): The name of the current workspace.
-        environment (str): The current environment (e.g., development, production).
 
     ### Class variables
-
-    `environment: str`
-    :
 
     `workspace: str`
     :

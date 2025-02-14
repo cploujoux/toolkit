@@ -4,12 +4,12 @@ Module beamlit.models.agent
 Classes
 -------
 
-`Agent(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('EnvironmentMetadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('AgentSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`Agent(events: beamlit.types.Unset | list['CoreEvent'] = <beamlit.types.Unset object>, metadata: beamlit.types.Unset | ForwardRef('Metadata') = <beamlit.types.Unset object>, spec: beamlit.types.Unset | ForwardRef('AgentSpec') = <beamlit.types.Unset object>, status: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Agent
     
     Attributes:
         events (Union[Unset, list['CoreEvent']]): Core events
-        metadata (Union[Unset, EnvironmentMetadata]): Environment metadata
+        metadata (Union[Unset, Metadata]): Metadata
         spec (Union[Unset, AgentSpec]): Agent specification
         status (Union[Unset, str]): Agent status
     

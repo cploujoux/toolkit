@@ -7,7 +7,7 @@ import (
 	"github.com/beamlit/toolkit/sdk"
 )
 
-func (r *Operations) ApiKeyLogin(workspace string, environment string) {
+func (r *Operations) ApiKeyLogin(workspace string) {
 	var apiKey string
 	// Check if API key is provided via environment variable
 	if apiKey = os.Getenv("BL_API_KEY"); apiKey != "" {
@@ -33,12 +33,13 @@ func (r *Operations) ApiKeyLogin(workspace string, environment string) {
 		APIKey: apiKey,
 	}
 
-	if err := CheckWorkspaceAccess(workspace, creds); err != nil {
+	_, err := CheckWorkspaceAccess(workspace, creds)
+	if err != nil {
 		fmt.Printf("Error accessing workspace %s : %s\n", workspace, err)
 		os.Exit(1)
 	}
 
 	sdk.SaveCredentials(workspace, creds)
-	sdk.SetCurrentWorkspace(workspace, environment)
+	sdk.SetCurrentWorkspace(workspace)
 	fmt.Println("Successfully stored API key")
 }

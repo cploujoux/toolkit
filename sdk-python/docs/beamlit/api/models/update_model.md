@@ -11,8 +11,7 @@ Functions
     
     Args:
         model_name (str):
-        body (Model): Logical object representing a model, that can be instantiated in multiple
-            environments as model deployments
+        body (Model): Logical object representing a model
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -28,8 +27,7 @@ Functions
     
     Args:
         model_name (str):
-        body (Model): Logical object representing a model, that can be instantiated in multiple
-            environments as model deployments
+        body (Model): Logical object representing a model
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -45,8 +43,7 @@ Functions
     
     Args:
         model_name (str):
-        body (Model): Logical object representing a model, that can be instantiated in multiple
-            environments as model deployments
+        body (Model): Logical object representing a model
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -62,8 +59,7 @@ Functions
     
     Args:
         model_name (str):
-        body (Model): Logical object representing a model, that can be instantiated in multiple
-            environments as model deployments
+        body (Model): Logical object representing a model
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

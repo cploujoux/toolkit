@@ -57,10 +57,8 @@ class ContextConfig:
 
     Attributes:
         workspace (str): The name of the current workspace.
-        environment (str): The current environment (e.g., development, production).
     """
     workspace: str = ""
-    environment: str = ""
 
 
 @dataclass
@@ -108,7 +106,6 @@ class Config:
             ],
             "context": {
                 "workspace": self.context.workspace,
-                "environment": self.context.environment,
             },
         }
 
@@ -186,17 +183,15 @@ def current_context() -> ContextConfig:
     return config.context
 
 
-def set_current_workspace(workspace_name: str, environment: str):
+def set_current_workspace(workspace_name: str):
     """
-    Sets the current workspace and environment in the configuration.
+    Sets the current workspace in the configuration.
 
     Parameters:
         workspace_name (str): The name of the workspace to set as current.
-        environment (str): The environment to set for the workspace.
     """
     config = load_config()
     config.context.workspace = workspace_name
-    config.context.environment = environment
     save_config(config)
 
 

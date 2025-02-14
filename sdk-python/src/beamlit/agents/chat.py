@@ -155,19 +155,13 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
 
     if agent_model is None:
         try:
-            agent_model = get_model.sync(name, client=client, environment=settings.environment)
+            agent_model = get_model.sync(name, client=client)
         except Exception:
             logger.warning(f"Model {name} not found, defaulting to gpt-4o-mini")
 
-    environment = (
-        (agent_model and agent_model.metadata and agent_model.metadata.environment)
-        or settings.environment
-    )
     headers = get_authentication_headers(settings)
-    headers["X-Beamlit-Environment"] = environment
 
     jwt = headers.get("X-Beamlit-Authorization", "").replace("Bearer ", "")
-    params = {"environment": environment}
     chat_classes = {
         "openai": {
             "func": get_openai_chat_model,
@@ -257,7 +251,6 @@ def get_chat_model_full(name: str, agent_model: Union[Model, None] = None) -> Tu
     kwargs = {
         "model": model,
         "base_url": get_base_url(name),
-        "default_query": params,
         "default_headers": headers,
         "api_key": "fake_api_key",
         "temperature": 0,

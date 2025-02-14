@@ -49,7 +49,7 @@ Functions
     Returns:
         str: YAML configuration string
 
-`get_beamlit_deployment_from_resource(resource: beamlit.deploy.parser.Resource) ‑> beamlit.models.agent.Agent | beamlit.models.function.Function`
+`get_beamlit_deployment_from_resource(settings: beamlit.common.settings.Settings, resource: beamlit.deploy.parser.Resource) ‑> beamlit.models.agent.Agent | beamlit.models.function.Function`
 :   Creates a deployment configuration from a given resource.
     
     Args:

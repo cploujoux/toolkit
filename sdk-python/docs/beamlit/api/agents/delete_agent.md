@@ -4,12 +4,11 @@ Module beamlit.api.agents.delete_agent
 Functions
 ---------
 
-`asyncio(agent_name: str, *, client: beamlit.client.AuthenticatedClient, environment: str) ‑> beamlit.models.agent.Agent | None`
+`asyncio(agent_name: str, *, client: beamlit.client.AuthenticatedClient) ‑> beamlit.models.agent.Agent | None`
 :   Delete agent by name
     
     Args:
         agent_name (str):
-        environment (str):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -18,12 +17,11 @@ Functions
     Returns:
         Agent
 
-`asyncio_detailed(agent_name: str, *, client: beamlit.client.AuthenticatedClient, environment: str) ‑> beamlit.types.Response[beamlit.models.agent.Agent]`
+`asyncio_detailed(agent_name: str, *, client: beamlit.client.AuthenticatedClient) ‑> beamlit.types.Response[beamlit.models.agent.Agent]`
 :   Delete agent by name
     
     Args:
         agent_name (str):
-        environment (str):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -32,12 +30,11 @@ Functions
     Returns:
         Response[Agent]
 
-`sync(agent_name: str, *, client: beamlit.client.AuthenticatedClient, environment: str) ‑> beamlit.models.agent.Agent | None`
+`sync(agent_name: str, *, client: beamlit.client.AuthenticatedClient) ‑> beamlit.models.agent.Agent | None`
 :   Delete agent by name
     
     Args:
         agent_name (str):
-        environment (str):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -46,12 +43,11 @@ Functions
     Returns:
         Agent
 
-`sync_detailed(agent_name: str, *, client: beamlit.client.AuthenticatedClient, environment: str) ‑> beamlit.types.Response[beamlit.models.agent.Agent]`
+`sync_detailed(agent_name: str, *, client: beamlit.client.AuthenticatedClient) ‑> beamlit.types.Response[beamlit.models.agent.Agent]`
 :   Delete agent by name
     
     Args:
         agent_name (str):
-        environment (str):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

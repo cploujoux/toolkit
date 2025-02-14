@@ -13,7 +13,6 @@ import (
 func (c *Client) Run(
 	ctx context.Context,
 	workspaceName string,
-	environment string,
 	resourceType string,
 	resourceName string,
 	method string,
@@ -30,7 +29,7 @@ func (c *Client) Run(
 		bodyReader = bytes.NewReader([]byte(body))
 	}
 
-	req, err := NewRunRequest(c.RunServer, method, path, headers, params, local, debug, workspaceName, environment, resourceType, resourceName, bodyReader)
+	req, err := NewRunRequest(c.RunServer, method, path, headers, params, local, debug, workspaceName, resourceType, resourceName, bodyReader)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +49,6 @@ func NewRunRequest(
 	local bool,
 	debug bool,
 	workspaceName string,
-	environment string,
 	resourceType string,
 	resourceName string,
 	body io.Reader,
@@ -79,7 +77,7 @@ func NewRunRequest(
 		params = append(params, "debug=true")
 	}
 
-	queryURL, err := runURL.Parse(path + "?environment=" + environment + "&" + strings.Join(params, "&"))
+	queryURL, err := runURL.Parse(path + "?" + strings.Join(params, "&"))
 	if err != nil {
 		return nil, err
 	}

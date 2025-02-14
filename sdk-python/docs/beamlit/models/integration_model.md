@@ -4,18 +4,20 @@ Module beamlit.models.integration_model
 Classes
 -------
 
-`IntegrationModel(created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, downloads: beamlit.types.Unset | int = <beamlit.types.Unset object>, id: beamlit.types.Unset | str = <beamlit.types.Unset object>, library_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, likes: beamlit.types.Unset | int = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, pipeline_tag: beamlit.types.Unset | str = <beamlit.types.Unset object>, private: beamlit.types.Unset | bool = <beamlit.types.Unset object>, tags: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, trending_score: beamlit.types.Unset | int = <beamlit.types.Unset object>)`
+`IntegrationModel(author: beamlit.types.Unset | str = <beamlit.types.Unset object>, created_at: beamlit.types.Unset | str = <beamlit.types.Unset object>, downloads: beamlit.types.Unset | int = <beamlit.types.Unset object>, endpoint: beamlit.types.Unset | str = <beamlit.types.Unset object>, id: beamlit.types.Unset | str = <beamlit.types.Unset object>, library_name: beamlit.types.Unset | str = <beamlit.types.Unset object>, likes: beamlit.types.Unset | int = <beamlit.types.Unset object>, model_private: beamlit.types.Unset | str = <beamlit.types.Unset object>, name: beamlit.types.Unset | str = <beamlit.types.Unset object>, pipeline_tag: beamlit.types.Unset | str = <beamlit.types.Unset object>, tags: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, trending_score: beamlit.types.Unset | int = <beamlit.types.Unset object>)`
 :   Model obtained from an external authentication provider, such as HuggingFace, OpenAI, etc...
     
     Attributes:
+        author (Union[Unset, str]): Provider model author
         created_at (Union[Unset, str]): Provider model created at
         downloads (Union[Unset, int]): Provider model downloads
+        endpoint (Union[Unset, str]): Model endpoint URL
         id (Union[Unset, str]): Provider model ID
         library_name (Union[Unset, str]): Provider model library name
         likes (Union[Unset, int]): Provider model likes
+        model_private (Union[Unset, str]): Is the model private
         name (Union[Unset, str]): Provider model name
         pipeline_tag (Union[Unset, str]): Provider model pipeline tag
-        private (Union[Unset, bool]): Provider model private
         tags (Union[Unset, list[str]]): Provider model tags
         trending_score (Union[Unset, int]): Provider model trending score
     
@@ -34,10 +36,16 @@ Classes
     `additional_properties: dict[str, typing.Any]`
     :
 
+    `author: beamlit.types.Unset | str`
+    :
+
     `created_at: beamlit.types.Unset | str`
     :
 
     `downloads: beamlit.types.Unset | int`
+    :
+
+    `endpoint: beamlit.types.Unset | str`
     :
 
     `id: beamlit.types.Unset | str`
@@ -49,13 +57,13 @@ Classes
     `likes: beamlit.types.Unset | int`
     :
 
+    `model_private: beamlit.types.Unset | str`
+    :
+
     `name: beamlit.types.Unset | str`
     :
 
     `pipeline_tag: beamlit.types.Unset | str`
-    :
-
-    `private: beamlit.types.Unset | bool`
     :
 
     `tags: beamlit.types.Unset | list[str]`

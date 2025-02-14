@@ -16,9 +16,15 @@ var RUN_URL = "https://run.beamlit.com"
 var REGISTRY_URL = "https://us.registry.beamlit.com"
 
 func init() {
-	if os.Getenv("BL_ENV") == "dev" {
+	env := os.Getenv("BL_ENV")
+	if env == "dev" {
 		BASE_URL = "https://api.beamlit.dev/v0"
 		APP_URL = "https://app.beamlit.dev"
+		RUN_URL = "https://run.beamlit.dev"
+		REGISTRY_URL = "https://eu.registry.beamlit.dev"
+	} else if env == "local" {
+		BASE_URL = "http://localhost:8080/v0"
+		APP_URL = "http://localhost:3000"
 		RUN_URL = "https://run.beamlit.dev"
 		REGISTRY_URL = "https://eu.registry.beamlit.dev"
 	}
@@ -26,7 +32,6 @@ func init() {
 
 var workspace string
 var outputFormat string
-var environment string
 var client *sdk.ClientWithResponses
 var reg *Operations
 var verbose bool
@@ -117,18 +122,11 @@ func Execute(releaseVersion string, releaseCommit string, releaseDate string) er
 
 	rootCmd.PersistentFlags().StringVarP(&workspace, "workspace", "w", "", "Specify the workspace name")
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format. One of: pretty,yaml,json,table")
-	rootCmd.PersistentFlags().StringVarP(&environment, "env", "e", "", "Environment. One of: development,production")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&utc, "utc", "u", false, "Enable UTC timezone")
 
 	if workspace == "" {
 		workspace = sdk.CurrentContext().Workspace
-	}
-	if environment == "" {
-		environment = sdk.CurrentContext().Environment
-	}
-	if environment == "" {
-		environment = "production"
 	}
 	if version == "" {
 		version = releaseVersion

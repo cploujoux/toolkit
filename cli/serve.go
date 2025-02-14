@@ -96,7 +96,7 @@ func startUvicornServer(port int, host string, hotreload bool, module string, re
 	uvicorn.Stdout = os.Stdout
 	uvicorn.Stderr = os.Stderr
 
-	// Set environment variables
+	// Set env variables
 	if module == "" {
 		module = "agent.main"
 	}
@@ -127,7 +127,7 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 	ts.Stdout = os.Stdout
 	ts.Stderr = os.Stderr
 
-	// Set environment variables
+	// Set env variables
 	ts.Env = getServerEnvironment(port, host, module, remote)
 	// Check if src directory exists and is a directory
 	srcInfo, err := os.Stat("src")
@@ -164,12 +164,6 @@ func startTypescriptServer(port int, host string, hotreload bool, module string,
 
 func getServerEnvironment(port int, host string, module string, remote bool) []string {
 	env := []string{}
-
-	if environment == "" {
-		environment = "production"
-	}
-
-	env = append(env, fmt.Sprintf("BL_ENVIRONMENT=%s", environment))
 	env = append(env, fmt.Sprintf("BL_WORKSPACE=%s", workspace))
 	env = append(env, fmt.Sprintf("BL_REMOTE=%t", remote))
 	env = append(env, fmt.Sprintf("BL_SERVER_PORT=%d", port))
@@ -180,7 +174,7 @@ func getServerEnvironment(port int, host string, module string, remote bool) []s
 		env = append(env, fmt.Sprintf("BL_ENV=%s", os.Getenv("BL_ENV")))
 	}
 
-	// Add all current environment variables if not already set
+	// Add all current env variables if not already set
 	env = AddClientEnv(env)
 	return env
 }

@@ -4,11 +4,8 @@ Module beamlit.api.functions.list_functions
 Functions
 ---------
 
-`asyncio(*, client: beamlit.client.AuthenticatedClient, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>) ‑> list[beamlit.models.function.Function] | None`
+`asyncio(*, client: beamlit.client.AuthenticatedClient) ‑> list[beamlit.models.function.Function] | None`
 :   List all functions
-    
-    Args:
-        environment (Union[Unset, str]):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -17,11 +14,8 @@ Functions
     Returns:
         list['Function']
 
-`asyncio_detailed(*, client: beamlit.client.AuthenticatedClient, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>) ‑> beamlit.types.Response[list[beamlit.models.function.Function]]`
+`asyncio_detailed(*, client: beamlit.client.AuthenticatedClient) ‑> beamlit.types.Response[list[beamlit.models.function.Function]]`
 :   List all functions
-    
-    Args:
-        environment (Union[Unset, str]):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -30,11 +24,8 @@ Functions
     Returns:
         Response[list['Function']]
 
-`sync(*, client: beamlit.client.AuthenticatedClient, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>) ‑> list[beamlit.models.function.Function] | None`
+`sync(*, client: beamlit.client.AuthenticatedClient) ‑> list[beamlit.models.function.Function] | None`
 :   List all functions
-    
-    Args:
-        environment (Union[Unset, str]):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -43,11 +34,8 @@ Functions
     Returns:
         list['Function']
 
-`sync_detailed(*, client: beamlit.client.AuthenticatedClient, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>) ‑> beamlit.types.Response[list[beamlit.models.function.Function]]`
+`sync_detailed(*, client: beamlit.client.AuthenticatedClient) ‑> beamlit.types.Response[list[beamlit.models.function.Function]]`
 :   List all functions
-    
-    Args:
-        environment (Union[Unset, str]):
     
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

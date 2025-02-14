@@ -50,12 +50,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	env, err := client.PutEnvironmentWithResponse(ctx, "test", sdk.PutEnvironmentJSONRequestBody{
+	env, err := client.PutAgentWithResponse(ctx, "test", sdk.PutAgentJSONRequestBody{
 		Name:        sdk.BlString("test"),
 		DisplayName: sdk.BlString("Test"),
 	})
 	if err != nil {
-		slog.Error("Error getting environment", "error", err)
+		slog.Error("Error updating agent", "error", err)
 		os.Exit(1)
 	}
 	spew.Dump(&env.JSON200)

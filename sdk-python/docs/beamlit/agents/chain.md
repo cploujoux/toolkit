@@ -61,6 +61,17 @@ Classes
         Returns:
             type[pydantic.BaseModel]: The Pydantic model representing the tool call schema.
 
+    ### Methods
+
+    `model_post_init(self: BaseModel, context: Any, /) ‑> None`
+    :   This function is meant to behave like a BaseModel method to initialise private attributes.
+        
+        It takes context as an argument since that's what pydantic-core passes when calling it.
+        
+        Args:
+            self: The BaseModel instance.
+            context: The context.
+
 `ChainToolkit(client: beamlit.client.AuthenticatedClient, chain: list[beamlit.models.agent_chain.AgentChain])`
 :   A toolkit for managing and initializing a chain of agents.
 

@@ -3,27 +3,21 @@ Module beamlit.functions.mcp.mcp
 This module provides functionalities to interact with MCP (Multi-Client Platform) servers.
 It includes classes for managing MCP clients, creating dynamic schemas, and integrating MCP tools into Beamlit.
 
-Functions
----------
-
-`configure_field(name: str, type_: dict[str, typing.Any], required: list[str]) ‑> tuple[type, typing.Any]`
-:   
-
-`create_schema_model(name: str, schema: dict[str, typing.Any]) ‑> type[pydantic.main.BaseModel]`
-:   
-
 Classes
 -------
 
-`MCPClient(client: beamlit.client.AuthenticatedClient, url: str)`
+`MCPClient(client: beamlit.client.AuthenticatedClient, url: str, sse: bool = False)`
 :   
 
     ### Methods
 
-    `call_tool(self, tool_name: str, arguments: dict[str, typing.Any] = None) ‑> requests.models.Response`
+    `call_tool(self, tool_name: str, arguments: dict[str, typing.Any] = None) ‑> requests.models.Response | AsyncIterator[mcp.types.CallToolResult]`
     :
 
-    `list_tools(self) ‑> requests.models.Response`
+    `list_sse_tools(self) ‑> mcp.types.ListToolsResult`
+    :
+
+    `list_tools(self) ‑> mcp.types.ListToolsResult`
     :
 
 `MCPTool(**kwargs: Any)`
@@ -32,6 +26,7 @@ Classes
     Attributes:
         client (MCPClient): The MCP client instance.
         handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
+        sse (bool): Whether to use SSE streaming for responses.
     
     Initialize the tool.
 

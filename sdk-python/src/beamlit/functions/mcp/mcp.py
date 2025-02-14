@@ -19,6 +19,7 @@ from mcp.types import CallToolResult, ListToolsResult
 
 from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.authentication import get_authentication_headers
+from beamlit.authentication.authentication import AuthenticatedClient
 from beamlit.common.settings import get_settings
 from beamlit.functions.mcp.client import websocket_client
 
@@ -165,6 +166,7 @@ class MCPToolkit(BaseToolkit):
                 name=tool.name,
                 description=tool.description or "",
                 args_schema=create_schema_model(tool.name, tool.inputSchema),
+                sse=self.sse,
             )
             # list_tools returns a PaginatedResult, but I don't see a way to pass the cursor to retrieve more tools
             for tool in self._tools.tools

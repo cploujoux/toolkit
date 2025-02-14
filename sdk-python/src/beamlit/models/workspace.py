@@ -22,7 +22,6 @@ class Workspace:
         created_by (Union[Unset, str]): The user or service account who created the resource
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         account_id (Union[Unset, str]): Workspace account id
-        default_environment (Union[Unset, str]): Workspace environment
         display_name (Union[Unset, str]): Workspace display name
         labels (Union[Unset, WorkspaceLabels]): Workspace labels
         name (Union[Unset, str]): Workspace name
@@ -34,7 +33,6 @@ class Workspace:
     created_by: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     account_id: Union[Unset, str] = UNSET
-    default_environment: Union[Unset, str] = UNSET
     display_name: Union[Unset, str] = UNSET
     labels: Union[Unset, "WorkspaceLabels"] = UNSET
     name: Union[Unset, str] = UNSET
@@ -51,8 +49,6 @@ class Workspace:
         updated_by = self.updated_by
 
         account_id = self.account_id
-
-        default_environment = self.default_environment
 
         display_name = self.display_name
 
@@ -79,8 +75,6 @@ class Workspace:
             field_dict["updatedBy"] = updated_by
         if account_id is not UNSET:
             field_dict["accountId"] = account_id
-        if default_environment is not UNSET:
-            field_dict["defaultEnvironment"] = default_environment
         if display_name is not UNSET:
             field_dict["displayName"] = display_name
         if labels is not UNSET:
@@ -109,8 +103,6 @@ class Workspace:
 
         account_id = d.pop("accountId", UNSET)
 
-        default_environment = d.pop("defaultEnvironment", UNSET)
-
         display_name = d.pop("displayName", UNSET)
 
         _labels = d.pop("labels", UNSET)
@@ -130,7 +122,6 @@ class Workspace:
             created_by=created_by,
             updated_by=updated_by,
             account_id=account_id,
-            default_environment=default_environment,
             display_name=display_name,
             labels=labels,
             name=name,

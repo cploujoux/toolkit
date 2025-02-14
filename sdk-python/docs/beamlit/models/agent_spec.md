@@ -4,7 +4,7 @@ Module beamlit.models.agent_spec
 Classes
 -------
 
-`AgentSpec(configurations: beamlit.types.Unset | ForwardRef('CoreSpecConfigurations') = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, flavors: beamlit.types.Unset | list['Flavor'] = <beamlit.types.Unset object>, integration_connections: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, pod_template: beamlit.types.Unset | ForwardRef('PodTemplateSpec') = <beamlit.types.Unset object>, policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, private_clusters: beamlit.types.Unset | ForwardRef('ModelPrivateCluster') = <beamlit.types.Unset object>, runtime: beamlit.types.Unset | ForwardRef('Runtime') = <beamlit.types.Unset object>, sandbox: beamlit.types.Unset | bool = <beamlit.types.Unset object>, serverless_config: beamlit.types.Unset | ForwardRef('ServerlessConfig') = <beamlit.types.Unset object>, agent_chain: beamlit.types.Unset | list['AgentChain'] = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, functions: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, model: beamlit.types.Unset | str = <beamlit.types.Unset object>, repository: beamlit.types.Unset | ForwardRef('Repository') = <beamlit.types.Unset object>, store_id: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`AgentSpec(configurations: beamlit.types.Unset | ForwardRef('CoreSpecConfigurations') = <beamlit.types.Unset object>, enabled: beamlit.types.Unset | bool = <beamlit.types.Unset object>, flavors: beamlit.types.Unset | list['Flavor'] = <beamlit.types.Unset object>, integration_connections: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, pod_template: beamlit.types.Unset | ForwardRef('PodTemplateSpec') = <beamlit.types.Unset object>, policies: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, private_clusters: beamlit.types.Unset | ForwardRef('ModelPrivateCluster') = <beamlit.types.Unset object>, runtime: beamlit.types.Unset | ForwardRef('Runtime') = <beamlit.types.Unset object>, sandbox: beamlit.types.Unset | bool = <beamlit.types.Unset object>, serverless_config: beamlit.types.Unset | ForwardRef('ServerlessConfig') = <beamlit.types.Unset object>, agent_chain: beamlit.types.Unset | list['AgentChain'] = <beamlit.types.Unset object>, description: beamlit.types.Unset | str = <beamlit.types.Unset object>, functions: beamlit.types.Unset | list[str] = <beamlit.types.Unset object>, knowledgebase: beamlit.types.Unset | str = <beamlit.types.Unset object>, model: beamlit.types.Unset | str = <beamlit.types.Unset object>, prompt: beamlit.types.Unset | str = <beamlit.types.Unset object>, repository: beamlit.types.Unset | ForwardRef('Repository') = <beamlit.types.Unset object>, store_id: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Agent specification
     
     Attributes:
@@ -19,9 +19,11 @@ Classes
         sandbox (Union[Unset, bool]): Sandbox mode
         serverless_config (Union[Unset, ServerlessConfig]): Configuration for a serverless deployment
         agent_chain (Union[Unset, list['AgentChain']]): Agent chain
-        description (Union[Unset, str]): Agent description
+        description (Union[Unset, str]): Description, small description computed from the prompt
         functions (Union[Unset, list[str]]):
+        knowledgebase (Union[Unset, str]): Knowledgebase Name
         model (Union[Unset, str]): Model name
+        prompt (Union[Unset, str]): Prompt, describe what your agent does
         repository (Union[Unset, Repository]): Repository
         store_id (Union[Unset, str]): Store id
     
@@ -61,6 +63,9 @@ Classes
     `integration_connections`
     :
 
+    `knowledgebase`
+    :
+
     `model`
     :
 
@@ -71,6 +76,9 @@ Classes
     :
 
     `private_clusters`
+    :
+
+    `prompt`
     :
 
     `repository`

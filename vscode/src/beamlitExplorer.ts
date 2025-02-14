@@ -1,8 +1,5 @@
 import {
-  EnvironmentMetadata,
-  Function,
   ListAgentsResponse,
-  ListEnvironmentsResponse,
   ListFunctionsResponse,
   ListIntegrationConnectionsResponse,
   ListModelsResponse,
@@ -40,63 +37,11 @@ export class BeamlitExplorer implements vscode.TreeDataProvider<ResourceNode> {
         );
       });
     }
-    let resourceType = `${element.resourceType}`;
-    // Child level - show resources for selected resource
-    if (resourceType === "functions-env") {
-      resourceType = "functions";
-    }
-    if (resourceType === "models-env") {
-      resourceType = "models";
-    }
-    if (resourceType === "agents-env") {
-      resourceType = "agents";
-    }
 
-    const resources = await this.resourceProvider.getResources(resourceType);
-    if (
-      element.resourceType === "functions" ||
-      element.resourceType === "models" ||
-      element.resourceType === "agents"
-    ) {
-      return this.getEnvironmentResources(
-        element.resourceType,
-        resources as
-          | ListAgentsResponse
-          | ListModelsResponse
-          | ListFunctionsResponse
-      );
-    }
-    return this.handleResource(resources, resourceType, element);
-  }
-
-  async getEnvironmentResources(
-    resourceType: string,
-    resources: ListAgentsResponse | ListModelsResponse | ListFunctionsResponse
-  ) {
-    // For functions, group by environment
-    const environments = await this.resourceProvider.getResources(
-      "environments"
+    const resources = await this.resourceProvider.getResources(
+      element.resourceType
     );
-
-    return environments.map((env) => {
-      const envName = env.metadata?.name || "";
-      const envFunctions = resources.filter((resource) => {
-        if (resource as Function) {
-          return (
-            resource.metadata &&
-            (resource.metadata as EnvironmentMetadata).environment === envName
-          );
-        }
-        return false;
-      });
-
-      return new ResourceNode(
-        envName,
-        resourceType + "-env",
-        `${envFunctions.length} ${resourceType}`,
-        "environments"
-      );
-    });
+    return this.handleResource(resources, element.resourceType, element);
   }
 
   handleResource(
@@ -104,37 +49,19 @@ export class BeamlitExplorer implements vscode.TreeDataProvider<ResourceNode> {
       | ListAgentsResponse
       | ListModelsResponse
       | ListFunctionsResponse
-      | ListEnvironmentsResponse
       | ListPoliciesResponse
       | ListIntegrationConnectionsResponse,
     resourceType: string,
     element: ResourceNode
   ) {
-    return resources
-      .filter((resource) => {
-        if (
-          resourceType === "functions" ||
-          resourceType === "models" ||
-          resourceType === "agents"
-        ) {
-          return (
-            resource.metadata &&
-            element.label ===
-              (resource.metadata as EnvironmentMetadata).environment
-          );
-        }
-        return true;
-      })
-      .map(
-        (resource) =>
-          new ResourceTypeNode(
-            resource.metadata?.name ?? resource.metadata?.displayName ?? "",
-            resourceType,
-            "",
-            resource.metadata &&
-              (resource.metadata as EnvironmentMetadata).environment
-          )
-      );
+    return resources.map(
+      (resource) =>
+        new ResourceTypeNode(
+          resource.metadata?.name ?? resource.metadata?.displayName ?? "",
+          resourceType,
+          ""
+        )
+    );
   }
 }
 
@@ -164,8 +91,7 @@ class ResourceTypeNode extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     public readonly resourceType: string,
-    public readonly description: string,
-    public readonly environment?: string
+    public readonly description: string
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.contextValue = "resource";
@@ -181,7 +107,7 @@ class ResourceTypeNode extends vscode.TreeItem {
     this.command = {
       command: "beamlit.selectResource",
       title: "Select Resource",
-      arguments: [this.resourceType, this.label, this.environment],
+      arguments: [this.resourceType, this.label],
     };
   }
 }

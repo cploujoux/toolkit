@@ -4,12 +4,11 @@ Module beamlit.models.last_n_requests_metric
 Classes
 -------
 
-`LastNRequestsMetric(date: beamlit.types.Unset | str = <beamlit.types.Unset object>, environment: beamlit.types.Unset | str = <beamlit.types.Unset object>, workload_type: beamlit.types.Unset | str = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
+`LastNRequestsMetric(date: beamlit.types.Unset | str = <beamlit.types.Unset object>, workload_type: beamlit.types.Unset | str = <beamlit.types.Unset object>, workspace: beamlit.types.Unset | str = <beamlit.types.Unset object>)`
 :   Last N requests
     
     Attributes:
         date (Union[Unset, str]): Timestamp
-        environment (Union[Unset, str]): Environment
         workload_type (Union[Unset, str]): Workload type
         workspace (Union[Unset, str]): Workspace
     
@@ -29,9 +28,6 @@ Classes
     :
 
     `date: beamlit.types.Unset | str`
-    :
-
-    `environment: beamlit.types.Unset | str`
     :
 
     `workload_type: beamlit.types.Unset | str`

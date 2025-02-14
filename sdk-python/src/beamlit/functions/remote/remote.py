@@ -80,14 +80,12 @@ class RemoteTool(BaseTool):
 
     @t.override
     async def _arun(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
-        settings = get_settings()
         body = {**kwargs}
         if self.kit:
             body["name"] = self.name
         result = self.client.run(
             "function",
             self.resource_name,
-            settings.environment,
             "POST",
             cloud=self.cloud,
             service_name=self.service_name,
@@ -119,10 +117,9 @@ class RemoteToolkit:
 
     def initialize(self) -> None:
         """Initialize the session and retrieve the remote function details."""
-        settings = get_settings()
         if self._function is None:
             try:
-                response = get_function.sync_detailed(self.function, client=self.client, environment=settings.environment)
+                response = get_function.sync_detailed(self.function, client=self.client)
                 function_name = self.function.upper().replace("-", "_")
                 if os.getenv(f"BL_FUNCTION_{function_name}_SERVICE_NAME"):
                     self._service_name = os.getenv(f"BL_FUNCTION_{function_name}_SERVICE_NAME")
@@ -130,7 +127,6 @@ class RemoteToolkit:
             except UnexpectedStatus as e:
                 functions = list_functions.sync_detailed(
                     client=self.client,
-                    environment=settings.environment,
                 ).parsed
                 names = [
                     f.metadata.name

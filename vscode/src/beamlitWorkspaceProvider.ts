@@ -1,8 +1,7 @@
 import {
+  init,
   listAgents,
   ListAgentsResponse,
-  listEnvironments,
-  ListEnvironmentsResponse,
   listFunctions,
   ListFunctionsResponse,
   listIntegrationConnections,
@@ -11,14 +10,13 @@ import {
   ListModelsResponse,
   listPolicies,
   ListPoliciesResponse,
-  newClient
+  newClient,
 } from "@beamlit/sdk";
 
 export class BeamlitWorkspaceProvider {
   private functions: ListFunctionsResponse;
   private models: ListModelsResponse;
   private agents: ListAgentsResponse;
-  private environments: ListEnvironmentsResponse;
   private policies: ListPoliciesResponse;
   private integrations: ListIntegrationConnectionsResponse;
 
@@ -26,9 +24,9 @@ export class BeamlitWorkspaceProvider {
     this.functions = [];
     this.models = [];
     this.agents = [];
-    this.environments = [];
     this.policies = [];
     this.integrations = [];
+    init();
   }
 
   async getResourceTypes() {
@@ -38,7 +36,6 @@ export class BeamlitWorkspaceProvider {
       { name: "Functions", id: "functions", description: "Functions" },
       { name: "Policies", id: "policies", description: "Policies" },
       { name: "Integrations", id: "integrations", description: "Integrations" },
-      { name: "Environments", id: "environments", description: "Environments" },
     ];
   }
 
@@ -57,10 +54,6 @@ export class BeamlitWorkspaceProvider {
       client,
       throwOnError: true,
     });
-    const responseEnvironments = await listEnvironments({
-      client,
-      throwOnError: true,
-    });
     const responsePolicies = await listPolicies({
       client,
       throwOnError: true,
@@ -72,7 +65,6 @@ export class BeamlitWorkspaceProvider {
     this.agents = responseAgents.data ?? [];
     this.models = responseModels.data ?? [];
     this.functions = responseFunctions.data ?? [];
-    this.environments = responseEnvironments.data ?? [];
     this.policies = responsePolicies.data ?? [];
     this.integrations = responseIntegrations.data ?? [];
   }
@@ -83,7 +75,6 @@ export class BeamlitWorkspaceProvider {
     | ListAgentsResponse
     | ListModelsResponse
     | ListFunctionsResponse
-    | ListEnvironmentsResponse
     | ListPoliciesResponse
     | ListIntegrationConnectionsResponse
   > {
@@ -93,8 +84,6 @@ export class BeamlitWorkspaceProvider {
       return this.models;
     } else if (type === "functions") {
       return this.functions;
-    } else if (type === "environments") {
-      return this.environments;
     } else if (type === "policies") {
       return this.policies;
     } else if (type === "integrations") {
