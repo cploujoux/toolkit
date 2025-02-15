@@ -131,14 +131,14 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
     createConfig({
       baseUrl: settings.baseUrl,
       fetch: async (req) => {
-        const headers = await provider.getHeaders();
-        Object.entries(headers).forEach(([key, value]) => {
-          req.headers.set(key, value as string);
-        });
         const cache = await handleControlplaneCache(req)
         if(cache) {
           return cache
         }
+        const headers = await provider.getHeaders();
+        Object.entries(headers).forEach(([key, value]) => {
+          req.headers.set(key, value as string);
+        });
         return fetch(req);
       },
     })
