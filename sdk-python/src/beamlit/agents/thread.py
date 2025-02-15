@@ -2,7 +2,6 @@
 
 Defines threading capabilities for agents.
 """
-import jwt
 from fastapi import Request
 
 

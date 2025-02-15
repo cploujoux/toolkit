@@ -7,21 +7,18 @@ It also includes utilities for creating authenticated clients and managing authe
 from dataclasses import dataclass
 from typing import Dict, Generator
 
-from httpx import Auth, Request, Response
-
 from beamlit.common.settings import Settings, get_settings
+from httpx import Auth, Request, Response
 
 from ..client import AuthenticatedClient
 from .apikey import ApiKeyProvider
 from .clientcredentials import ClientCredentials
-from .credentials import (
-    Credentials,
-    current_context,
-    load_credentials,
-    load_credentials_from_settings,
-)
+from .credentials import (Credentials, current_context, load_credentials,
+                          load_credentials_from_settings)
 from .device_mode import BearerToken
 
+global provider_singleton
+provider_singleton = None
 
 class PublicProvider(Auth):
     """
@@ -144,6 +141,11 @@ def get_authentication_headers(settings: Settings) -> Dict[str, str]:
     Returns:
         Dict[str, str]: A dictionary of authentication headers.
     """
+    global provider_singleton
+
+    if provider_singleton:
+        return provider_singleton.get_headers()
+
     context = current_context()
     if context.workspace and not settings.authentication.client.credentials:
         credentials = load_credentials(context.workspace)
@@ -165,4 +167,5 @@ def get_authentication_headers(settings: Settings) -> Dict[str, str]:
 
     if provider is None:
         return None
+    provider_singleton = provider
     return provider.get_headers()

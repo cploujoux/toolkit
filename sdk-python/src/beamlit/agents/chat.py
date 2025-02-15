@@ -1,11 +1,12 @@
 from logging import getLogger
 from typing import Tuple, Union
 
+from langchain_core.language_models import BaseChatModel
+
 from beamlit.api.models import get_model
 from beamlit.authentication import get_authentication_headers, new_client
 from beamlit.common.settings import get_settings
 from beamlit.models import Model
-from langchain_core.language_models import BaseChatModel
 
 from .voice.openai import OpenAIVoiceReactAgent
 
