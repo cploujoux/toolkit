@@ -8,7 +8,7 @@ import asyncio
 import functools
 import inspect
 from logging import getLogger
-from typing import Callable
+from typing import Any, Callable
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -36,6 +36,9 @@ async def initialize_agent(
     logger = getLogger(__name__)
     client = new_client()
     chat_model = override_model or None
+
+    if asyncio.iscoroutinefunction(override_agent):
+        override_agent = await override_agent()
 
     if agent is not None:
         metadata = Metadata(**agent.get("metadata", {}))
@@ -125,7 +128,7 @@ async def initialize_agent(
 def agent(
     agent: Agent | dict = None,
     override_model=None,
-    override_agent=None,
+    override_agent: Any | Callable = None,
     override_functions=None,
     remote_functions=None,
     local_functions=None,
@@ -137,7 +140,7 @@ def agent(
     Parameters:
         agent (Agent | dict, optional): An `Agent` instance or a dictionary containing agent metadata and specifications.
         override_model (Any, optional): An optional model to override the default agent model.
-        override_agent (Any, optional): An optional agent instance to override the default agent.
+        override_agent (Any, Callable, optional): An optional agent instance to override the default agent, or a function which returns an agent instance.
         mcp_hub (Any, optional): An optional MCP hub configuration.
         remote_functions (Any, optional): An optional list of remote functions to be integrated.
         local_functions (Any, optional): An optional list of local functions to be integrated.
