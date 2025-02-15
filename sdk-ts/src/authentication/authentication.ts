@@ -1,5 +1,4 @@
 import { createClient, createConfig } from "@hey-api/client-fetch";
-import { handleControlplaneCache } from "../common/cache.js";
 import { getSettings } from "../common/settings.js";
 import { ApiKeyAuth } from "./apikey.js";
 import { ClientCredentials } from "./clientcredentials.js";
@@ -131,10 +130,10 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
     createConfig({
       baseUrl: settings.baseUrl,
       fetch: async (req) => {
-        const cache = await handleControlplaneCache(req)
-        if(cache) {
-          return cache
-        }
+        // const cache = await handleControlplaneCache(req)
+        // if(cache) {
+        //   return cache
+        // }
         const headers = await provider.getHeaders();
         Object.entries(headers).forEach(([key, value]) => {
           req.headers.set(key, value as string);

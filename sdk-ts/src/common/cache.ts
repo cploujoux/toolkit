@@ -1,7 +1,6 @@
-import { logger } from './logger';
 
 export async function handleControlplaneCache(req:Request):Promise<Response | null> {
-  if (req.method != "GET") {
+  if (req.method !== "GET") {
     return null
   }
   const allowedHosts = new Set(['api.beamlit.com', 'api.beamlit.dev']);
@@ -26,15 +25,22 @@ export async function handleControlplaneCache(req:Request):Promise<Response | nu
   }
 
   try {
-    logger.debug(`Reading cache from ${requirePath}`)
+    log(`Reading cache from ${requirePath}`)
     const cache = fs.readFileSync(requirePath, 'utf8')
-    logger.debug(`Cache found`)
+    log(`Cache found`)
     return new Response(cache, {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
   } catch {
-    logger.debug(`Cache not found`)
+    log(`Cache not found`)
     return null
+  }
+}
+
+function log(message: string) {
+  const logLevel = process.env.BL_LOG_LEVEL || 'info'
+  if(logLevel == "info") {
+    console.log(message)
   }
 }
