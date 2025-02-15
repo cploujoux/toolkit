@@ -96,7 +96,7 @@ class ClientCredentials(Auth):
         Raises:
             Exception: If token refresh fails.
         """
-        err = self.refresh_if_needed()
+        err = self.do_refresh()
         if err:
             return err
 
