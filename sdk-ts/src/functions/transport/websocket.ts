@@ -3,6 +3,7 @@ import {
   JSONRPCMessage,
   JSONRPCMessageSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import WebSocket from "ws";
 import { logger } from "../../common/logger.js";
 //const SUBPROTOCOL = "mcp";
 
@@ -60,7 +61,6 @@ export class WebSocketClientTransport implements Transport {
         //protocols: SUBPROTOCOL,
         headers: this._headers,
       });
-
       this._socket.onerror = (event) => {
         const error =
           "error" in event
@@ -80,11 +80,13 @@ export class WebSocketClientTransport implements Transport {
         this.onclose?.();
       };
 
-      this._socket.onmessage = (event: MessageEvent) => {
+      this._socket.onmessage = (event: WebSocket.MessageEvent) => {
         logger.debug("WebSocket message received");
         let message: JSONRPCMessage;
         try {
-          message = JSONRPCMessageSchema.parse(JSON.parse(event.data));
+          message = JSONRPCMessageSchema.parse(
+            JSON.parse(event.data.toString())
+          );
         } catch (error) {
           logger.error(`Error parsing message: ${event.data}`);
           this.onerror?.(error as Error);
