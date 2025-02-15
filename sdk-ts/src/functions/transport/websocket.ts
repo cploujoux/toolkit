@@ -71,17 +71,17 @@ export class WebSocketClientTransport implements Transport {
       };
 
       this._socket.onopen = () => {
-        logger.info("WebSocket opened");
+        logger.debug("WebSocket opened");
         resolve();
       };
 
       this._socket.onclose = () => {
-        logger.info("WebSocket closed");
+        logger.debug("WebSocket closed");
         this.onclose?.();
       };
 
       this._socket.onmessage = (event: MessageEvent) => {
-        logger.info("WebSocket message received");
+        logger.debug("WebSocket message received");
         let message: JSONRPCMessage;
         try {
           message = JSONRPCMessageSchema.parse(JSON.parse(event.data));

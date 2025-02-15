@@ -1,7 +1,9 @@
 import { Client } from "@hey-api/client-fetch";
-import { Client as ModelContextProtocolClient } from "@modelcontextprotocol/sdk/client/index.js";
 import { StructuredTool, tool } from "@langchain/core/tools";
+import { Client as ModelContextProtocolClient } from "@modelcontextprotocol/sdk/client/index.js";
+import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { z } from "zod";
+import { getAuthenticationHeaders } from "../authentication/authentication.js";
 import { getFunction, listFunctions } from "../client/sdk.gen.js";
 import { Function } from "../client/types.gen.js";
 import { getSettings, Settings } from "../common/settings.js";
@@ -9,8 +11,6 @@ import { RunClient } from "../run.js";
 import { parametersToZodSchema } from "./common.js";
 import { MCPClient, MCPToolkit } from "./mcp.js";
 import { WebSocketClientTransport } from "./transport/websocket.js";
-import { getAuthenticationHeaders } from "../authentication/authentication.js";
-import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 
 /**
  * Creates a StructuredTool for remote functions, enabling their invocation via the RunClient.
@@ -72,12 +72,12 @@ export class RemoteToolkit {
     this.modelContextProtocolClient = new ModelContextProtocolClient(
       {
         name: this.settings.name,
-        version: "1.0.0"
+        version: "1.0.0",
       },
       {
         capabilities: {
-          tools: {}
-        }
+          tools: {},
+        },
       }
     );
   }
@@ -118,7 +118,9 @@ export class RemoteToolkit {
       const envVar = toEnvVar(this._function.metadata.name || "");
       if (process.env[`BL_FUNCTION_${envVar}_SERVICE_NAME`]) {
         this.fallbackUrl = url;
-        url = `https://${process.env[`BL_FUNCTION_${envVar}_SERVICE_NAME`]}.${this.settings.runInternalHostname}`;
+        url = `https://${process.env[`BL_FUNCTION_${envVar}_SERVICE_NAME`]}.${
+          this.settings.runInternalHostname
+        }`;
         transport = new WebSocketClientTransport(new URL(url), {
           "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
           "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
@@ -135,10 +137,11 @@ export class RemoteToolkit {
         const mcpToolkit = new MCPToolkit(mcpClient);
         this._mcpToolkit = mcpToolkit;
         await mcpToolkit.initialize();
-      } catch {
+      } catch (error) {
         if (this.fallbackUrl) {
           transport = new WebSocketClientTransport(new URL(this.fallbackUrl), {
-            "x-beamlit-authorization": headers?.["X-Beamlit-Authorization"] || "",
+            "x-beamlit-authorization":
+              headers?.["X-Beamlit-Authorization"] || "",
             "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
           });
           await this.modelContextProtocolClient.connect(transport);
@@ -147,11 +150,13 @@ export class RemoteToolkit {
           this._mcpToolkit = mcpToolkit;
           try {
             await mcpToolkit.initialize();
-          } catch {
-            throw new Error("Failed to initialize MCP toolkit");
+          } catch (error) {
+            throw new Error(
+              `Failed to initialize MCP toolkit, error: ${error}`
+            );
           }
         } else {
-          throw new Error("Failed to initialize MCP toolkit");
+          throw new Error(`Failed to initialize MCP toolkit, error: ${error}`);
         }
       }
     }
