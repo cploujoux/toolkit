@@ -9,6 +9,7 @@ import {
 } from "./credentials.js";
 import { BearerToken } from "./deviceMode.js";
 import { Credentials } from "./types.js";
+import { handleControlplaneCache } from "../common/cache.js";
 
 interface RunClientWithCredentials {
   credentials: Credentials;
@@ -130,10 +131,10 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
     createConfig({
       baseUrl: settings.baseUrl,
       fetch: async (req) => {
-        // const cache = await handleControlplaneCache(req)
-        // if(cache) {
-        //   return cache
-        // }
+        const cache = await handleControlplaneCache(req)
+        if(cache) {
+          return cache
+        }
         const headers = await provider.getHeaders();
         Object.entries(headers).forEach(([key, value]) => {
           req.headers.set(key, value as string);
