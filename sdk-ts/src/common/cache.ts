@@ -2,8 +2,10 @@ export async function handleControlplaneCache(req:Request):Promise<Response | nu
   if (req.method != "GET") {
     return null
   }
-  if (!req.url.includes('https://api.beamlit.com') && !req.url.includes('https://api.beamlit.dev')) {
-    return null
+  const allowedHosts = new Set(['api.beamlit.com', 'api.beamlit.dev']);
+  const url = new URL(req.url);
+  if (!allowedHosts.has(url.hostname)) {
+    return null;
   }
   
   const pathSegments = req.url.split('/')
