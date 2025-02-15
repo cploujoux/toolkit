@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 export async function handleControlplaneCache(req:Request):Promise<Response | null> {
   if (req.method != "GET") {
     return null
@@ -24,6 +26,7 @@ export async function handleControlplaneCache(req:Request):Promise<Response | nu
   }
 
   try {
+    logger.debug(`Reading cache from ${requirePath}`)
     const cache = fs.readFileSync(requirePath, 'utf8')
     return new Response(cache, {
       status: 200,
