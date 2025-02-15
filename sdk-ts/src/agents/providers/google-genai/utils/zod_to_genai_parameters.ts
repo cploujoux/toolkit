@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import {
+  type SchemaType as FunctionDeclarationSchemaType,
+  type FunctionDeclarationSchema as GenerativeAIFunctionDeclarationSchema,
+} from "@google/generative-ai";
 import type { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import {
-  type FunctionDeclarationSchema as GenerativeAIFunctionDeclarationSchema,
-  type SchemaType as FunctionDeclarationSchemaType,
-} from "@google/generative-ai";
 
 export interface GenerativeAIJsonSchema extends Record<string, unknown> {
   properties?: Record<string, GenerativeAIJsonSchema>;
@@ -18,7 +18,7 @@ export interface GenerativeAIJsonSchemaDirty extends GenerativeAIJsonSchema {
 }
 
 export function removeAdditionalProperties(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable @typescript-eslint/no-explicit-any
   obj: Record<string, any>
 ): GenerativeAIJsonSchema {
   if (typeof obj === "object" && obj !== null) {
@@ -48,7 +48,6 @@ export function removeAdditionalProperties(
 }
 
 export function zodToGenerativeAIParameters(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   zodObj: z.ZodType<any>
 ): GenerativeAIFunctionDeclarationSchema {
   // GenerativeAI doesn't accept either the $schema or additionalProperties
@@ -60,12 +59,11 @@ export function zodToGenerativeAIParameters(
 }
 
 export function jsonSchemaToGeminiParameters(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema: Record<string, any>
 ): GenerativeAIFunctionDeclarationSchema {
   // Gemini doesn't accept either the $schema or additionalProperties
   // attributes, so we need to explicitly remove them.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const jsonSchema = removeAdditionalProperties(
     schema as GenerativeAIJsonSchemaDirty
   );

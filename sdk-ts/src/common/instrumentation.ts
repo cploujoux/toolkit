@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable no-console */
 /**
  * Instrumentation utilities for performance monitoring and tracing.
  */
@@ -217,7 +219,7 @@ function isPackageInstalled(packageName: string): boolean {
   try {
     require.resolve(packageName);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

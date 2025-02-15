@@ -10,8 +10,8 @@ import { logger } from "../common/logger.js";
 import { getSettings } from "../common/settings.js";
 import { RunClient } from "../run.js";
 import { FunctionBase } from "./base.js";
-import { RemoteToolkit } from "./remote.js";
 import { LocalFunction, LocalToolkit } from "./local.js";
+import { RemoteToolkit } from "./remote.js";
 
 /**
  * Converts an array of `StoreFunctionParameter` objects into a Zod schema for validation.
@@ -160,11 +160,13 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
     functions.push(...toolkit.getTools());
   }
   if (localFunctions) {
-    await Promise.all(localFunctions.map(async (func) => {
-      const toolkit = new LocalToolkit(client, func.name, func.url);
-      await toolkit.initialize(func.name, func.description);
-      functions.push(...(await toolkit.getTools()));
-    }));
+    await Promise.all(
+      localFunctions.map(async (func) => {
+        const toolkit = new LocalToolkit(client, func.name, func.url);
+        await toolkit.initialize(func.name);
+        functions.push(...(await toolkit.getTools()));
+      })
+    );
   }
   return functions;
 };

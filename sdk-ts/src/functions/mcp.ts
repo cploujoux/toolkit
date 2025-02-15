@@ -1,10 +1,7 @@
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StructuredTool, tool } from "@langchain/core/tools";
-import {
-  ListToolsResult,
-} from "@modelcontextprotocol/sdk/types.js";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { ListToolsResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import { getSettings, Settings } from "../common/settings.js";
 
 /**
  * Represents a property expected by MCP tools.
@@ -40,6 +37,9 @@ export function getMCPTool(
   return tool(
     async (args: any) => {
       const result = await client.callTool(name, args);
+      if (result.isError) {
+        throw new Error(JSON.stringify(result.content));
+      }
       return JSON.stringify(result.content);
     },
     {

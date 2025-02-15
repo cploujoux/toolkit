@@ -1,19 +1,18 @@
-import type { z } from "zod";
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { ToolCall } from "@langchain/core/messages/tool";
 import {
   BaseLLMOutputParser,
   OutputParserException,
 } from "@langchain/core/output_parsers";
 import { JsonOutputKeyToolsParserParams } from "@langchain/core/output_parsers/openai_tools";
 import { ChatGeneration } from "@langchain/core/outputs";
-import { ToolCall } from "@langchain/core/messages/tool";
+import type { z } from "zod";
 
 interface GoogleGenerativeAIToolsOutputParserParams<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Record<string, any>
 > extends JsonOutputKeyToolsParserParams<T> {}
 
 export class GoogleGenerativeAIToolsOutputParser<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Record<string, any> = Record<string, any>
 > extends BaseLLMOutputParser<T> {
   static lc_name() {

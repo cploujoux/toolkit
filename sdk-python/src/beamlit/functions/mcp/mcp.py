@@ -83,6 +83,8 @@ class MCPClient:
                     await session.initialize()
                     response = await session.call_tool(tool_name, arguments or {})
                     content = pydantic_core.to_json(response).decode()
+                    if response.isError:
+                        raise ToolException(content)
                     return content
         except Exception as e:
             raise e

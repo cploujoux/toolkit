@@ -1,5 +1,8 @@
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { JSONRPCMessage, JSONRPCMessageSchema } from "@modelcontextprotocol/sdk/types.js";
+import {
+  JSONRPCMessage,
+  JSONRPCMessageSchema,
+} from "@modelcontextprotocol/sdk/types.js";
 import { logger } from "../../common/logger.js";
 //const SUBPROTOCOL = "mcp";
 
@@ -7,7 +10,7 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
 
 // Helper function to wait
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Client transport for WebSocket: this will connect to a server over the WebSocket protocol.
@@ -29,7 +32,7 @@ export class WebSocketClientTransport implements Transport {
   async start(): Promise<void> {
     if (this._socket) {
       throw new Error(
-        "WebSocketClientTransport already started! If using Client class, note that connect() calls start() automatically.",
+        "WebSocketClientTransport already started! If using Client class, note that connect() calls start() automatically."
       );
     }
 
@@ -43,7 +46,9 @@ export class WebSocketClientTransport implements Transport {
         if (attempts === MAX_RETRIES) {
           throw error;
         }
-        logger.debug(`WebSocket connection attempt ${attempts} failed, retrying in ${RETRY_DELAY_MS}ms...`);
+        logger.debug(
+          `WebSocket connection attempt ${attempts} failed, retrying in ${RETRY_DELAY_MS}ms...`
+        );
         await delay(RETRY_DELAY_MS);
       }
     }
@@ -53,7 +58,7 @@ export class WebSocketClientTransport implements Transport {
     return new Promise((resolve, reject) => {
       this._socket = new WebSocket(this._url, {
         //protocols: SUBPROTOCOL,
-        headers: this._headers
+        headers: this._headers,
       });
 
       this._socket.onerror = (event) => {
@@ -103,7 +108,7 @@ export class WebSocketClientTransport implements Transport {
           throw new Error("Not connected");
         }
 
-        await new Promise<void>((resolve, reject) => {
+        await new Promise<void>((resolve) => {
           this._socket?.send(JSON.stringify(message));
           resolve();
         });
@@ -113,7 +118,9 @@ export class WebSocketClientTransport implements Transport {
         if (attempts === MAX_RETRIES) {
           throw error;
         }
-        logger.warn(`WebSocket send attempt ${attempts} failed, retrying in ${RETRY_DELAY_MS}ms...`);
+        logger.warn(
+          `WebSocket send attempt ${attempts} failed, retrying in ${RETRY_DELAY_MS}ms...`
+        );
         await delay(RETRY_DELAY_MS);
       }
     }
