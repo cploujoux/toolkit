@@ -6,18 +6,18 @@ It includes classes for managing MCP clients, creating dynamic schemas, and inte
 Classes
 -------
 
-`MCPClient(client: beamlit.client.AuthenticatedClient, url: str, sse: bool = False)`
+`MCPClient(client: beamlit.client.AuthenticatedClient, url: str, fallback_url: str | None = None)`
 :   
 
     ### Methods
 
-    `call_tool(self, tool_name: str, arguments: dict[str, typing.Any] = None) ‑> requests.models.Response | AsyncIterator[mcp.types.CallToolResult]`
-    :
-
-    `list_sse_tools(self) ‑> mcp.types.ListToolsResult`
+    `call_tool(self, tool_name: str, arguments: dict[str, typing.Any] = None, is_fallback: bool = False) ‑> requests.models.Response | AsyncIterator[mcp.types.CallToolResult]`
     :
 
     `list_tools(self) ‑> mcp.types.ListToolsResult`
+    :
+
+    `list_ws_tools(self, is_fallback: bool = False) ‑> mcp.types.ListToolsResult`
     :
 
 `MCPTool(**kwargs: Any)`
@@ -26,7 +26,6 @@ Classes
     Attributes:
         client (MCPClient): The MCP client instance.
         handle_tool_error (bool | str | Callable[[ToolException], str] | None): Error handling strategy.
-        sse (bool): Whether to use SSE streaming for responses.
     
     Initialize the tool.
 

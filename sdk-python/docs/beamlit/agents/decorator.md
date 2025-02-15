@@ -32,3 +32,6 @@ Functions
     Raises:
         ValueError: If required configurations such as the model are missing.
         Re-raises exceptions encountered during model retrieval and agent setup.
+
+`initialize_agent(settings: beamlit.common.settings.Settings, agent: beamlit.models.agent.Agent | dict = None, override_model=None, override_agent=None, override_functions=None, remote_functions=None, local_functions=None)`
+:

@@ -65,6 +65,9 @@ Functions
 `get_deepseek_chat_model(**kwargs)`
 :   
 
+`get_gemini_chat_model(**kwargs)`
+:   
+
 `get_mistral_chat_model(**kwargs) ‑> langchain_core.language_models.chat_models.BaseChatModel`
 :   Initializes and returns a MistralAI chat model with the provided keyword arguments.
     

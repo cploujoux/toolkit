@@ -50,11 +50,14 @@ Classes
         Raises:
             Exception: If token refresh fails.
 
-    `refresh_if_needed(self) ‑> Exception | None`
+    `get_token(self) ‑> Exception | None`
     :   Checks if the access token needs to be refreshed and performs the refresh if necessary.
         
         Returns:
             Optional[Exception]: An exception if refreshing fails, otherwise None.
+
+    `need_token(self)`
+    :
 
 `DeviceLoginFinalizeResponse(access_token: str, expires_in: int, refresh_token: str, token_type: str)`
 :   DeviceLoginFinalizeResponse(access_token: str, expires_in: int, refresh_token: str, token_type: str)
