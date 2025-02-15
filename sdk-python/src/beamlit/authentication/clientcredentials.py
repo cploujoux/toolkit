@@ -4,16 +4,13 @@ authentication for Beamlit. It manages token refreshing and authentication flows
 client credentials and refresh tokens.
 """
 
-import base64
-import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Generator, Optional
 
 import requests
-from httpx import Auth, Request, Response, post
-
 from beamlit.common.settings import get_settings
+from httpx import Auth, Request, Response, post
 
 
 @dataclass
@@ -39,6 +36,7 @@ class ClientCredentials(Auth):
             base_url (str): The base URL for authentication.
         """
         self.credentials = credentials
+        self.expires_at = None
         self.workspace_name = workspace_name
         self.base_url = base_url
 
@@ -52,16 +50,15 @@ class ClientCredentials(Auth):
         Raises:
             Exception: If token refresh fails.
         """
-        err = self.refresh_if_needed()
+        err = self.get_token()
         if err:
             raise err
-
         return {
             "X-Beamlit-Authorization": f"Bearer {self.credentials.access_token}",
             "X-Beamlit-Workspace": self.workspace_name,
         }
 
-    def refresh_if_needed(self) -> Optional[Exception]:
+    def get_token(self) -> Optional[Exception]:
         """
         Checks if the access token needs to be refreshed and performs the refresh if necessary.
 
@@ -69,32 +66,22 @@ class ClientCredentials(Auth):
             Optional[Exception]: An exception if refreshing fails, otherwise None.
         """
         settings = get_settings()
-        if self.credentials.client_credentials and not self.credentials.refresh_token:
+        if self.need_token():
             headers = {"Authorization": f"Basic {self.credentials.client_credentials}", "Content-Type": "application/json"}
             body = {"grant_type": "client_credentials"}
             response = requests.post(f"{settings.base_url}/oauth/token", headers=headers, json=body)
             response.raise_for_status()
-            self.credentials.access_token = response.json()["access_token"]
-            self.credentials.refresh_token = response.json()["refresh_token"]
-            self.credentials.expires_in = response.json()["expires_in"]
-
-        # Need to refresh token if expires in less than 10 minutes
-        parts = self.credentials.access_token.split(".")
-        if len(parts) != 3:
-            return Exception("Invalid JWT token format")
-        try:
-            claims_bytes = base64.urlsafe_b64decode(parts[1] + "=" * (-len(parts[1]) % 4))
-            claims = json.loads(claims_bytes)
-        except Exception as e:
-            return Exception(f"Failed to decode/parse JWT claims: {str(e)}")
-
-        exp_time = datetime.fromtimestamp(claims["exp"])
-        current_time = datetime.now()
-        # Refresh if token expires in less than 10 minutes
-        if current_time + timedelta(minutes=10) > exp_time:
-            return self.do_refresh()
-
+            creds = response.json()
+            self.credentials.access_token = creds["access_token"]
+            self.credentials.refresh_token = creds["refresh_token"]
+            self.credentials.expires_in = creds["expires_in"]
+            self.expires_at = datetime.now() + timedelta(seconds=self.credentials.expires_in)
         return None
+
+    def need_token(self):
+        if not self.expires_at:
+            return True
+        return datetime.now() > self.expires_at - timedelta(minutes=10)
 
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
         """
