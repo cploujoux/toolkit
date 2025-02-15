@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import List
 
 import yaml
-
 from beamlit.common.settings import Settings
 
 logger = getLogger(__name__)
@@ -132,7 +131,7 @@ def load_config() -> Config:
                             workspaces.append(WorkspaceConfig(name=ws["name"], credentials=creds))
                         config.workspaces = workspaces
                         if "context" in data:
-                            config.context = ContextConfig(**data["context"])
+                            config.context = ContextConfig(workspace=data["context"].get("workspace", ""))
             except yaml.YAMLError:
                 # Invalid YAML, use empty config
                 pass
