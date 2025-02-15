@@ -14,19 +14,18 @@ export async function handleControlplaneCache(req:Request):Promise<Response | nu
   const name = pathSegments[5]
   const requirePath = `${process.cwd()}/.beamlit/cache/${objectType}/${name}.json`
   
-  // Importation dynamique de 'fs'
   let fs;
   try {
     fs = await import('fs');
   } catch {
-    return null; // Retourner null si 'fs' n'est pas disponible
+    return null;
   }
 
   try {
     const cache = fs.readFileSync(requirePath, 'utf8')
     return new Response(cache, {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }, // Headers as plain object
+      headers: { 'Content-Type': 'application/json' },
     })
   } catch {
     return null
