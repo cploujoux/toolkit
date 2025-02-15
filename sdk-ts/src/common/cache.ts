@@ -41,6 +41,6 @@ export async function handleControlplaneCache(req:Request):Promise<Response | nu
 function log(message: string) {
   const logLevel = process.env.BL_LOG_LEVEL || 'info'
   if(logLevel == "info") {
-    console.log(message)
+    console.warn(message)
   }
 }
