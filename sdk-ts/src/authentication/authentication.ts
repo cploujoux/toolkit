@@ -86,12 +86,17 @@ export function newClient() {
   return client;
 }
 
+let providerInstance: ApiKeyAuth | BearerToken | ClientCredentials | PublicAuth | null = null
+
 /**
  * Determines the appropriate authentication provider based on the client configuration.
  * @param config - The client configuration.
  * @returns An instance of an authentication provider.
  */
 function getProvider(config: RunClientWithCredentials) {
+  if (providerInstance) {
+    return providerInstance;
+  }
   let provider: ApiKeyAuth | BearerToken | ClientCredentials | PublicAuth;
   const settings = getSettings();
 
@@ -115,6 +120,7 @@ function getProvider(config: RunClientWithCredentials) {
   } else {
     provider = new PublicAuth();
   }
+  providerInstance = provider
   return provider;
 }
 

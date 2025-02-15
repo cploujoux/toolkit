@@ -15,7 +15,8 @@ export class ClientCredentials {
   private credentials: Credentials;
   private workspace_name: string;
   private base_url: string;
-
+  private refresh_promise: Promise<null> | null;
+  private last_refresh_at: Date | null;
   /**
    * Constructs a new ClientCredentials instance.
    * @param credentials - The credentials containing client credentials and tokens.
@@ -30,6 +31,8 @@ export class ClientCredentials {
     this.credentials = credentials;
     this.workspace_name = workspace_name;
     this.base_url = base_url;
+    this.refresh_promise = null
+    this.last_refresh_at = null
   }
 
   /**
@@ -48,17 +51,30 @@ export class ClientCredentials {
       "X-Beamlit-Workspace": this.workspace_name,
     };
   }
-
+  
   /**
    * Refreshes the access token if it's expired or about to expire.
    * @returns A promise resolving to null, or an error if refresh fails.
    * @throws If token refresh fails.
    */
   async refreshIfNeeded(): Promise<null> {
+    if (this.refresh_promise) {
+      return this.refresh_promise;
+    }
+    this.refresh_promise = this.refreshInternal();
+    const res = await this.refresh_promise;
+    this.refresh_promise = null;
+    return res;
+  }
+
+  async refreshInternal(): Promise<null> {
+    const now = new Date()
+    const time_since_refresh = (now.getTime() - (this.last_refresh_at?.getTime() || 0))/1000
+    const expires_in = this.credentials.expires_in || 0
     if (
-      this.credentials.client_credentials &&
-      !this.credentials.refresh_token
+      this.credentials.client_credentials && time_since_refresh > expires_in/2
     ) {
+      this.last_refresh_at = new Date();
       const body = { grant_type: "client_credentials" };
 
       try {
