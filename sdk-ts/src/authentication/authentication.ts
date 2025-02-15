@@ -1,4 +1,5 @@
 import { createClient, createConfig } from "@hey-api/client-fetch";
+import { handleControlplaneCache } from "../common/cache.js";
 import { getSettings } from "../common/settings.js";
 import { ApiKeyAuth } from "./apikey.js";
 import { ClientCredentials } from "./clientcredentials.js";
@@ -134,6 +135,10 @@ export function newClientWithCredentials(config: RunClientWithCredentials) {
         Object.entries(headers).forEach(([key, value]) => {
           req.headers.set(key, value as string);
         });
+        const cache = await handleControlplaneCache(req)
+        if(cache) {
+          return cache
+        }
         return fetch(req);
       },
     })
