@@ -28,11 +28,13 @@ export async function handleControlplaneCache(req:Request):Promise<Response | nu
   try {
     logger.debug(`Reading cache from ${requirePath}`)
     const cache = fs.readFileSync(requirePath, 'utf8')
+    logger.debug(`Cache found`)
     return new Response(cache, {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
   } catch {
+    logger.debug(`Cache not found`)
     return null
   }
 }
