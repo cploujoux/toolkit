@@ -16,14 +16,13 @@ settings = init()
             "model": "sandbox-openai",
         },
     },
-    remote_functions=[],
-    # local_functions=[
-    #     {
-    #         "name": "brave-search",
-    #         "description": "A tool that searches Brave for a given query",
-    #         "url": "http://localhost:1400",
-    #     }
-    # ],
+    local_functions=[
+        {
+            "name": "brave-search",
+            "description": "A tool that searches Brave for a given query",
+            "url": "http://0.0.0.0:1400",
+        }
+    ],
 )
 async def main(
     input, agent, functions
