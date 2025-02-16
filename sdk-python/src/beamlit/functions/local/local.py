@@ -42,7 +42,7 @@ class LocalToolKit:
                 raise RuntimeError(f"Failed to initialize local function: {e}")
 
     async def get_tools(self) -> list[BaseTool]:
-        mcp_client = MCPClient(self.client, self._function.spec["configurations"]["url"], sse=self._function.spec["configurations"]["sse"])
+        mcp_client = MCPClient(self.client, self._function.spec["configurations"]["url"])
         mcp_toolkit = MCPToolkit(client=mcp_client)
         await mcp_toolkit.initialize()
         return await mcp_toolkit.get_tools()
