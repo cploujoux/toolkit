@@ -13,7 +13,7 @@ settings = init()
         },
         "spec": {
             "description": "A chat agent using Beamlit to handle your tasks.",
-            "model": "gpt-4o-mini",
+            "model": "sandbox-openai",
         },
     },
     local_functions=[
@@ -28,7 +28,7 @@ async def main(
     input, agent, functions
 ):
     agent_config = {"configurable": {"thread_id": str(uuid.uuid4())}}
-    print(functions)
+
     body = await input.json()
 
     agent_body = {"messages": [("user", body["inputs"])]}
