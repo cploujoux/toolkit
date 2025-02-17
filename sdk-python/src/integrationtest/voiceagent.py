@@ -1,9 +1,8 @@
 from logging import getLogger
 
-from starlette.websockets import WebSocket
-
 from beamlit.agents import agent
 from beamlit.common import init
+from starlette.websockets import WebSocket
 
 settings = init()
 logger = getLogger(__name__)
