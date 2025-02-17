@@ -70,7 +70,12 @@ export type GetFunctionsOptions = {
 const MAX_RETRIES = 10;
 const RETRY_DELAY = 1000; // 1 second delay between retries
 
-const initializeWithRetry = async (toolkit: RemoteToolkit | LocalToolkit, name: string, maxRetries: number, url?: string) => {
+const initializeWithRetry = async (
+  toolkit: RemoteToolkit | LocalToolkit,
+  name: string,
+  maxRetries: number,
+  url?: string
+) => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     switch (toolkit.constructor.name) {
       case "RemoteToolkit": {
@@ -78,13 +83,17 @@ const initializeWithRetry = async (toolkit: RemoteToolkit | LocalToolkit, name: 
           await toolkit.initialize(name);
           return await toolkit.getTools();
         } catch (error) {
+          console.log(error);
           if (attempt === maxRetries) {
-            logger.warn(`Failed to initialize remote function ${name} after ${maxRetries} attempts: ${error}`);
+            logger.warn(
+              `Failed to initialize remote function ${name} after ${maxRetries} attempts: ${error}`
+            );
             throw error;
           }
           logger.info(`Attempt ${attempt} failed for ${name}, retrying...`);
-          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
         }
+        break;
       }
       case "LocalToolkit": {
         try {
@@ -95,12 +104,15 @@ const initializeWithRetry = async (toolkit: RemoteToolkit | LocalToolkit, name: 
           return await toolkit.getTools();
         } catch (error) {
           if (attempt === maxRetries) {
-            logger.warn(`Failed to initialize local function ${name} after ${maxRetries} attempts: ${error}`);
+            logger.warn(
+              `Failed to initialize local function ${name} after ${maxRetries} attempts: ${error}`
+            );
             throw error;
           }
           logger.info(`Attempt ${attempt} failed for ${name}, retrying...`);
-          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
         }
+        break;
       }
     }
   }
@@ -204,14 +216,20 @@ export const getFunctions = async (options: GetFunctionsOptions = {}) => {
       localFunctions.map(async (func) => {
         try {
           const toolkit = new LocalToolkit(client, func.name, func.url);
-          const tools = await initializeWithRetry(toolkit, func.name, MAX_RETRIES, func.url); 
+          const tools = await initializeWithRetry(
+            toolkit,
+            func.name,
+            MAX_RETRIES,
+            func.url
+          );
           functions.push(...(tools || []));
         } catch (error) {
-          logger.warn(`Failed to initialize local function ${func.name}: ${error}`);
+          logger.warn(
+            `Failed to initialize local function ${func.name}: ${error}`
+          );
         }
       })
     );
   }
   return functions;
 };
-
