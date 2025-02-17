@@ -130,7 +130,11 @@ export class MCPToolkit {
    */
   async initialize(): Promise<void> {
     if (!this._tools) {
-      this._tools = await this.client.listTools();
+      try {
+        this._tools = await this.client.listTools();
+      } catch (error) {
+        throw new Error(`Failed to list tools: ${error}`);
+      }
     }
   }
 
