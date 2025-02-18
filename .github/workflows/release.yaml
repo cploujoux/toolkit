@@ -13,14 +13,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Copy definition
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global url."https://.:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
-          git clone https://github.com/${{ github.repository_owner }}/controlplane
-          cp controlplane/api/api/definitions/controlplane.yml ./definition.yml
-          rm -rf controlplane
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -35,7 +27,7 @@ jobs:
           version: "~> v2"
           args: release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
