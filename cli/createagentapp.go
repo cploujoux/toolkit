@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -118,6 +117,13 @@ func retrieveModels(modelType string) ([]sdk.Model, error) {
 	return modelDeployments, nil
 }
 
+func getBranch() string {
+	if os.Getenv("BL_ENV") == "dev" {
+		return "develop"
+	}
+	return "main"
+}
+
 // retrieveTemplates retrieves the list of available templates from the templates repository.
 // It fetches the repository's tree structure and extracts the paths of all directories.
 // Returns a list of template names or an error if the retrieval fails.
@@ -128,8 +134,7 @@ func retrieveTemplates() ([]string, map[string][]string, error) {
 	spinnerErr := spinner.New().
 		Title("Retrieving templates...").
 		Action(func() {
-			url := "https://api.github.com/repos/beamlit/templates/git/trees/main?recursive=1"
-
+			url := fmt.Sprintf("https://api.github.com/repos/beamlit/templates/git/trees/%s?recursive=1", getBranch())
 			req, err := http.NewRequest("GET", url, nil)
 			if err != nil {
 				scriptErr = err
@@ -178,8 +183,7 @@ func retrieveTemplates() ([]string, map[string][]string, error) {
 }
 
 func retrieveTemplateConfig(language string, template string) (*TemplateConfig, error) {
-	url := fmt.Sprintf("https://api.github.com/repos/beamlit/templates/contents/agents/%s/%s/template.yaml", language, template)
-
+	url := fmt.Sprintf("https://raw.githubusercontent.com/beamlit/templates/refs/heads/%s/agents/%s/%s/template.yaml", getBranch(), language, template)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -195,17 +199,8 @@ func retrieveTemplateConfig(language string, template string) (*TemplateConfig, 
 	if err != nil {
 		return nil, err
 	}
-	var contentResponse GithubContentResponse
-	err = json.Unmarshal(body, &contentResponse)
-	if err != nil {
-		return nil, err
-	}
 	var templateConfig TemplateConfig
-	content, err := base64.StdEncoding.DecodeString(contentResponse.Content)
-	if err != nil {
-		return nil, err
-	}
-	err = yaml.Unmarshal(content, &templateConfig)
+	err = yaml.Unmarshal(body, &templateConfig)
 	if err != nil {
 		return nil, err
 	}
