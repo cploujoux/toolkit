@@ -7,6 +7,7 @@ from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.latency_metric import LatencyMetric
+    from ..models.memory_allocation_metric import MemoryAllocationMetric
     from ..models.metric import Metric
     from ..models.request_duration_over_time_metrics import RequestDurationOverTimeMetrics
     from ..models.request_total_by_origin_metric import RequestTotalByOriginMetric
@@ -27,6 +28,7 @@ class ResourceMetrics:
         inference_global (Union[Unset, list['Metric']]): Array of metrics
         last_n_requests (Union[Unset, list['Metric']]): Array of metrics
         latency (Union[Unset, LatencyMetric]): Latency metrics
+        memory_allocation (Union[Unset, MemoryAllocationMetric]): Metrics for memory allocation
         request_duration_over_time (Union[Unset, RequestDurationOverTimeMetrics]): Request duration over time metrics
         request_total (Union[Unset, float]): Number of requests for the resource globally
         request_total_by_origin (Union[Unset, RequestTotalByOriginMetric]): Request total by origin metric
@@ -42,6 +44,7 @@ class ResourceMetrics:
     inference_global: Union[Unset, list["Metric"]] = UNSET
     last_n_requests: Union[Unset, list["Metric"]] = UNSET
     latency: Union[Unset, "LatencyMetric"] = UNSET
+    memory_allocation: Union[Unset, "MemoryAllocationMetric"] = UNSET
     request_duration_over_time: Union[Unset, "RequestDurationOverTimeMetrics"] = UNSET
     request_total: Union[Unset, float] = UNSET
     request_total_by_origin: Union[Unset, "RequestTotalByOriginMetric"] = UNSET
@@ -72,6 +75,16 @@ class ResourceMetrics:
             latency = self.latency.to_dict()
         elif self.latency and isinstance(self.latency, dict):
             latency = self.latency
+
+        memory_allocation: Union[Unset, dict[str, Any]] = UNSET
+        if (
+            self.memory_allocation
+            and not isinstance(self.memory_allocation, Unset)
+            and not isinstance(self.memory_allocation, dict)
+        ):
+            memory_allocation = self.memory_allocation.to_dict()
+        elif self.memory_allocation and isinstance(self.memory_allocation, dict):
+            memory_allocation = self.memory_allocation
 
         request_duration_over_time: Union[Unset, dict[str, Any]] = UNSET
         if (
@@ -134,6 +147,8 @@ class ResourceMetrics:
             field_dict["lastNRequests"] = last_n_requests
         if latency is not UNSET:
             field_dict["latency"] = latency
+        if memory_allocation is not UNSET:
+            field_dict["memoryAllocation"] = memory_allocation
         if request_duration_over_time is not UNSET:
             field_dict["requestDurationOverTime"] = request_duration_over_time
         if request_total is not UNSET:
@@ -156,6 +171,7 @@ class ResourceMetrics:
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.latency_metric import LatencyMetric
+        from ..models.memory_allocation_metric import MemoryAllocationMetric
         from ..models.metric import Metric
         from ..models.request_duration_over_time_metrics import RequestDurationOverTimeMetrics
         from ..models.request_total_by_origin_metric import RequestTotalByOriginMetric
@@ -189,6 +205,13 @@ class ResourceMetrics:
             latency = UNSET
         else:
             latency = LatencyMetric.from_dict(_latency)
+
+        _memory_allocation = d.pop("memoryAllocation", UNSET)
+        memory_allocation: Union[Unset, MemoryAllocationMetric]
+        if isinstance(_memory_allocation, Unset):
+            memory_allocation = UNSET
+        else:
+            memory_allocation = MemoryAllocationMetric.from_dict(_memory_allocation)
 
         _request_duration_over_time = d.pop("requestDurationOverTime", UNSET)
         request_duration_over_time: Union[Unset, RequestDurationOverTimeMetrics]
@@ -240,6 +263,7 @@ class ResourceMetrics:
             inference_global=inference_global,
             last_n_requests=last_n_requests,
             latency=latency,
+            memory_allocation=memory_allocation,
             request_duration_over_time=request_duration_over_time,
             request_total=request_total,
             request_total_by_origin=request_total_by_origin,

@@ -691,6 +691,16 @@ export type MCPDefinition = {
 };
 
 /**
+ * Metrics for memory allocation
+ */
+export type MemoryAllocationMetric = {
+    /**
+     * Total memory allocation in GB-seconds
+     */
+    totalAllocation?: number;
+};
+
+/**
  * Metadata
  */
 export type Metadata = TimeFields & OwnerFields & {
@@ -1233,6 +1243,10 @@ export type ResourceMetrics = {
      * Historical requests (in last 24 hours) for the model deployment globally
      */
     latency?: LatencyMetric;
+    /**
+     * Memory allocation metrics for the resource
+     */
+    memoryAllocation?: MemoryAllocationMetric;
     /**
      * Historical requests (in last 24 hours) for the model deployment globally
      */
@@ -1819,32 +1833,6 @@ export type UpdateAgentResponse = (Agent);
 
 export type UpdateAgentError = unknown;
 
-export type GetAgentLogsData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-    };
-};
-
-export type GetAgentLogsResponse = (Array<ResourceLog>);
-
-export type GetAgentLogsError = unknown;
-
-export type GetAgentMetricsData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-    };
-};
-
-export type GetAgentMetricsResponse = (ResourceMetrics);
-
-export type GetAgentMetricsError = unknown;
-
 export type ListAgentRevisionsData = {
     path: {
         /**
@@ -1857,33 +1845,6 @@ export type ListAgentRevisionsData = {
 export type ListAgentRevisionsResponse = (Array<RevisionMetadata>);
 
 export type ListAgentRevisionsError = unknown;
-
-export type GetAgentTraceIdsData = {
-    path: {
-        /**
-         * Name of the agent
-         */
-        agentName: string;
-    };
-    query?: {
-        /**
-         * End time
-         */
-        endTime?: string;
-        /**
-         * Limit
-         */
-        limit?: string;
-        /**
-         * Start time
-         */
-        startTime?: string;
-    };
-};
-
-export type GetAgentTraceIdsResponse = (TraceIdsResponse);
-
-export type GetAgentTraceIdsError = unknown;
 
 export type GetConfigurationResponse = (Configuration);
 
@@ -1941,32 +1902,6 @@ export type UpdateFunctionResponse = (Function);
 
 export type UpdateFunctionError = unknown;
 
-export type GetFunctionLogsData = {
-    path: {
-        /**
-         * Name of the function
-         */
-        functionName: string;
-    };
-};
-
-export type GetFunctionLogsResponse = (Array<ResourceLog>);
-
-export type GetFunctionLogsError = unknown;
-
-export type GetFunctionMetricsData = {
-    path: {
-        /**
-         * Name of the function
-         */
-        functionName: string;
-    };
-};
-
-export type GetFunctionMetricsResponse = (ResourceMetrics);
-
-export type GetFunctionMetricsError = unknown;
-
 export type ListFunctionRevisionsData = {
     path: {
         /**
@@ -1979,33 +1914,6 @@ export type ListFunctionRevisionsData = {
 export type ListFunctionRevisionsResponse = (RevisionMetadata);
 
 export type ListFunctionRevisionsError = unknown;
-
-export type GetFunctionTraceIdsData = {
-    path: {
-        /**
-         * Name of the function
-         */
-        functionName: string;
-    };
-    query?: {
-        /**
-         * End time
-         */
-        endTime?: string;
-        /**
-         * Limit
-         */
-        limit?: string;
-        /**
-         * Start time
-         */
-        startTime?: string;
-    };
-};
-
-export type GetFunctionTraceIdsResponse = (TraceIdsResponse);
-
-export type GetFunctionTraceIdsError = unknown;
 
 export type GetIntegrationData = {
     path: {
@@ -2188,10 +2096,6 @@ export type ListMcpHubDefinitionsResponse = (Array<MCPDefinition>);
 
 export type ListMcpHubDefinitionsError = unknown;
 
-export type GetMetricsResponse = (Metrics);
-
-export type GetMetricsError = unknown;
-
 export type ListModelsResponse = (Array<Model>);
 
 export type ListModelsError = unknown;
@@ -2244,32 +2148,6 @@ export type UpdateModelResponse = (Model);
 
 export type UpdateModelError = unknown;
 
-export type GetModelLogsData = {
-    path: {
-        /**
-         * Name of the model
-         */
-        modelName: string;
-    };
-};
-
-export type GetModelLogsResponse = (Array<ResourceLog>);
-
-export type GetModelLogsError = unknown;
-
-export type GetModelMetricsData = {
-    path: {
-        /**
-         * Name of the model
-         */
-        modelName: string;
-    };
-};
-
-export type GetModelMetricsResponse = (ResourceMetrics);
-
-export type GetModelMetricsError = unknown;
-
 export type ListModelRevisionsData = {
     path: {
         /**
@@ -2282,33 +2160,6 @@ export type ListModelRevisionsData = {
 export type ListModelRevisionsResponse = (RevisionMetadata);
 
 export type ListModelRevisionsError = unknown;
-
-export type GetModelTraceIdsData = {
-    path: {
-        /**
-         * Name of the model
-         */
-        modelName: string;
-    };
-    query?: {
-        /**
-         * End time
-         */
-        endTime?: string;
-        /**
-         * Limit
-         */
-        limit?: string;
-        /**
-         * Start time
-         */
-        startTime?: string;
-    };
-};
-
-export type GetModelTraceIdsResponse = (TraceIdsResponse);
-
-export type GetModelTraceIdsError = unknown;
 
 export type ListPoliciesResponse = (Array<Policy>);
 
@@ -2670,50 +2521,6 @@ export type GetStoreFunctionData = {
 export type GetStoreFunctionResponse = (StoreFunction);
 
 export type GetStoreFunctionError = unknown;
-
-export type GetTraceIdsData = {
-    query?: {
-        endTime?: string;
-        limit?: string;
-        startTime?: string;
-        workloadId?: string;
-        workloadType?: string;
-    };
-};
-
-export type GetTraceIdsResponse = ({
-    [key: string]: unknown;
-});
-
-export type GetTraceIdsError = unknown;
-
-export type GetTraceData = {
-    path: {
-        traceId: string;
-    };
-};
-
-export type GetTraceResponse = ({
-    [key: string]: unknown;
-});
-
-export type GetTraceError = unknown;
-
-export type GetTraceLogsData = {
-    path: {
-        traceId: string;
-    };
-    query?: {
-        limit?: string;
-        spanId?: string;
-    };
-};
-
-export type GetTraceLogsResponse = ({
-    [key: string]: unknown;
-});
-
-export type GetTraceLogsError = unknown;
 
 export type ListWorkspaceUsersResponse = (Array<WorkspaceUser>);
 

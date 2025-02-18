@@ -25,9 +25,6 @@ from .form_secrets import FormSecrets
 from .function import Function
 from .function_kit import FunctionKit
 from .function_spec import FunctionSpec
-from .get_trace_ids_response_200 import GetTraceIdsResponse200
-from .get_trace_logs_response_200 import GetTraceLogsResponse200
-from .get_trace_response_200 import GetTraceResponse200
 from .get_workspace_service_accounts_response_200_item import (
     GetWorkspaceServiceAccountsResponse200Item,
 )
@@ -49,6 +46,7 @@ from .location_response import LocationResponse
 from .mcp_definition import MCPDefinition
 from .mcp_definition_entrypoint import MCPDefinitionEntrypoint
 from .mcp_definition_form import MCPDefinitionForm
+from .memory_allocation_metric import MemoryAllocationMetric
 from .metadata import Metadata
 from .metadata_labels import MetadataLabels
 from .metric import Metric
@@ -144,9 +142,6 @@ __all__ = (
     "Function",
     "FunctionKit",
     "FunctionSpec",
-    "GetTraceIdsResponse200",
-    "GetTraceLogsResponse200",
-    "GetTraceResponse200",
     "GetWorkspaceServiceAccountsResponse200Item",
     "HistogramBucket",
     "HistogramStats",
@@ -166,6 +161,7 @@ __all__ = (
     "MCPDefinition",
     "MCPDefinitionEntrypoint",
     "MCPDefinitionForm",
+    "MemoryAllocationMetric",
     "Metadata",
     "MetadataLabels",
     "Metric",

@@ -149,9 +149,6 @@ type ApiKey struct {
 	UpdatedBy *string `json:"updatedBy,omitempty"`
 }
 
-// ArrayMetric Array of metrics
-type ArrayMetric = []Metric
-
 // Configuration Configuration
 type Configuration struct {
 	// Continents Continents
@@ -309,33 +306,6 @@ type FunctionSpec struct {
 // FunctionsList defines model for FunctionsList.
 type FunctionsList = []string
 
-// HistogramBucket Histogram bucket
-type HistogramBucket struct {
-	// Count Count
-	Count *int `json:"count,omitempty"`
-
-	// End End
-	End *float32 `json:"end,omitempty"`
-
-	// Start Start
-	Start *float32 `json:"start,omitempty"`
-}
-
-// HistogramStats Histogram stats
-type HistogramStats struct {
-	// Average Average request duration
-	Average *float32 `json:"average,omitempty"`
-
-	// P50 P50 request duration
-	P50 *float32 `json:"p50,omitempty"`
-
-	// P90 P90 request duration
-	P90 *float32 `json:"p90,omitempty"`
-
-	// P99 P99 request duration
-	P99 *float32 `json:"p99,omitempty"`
-}
-
 // IntegrationConnection Integration Connection
 type IntegrationConnection struct {
 	// Metadata Metadata
@@ -402,21 +372,6 @@ type KnowledgebaseSpec struct {
 
 	// Sandbox Sandbox mode
 	Sandbox *bool `json:"sandbox,omitempty"`
-}
-
-// LatencyMetric Latency metrics
-type LatencyMetric struct {
-	// GlobalHistogram Histogram bucket
-	GlobalHistogram *HistogramBucket `json:"globalHistogram,omitempty"`
-
-	// GlobalStats Histogram stats
-	GlobalStats *HistogramStats `json:"globalStats,omitempty"`
-
-	// HistogramPerCode Histogram bucket
-	HistogramPerCode *HistogramBucket `json:"histogramPerCode,omitempty"`
-
-	// StatsPerCode Histogram stats
-	StatsPerCode *HistogramStats `json:"statsPerCode,omitempty"`
 }
 
 // LocationResponse Location availability for policies
@@ -505,45 +460,6 @@ type Metadata struct {
 
 // MetadataLabels Labels
 type MetadataLabels map[string]string
-
-// Metric Metric
-type Metric struct {
-	// Rate Metric value
-	Rate *int `json:"rate,omitempty"`
-
-	// RequestTotal Metric value
-	RequestTotal *int `json:"requestTotal,omitempty"`
-
-	// Timestamp Metric timestamp
-	Timestamp *string `json:"timestamp,omitempty"`
-}
-
-// Metrics Metrics for resources
-type Metrics struct {
-	// Agents Metrics for agents
-	Agents *interface{} `json:"agents,omitempty"`
-
-	// Functions Metrics for functions
-	Functions *interface{} `json:"functions,omitempty"`
-
-	// InferenceGlobal Historical requests for all resources globally
-	InferenceGlobal *[]interface{} `json:"inferenceGlobal,omitempty"`
-
-	// Models Metrics for models
-	Models *map[string]interface{} `json:"models,omitempty"`
-
-	// RequestTotal Number of requests for all resources globally
-	RequestTotal *float32 `json:"requestTotal,omitempty"`
-
-	// RequestTotalPerCode Number of requests for all resources globally per code
-	RequestTotalPerCode *map[string]interface{} `json:"requestTotalPerCode,omitempty"`
-
-	// Rps Number of requests per second for all resources globally
-	Rps *float32 `json:"rps,omitempty"`
-
-	// RpsPerCode Number of requests per second for all resources globally per code
-	RpsPerCode *map[string]interface{} `json:"rpsPerCode,omitempty"`
-}
 
 // Model Logical object representing a model
 type Model struct {
@@ -835,87 +751,6 @@ type Repository struct {
 	Url *string `json:"url,omitempty"`
 }
 
-// RequestDurationOverTimeMetric Request duration over time metric
-type RequestDurationOverTimeMetric struct {
-	// Average Average request duration
-	Average *float32 `json:"average,omitempty"`
-
-	// P50 P50 request duration
-	P50 *float32 `json:"p50,omitempty"`
-
-	// P90 P90 request duration
-	P90 *float32 `json:"p90,omitempty"`
-
-	// P99 P99 request duration
-	P99 *float32 `json:"p99,omitempty"`
-
-	// Timestamp Timestamp
-	Timestamp *string `json:"timestamp,omitempty"`
-}
-
-// RequestDurationOverTimeMetrics Request duration over time metrics
-type RequestDurationOverTimeMetrics struct {
-	// RequestDurationOverTime Request duration over time metric
-	RequestDurationOverTime *RequestDurationOverTimeMetric `json:"requestDurationOverTime,omitempty"`
-}
-
-// RequestTotalByOriginMetric Request total by origin metric
-type RequestTotalByOriginMetric struct {
-	// RequestTotalByOrigin Request total by origin
-	RequestTotalByOrigin *map[string]interface{} `json:"requestTotalByOrigin,omitempty"`
-
-	// RequestTotalByOriginAndCode Request total by origin and code
-	RequestTotalByOriginAndCode *map[string]interface{} `json:"requestTotalByOriginAndCode,omitempty"`
-}
-
-// ResourceLog Log for a resource deployment (eg. model deployment, function deployment)
-type ResourceLog struct {
-	// Message Content of the log
-	Message *string `json:"message,omitempty"`
-
-	// Severity Severity of the log
-	Severity *int `json:"severity,omitempty"`
-
-	// Timestamp The timestamp of the log
-	Timestamp *string `json:"timestamp,omitempty"`
-}
-
-// ResourceMetrics Metrics for a single resource deployment (eg. model deployment, function deployment)
-type ResourceMetrics struct {
-	// InferenceGlobal Array of metrics
-	InferenceGlobal *ArrayMetric `json:"inferenceGlobal,omitempty"`
-
-	// LastNRequests Array of metrics
-	LastNRequests *ArrayMetric `json:"lastNRequests,omitempty"`
-
-	// Latency Latency metrics
-	Latency *LatencyMetric `json:"latency,omitempty"`
-
-	// RequestDurationOverTime Request duration over time metrics
-	RequestDurationOverTime *RequestDurationOverTimeMetrics `json:"requestDurationOverTime,omitempty"`
-
-	// RequestTotal Number of requests for the resource globally
-	RequestTotal *float32 `json:"requestTotal,omitempty"`
-
-	// RequestTotalByOrigin Request total by origin metric
-	RequestTotalByOrigin *RequestTotalByOriginMetric `json:"requestTotalByOrigin,omitempty"`
-
-	// RequestTotalPerCode Number of requests for the resource globally per code
-	RequestTotalPerCode *map[string]interface{} `json:"requestTotalPerCode,omitempty"`
-
-	// Rps Number of requests per second for the resource globally
-	Rps *float32 `json:"rps,omitempty"`
-
-	// RpsPerCode Number of requests per second for the resource globally per code
-	RpsPerCode *map[string]interface{} `json:"rpsPerCode,omitempty"`
-
-	// TokenRate Token rate metrics
-	TokenRate *TokenRateMetrics `json:"tokenRate,omitempty"`
-
-	// TokenTotal Token total metric
-	TokenTotal *TokenTotalMetric `json:"tokenTotal,omitempty"`
-}
-
 // RevisionConfiguration Revision configuration
 type RevisionConfiguration struct {
 	// Active Active revision id
@@ -1175,57 +1010,6 @@ type TimeFields struct {
 	UpdatedAt *string `json:"updatedAt,omitempty"`
 }
 
-// TokenRateMetric Token rate metric
-type TokenRateMetric struct {
-	// Model Model ID
-	Model *string `json:"model,omitempty"`
-
-	// Timestamp Timestamp
-	Timestamp *string `json:"timestamp,omitempty"`
-
-	// TokenTotal Total tokens
-	TokenTotal *float32 `json:"tokenTotal,omitempty"`
-
-	// Trend Trend
-	Trend *float32 `json:"trend,omitempty"`
-}
-
-// TokenRateMetrics Token rate metrics
-type TokenRateMetrics struct {
-	// TokenRate Token rate metric
-	TokenRate *TokenRateMetric `json:"tokenRate,omitempty"`
-
-	// TokenRateInput Token rate metric
-	TokenRateInput *TokenRateMetric `json:"tokenRateInput,omitempty"`
-
-	// TokenRateOutput Token rate metric
-	TokenRateOutput *TokenRateMetric `json:"tokenRateOutput,omitempty"`
-}
-
-// TokenTotalMetric Token total metric
-type TokenTotalMetric struct {
-	// AverageTokenInputPerRequest Average input token per request
-	AverageTokenInputPerRequest *float32 `json:"averageTokenInputPerRequest,omitempty"`
-
-	// AverageTokenOutputPerRequest Average output token per request
-	AverageTokenOutputPerRequest *float32 `json:"averageTokenOutputPerRequest,omitempty"`
-
-	// AverageTokenPerRequest Average token per request
-	AverageTokenPerRequest *float32 `json:"averageTokenPerRequest,omitempty"`
-
-	// TokenInput Total input tokens
-	TokenInput *float32 `json:"tokenInput,omitempty"`
-
-	// TokenOutput Total output tokens
-	TokenOutput *float32 `json:"tokenOutput,omitempty"`
-
-	// TokenTotal Total tokens
-	TokenTotal *float32 `json:"tokenTotal,omitempty"`
-}
-
-// TraceIdsResponse Trace IDs response
-type TraceIdsResponse = map[string]interface{}
-
 // Workspace defines model for Workspace.
 type Workspace struct {
 	// AccountId Workspace account id
@@ -1280,42 +1064,6 @@ type WorkspaceUser struct {
 	Sub *string `json:"sub,omitempty"`
 }
 
-// GetAgentTraceIdsParams defines parameters for GetAgentTraceIds.
-type GetAgentTraceIdsParams struct {
-	// Limit Limit
-	Limit *string `form:"limit,omitempty" json:"limit,omitempty"`
-
-	// StartTime Start time
-	StartTime *string `form:"startTime,omitempty" json:"startTime,omitempty"`
-
-	// EndTime End time
-	EndTime *string `form:"endTime,omitempty" json:"endTime,omitempty"`
-}
-
-// GetFunctionTraceIdsParams defines parameters for GetFunctionTraceIds.
-type GetFunctionTraceIdsParams struct {
-	// Limit Limit
-	Limit *string `form:"limit,omitempty" json:"limit,omitempty"`
-
-	// StartTime Start time
-	StartTime *string `form:"startTime,omitempty" json:"startTime,omitempty"`
-
-	// EndTime End time
-	EndTime *string `form:"endTime,omitempty" json:"endTime,omitempty"`
-}
-
-// GetModelTraceIdsParams defines parameters for GetModelTraceIds.
-type GetModelTraceIdsParams struct {
-	// Limit Limit
-	Limit *string `form:"limit,omitempty" json:"limit,omitempty"`
-
-	// StartTime Start time
-	StartTime *string `form:"startTime,omitempty" json:"startTime,omitempty"`
-
-	// EndTime End time
-	EndTime *string `form:"endTime,omitempty" json:"endTime,omitempty"`
-}
-
 // CreateWorkspaceServiceAccountJSONBody defines parameters for CreateWorkspaceServiceAccount.
 type CreateWorkspaceServiceAccountJSONBody struct {
 	// Description Service account description
@@ -1341,21 +1089,6 @@ type CreateApiKeyForServiceAccountJSONBody struct {
 
 	// Name Name for the API key
 	Name *string `json:"name,omitempty"`
-}
-
-// GetTraceIdsParams defines parameters for GetTraceIds.
-type GetTraceIdsParams struct {
-	WorkloadId   *string `form:"workloadId,omitempty" json:"workloadId,omitempty"`
-	WorkloadType *string `form:"workloadType,omitempty" json:"workloadType,omitempty"`
-	Limit        *string `form:"limit,omitempty" json:"limit,omitempty"`
-	StartTime    *string `form:"startTime,omitempty" json:"startTime,omitempty"`
-	EndTime      *string `form:"endTime,omitempty" json:"endTime,omitempty"`
-}
-
-// GetTraceLogsParams defines parameters for GetTraceLogs.
-type GetTraceLogsParams struct {
-	SpanId *string `form:"spanId,omitempty" json:"spanId,omitempty"`
-	Limit  *string `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // InviteWorkspaceUserJSONBody defines parameters for InviteWorkspaceUser.
@@ -1536,17 +1269,8 @@ type ClientInterface interface {
 
 	UpdateAgent(ctx context.Context, agentName string, body UpdateAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetAgentLogs request
-	GetAgentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetAgentMetrics request
-	GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListAgentRevisions request
 	ListAgentRevisions(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetAgentTraceIds request
-	GetAgentTraceIds(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetConfiguration request
 	GetConfiguration(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1570,17 +1294,8 @@ type ClientInterface interface {
 
 	UpdateFunction(ctx context.Context, functionName string, body UpdateFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetFunctionLogs request
-	GetFunctionLogs(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetFunctionMetrics request
-	GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListFunctionRevisions request
 	ListFunctionRevisions(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetFunctionTraceIds request
-	GetFunctionTraceIds(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListIntegrationConnections request
 	ListIntegrationConnections(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1641,9 +1356,6 @@ type ClientInterface interface {
 	// ListMCPHubDefinitions request
 	ListMCPHubDefinitions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetMetrics request
-	GetMetrics(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListModels request
 	ListModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1663,17 +1375,8 @@ type ClientInterface interface {
 
 	UpdateModel(ctx context.Context, modelName string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetModelLogs request
-	GetModelLogs(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetModelMetrics request
-	GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListModelRevisions request
 	ListModelRevisions(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetModelTraceIds request
-	GetModelTraceIds(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListPolicies request
 	ListPolicies(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1757,15 +1460,6 @@ type ClientInterface interface {
 	// GetStoreFunction request
 	GetStoreFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetTraceIds request
-	GetTraceIds(ctx context.Context, params *GetTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetTrace request
-	GetTrace(ctx context.Context, traceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetTraceLogs request
-	GetTraceLogs(ctx context.Context, traceId string, params *GetTraceLogsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ListWorkspaceUsers request
 	ListWorkspaceUsers(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1829,17 +1523,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateAgent
 	reg.CliCommand(ctx, "UpdateAgent", c.UpdateAgent)
 
-	// Register CLI commands for GetAgentLogs
-	reg.CliCommand(ctx, "GetAgentLogs", c.GetAgentLogs)
-
-	// Register CLI commands for GetAgentMetrics
-	reg.CliCommand(ctx, "GetAgentMetrics", c.GetAgentMetrics)
-
 	// Register CLI commands for ListAgentRevisions
 	reg.CliCommand(ctx, "ListAgentRevisions", c.ListAgentRevisions)
-
-	// Register CLI commands for GetAgentTraceIds
-	reg.CliCommand(ctx, "GetAgentTraceIds", c.GetAgentTraceIds)
 
 	// Register CLI commands for GetConfiguration
 	reg.CliCommand(ctx, "GetConfiguration", c.GetConfiguration)
@@ -1859,17 +1544,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateFunction
 	reg.CliCommand(ctx, "UpdateFunction", c.UpdateFunction)
 
-	// Register CLI commands for GetFunctionLogs
-	reg.CliCommand(ctx, "GetFunctionLogs", c.GetFunctionLogs)
-
-	// Register CLI commands for GetFunctionMetrics
-	reg.CliCommand(ctx, "GetFunctionMetrics", c.GetFunctionMetrics)
-
 	// Register CLI commands for ListFunctionRevisions
 	reg.CliCommand(ctx, "ListFunctionRevisions", c.ListFunctionRevisions)
-
-	// Register CLI commands for GetFunctionTraceIds
-	reg.CliCommand(ctx, "GetFunctionTraceIds", c.GetFunctionTraceIds)
 
 	// Register CLI commands for ListIntegrationConnections
 	reg.CliCommand(ctx, "ListIntegrationConnections", c.ListIntegrationConnections)
@@ -1922,9 +1598,6 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for ListMCPHubDefinitions
 	reg.CliCommand(ctx, "ListMCPHubDefinitions", c.ListMCPHubDefinitions)
 
-	// Register CLI commands for GetMetrics
-	reg.CliCommand(ctx, "GetMetrics", c.GetMetrics)
-
 	// Register CLI commands for ListModels
 	reg.CliCommand(ctx, "ListModels", c.ListModels)
 
@@ -1940,17 +1613,8 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 	// Register CLI commands for UpdateModel
 	reg.CliCommand(ctx, "UpdateModel", c.UpdateModel)
 
-	// Register CLI commands for GetModelLogs
-	reg.CliCommand(ctx, "GetModelLogs", c.GetModelLogs)
-
-	// Register CLI commands for GetModelMetrics
-	reg.CliCommand(ctx, "GetModelMetrics", c.GetModelMetrics)
-
 	// Register CLI commands for ListModelRevisions
 	reg.CliCommand(ctx, "ListModelRevisions", c.ListModelRevisions)
-
-	// Register CLI commands for GetModelTraceIds
-	reg.CliCommand(ctx, "GetModelTraceIds", c.GetModelTraceIds)
 
 	// Register CLI commands for ListPolicies
 	reg.CliCommand(ctx, "ListPolicies", c.ListPolicies)
@@ -2023,15 +1687,6 @@ func (c *ClientWithResponses) RegisterCliCommands(reg register.Register, ctx con
 
 	// Register CLI commands for GetStoreFunction
 	reg.CliCommand(ctx, "GetStoreFunction", c.GetStoreFunction)
-
-	// Register CLI commands for GetTraceIds
-	reg.CliCommand(ctx, "GetTraceIds", c.GetTraceIds)
-
-	// Register CLI commands for GetTrace
-	reg.CliCommand(ctx, "GetTrace", c.GetTrace)
-
-	// Register CLI commands for GetTraceLogs
-	reg.CliCommand(ctx, "GetTraceLogs", c.GetTraceLogs)
 
 	// Register CLI commands for ListWorkspaceUsers
 	reg.CliCommand(ctx, "ListWorkspaceUsers", c.ListWorkspaceUsers)
@@ -2155,44 +1810,8 @@ func (c *Client) UpdateAgent(ctx context.Context, agentName string, body UpdateA
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetAgentLogs(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentLogsRequest(c.Server, agentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetAgentMetrics(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentMetricsRequest(c.Server, agentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ListAgentRevisions(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListAgentRevisionsRequest(c.Server, agentName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetAgentTraceIds(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetAgentTraceIdsRequest(c.Server, agentName, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2299,44 +1918,8 @@ func (c *Client) UpdateFunction(ctx context.Context, functionName string, body U
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetFunctionLogs(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFunctionLogsRequest(c.Server, functionName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetFunctionMetrics(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFunctionMetricsRequest(c.Server, functionName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ListFunctionRevisions(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListFunctionRevisionsRequest(c.Server, functionName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetFunctionTraceIds(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFunctionTraceIdsRequest(c.Server, functionName, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2599,18 +2182,6 @@ func (c *Client) ListMCPHubDefinitions(ctx context.Context, reqEditors ...Reques
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetMetrics(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMetricsRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ListModels(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListModelsRequest(c.Server)
 	if err != nil {
@@ -2695,44 +2266,8 @@ func (c *Client) UpdateModel(ctx context.Context, modelName string, body UpdateM
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetModelLogs(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelLogsRequest(c.Server, modelName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetModelMetrics(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelMetricsRequest(c.Server, modelName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ListModelRevisions(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListModelRevisionsRequest(c.Server, modelName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetModelTraceIds(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetModelTraceIdsRequest(c.Server, modelName, params)
 	if err != nil {
 		return nil, err
 	}
@@ -3081,42 +2616,6 @@ func (c *Client) ListStoreFunctions(ctx context.Context, reqEditors ...RequestEd
 
 func (c *Client) GetStoreFunction(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetStoreFunctionRequest(c.Server, functionName)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetTraceIds(ctx context.Context, params *GetTraceIdsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetTraceIdsRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetTrace(ctx context.Context, traceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetTraceRequest(c.Server, traceId)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetTraceLogs(ctx context.Context, traceId string, params *GetTraceLogsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetTraceLogsRequest(c.Server, traceId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -3501,74 +3000,6 @@ func NewUpdateAgentRequestWithBody(server string, agentName string, contentType 
 	return req, nil
 }
 
-// NewGetAgentLogsRequest generates requests for GetAgentLogs
-func NewGetAgentLogsRequest(server string, agentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/logs", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetAgentMetricsRequest generates requests for GetAgentMetrics
-func NewGetAgentMetricsRequest(server string, agentName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/metrics", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewListAgentRevisionsRequest generates requests for ListAgentRevisions
 func NewListAgentRevisionsRequest(server string, agentName string) (*http.Request, error) {
 	var err error
@@ -3593,94 +3024,6 @@ func NewListAgentRevisionsRequest(server string, agentName string) (*http.Reques
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetAgentTraceIdsRequest generates requests for GetAgentTraceIds
-func NewGetAgentTraceIdsRequest(server string, agentName string, params *GetAgentTraceIdsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "agentName", runtime.ParamLocationPath, agentName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/agents/%s/traces", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Limit != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.StartTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.EndTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -3900,74 +3243,6 @@ func NewUpdateFunctionRequestWithBody(server string, functionName string, conten
 	return req, nil
 }
 
-// NewGetFunctionLogsRequest generates requests for GetFunctionLogs
-func NewGetFunctionLogsRequest(server string, functionName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/functions/%s/logs", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetFunctionMetricsRequest generates requests for GetFunctionMetrics
-func NewGetFunctionMetricsRequest(server string, functionName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/functions/%s/metrics", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewListFunctionRevisionsRequest generates requests for ListFunctionRevisions
 func NewListFunctionRevisionsRequest(server string, functionName string) (*http.Request, error) {
 	var err error
@@ -3992,94 +3267,6 @@ func NewListFunctionRevisionsRequest(server string, functionName string) (*http.
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetFunctionTraceIdsRequest generates requests for GetFunctionTraceIds
-func NewGetFunctionTraceIdsRequest(server string, functionName string, params *GetFunctionTraceIdsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "functionName", runtime.ParamLocationPath, functionName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/functions/%s/traces", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Limit != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.StartTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.EndTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -4685,33 +3872,6 @@ func NewListMCPHubDefinitionsRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
-// NewGetMetricsRequest generates requests for GetMetrics
-func NewGetMetricsRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/metrics")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewListModelsRequest generates requests for ListModels
 func NewListModelsRequest(server string) (*http.Request, error) {
 	var err error
@@ -4894,74 +4054,6 @@ func NewUpdateModelRequestWithBody(server string, modelName string, contentType 
 	return req, nil
 }
 
-// NewGetModelLogsRequest generates requests for GetModelLogs
-func NewGetModelLogsRequest(server string, modelName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelName", runtime.ParamLocationPath, modelName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/models/%s/logs", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetModelMetricsRequest generates requests for GetModelMetrics
-func NewGetModelMetricsRequest(server string, modelName string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelName", runtime.ParamLocationPath, modelName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/models/%s/metrics", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewListModelRevisionsRequest generates requests for ListModelRevisions
 func NewListModelRevisionsRequest(server string, modelName string) (*http.Request, error) {
 	var err error
@@ -4986,94 +4078,6 @@ func NewListModelRevisionsRequest(server string, modelName string) (*http.Reques
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetModelTraceIdsRequest generates requests for GetModelTraceIds
-func NewGetModelTraceIdsRequest(server string, modelName string, params *GetModelTraceIdsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "modelName", runtime.ParamLocationPath, modelName)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/models/%s/traces", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Limit != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.StartTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.EndTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -5909,225 +4913,6 @@ func NewGetStoreFunctionRequest(server string, functionName string) (*http.Reque
 	return req, nil
 }
 
-// NewGetTraceIdsRequest generates requests for GetTraceIds
-func NewGetTraceIdsRequest(server string, params *GetTraceIdsParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/traces")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.WorkloadId != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "workloadId", runtime.ParamLocationQuery, *params.WorkloadId); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.WorkloadType != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "workloadType", runtime.ParamLocationQuery, *params.WorkloadType); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.Limit != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.StartTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "startTime", runtime.ParamLocationQuery, *params.StartTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.EndTime != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "endTime", runtime.ParamLocationQuery, *params.EndTime); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetTraceRequest generates requests for GetTrace
-func NewGetTraceRequest(server string, traceId string) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "traceId", runtime.ParamLocationPath, traceId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/traces/%s", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewGetTraceLogsRequest generates requests for GetTraceLogs
-func NewGetTraceLogsRequest(server string, traceId string, params *GetTraceLogsParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "traceId", runtime.ParamLocationPath, traceId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/traces/%s/logs", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.SpanId != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "spanId", runtime.ParamLocationQuery, *params.SpanId); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.Limit != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewListWorkspaceUsersRequest generates requests for ListWorkspaceUsers
 func NewListWorkspaceUsersRequest(server string) (*http.Request, error) {
 	var err error
@@ -6622,17 +5407,8 @@ type ClientWithResponsesInterface interface {
 
 	UpdateAgentWithResponse(ctx context.Context, agentName string, body UpdateAgentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAgentResponse, error)
 
-	// GetAgentLogsWithResponse request
-	GetAgentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentLogsResponse, error)
-
-	// GetAgentMetricsWithResponse request
-	GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error)
-
 	// ListAgentRevisionsWithResponse request
 	ListAgentRevisionsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentRevisionsResponse, error)
-
-	// GetAgentTraceIdsWithResponse request
-	GetAgentTraceIdsWithResponse(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*GetAgentTraceIdsResponse, error)
 
 	// GetConfigurationWithResponse request
 	GetConfigurationWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetConfigurationResponse, error)
@@ -6656,17 +5432,8 @@ type ClientWithResponsesInterface interface {
 
 	UpdateFunctionWithResponse(ctx context.Context, functionName string, body UpdateFunctionJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateFunctionResponse, error)
 
-	// GetFunctionLogsWithResponse request
-	GetFunctionLogsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionLogsResponse, error)
-
-	// GetFunctionMetricsWithResponse request
-	GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error)
-
 	// ListFunctionRevisionsWithResponse request
 	ListFunctionRevisionsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*ListFunctionRevisionsResponse, error)
-
-	// GetFunctionTraceIdsWithResponse request
-	GetFunctionTraceIdsWithResponse(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*GetFunctionTraceIdsResponse, error)
 
 	// ListIntegrationConnectionsWithResponse request
 	ListIntegrationConnectionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsResponse, error)
@@ -6727,9 +5494,6 @@ type ClientWithResponsesInterface interface {
 	// ListMCPHubDefinitionsWithResponse request
 	ListMCPHubDefinitionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListMCPHubDefinitionsResponse, error)
 
-	// GetMetricsWithResponse request
-	GetMetricsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMetricsResponse, error)
-
 	// ListModelsWithResponse request
 	ListModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
 
@@ -6749,17 +5513,8 @@ type ClientWithResponsesInterface interface {
 
 	UpdateModelWithResponse(ctx context.Context, modelName string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error)
 
-	// GetModelLogsWithResponse request
-	GetModelLogsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelLogsResponse, error)
-
-	// GetModelMetricsWithResponse request
-	GetModelMetricsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error)
-
 	// ListModelRevisionsWithResponse request
 	ListModelRevisionsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ListModelRevisionsResponse, error)
-
-	// GetModelTraceIdsWithResponse request
-	GetModelTraceIdsWithResponse(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*GetModelTraceIdsResponse, error)
 
 	// ListPoliciesWithResponse request
 	ListPoliciesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListPoliciesResponse, error)
@@ -6842,15 +5597,6 @@ type ClientWithResponsesInterface interface {
 
 	// GetStoreFunctionWithResponse request
 	GetStoreFunctionWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetStoreFunctionResponse, error)
-
-	// GetTraceIdsWithResponse request
-	GetTraceIdsWithResponse(ctx context.Context, params *GetTraceIdsParams, reqEditors ...RequestEditorFn) (*GetTraceIdsResponse, error)
-
-	// GetTraceWithResponse request
-	GetTraceWithResponse(ctx context.Context, traceId string, reqEditors ...RequestEditorFn) (*GetTraceResponse, error)
-
-	// GetTraceLogsWithResponse request
-	GetTraceLogsWithResponse(ctx context.Context, traceId string, params *GetTraceLogsParams, reqEditors ...RequestEditorFn) (*GetTraceLogsResponse, error)
 
 	// ListWorkspaceUsersWithResponse request
 	ListWorkspaceUsersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListWorkspaceUsersResponse, error)
@@ -7007,50 +5753,6 @@ func (r UpdateAgentResponse) StatusCode() int {
 	return 0
 }
 
-type GetAgentLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ResourceLog
-}
-
-// Status returns HTTPResponse.Status
-func (r GetAgentLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetAgentLogsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetAgentMetricsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ResourceMetrics
-}
-
-// Status returns HTTPResponse.Status
-func (r GetAgentMetricsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetAgentMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ListAgentRevisionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7067,28 +5769,6 @@ func (r ListAgentRevisionsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListAgentRevisionsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetAgentTraceIdsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *TraceIdsResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r GetAgentTraceIdsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetAgentTraceIdsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7227,50 +5907,6 @@ func (r UpdateFunctionResponse) StatusCode() int {
 	return 0
 }
 
-type GetFunctionLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ResourceLog
-}
-
-// Status returns HTTPResponse.Status
-func (r GetFunctionLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetFunctionLogsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetFunctionMetricsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ResourceMetrics
-}
-
-// Status returns HTTPResponse.Status
-func (r GetFunctionMetricsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetFunctionMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ListFunctionRevisionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7287,28 +5923,6 @@ func (r ListFunctionRevisionsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListFunctionRevisionsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetFunctionTraceIdsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *TraceIdsResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r GetFunctionTraceIdsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetFunctionTraceIdsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7685,28 +6299,6 @@ func (r ListMCPHubDefinitionsResponse) StatusCode() int {
 	return 0
 }
 
-type GetMetricsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *Metrics
-}
-
-// Status returns HTTPResponse.Status
-func (r GetMetricsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ListModelsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7817,50 +6409,6 @@ func (r UpdateModelResponse) StatusCode() int {
 	return 0
 }
 
-type GetModelLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *[]ResourceLog
-}
-
-// Status returns HTTPResponse.Status
-func (r GetModelLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetModelLogsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetModelMetricsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *ResourceMetrics
-}
-
-// Status returns HTTPResponse.Status
-func (r GetModelMetricsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetModelMetricsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ListModelRevisionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7877,28 +6425,6 @@ func (r ListModelRevisionsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ListModelRevisionsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetModelTraceIdsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *TraceIdsResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r GetModelTraceIdsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetModelTraceIdsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8493,72 +7019,6 @@ func (r GetStoreFunctionResponse) StatusCode() int {
 	return 0
 }
 
-type GetTraceIdsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *map[string]interface{}
-}
-
-// Status returns HTTPResponse.Status
-func (r GetTraceIdsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetTraceIdsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetTraceResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *map[string]interface{}
-}
-
-// Status returns HTTPResponse.Status
-func (r GetTraceResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetTraceResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetTraceLogsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *map[string]interface{}
-}
-
-// Status returns HTTPResponse.Status
-func (r GetTraceLogsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetTraceLogsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ListWorkspaceUsersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -8883,24 +7343,6 @@ func (c *ClientWithResponses) UpdateAgentWithResponse(ctx context.Context, agent
 	return ParseUpdateAgentResponse(rsp)
 }
 
-// GetAgentLogsWithResponse request returning *GetAgentLogsResponse
-func (c *ClientWithResponses) GetAgentLogsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentLogsResponse, error) {
-	rsp, err := c.GetAgentLogs(ctx, agentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetAgentLogsResponse(rsp)
-}
-
-// GetAgentMetricsWithResponse request returning *GetAgentMetricsResponse
-func (c *ClientWithResponses) GetAgentMetricsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*GetAgentMetricsResponse, error) {
-	rsp, err := c.GetAgentMetrics(ctx, agentName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetAgentMetricsResponse(rsp)
-}
-
 // ListAgentRevisionsWithResponse request returning *ListAgentRevisionsResponse
 func (c *ClientWithResponses) ListAgentRevisionsWithResponse(ctx context.Context, agentName string, reqEditors ...RequestEditorFn) (*ListAgentRevisionsResponse, error) {
 	rsp, err := c.ListAgentRevisions(ctx, agentName, reqEditors...)
@@ -8908,15 +7350,6 @@ func (c *ClientWithResponses) ListAgentRevisionsWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParseListAgentRevisionsResponse(rsp)
-}
-
-// GetAgentTraceIdsWithResponse request returning *GetAgentTraceIdsResponse
-func (c *ClientWithResponses) GetAgentTraceIdsWithResponse(ctx context.Context, agentName string, params *GetAgentTraceIdsParams, reqEditors ...RequestEditorFn) (*GetAgentTraceIdsResponse, error) {
-	rsp, err := c.GetAgentTraceIds(ctx, agentName, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetAgentTraceIdsResponse(rsp)
 }
 
 // GetConfigurationWithResponse request returning *GetConfigurationResponse
@@ -8989,24 +7422,6 @@ func (c *ClientWithResponses) UpdateFunctionWithResponse(ctx context.Context, fu
 	return ParseUpdateFunctionResponse(rsp)
 }
 
-// GetFunctionLogsWithResponse request returning *GetFunctionLogsResponse
-func (c *ClientWithResponses) GetFunctionLogsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionLogsResponse, error) {
-	rsp, err := c.GetFunctionLogs(ctx, functionName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetFunctionLogsResponse(rsp)
-}
-
-// GetFunctionMetricsWithResponse request returning *GetFunctionMetricsResponse
-func (c *ClientWithResponses) GetFunctionMetricsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*GetFunctionMetricsResponse, error) {
-	rsp, err := c.GetFunctionMetrics(ctx, functionName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetFunctionMetricsResponse(rsp)
-}
-
 // ListFunctionRevisionsWithResponse request returning *ListFunctionRevisionsResponse
 func (c *ClientWithResponses) ListFunctionRevisionsWithResponse(ctx context.Context, functionName string, reqEditors ...RequestEditorFn) (*ListFunctionRevisionsResponse, error) {
 	rsp, err := c.ListFunctionRevisions(ctx, functionName, reqEditors...)
@@ -9014,15 +7429,6 @@ func (c *ClientWithResponses) ListFunctionRevisionsWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParseListFunctionRevisionsResponse(rsp)
-}
-
-// GetFunctionTraceIdsWithResponse request returning *GetFunctionTraceIdsResponse
-func (c *ClientWithResponses) GetFunctionTraceIdsWithResponse(ctx context.Context, functionName string, params *GetFunctionTraceIdsParams, reqEditors ...RequestEditorFn) (*GetFunctionTraceIdsResponse, error) {
-	rsp, err := c.GetFunctionTraceIds(ctx, functionName, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetFunctionTraceIdsResponse(rsp)
 }
 
 // ListIntegrationConnectionsWithResponse request returning *ListIntegrationConnectionsResponse
@@ -9210,15 +7616,6 @@ func (c *ClientWithResponses) ListMCPHubDefinitionsWithResponse(ctx context.Cont
 	return ParseListMCPHubDefinitionsResponse(rsp)
 }
 
-// GetMetricsWithResponse request returning *GetMetricsResponse
-func (c *ClientWithResponses) GetMetricsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMetricsResponse, error) {
-	rsp, err := c.GetMetrics(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetMetricsResponse(rsp)
-}
-
 // ListModelsWithResponse request returning *ListModelsResponse
 func (c *ClientWithResponses) ListModelsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListModelsResponse, error) {
 	rsp, err := c.ListModels(ctx, reqEditors...)
@@ -9280,24 +7677,6 @@ func (c *ClientWithResponses) UpdateModelWithResponse(ctx context.Context, model
 	return ParseUpdateModelResponse(rsp)
 }
 
-// GetModelLogsWithResponse request returning *GetModelLogsResponse
-func (c *ClientWithResponses) GetModelLogsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelLogsResponse, error) {
-	rsp, err := c.GetModelLogs(ctx, modelName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetModelLogsResponse(rsp)
-}
-
-// GetModelMetricsWithResponse request returning *GetModelMetricsResponse
-func (c *ClientWithResponses) GetModelMetricsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*GetModelMetricsResponse, error) {
-	rsp, err := c.GetModelMetrics(ctx, modelName, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetModelMetricsResponse(rsp)
-}
-
 // ListModelRevisionsWithResponse request returning *ListModelRevisionsResponse
 func (c *ClientWithResponses) ListModelRevisionsWithResponse(ctx context.Context, modelName string, reqEditors ...RequestEditorFn) (*ListModelRevisionsResponse, error) {
 	rsp, err := c.ListModelRevisions(ctx, modelName, reqEditors...)
@@ -9305,15 +7684,6 @@ func (c *ClientWithResponses) ListModelRevisionsWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParseListModelRevisionsResponse(rsp)
-}
-
-// GetModelTraceIdsWithResponse request returning *GetModelTraceIdsResponse
-func (c *ClientWithResponses) GetModelTraceIdsWithResponse(ctx context.Context, modelName string, params *GetModelTraceIdsParams, reqEditors ...RequestEditorFn) (*GetModelTraceIdsResponse, error) {
-	rsp, err := c.GetModelTraceIds(ctx, modelName, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetModelTraceIdsResponse(rsp)
 }
 
 // ListPoliciesWithResponse request returning *ListPoliciesResponse
@@ -9570,33 +7940,6 @@ func (c *ClientWithResponses) GetStoreFunctionWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseGetStoreFunctionResponse(rsp)
-}
-
-// GetTraceIdsWithResponse request returning *GetTraceIdsResponse
-func (c *ClientWithResponses) GetTraceIdsWithResponse(ctx context.Context, params *GetTraceIdsParams, reqEditors ...RequestEditorFn) (*GetTraceIdsResponse, error) {
-	rsp, err := c.GetTraceIds(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetTraceIdsResponse(rsp)
-}
-
-// GetTraceWithResponse request returning *GetTraceResponse
-func (c *ClientWithResponses) GetTraceWithResponse(ctx context.Context, traceId string, reqEditors ...RequestEditorFn) (*GetTraceResponse, error) {
-	rsp, err := c.GetTrace(ctx, traceId, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetTraceResponse(rsp)
-}
-
-// GetTraceLogsWithResponse request returning *GetTraceLogsResponse
-func (c *ClientWithResponses) GetTraceLogsWithResponse(ctx context.Context, traceId string, params *GetTraceLogsParams, reqEditors ...RequestEditorFn) (*GetTraceLogsResponse, error) {
-	rsp, err := c.GetTraceLogs(ctx, traceId, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetTraceLogsResponse(rsp)
 }
 
 // ListWorkspaceUsersWithResponse request returning *ListWorkspaceUsersResponse
@@ -9869,58 +8212,6 @@ func ParseUpdateAgentResponse(rsp *http.Response) (*UpdateAgentResponse, error) 
 	return response, nil
 }
 
-// ParseGetAgentLogsResponse parses an HTTP response from a GetAgentLogsWithResponse call
-func ParseGetAgentLogsResponse(rsp *http.Response) (*GetAgentLogsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetAgentLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ResourceLog
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetAgentMetricsResponse parses an HTTP response from a GetAgentMetricsWithResponse call
-func ParseGetAgentMetricsResponse(rsp *http.Response) (*GetAgentMetricsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetAgentMetricsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMetrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseListAgentRevisionsResponse parses an HTTP response from a ListAgentRevisionsWithResponse call
 func ParseListAgentRevisionsResponse(rsp *http.Response) (*ListAgentRevisionsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -9937,32 +8228,6 @@ func ParseListAgentRevisionsResponse(rsp *http.Response) (*ListAgentRevisionsRes
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []RevisionMetadata
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetAgentTraceIdsResponse parses an HTTP response from a GetAgentTraceIdsWithResponse call
-func ParseGetAgentTraceIdsResponse(rsp *http.Response) (*GetAgentTraceIdsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetAgentTraceIdsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest TraceIdsResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -10129,58 +8394,6 @@ func ParseUpdateFunctionResponse(rsp *http.Response) (*UpdateFunctionResponse, e
 	return response, nil
 }
 
-// ParseGetFunctionLogsResponse parses an HTTP response from a GetFunctionLogsWithResponse call
-func ParseGetFunctionLogsResponse(rsp *http.Response) (*GetFunctionLogsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetFunctionLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ResourceLog
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetFunctionMetricsResponse parses an HTTP response from a GetFunctionMetricsWithResponse call
-func ParseGetFunctionMetricsResponse(rsp *http.Response) (*GetFunctionMetricsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetFunctionMetricsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMetrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseListFunctionRevisionsResponse parses an HTTP response from a ListFunctionRevisionsWithResponse call
 func ParseListFunctionRevisionsResponse(rsp *http.Response) (*ListFunctionRevisionsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10197,32 +8410,6 @@ func ParseListFunctionRevisionsResponse(rsp *http.Response) (*ListFunctionRevisi
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest RevisionMetadata
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetFunctionTraceIdsResponse parses an HTTP response from a GetFunctionTraceIdsWithResponse call
-func ParseGetFunctionTraceIdsResponse(rsp *http.Response) (*GetFunctionTraceIdsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetFunctionTraceIdsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest TraceIdsResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -10635,32 +8822,6 @@ func ParseListMCPHubDefinitionsResponse(rsp *http.Response) (*ListMCPHubDefiniti
 	return response, nil
 }
 
-// ParseGetMetricsResponse parses an HTTP response from a GetMetricsWithResponse call
-func ParseGetMetricsResponse(rsp *http.Response) (*GetMetricsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetMetricsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Metrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseListModelsResponse parses an HTTP response from a ListModelsWithResponse call
 func ParseListModelsResponse(rsp *http.Response) (*ListModelsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10791,58 +8952,6 @@ func ParseUpdateModelResponse(rsp *http.Response) (*UpdateModelResponse, error) 
 	return response, nil
 }
 
-// ParseGetModelLogsResponse parses an HTTP response from a GetModelLogsWithResponse call
-func ParseGetModelLogsResponse(rsp *http.Response) (*GetModelLogsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetModelLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []ResourceLog
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetModelMetricsResponse parses an HTTP response from a GetModelMetricsWithResponse call
-func ParseGetModelMetricsResponse(rsp *http.Response) (*GetModelMetricsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetModelMetricsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ResourceMetrics
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseListModelRevisionsResponse parses an HTTP response from a ListModelRevisionsWithResponse call
 func ParseListModelRevisionsResponse(rsp *http.Response) (*ListModelRevisionsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10859,32 +8968,6 @@ func ParseListModelRevisionsResponse(rsp *http.Response) (*ListModelRevisionsRes
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest RevisionMetadata
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetModelTraceIdsResponse parses an HTTP response from a GetModelTraceIdsWithResponse call
-func ParseGetModelTraceIdsResponse(rsp *http.Response) (*GetModelTraceIdsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetModelTraceIdsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest TraceIdsResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -11552,84 +9635,6 @@ func ParseGetStoreFunctionResponse(rsp *http.Response) (*GetStoreFunctionRespons
 	return response, nil
 }
 
-// ParseGetTraceIdsResponse parses an HTTP response from a GetTraceIdsWithResponse call
-func ParseGetTraceIdsResponse(rsp *http.Response) (*GetTraceIdsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetTraceIdsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest map[string]interface{}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetTraceResponse parses an HTTP response from a GetTraceWithResponse call
-func ParseGetTraceResponse(rsp *http.Response) (*GetTraceResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetTraceResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest map[string]interface{}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetTraceLogsResponse parses an HTTP response from a GetTraceLogsWithResponse call
-func ParseGetTraceLogsResponse(rsp *http.Response) (*GetTraceLogsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetTraceLogsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest map[string]interface{}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseListWorkspaceUsersResponse parses an HTTP response from a ListWorkspaceUsersWithResponse call
 func ParseListWorkspaceUsersResponse(rsp *http.Response) (*ListWorkspaceUsersResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -11935,146 +9940,126 @@ func ParseLeaveWorkspaceResponse(rsp *http.Response) (*LeaveWorkspaceResponse, e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"fegAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
