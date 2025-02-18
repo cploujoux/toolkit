@@ -138,9 +138,9 @@ export class RemoteToolkit {
       } catch (error) {
         if (this.fallbackUrl) {
           transport = new WebSocketClientTransport(new URL(this.fallbackUrl), {
-            "x-beamlit-authorization":
-              headers?.["X-Beamlit-Authorization"] || "",
-            "x-beamlit-workspace": headers?.["X-Beamlit-Workspace"] || "",
+            "x-blaxel-authorization":
+              headers?.["X-Blaxel-Authorization"] || "",
+            "x-blaxel-workspace": headers?.["X-Blaxel-Workspace"] || "",
           });
           await this.modelContextProtocolClient.connect(transport);
           const mcpClient = new MCPClient(
