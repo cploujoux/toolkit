@@ -18,8 +18,8 @@ from asgi_correlation_id import CorrelationIdMiddleware
 from fastapi import FastAPI, Request, Response, WebSocket
 from fastapi.responses import JSONResponse
 
-from blaxel.aimon import HTTPError, get_settings, init
-from blaxel.aimon.instrumentation import instrument_app, shutdown_instrumentation
+from blaxel.common import HTTPError, get_settings, init
+from blaxel.common.instrumentation import instrument_app, shutdown_instrumentation
 
 from .middlewares import AccessLogMiddleware, AddProcessTimeHeader
 

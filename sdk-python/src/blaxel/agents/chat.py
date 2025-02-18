@@ -3,7 +3,7 @@ from typing import Tuple, Union
 
 from langchain_core.language_models import BaseChatModel
 
-from blaxel.aimon.settings import get_settings
+from blaxel.common.settings import get_settings
 from blaxel.api.models import get_model
 from blaxel.authentication import get_authentication_headers, new_client
 from blaxel.models import Model

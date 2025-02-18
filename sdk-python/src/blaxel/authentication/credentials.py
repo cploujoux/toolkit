@@ -11,7 +11,7 @@ from typing import List
 
 import yaml
 
-from blaxel.aimon.settings import Settings
+from blaxel.common.settings import Settings
 
 logger = getLogger(__name__)
 

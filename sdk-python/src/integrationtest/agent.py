@@ -2,7 +2,7 @@ import asyncio
 import uuid
 
 from blaxel.agents import agent
-from blaxel.aimon import init
+from blaxel.common import init
 
 settings = init()
 

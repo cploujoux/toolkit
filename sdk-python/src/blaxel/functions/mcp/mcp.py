@@ -16,7 +16,7 @@ from langchain_core.tools.base import BaseTool, BaseToolkit, ToolException
 from mcp import ClientSession
 from mcp.types import CallToolResult, ListToolsResult
 
-from blaxel.aimon.settings import get_settings
+from blaxel.common.settings import get_settings
 from blaxel.authentication import get_authentication_headers
 from blaxel.authentication.authentication import AuthenticatedClient
 from blaxel.functions.mcp.client import websocket_client

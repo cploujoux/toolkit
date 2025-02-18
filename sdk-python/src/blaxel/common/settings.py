@@ -17,7 +17,7 @@ from pydantic_settings import (
     YamlConfigSettingsSource,
 )
 
-from blaxel.aimon.logger import init as init_logger
+from blaxel.common.logger import init as init_logger
 from blaxel.models import Agent, Function, Model
 
 global SETTINGS

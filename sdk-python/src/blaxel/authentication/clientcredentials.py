@@ -11,7 +11,7 @@ from typing import Generator, Optional
 import requests
 from httpx import Auth, Request, Response
 
-from blaxel.aimon.settings import get_settings
+from blaxel.common.settings import get_settings
 
 
 @dataclass

@@ -9,7 +9,7 @@ from typing import Dict, Generator
 
 from httpx import Auth, Request, Response
 
-from blaxel.aimon.settings import Settings, get_settings
+from blaxel.common.settings import Settings, get_settings
 
 from ..client import AuthenticatedClient
 from .apikey import ApiKeyProvider

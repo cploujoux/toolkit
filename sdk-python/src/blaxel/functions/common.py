@@ -24,8 +24,8 @@ from typing import Union
 from langchain_core.tools import StructuredTool
 from langchain_core.tools.base import create_schema_from_function
 
-from blaxel.aimon import slugify
-from blaxel.aimon.settings import get_settings
+from blaxel.common import slugify
+from blaxel.common.settings import get_settings
 from blaxel.authentication import new_client
 from blaxel.client import AuthenticatedClient
 from blaxel.functions.local.local import LocalToolKit

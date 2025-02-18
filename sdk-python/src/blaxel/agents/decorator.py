@@ -13,7 +13,7 @@ from typing import Any, Callable
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
-from blaxel.aimon.settings import Settings, init
+from blaxel.common.settings import Settings, init
 from blaxel.api.models import get_model, list_models
 from blaxel.authentication import new_client
 from blaxel.errors import UnexpectedStatus

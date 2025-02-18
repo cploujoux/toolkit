@@ -3,7 +3,7 @@ import asyncio
 from langgraph.graph.graph import CompiledGraph
 
 from blaxel.agents import agent, get_chat_model
-from blaxel.aimon import init
+from blaxel.common import init
 from blaxel.functions import function
 
 settings = init()
